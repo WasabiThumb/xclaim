@@ -15,7 +15,7 @@ This process should be done without any players online. The server should have C
 | --: | :-: | :-- |
 | veteran-time | The time in seconds it takes for a player to be on the server in order for Veteran status to take effect | 604800 (1 week) |
 | stop-editing-on-shutdown | Whether or not players should be booted out of the chunk editor on shutdown | false |
-| stop-editing-on-leave | Whether or not players should be booted out of the chunk editor when the leave voluntarily | true |
+| stop-editing-on-leave | Whether or not players should be booted out of the chunk editor when they leave voluntarily | true |
 | exempt-claim-owner-from-permission-rules | If claim owners should have access to all permissions on the claim implicitly. You shouldn't change this, it's mainly for debugging | true |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-chunks | Sets the max chunks for a group. See Permissions for more info. | |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims | Sets the max claims for a group. See Permissions for more info. | |

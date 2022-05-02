@@ -1,4 +1,4 @@
-veteran-time: 604800 # measuerd in seconds
+veteran-time: 604800 # measured in seconds
 stop-editing-on-shutdown: false
 stop-editing-on-leave: true
 exempt-claim-owner-from-permission-rules: true
