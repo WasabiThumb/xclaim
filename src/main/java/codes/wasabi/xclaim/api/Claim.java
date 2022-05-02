@@ -338,11 +338,11 @@ public class Claim {
 
     public boolean hasPermission(@NotNull OfflinePlayer player, @NotNull Permission permission) {
         if (XClaim.mainConfig.getBoolean("exempt-claim-owner-from-permission-rules", true)) {
-            if (player.equals(owner)) return true;
+            if (player.getUniqueId().equals(owner.getUniqueId())) return true;
         }
         Player online = player.getPlayer();
         if (online != null) {
-            if (online.hasPermission("xclaim.admin")) return true;
+            if (online.hasPermission("xclaim.admin") || online.isOp()) return true;
         }
         EnumSet<Permission> set = playerPerms.get(player.getUniqueId());
         if (set != null) {

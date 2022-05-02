@@ -113,7 +113,7 @@ public class ChunkEditor {
                         Claim existing = Claim.getByChunk(chunk);
                         if (existing != null) {
                             if (!existing.getOwner().getUniqueId().equals(ply.getUniqueId())) {
-                                if (!ply.hasPermission("xclaim.override")) {
+                                if (!(ply.hasPermission("xclaim.override") || ply.isOp())) {
                                     ply.sendMessage(Component.text("* This chunk is already taken!").color(NamedTextColor.RED));
                                     break;
                                 }
@@ -233,7 +233,7 @@ public class ChunkEditor {
 
     private static final ItemStack CLAIM_STACK = DisplayItem.create(Material.GREEN_DYE, "Claim", NamedTextColor.GREEN);
     private static final ItemStack UNCLAIM_STACK = DisplayItem.create(Material.RED_DYE, "Unclaim", NamedTextColor.RED);
-    private static final ItemStack QUIT_STACK = DisplayItem.create(Material.BARRIER, "Quit", NamedTextColor.DARK_RED);
+    private static final ItemStack QUIT_STACK = DisplayItem.create(Material.ARROW, "Quit", NamedTextColor.DARK_RED);
 
     private static NamespacedKey KEY_FLAG;
     private static NamespacedKey KEY_NAME;

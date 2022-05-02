@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -84,6 +86,17 @@ public class BuildBreakHandler extends PermissionHandler {
         if (getClaim().hasPermission(event.getPlayer(), Permission.BREAK)) return;
         if (check(event, event.getBlock().getLocation().toCenterLocation())) {
             stdError(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onBreak(@NotNull HangingBreakByEntityEvent event) {
+        if (!brk) return;
+        Entity remover = event.getRemover();
+        if (remover instanceof Player ply) {
+            if (getClaim().hasPermission(ply, Permission.BREAK)) return;
+            event.setCancelled(true);
+            stdError(ply);
         }
     }
 
