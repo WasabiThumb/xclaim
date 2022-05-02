@@ -1,4 +1,15 @@
-veteran-time: 604800
+veteran-time: 604800 # measuerd in seconds
 stop-editing-on-shutdown: false
 stop-editing-on-leave: true
 exempt-claim-owner-from-permission-rules: true
+limits:
+  default:
+     max-chunks: 20
+     max-claims: 5
+  sample-1:
+    max-chunks: 50
+    max-claims: 10
+  sample-2:
+    max-chunks: 25
+    max-claims: 8
+    give-after: 604800 # measured in seconds

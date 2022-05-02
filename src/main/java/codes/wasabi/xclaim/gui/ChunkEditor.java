@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.gui;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import com.destroystokyo.paper.ParticleBuilder;
@@ -117,6 +118,18 @@ public class ChunkEditor {
                                     break;
                                 }
                             }
+                        }
+                        int numChunks = 0;
+                        int maxChunks = XCPlayer.of(ply).getMaxChunks();
+                        UUID uuid = ply.getUniqueId();
+                        for (Claim c : Claim.getAll()) {
+                            if (c.getOwner().getUniqueId().equals(uuid)) {
+                                numChunks += c.getChunks().size();
+                            }
+                        }
+                        if (numChunks >= maxChunks) {
+                            ply.sendMessage(Component.text("* You've reached your maximum number of chunks, Try deleting some.").color(NamedTextColor.RED));
+                            break;
                         }
                         if (claim.addChunk(chunk)) {
                             ply.sendMessage(Component.empty()

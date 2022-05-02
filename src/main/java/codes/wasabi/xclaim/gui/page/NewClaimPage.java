@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.gui.page;
 
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.util.DisplayItem;
@@ -14,10 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewClaimPage extends Page {
@@ -89,6 +87,28 @@ public class NewClaimPage extends Page {
                         return;
                     }
                 }
+            }
+            UUID uuid = ply.getUniqueId();
+            XCPlayer xcp = XCPlayer.of(ply);
+            int maxChunks = xcp.getMaxChunks();
+            int maxClaims = xcp.getMaxClaims();
+            int curClaims = 0;
+            int curChunks = 0;
+            for (Claim c : Claim.getAll()) {
+                if (c.getOwner().getUniqueId().equals(uuid)) {
+                    curClaims++;
+                    curChunks += c.getChunks().size();
+                }
+            }
+            if (curClaims >= maxClaims) {
+                ply.sendMessage(Component.text("* You've reached your maximum number of claims! Try deleting some.").color(NamedTextColor.RED));
+                getParent().close();
+                return;
+            }
+            if (curChunks >= maxChunks) {
+                ply.sendMessage(Component.text("* Can't create this claim, it will exceed your maximum number of chunks.").color(NamedTextColor.RED));
+                getParent().close();
+                return;
             }
             String name = "New Claim #" + nextIndex();
             Claim newClaim = new Claim(name, Set.of(chunk), ply);

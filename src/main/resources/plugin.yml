@@ -24,3 +24,4 @@ commands:
     aliases: [ claims, cg ]
   importclaims:
     description: Safely imports claims from the ClaimChunk plugin
+    permission: xclaim.import

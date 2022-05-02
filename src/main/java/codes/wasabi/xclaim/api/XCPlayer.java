@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.api;
 
 import codes.wasabi.xclaim.XClaim;
 import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.profile.PlayerProfile;
@@ -80,6 +81,50 @@ public class XCPlayer implements OfflinePlayer {
     public void setTrustedPlayers(@NotNull List<OfflinePlayer> players) {
         List<String> list = players.stream().flatMap((OfflinePlayer op) -> Stream.of(op.getUniqueId().toString())).toList();
         XClaim.trustConfig.set(uuidString, list);
+    }
+
+    private int[] getPermGroup() {
+        ConfigurationSection section = XClaim.mainConfig.getConfigurationSection("limits");
+        if (section == null) return new int[]{ 0, 0 };
+        int maxChunks = 0;
+        int maxClaims = 0;
+        for (String groupName : section.getKeys(false)) {
+            boolean inGroup = true;
+            if (!groupName.equalsIgnoreCase("default")) {
+                inGroup = false;
+                Player ply = op.getPlayer();
+                if (ply != null) {
+                    inGroup = ply.hasPermission("xclaim.group." + groupName);
+                    if (!inGroup) {
+                        int giveAfter = section.getInt(groupName + ".give-after", -1);
+                        if (giveAfter == 0) {
+                            ply.addAttachment(XClaim.instance, "xclaim.group." + groupName, true);
+                            inGroup = true;
+                        } else if (giveAfter > 0) {
+                            long elapsed = op.getLastSeen() - op.getFirstPlayed();
+                            int seconds = (int) Math.round(Math.min((elapsed / 1000d), Integer.MAX_VALUE));
+                            if (seconds >= giveAfter) {
+                                ply.addAttachment(XClaim.instance, "xclaim.group." + groupName, true);
+                                inGroup = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (inGroup) {
+                maxChunks = Math.max(maxChunks, section.getInt(groupName + ".max-chunks", 0));
+                maxClaims = Math.max(maxClaims, section.getInt(groupName + ".max-claims", 0));
+            }
+        }
+        return new int[]{ maxChunks, maxClaims };
+    }
+
+    public int getMaxChunks() {
+        return getPermGroup()[0];
+    }
+
+    public int getMaxClaims() {
+        return getPermGroup()[1];
     }
 
     public @NotNull List<OfflinePlayer> getTrustedPlayers() {
