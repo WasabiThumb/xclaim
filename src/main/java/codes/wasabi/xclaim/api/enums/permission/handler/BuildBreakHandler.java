@@ -92,6 +92,7 @@ public class BuildBreakHandler extends PermissionHandler {
     @EventHandler
     public void onBreak(@NotNull HangingBreakByEntityEvent event) {
         if (!brk) return;
+        if (!getClaim().contains(event.getEntity().getLocation())) return;
         Entity remover = event.getRemover();
         if (remover instanceof Player ply) {
             if (getClaim().hasPermission(ply, Permission.BREAK)) return;
