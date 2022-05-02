@@ -1,4 +1,5 @@
 # XClaim
+[![Java CI with Maven](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml)
 A better chunk claim system for Paper servers
 
 ## Installation
