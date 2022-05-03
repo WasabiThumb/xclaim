@@ -25,7 +25,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -105,6 +104,7 @@ public class ChunkEditor {
             Player ply = event.getPlayer();
             Claim claim = getEditing(ply);
             if (claim != null) {
+                event.setCancelled(true);
                 PlayerInventory inv = ply.getInventory();
                 int slot = inv.getHeldItemSlot();
                 switch (slot) {
@@ -233,7 +233,7 @@ public class ChunkEditor {
 
     private static final ItemStack CLAIM_STACK = DisplayItem.create(Material.GREEN_DYE, "Claim", NamedTextColor.GREEN);
     private static final ItemStack UNCLAIM_STACK = DisplayItem.create(Material.RED_DYE, "Unclaim", NamedTextColor.RED);
-    private static final ItemStack QUIT_STACK = DisplayItem.create(Material.ARROW, "Quit", NamedTextColor.DARK_RED);
+    private static final ItemStack QUIT_STACK = DisplayItem.create(Material.BARRIER, "Quit", NamedTextColor.DARK_RED);
 
     private static NamespacedKey KEY_FLAG;
     private static NamespacedKey KEY_NAME;
