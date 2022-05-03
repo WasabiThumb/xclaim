@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -79,7 +81,12 @@ public class BuildBreakHandler extends PermissionHandler {
             Block block = event.getClickedBlock();
             if (block != null) {
                 BlockFace face = event.getBlockFace();
-                loc = block.getRelative(face).getLocation().toCenterLocation();
+                BlockData bd = block.getBlockData();
+                if (bd instanceof Waterlogged) {
+                    loc = block.getLocation().toCenterLocation();
+                } else {
+                    loc = block.getRelative(face).getLocation().toCenterLocation();
+                }
             }
             if (check(event, loc)) stdError(ply);
         }
