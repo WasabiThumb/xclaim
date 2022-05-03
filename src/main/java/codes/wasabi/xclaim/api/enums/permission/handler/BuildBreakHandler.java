@@ -3,16 +3,16 @@ package codes.wasabi.xclaim.api.enums.permission.handler;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
+import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockMultiPlaceEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -99,6 +99,32 @@ public class BuildBreakHandler extends PermissionHandler {
             if (getClaim().hasPermission(ply, Permission.BREAK)) return;
             event.setCancelled(true);
             stdError(ply);
+        }
+    }
+
+    @EventHandler
+    public void onDamage(@NotNull BlockDamageEvent event) {
+        if (!brk) return;
+        if (check(event, event.getBlock().getLocation().toCenterLocation())) {
+            Player ply = event.getPlayer();
+            if (getClaim().hasPermission(ply, Permission.BREAK)) return;
+            stdError(ply);
+        }
+    }
+
+    @EventHandler
+    public void onTrample(@NotNull PlayerInteractEvent event) {
+        Action action = event.getAction();
+        if (action.equals(Action.PHYSICAL)) {
+            Block block = event.getClickedBlock();
+            if (block != null) {
+                Material type = block.getType();
+                if (type.equals(Material.LEGACY_SOIL) || type.equals(Material.FARMLAND)) {
+                    Player ply = event.getPlayer();
+                    if (getClaim().hasPermission(ply, Permission.BREAK)) return;
+                    if (check(event, block.getLocation().toCenterLocation())) stdError(ply);
+                }
+            }
         }
     }
 
