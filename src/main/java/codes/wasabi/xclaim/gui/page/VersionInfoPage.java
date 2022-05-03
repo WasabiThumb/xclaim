@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -70,7 +71,11 @@ public class VersionInfoPage extends Page {
 
     @Override
     public void onClick(int slot) {
-        if (slot == 15) switchPage(new MainPage(getParent()));
+        if (slot == 15) {
+            switchPage(new MainPage(getParent()));
+        } else if (slot == 13) {
+            getTarget().playSound(getTarget().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 1f, 1f);
+        }
     }
 
 }
