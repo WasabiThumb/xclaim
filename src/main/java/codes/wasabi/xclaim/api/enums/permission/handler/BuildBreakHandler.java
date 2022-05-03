@@ -6,6 +6,7 @@ import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -74,8 +75,13 @@ public class BuildBreakHandler extends PermissionHandler {
         ItemStack is = ply.getInventory().getItem(Objects.requireNonNullElse(event.getHand(), EquipmentSlot.HAND));
         if (is == null) return;
         if (is.getType().name().toUpperCase(Locale.ROOT).contains("BUCKET")) {
-            event.setCancelled(true);
-            stdError(ply);
+            Location loc = ply.getLocation();
+            Block block = event.getClickedBlock();
+            if (block != null) {
+                BlockFace face = event.getBlockFace();
+                loc = block.getRelative(face).getLocation().toCenterLocation();
+            }
+            if (check(event, loc)) stdError(ply);
         }
     }
 
