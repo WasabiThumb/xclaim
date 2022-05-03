@@ -69,8 +69,8 @@ public class BuildBreakHandler extends PermissionHandler {
     public void onPlaceFluid(@NotNull PlayerInteractEvent event) {
         if (!place) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (getClaim().hasPermission(event.getPlayer(), Permission.BUILD)) return;
         Player ply = event.getPlayer();
+        if (getClaim().hasPermission(ply, Permission.BUILD)) return;
         ItemStack is = ply.getInventory().getItem(Objects.requireNonNullElse(event.getHand(), EquipmentSlot.HAND));
         if (is == null) return;
         if (is.getType().name().toUpperCase(Locale.ROOT).contains("BUCKET")) {

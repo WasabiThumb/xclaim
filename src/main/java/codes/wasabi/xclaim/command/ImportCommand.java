@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 public class ImportCommand implements Command {
@@ -26,12 +25,13 @@ public class ImportCommand implements Command {
         private final Map<Long, UUID> backingMap = new HashMap<>();
 
         public long coordsToKey(int x, int z) {
-            return ByteBuffer.allocate(Long.BYTES).putInt(x).putInt(z).position(0).getLong();
+            return (((long) x) << 32) | (z & 0xFFFFFFFFL);
         }
 
         public int[] keyToCoords(long key) {
-            ByteBuffer bb = ByteBuffer.allocate(Long.BYTES).putLong(key).position(0);
-            return new int[]{ bb.getInt(), bb.getInt() };
+            int x = (int) (key >> 32);
+            int z = (int) key;
+            return new int[]{ x, z };
         }
 
         public void set(int x, int z, UUID uuid) {
