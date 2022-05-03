@@ -74,14 +74,23 @@ public class InteractHandler extends PermissionHandler {
         if (mode != Mode.FLAMMABLE) return false;
         Player ply = event.getPlayer();
         ItemStack is;
+        Location loc = ply.getLocation();
         if (event instanceof PlayerInteractEvent pie) {
             EquipmentSlot slot = pie.getHand();
             if (slot == null) return false;
             is = ply.getInventory().getItem(slot);
+            Block block = pie.getClickedBlock();
+            if (block != null) {
+                loc = block.getRelative(pie.getBlockFace()).getLocation().toCenterLocation();
+            }
         } else {
             is = ply.getItemInUse();
+            if (event instanceof PlayerInteractEntityEvent entityEvent) {
+                loc = entityEvent.getRightClicked().getLocation();
+            }
         }
         if (is == null) return false;
+        if (!getClaim().contains(loc)) return false;
         Material mat = is.getType();
         if (mat.equals(Material.FLINT_AND_STEEL) || mat.equals(Material.FIRE_CHARGE)) {
             event.setCancelled(true);
