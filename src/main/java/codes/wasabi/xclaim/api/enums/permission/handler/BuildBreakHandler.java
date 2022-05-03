@@ -3,7 +3,6 @@ package codes.wasabi.xclaim.api.enums.permission.handler;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
-import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -105,9 +104,9 @@ public class BuildBreakHandler extends PermissionHandler {
     @EventHandler
     public void onDamage(@NotNull BlockDamageEvent event) {
         if (!brk) return;
+        Player ply = event.getPlayer();
+        if (getClaim().hasPermission(ply, Permission.BREAK)) return;
         if (check(event, event.getBlock().getLocation().toCenterLocation())) {
-            Player ply = event.getPlayer();
-            if (getClaim().hasPermission(ply, Permission.BREAK)) return;
             stdError(ply);
         }
     }
