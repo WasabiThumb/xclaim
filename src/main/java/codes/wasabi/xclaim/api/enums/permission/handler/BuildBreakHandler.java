@@ -68,28 +68,54 @@ public class BuildBreakHandler extends PermissionHandler {
         }
     }
 
-    @EventHandler
-    public void onPlaceFluid(@NotNull PlayerInteractEvent event) {
-        if (!place) return;
+    // what a fucking mess
+    private void onFluid(@NotNull PlayerInteractEvent event, boolean trueIfPlace) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Player ply = event.getPlayer();
         if (getClaim().hasPermission(ply, Permission.BUILD)) return;
         ItemStack is = ply.getInventory().getItem(Objects.requireNonNullElse(event.getHand(), EquipmentSlot.HAND));
         if (is == null) return;
         if (is.getType().name().toUpperCase(Locale.ROOT).contains("BUCKET")) {
+            boolean isBucket = is.getType().equals(Material.BUCKET);
+            if (trueIfPlace == isBucket) return;
             Location loc = ply.getLocation();
             Block block = event.getClickedBlock();
+            boolean hasWater = false;
             if (block != null) {
                 BlockFace face = event.getBlockFace();
                 BlockData bd = block.getBlockData();
-                if (bd instanceof Waterlogged) {
-                    loc = block.getLocation().toCenterLocation();
+                if (bd instanceof Waterlogged wl) {
+                    hasWater = wl.isWaterlogged();
+                    if (trueIfPlace && hasWater) {
+                        Block relBlock = block.getRelative(face);
+                        Material type = relBlock.getType();
+                        hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
+                        loc = relBlock.getLocation().toCenterLocation();
+                    } else {
+                        loc = block.getLocation().toCenterLocation();
+                    }
                 } else {
-                    loc = block.getRelative(face).getLocation().toCenterLocation();
+                    Block relBlock = block.getRelative(face);
+                    Material type = relBlock.getType();
+                    hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
+                    loc = relBlock.getLocation().toCenterLocation();
                 }
             }
+            if (trueIfPlace == hasWater) return;
             if (check(event, loc)) stdError(ply);
         }
+    }
+
+    @EventHandler
+    public void onPlaceFluid(@NotNull PlayerInteractEvent event) {
+        if (!place) return;
+        onFluid(event, true);
+    }
+
+    @EventHandler
+    public void onRemoveFluid(@NotNull PlayerInteractEvent event) {
+        if (!brk) return;
+        onFluid(event, false);
     }
 
     @EventHandler
