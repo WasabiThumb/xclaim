@@ -21,6 +21,8 @@ public class CommandManager {
 
     public static class Handler implements CommandExecutor, TabCompleter {
 
+        private record Resolution(@NotNull codes.wasabi.xclaim.command.Command cmd, @NotNull String[] args) {}
+
         private final codes.wasabi.xclaim.command.Command cmd;
         private final PluginCommand bukkitCmd;
         private Handler(@NotNull codes.wasabi.xclaim.command.Command command) {
@@ -28,9 +30,37 @@ public class CommandManager {
             bukkitCmd = XClaim.instance.getCommand(command.getName());
         }
 
+        private Resolution resolveSubcommands(@NotNull codes.wasabi.xclaim.command.Command root, @NotNull String[] args) {
+            codes.wasabi.xclaim.command.Command cmd = root;
+            while (true) {
+                boolean fullyResolved = true;
+                if (args.length >= 1) {
+                    String n = args[0];
+                    Collection<codes.wasabi.xclaim.command.Command> sub = cmd.getSubCommands();
+                    if (sub != null) {
+                        for (codes.wasabi.xclaim.command.Command candidate : sub) {
+                            if (n.equalsIgnoreCase(candidate.getName())) {
+                                cmd = candidate;
+                                String[] newArgs = new String[args.length - 1];
+                                if (newArgs.length > 0) System.arraycopy(args, 1, newArgs, 0, newArgs.length);
+                                args = newArgs;
+                                fullyResolved = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (fullyResolved) break;
+            }
+            return new Resolution(cmd, args);
+        }
+
         @Override
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
             if (!Objects.equals(command, bukkitCmd)) return false;
+            Resolution res = resolveSubcommands(this.cmd, args);
+            codes.wasabi.xclaim.command.Command cmd = res.cmd();
+            args = res.args();
             if (cmd.requiresPlayerExecutor()) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(Component.text("* You must be a player to run this command!").color(NamedTextColor.RED));
@@ -63,7 +93,7 @@ public class CommandManager {
                 obs[i] = null;
             }
             try {
-                cmd.execute(sender, obs);
+                cmd.execute(sender, label, obs);
             } catch (Exception e) {
                 sender.sendMessage(Component.text("* An unexpected exception (" + e.getClass().getName() + ") occurred while executing this command.").color(NamedTextColor.RED));
                 e.printStackTrace();
@@ -74,19 +104,34 @@ public class CommandManager {
         @Override
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
             if (!Objects.equals(command, bukkitCmd)) return null;
+            Resolution res = resolveSubcommands(this.cmd, args);
+            codes.wasabi.xclaim.command.Command cmd = res.cmd();
+            args = res.args();
+            List<String> entries = new ArrayList<>();
             int idx = Math.max(args.length - 1, 0);
             Argument[] argDefs = cmd.getArguments();
-            if (idx >= argDefs.length) return null;
-            Argument arg = argDefs[idx];
-            String tail = (args.length == 0 ? "" : args[idx]);
+            String tail = "";
             LevenshteinDistance sd = LevenshteinDistance.getDefaultInstance();
-            return arg.type().getSampleValues().stream().sorted(Comparator.comparingInt((String s) -> sd.apply(tail, s))).collect(Collectors.toList());
+            if (idx < argDefs.length) {
+                Argument arg = argDefs[idx];
+                tail = (args.length == 0 ? "" : args[idx]);
+                entries.addAll(arg.type().getSampleValues());
+            }
+            if (idx == 0) {
+                Collection<codes.wasabi.xclaim.command.Command> sub = cmd.getSubCommands();
+                if (sub != null) {
+                    for (codes.wasabi.xclaim.command.Command c : sub) entries.add(c.getName());
+                }
+            }
+            String finalTail = tail;
+            return entries.stream().sorted(Comparator.comparingInt((String s) -> sd.apply(finalTail, s))).collect(Collectors.toList());
         }
 
         public @NotNull codes.wasabi.xclaim.command.Command getCommand() {
             return cmd;
         }
 
+        @SuppressWarnings("unused")
         public @Nullable PluginCommand getBukkitCommand() {
             return bukkitCmd;
         }
@@ -131,6 +176,7 @@ public class CommandManager {
             int mod = clazz.getModifiers();
             if (Modifier.isAbstract(mod)) continue;
             if (Modifier.isInterface(mod)) continue;
+            if (clazz.getPackageName().contains("sub")) continue;
             Constructor<? extends codes.wasabi.xclaim.command.Command> con;
             try {
                 con = clazz.getConstructor();

@@ -18,10 +18,13 @@ permissions:
   xclaim.import:
     description: Allows you to import claims from the ClaimChunk plugin
     default: false
+  xclaim.update:
+    description: Allows you to update xclaim with /xclaim update
+    default: false
 commands:
-  claimgui:
-    description: Provides a human-readable GUI for editing claims
-    aliases: [ claims, cg ]
+  xclaim:
+    description: XClaim main command
+    aliases: [ xc, claimgui, claims, cg ]
   importclaims:
     description: Safely imports claims from the ClaimChunk plugin
     permission: xclaim.import

@@ -27,11 +27,14 @@ public final class XClaim extends JavaPlugin {
     public static YamlConfiguration claimsConfig;
     public static FileConfiguration mainConfig;
     public static CommandManager commandManager;
+    public static File jarFile;
 
     @Override
     public void onEnable() {
         instance = this;
         logger = getLogger();
+        logger.log(Level.INFO, "Locating JAR file");
+        jarFile = new File(XClaim.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         logger.log(Level.INFO, "Loading general config");
         saveDefaultConfig();
         mainConfig = getConfig();

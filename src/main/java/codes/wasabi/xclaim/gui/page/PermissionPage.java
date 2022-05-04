@@ -10,6 +10,8 @@ import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -94,7 +96,11 @@ public class PermissionPage extends Page {
                             return;
                         }
                     }
-                    setItem(i, DisplayItem.create(mat, Component.text(p.getPrintName()).color(col), Collections.singletonList(Component.text(p.getDescription()))));
+                    List<Component> lore = new ArrayList<>();
+                    for (String s : WordUtils.wrap(p.getDescription(), 25).split(System.lineSeparator())) {
+                        lore.add(Component.text(s).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+                    }
+                    setItem(i, DisplayItem.create(mat, Component.text(p.getPrintName()).color(col), lore));
                     i++;
                 }
                 setItem(22, BACK_STACK);

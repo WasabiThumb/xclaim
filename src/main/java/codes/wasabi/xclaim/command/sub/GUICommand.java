@@ -1,5 +1,6 @@
-package codes.wasabi.xclaim.command;
+package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
@@ -8,17 +9,18 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
-public class ClaimGUICommand implements Command {
+public class GUICommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "claimgui";
+        return "gui";
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Manage chunk claims in an accessible GUI";
+        return "An acessible gui for all XClaim functions";
     }
 
     @Override
@@ -27,7 +29,7 @@ public class ClaimGUICommand implements Command {
     }
 
     @Override
-    public int getNumRequiredArguments() {
+    public @Range(from = 0, to = Integer.MAX_VALUE) int getNumRequiredArguments() {
         return 0;
     }
 
@@ -37,7 +39,7 @@ public class ClaimGUICommand implements Command {
     }
 
     @Override
-    public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
+    public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) {
         Player ply = (Player) sender;
         if (ChunkEditor.getEditing(ply) != null) {
             sender.sendMessage(Component.text("* You must exit the chunk editor before using the GUI.").color(NamedTextColor.RED));
