@@ -20,6 +20,7 @@ public class XClaimCommand implements Command {
         HelpCommand helpCommand = new HelpCommand();
         subCommands = Arrays.asList(
                 helpCommand,
+                new InfoCommand(),
                 new CurrentCommand(),
                 new UpdateCommand(),
                 guiCommmand,

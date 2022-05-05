@@ -40,6 +40,7 @@ Don't worry, there aren't that many.
 | --: | :-- |
 | xclaim | XClaim main command. Without any extra arguments, is the same as /xclaim gui |
 | xclaim help | List the available subcommands |
+| xclaim info | Provides basic info about XClaim |
 | xclaim gui | Opens an easy-to-use GUI that covers most of XClaim's important features |
 | xclaim update | Scans for new versions of XClaim and, if desired, runs the auto-updater |
 | xclaim chunks \[claim_name] | Opens the chunk editor for the specified claim or, if absent, the current residing claim |
