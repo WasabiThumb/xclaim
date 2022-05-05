@@ -9,8 +9,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,11 +75,23 @@ public class ClaimSelectorPage extends Page {
                         .append(Component.text("Owned by ").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
                         .append(name.color(NamedTextColor.GOLD))
                 );
-                int chunkCount = claim.getChunks().size();
+                Set<Chunk> chunks = claim.getChunks();
+                int chunkCount = chunks.size();
                 lore.add(Component.empty()
                         .append(Component.text(chunkCount).color(NamedTextColor.GOLD))
                         .append(Component.text(" chunk" + (chunkCount == 1 ? "" : "s")).color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
                 );
+                if (chunkCount > 0) {
+                    Chunk c = chunks.iterator().next();
+                    Block b = c.getBlock(8, c.getWorld().getMinHeight(), 8);
+                    lore.add(Component.empty()
+                            .append(Component.text("Chunk #1 at ").color(NamedTextColor.DARK_GRAY))
+                            .append(Component.text("X=").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                            .append(Component.text(b.getX()).color(NamedTextColor.GOLD))
+                            .append(Component.text(", Z=").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                            .append(Component.text(b.getZ()).color(NamedTextColor.GOLD))
+                    );
+                }
                 if (i == 0 && addedWithin) {
                     lore.add(Component.empty()
                             .append(Component.text("Currently within").color(NamedTextColor.GRAY))
