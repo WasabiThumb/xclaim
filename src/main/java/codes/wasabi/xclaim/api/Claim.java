@@ -42,7 +42,7 @@ public class Claim {
     public static @NotNull @UnmodifiableView Set<Claim> getByOwner(@NotNull XCPlayer owner) {
         Set<Claim> set = new HashSet<>();
         for (Claim c : registry) {
-            if (c.owner.equals(owner)) set.add(c);
+            if (c.owner.getUniqueId().equals(owner.getUniqueId())) set.add(c);
         }
         return Collections.unmodifiableSet(set);
     }
