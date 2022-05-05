@@ -119,6 +119,70 @@ public class ChunkEditor {
                                 }
                             }
                         }
+                        World w = claim.getWorld();
+                        if (w != null) {
+                            if (!w.getName().equalsIgnoreCase(chunk.getWorld().getName())) {
+                                ply.sendMessage(Component.text("* You can't add chunks from this world to this claim!").color(NamedTextColor.RED));
+                                break;
+                            }
+                        }
+                        if (XClaim.mainConfig.getBoolean("enforce-adjacent-claim-chunks", true)) {
+                            boolean diagonals = XClaim.mainConfig.getBoolean("allow-diagonal-claim-chunks", true);
+                            boolean nextTo = false;
+                            int targetX = chunk.getX();
+                            int targetZ = chunk.getZ();
+                            // gross
+                            for (Chunk c : claim.getChunks()) {
+                                int thisX = c.getX();
+                                int thisZ = c.getZ();
+                                int leftX = thisX - 1;
+                                int rightX = thisX + 1;
+                                boolean leftMatch = targetX == leftX;
+                                boolean rightMatch = targetX == rightX;
+                                if (targetZ == thisZ) {
+                                    if (leftMatch) {
+                                        nextTo = true;
+                                        break;
+                                    }
+                                    if (rightMatch) {
+                                        nextTo = true;
+                                        break;
+                                    }
+                                }
+                                int upZ = thisZ + 1;
+                                int downZ = thisZ - 1;
+                                boolean upMatch = targetZ == upZ;
+                                boolean downMatch = targetZ == downZ;
+                                if (targetX == thisX) {
+                                    if (upMatch) {
+                                        nextTo = true;
+                                        break;
+                                    }
+                                    if (downMatch) {
+                                        nextTo = true;
+                                        break;
+                                    }
+                                }
+                                if (diagonals) {
+                                    if (upMatch) {
+                                        if (leftMatch || rightMatch) {
+                                            nextTo = true;
+                                            break;
+                                        }
+                                    }
+                                    if (downMatch) {
+                                        if (leftMatch || rightMatch) {
+                                            nextTo = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!nextTo) {
+                                ply.sendMessage(Component.text("* Chunks in your claim must be next to each other!").color(NamedTextColor.RED));
+                                break;
+                            }
+                        }
                         int numChunks = 0;
                         int maxChunks = XCPlayer.of(ply).getMaxChunks();
                         UUID uuid = ply.getUniqueId();
