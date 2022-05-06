@@ -49,4 +49,7 @@ Don't worry, there aren't that many.
 | importclaims | Import claims from ClaimChunk |
 
 ### Roadmap
-* Dynmap Integration
+* Improve Dynmap integration
+  * More accurate hulls
+  * Icons
+* Add more management commands
