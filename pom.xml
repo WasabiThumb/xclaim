@@ -6,7 +6,7 @@
 
     <groupId>codes.wasabi</groupId>
     <artifactId>xclaim</artifactId>
-    <version>1.0.0-RC7</version>
+    <version>1.0.0-RC8</version>
     <packaging>jar</packaging>
 
     <name>XClaim</name>
@@ -45,6 +45,7 @@
                                 <excludes>
                                     <exclude>com.cjburkey:claimchunk</exclude>
                                     <exclude>me.clip:placeholderapi</exclude>
+                                    <exclude>org:dynmap</exclude>
                                 </excludes>
                             </artifactSet>
                         </configuration>
@@ -109,6 +110,13 @@
             <version>2.11.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/PlaceholderAPI-2.11.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org</groupId>
+            <artifactId>dynmap</artifactId>
+            <version>3.3-beta-2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/Dynmap-3.3-beta-2-spigot.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

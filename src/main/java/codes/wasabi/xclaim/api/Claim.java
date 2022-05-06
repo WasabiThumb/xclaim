@@ -155,6 +155,13 @@ public class Claim {
         return BoundingBox.of(c.getBlock(0, w.getMinHeight(), 0), c.getBlock(15, w.getMaxHeight() - 1, 15));
     }
 
+    private void validateMarkers() {
+        if (XClaim.hasDynmap) {
+            org.dynmap.markers.AreaMarker marker = XClaim.dynmapInterface.getMarker(this);
+            if (marker != null) XClaim.dynmapInterface.updateMarker(marker, this);
+        }
+    }
+
     private void generateBounds() {
         BoundingBox bb = null;
         boolean set = false;
@@ -168,6 +175,7 @@ public class Claim {
             }
         }
         outerBounds = (set ? bb : new BoundingBox());
+        validateMarkers();
     }
 
     public @NotNull BoundingBox getOuterBounds() {
@@ -448,8 +456,12 @@ public class Claim {
             }
         }
         manageHandlers = true;
-        updateHandlers();
-        return registry.add(this);
+        if (registry.add(this)) {
+            updateHandlers();
+            validateMarkers();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -457,9 +469,13 @@ public class Claim {
      * @return If false, this claim was already non-canonical.
      */
     public boolean unclaim() {
+        manageHandlers = false;
         if (registry.remove(this)) {
-            manageHandlers = false;
             removeHandlers();
+            if (XClaim.hasDynmap) {
+                org.dynmap.markers.AreaMarker marker = XClaim.dynmapInterface.getMarker(this);
+                if (marker != null) marker.deleteMarker();
+            }
             return true;
         }
         return false;
