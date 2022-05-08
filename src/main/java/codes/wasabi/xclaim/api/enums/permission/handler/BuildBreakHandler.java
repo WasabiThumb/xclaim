@@ -10,11 +10,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
+import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -152,6 +154,7 @@ public class BuildBreakHandler extends PermissionHandler {
 
     @EventHandler
     public void onTrample(@NotNull PlayerInteractEvent event) {
+        if (!brk) return;
         Action action = event.getAction();
         if (action.equals(Action.PHYSICAL)) {
             Block block = event.getClickedBlock();
@@ -162,6 +165,19 @@ public class BuildBreakHandler extends PermissionHandler {
                     if (getClaim().hasPermission(ply, Permission.BREAK)) return;
                     if (check(event, block.getLocation().toCenterLocation())) stdError(ply);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBreakEndCrystal(@NotNull EntityDamageByEntityEvent event) {
+        if (!brk) return;
+        Entity ent = event.getDamager();
+        if (ent instanceof Player ply) {
+            Entity victim = event.getEntity();
+            if (victim instanceof EnderCrystal) {
+                if (getClaim().hasPermission(ply, Permission.BREAK)) return;
+                if (check(event, victim.getLocation())) stdError(ply);
             }
         }
     }
