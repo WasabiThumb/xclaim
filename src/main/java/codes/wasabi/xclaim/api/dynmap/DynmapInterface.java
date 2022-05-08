@@ -4,12 +4,10 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
 import codes.wasabi.xclaim.util.hull.Point;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.dynmap.bukkit.DynmapPlugin;
 import org.dynmap.markers.*;
 import org.jetbrains.annotations.NotNull;
@@ -65,16 +63,6 @@ public class DynmapInterface {
             int rgb = color.getRGB();
             marker.setFillStyle(0.5d, rgb);
             marker.setLineStyle(3, 0.8d, rgb);
-            String ownerName;
-            OfflinePlayer op = claim.getOwner();
-            Player ply = op.getPlayer();
-            if (ply != null) {
-                ownerName = PlainTextComponentSerializer.plainText().serializeOr(ply.displayName(), ply.getName());
-            } else {
-                ownerName = op.getName();
-                if (ownerName == null) ownerName = op.getUniqueId().toString();
-            }
-            marker.setDescription("Owner: " + ownerName);
         }
         return marker;
     }
