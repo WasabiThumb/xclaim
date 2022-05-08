@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -226,6 +227,12 @@ public class ChunkEditor {
             if (XClaim.mainConfig.getBoolean("stop-editing-on-leave", true)) {
                 stopEditing(ply);
             }
+        }
+
+        @EventHandler
+        public void onDeath(@NotNull PlayerDeathEvent event) {
+            Player ply = event.getPlayer();
+            stopEditing(ply);
         }
 
         @EventHandler
