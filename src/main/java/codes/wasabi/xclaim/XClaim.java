@@ -30,7 +30,7 @@ public final class XClaim extends JavaPlugin {
     public static CommandManager commandManager;
     public static File jarFile;
     public static boolean hasDynmap = false;
-    public static codes.wasabi.xclaim.dynmap.DynmapInterface dynmapInterface = null;
+    public static codes.wasabi.xclaim.api.dynmap.DynmapInterface dynmapInterface = null;
 
     @Override
     public void onEnable() {
@@ -48,7 +48,7 @@ public final class XClaim extends JavaPlugin {
                 try {
                     if (plugin instanceof org.dynmap.bukkit.DynmapPlugin dynmapPlugin) {
                         logger.log(Level.INFO, "Found Dynmap version " + dynmapPlugin.getDynmapVersion() + ", hooking...");
-                        dynmapInterface = new codes.wasabi.xclaim.dynmap.DynmapInterface(dynmapPlugin);
+                        dynmapInterface = new codes.wasabi.xclaim.api.dynmap.DynmapInterface(dynmapPlugin);
                         hasDynmap = true;
                     }
                 } catch (Exception e) {

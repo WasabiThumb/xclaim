@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.dynmap;
+package codes.wasabi.xclaim.api.dynmap;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
