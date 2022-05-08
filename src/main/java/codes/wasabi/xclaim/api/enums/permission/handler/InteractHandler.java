@@ -70,8 +70,7 @@ public class InteractHandler extends PermissionHandler {
         this(claim, Mode.ALL);
     }
 
-    private <T extends PlayerEvent & Cancellable> boolean flameCheck(@NotNull T event) {
-        if (mode != Mode.FLAMMABLE) return false;
+    private <T extends PlayerEvent & Cancellable> boolean itemCheck(@NotNull T event) {
         Player ply = event.getPlayer();
         ItemStack is;
         Location loc = ply.getLocation();
@@ -90,11 +89,15 @@ public class InteractHandler extends PermissionHandler {
             }
         }
         if (is == null) return false;
-        if (!getClaim().contains(loc)) return false;
         Material mat = is.getType();
-        if (mat.equals(Material.FLINT_AND_STEEL) || mat.equals(Material.FIRE_CHARGE)) {
-            event.setCancelled(true);
-            return true;
+        if (mode.equals(Mode.FLAMMABLE)) {
+            if (!getClaim().contains(loc)) return false;
+            if (mat.equals(Material.FLINT_AND_STEEL) || mat.equals(Material.FIRE_CHARGE)) {
+                event.setCancelled(true);
+                return true;
+            }
+        } else {
+            if (mat.equals(Material.WRITABLE_BOOK) || mat.equals(Material.WRITTEN_BOOK) || mat.equals(Material.KNOWLEDGE_BOOK)) return true;
         }
         return false;
     }
@@ -121,7 +124,7 @@ public class InteractHandler extends PermissionHandler {
             if (getClaim().hasPermission(ply, Permission.FIRE_USE)) return;
         }
         if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
-        if (flameCheck(event)) return;
+        if (itemCheck(event)) return;
         Location loc = event.getInteractionPoint();
         if (loc == null) {
             Block b = event.getClickedBlock();
@@ -144,7 +147,7 @@ public class InteractHandler extends PermissionHandler {
             if (getClaim().hasPermission(ply, Permission.FIRE_USE)) return;
         }
         if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
-        if (flameCheck(event)) return;
+        if (itemCheck(event)) return;
         if (test(event, event.getRightClicked().getLocation())) {
             stdError(ply);
         }
@@ -158,7 +161,7 @@ public class InteractHandler extends PermissionHandler {
             if (getClaim().hasPermission(ply, Permission.FIRE_USE)) return;
         }
         if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
-        if (flameCheck(event)) return;
+        if (itemCheck(event)) return;
         if (test(event, event.getClickedPosition().toLocation(event.getRightClicked().getWorld()))) {
             stdError(ply);
         }
@@ -171,7 +174,6 @@ public class InteractHandler extends PermissionHandler {
         HumanEntity ent = event.getPlayer();
         if (ent instanceof Player ply) {
             if (getClaim().hasPermission(ply, Permission.CHEST_OPEN)) return;
-            if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
             Inventory inv = event.getInventory();
             InventoryHolder holder = inv.getHolder();
             if (holder instanceof Container container) {
