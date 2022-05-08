@@ -1,62 +1,76 @@
 package codes.wasabi.xclaim.api.enums.permission.handler;
 
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.enums.EntityGroup;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Predicate;
 
 public class DamageHandler extends PermissionHandler {
 
-    public static final class All extends DamageHandler {
-        public All(@NotNull Claim claim) {
-            super(claim, (Entity e) -> true, Permission.ENTITY_DAMAGE);
-        }
-    }
-
-    public static final class Living extends DamageHandler {
-        public Living(@NotNull Claim claim) {
-            super(claim, (Entity e) -> e instanceof LivingEntity, Permission.LIVING_ENTITY_DAMAGE);
-        }
-    }
-
-    public static final class Mob extends DamageHandler {
-        public Mob(@NotNull Claim claim) {
-            super(claim, (Entity e) -> e instanceof org.bukkit.entity.Mob, Permission.MOB_DAMAGE);
-        }
-    }
-
     public static final class Friendly extends DamageHandler {
         public Friendly(@NotNull Claim claim) {
-            super(claim, (Entity e) -> e instanceof Animals, Permission.FRIENDLY_MOB_DAMAGE);
+            super(claim, EntityGroup.FRIENDLY, Permission.ENTITY_DAMAGE_FRIENDLY);
         }
     }
 
-    private final Predicate<Entity> filter;
+    public static final class Hostile extends DamageHandler {
+        public Hostile(@NotNull Claim claim) {
+            super(claim, EntityGroup.HOSTILE, Permission.ENTITY_DAMAGE_FRIENDLY);
+        }
+    }
+
+    public static final class Vehicle extends DamageHandler {
+        public Vehicle(@NotNull Claim claim) {
+            super(claim, EntityGroup.VEHICLE, Permission.ENTITY_DAMAGE_VEHICLE);
+        }
+    }
+
+    public static final class NonLiving extends DamageHandler {
+        public NonLiving(@NotNull Claim claim) {
+            super(claim, EntityGroup.NOT_ALIVE, Permission.ENTITY_DAMAGE_NL);
+        }
+    }
+
+    public static final class Misc extends DamageHandler {
+        public Misc(@NotNull Claim claim) {
+            super(claim, EntityGroup.MISC, Permission.ENTITY_DAMAGE_MISC);
+        }
+    }
+
+    private final EntityGroup eg;
     private final Permission permission;
-    private final boolean isDefault;
-    public DamageHandler(@NotNull Claim claim, @NotNull Predicate<Entity> filter, @NotNull Permission permission) {
+    public DamageHandler(@NotNull Claim claim, @NotNull EntityGroup eg, @NotNull Permission permission) {
         super(claim);
-        this.filter = filter;
+        this.eg = eg;
         this.permission = permission;
-        this.isDefault = permission == Permission.ENTITY_DAMAGE;
     }
 
     @EventHandler
     public void onDamage(@NotNull EntityDamageByEntityEvent event) {
+        Player ply = null;
+        boolean isPlayer = false;
         Entity damager = event.getDamager();
-        if (damager instanceof Player ply) {
-            if (getClaim().hasPermission(ply, permission)) return;
-            if (!isDefault) {
-                if (getClaim().hasPermission(ply, Permission.ENTITY_DAMAGE)) return;
+        if (damager instanceof Player p) {
+            ply = p;
+            isPlayer = true;
+        } else if (damager instanceof Projectile projectile) {
+            ProjectileSource ps = projectile.getShooter();
+            if (ps instanceof Player p) {
+                ply = p;
+                isPlayer = true;
             }
+        }
+        if (isPlayer) {
+            Claim c = getClaim();
+            if (c.hasPermission(ply, permission)) return;
             Entity victim = event.getEntity();
-            if (!filter.test(victim)) return;
-            if (!getClaim().contains(victim.getLocation())) return;
+            if (!eg.contains(victim)) return;
+            if (!c.contains(victim.getLocation())) return;
             event.setCancelled(true);
             stdError(ply);
         }

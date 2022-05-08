@@ -96,7 +96,8 @@ public class Claim {
         for (String key : sec.getKeys(false)) {
             Permission perm;
             try {
-                perm = Permission.valueOf(key);
+                perm = Permission.fromName(key);
+                if (perm == null) continue;
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Unknown permission \"" + key + "\"");
             }
@@ -128,7 +129,8 @@ public class Claim {
                 if (ob instanceof String str) {
                     Permission perm;
                     try {
-                        perm = Permission.valueOf(str);
+                        perm = Permission.fromName(str);
+                        if (perm == null) continue;
                     } catch (IllegalArgumentException e) {
                         throw new IllegalArgumentException("Unknown permission \"" + str + "\"");
                     }

@@ -4,6 +4,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.api.enums.permission.handler.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 
@@ -16,13 +17,37 @@ public enum Permission {
     ENT_PLACE("Place Entities", "Put down boats, minecarts, armor stands, etc.", TrustLevel.VETERANS, InteractHandler.Entities.class, (byte) 1),
     VEHICLE_PLACE("Place Vehicles", "Put down vehicles like minecarts", TrustLevel.VETERANS, InteractHandler.Vehicles.class, (byte) 2),
     FIRE_USE("Use Flammables", "Use flint & steel and fire charges", TrustLevel.TRUSTED, InteractHandler.Flammable.class, (byte) 1),
-    ENTITY_DAMAGE("Damage Entities", "Cause damage to entities like item frames, minecarts, and mobs", TrustLevel.VETERANS, DamageHandler.All.class),
-    LIVING_ENTITY_DAMAGE("Damage Living Entities", "Cause damage to entities that are deemed as \"living\" like mobs", TrustLevel.VETERANS, DamageHandler.Living.class, (byte) 1),
-    MOB_DAMAGE("Damage Mobs", "Cause damage to mobs", TrustLevel.VETERANS, DamageHandler.Mob.class, (byte) 2),
-    FRIENDLY_MOB_DAMAGE("Damage Friendly Mobs", "Cause damage to friendly mobs", TrustLevel.VETERANS, DamageHandler.Friendly.class, (byte) 3),
+    ENTITY_DAMAGE_FRIENDLY("Damage Friendly Entities", "Cause damage to things like cows, sheep, squid, etc", TrustLevel.VETERANS, DamageHandler.Friendly.class),
+    ENTITY_DAMAGE_HOSTILE("Damage Hostile Entities", "Cause damage to things like zombies, skeletons, slimes, etc", TrustLevel.VETERANS, DamageHandler.Hostile.class),
+    ENTITY_DAMAGE_VEHICLE("Damage Vehicles", "Cause damage to things like boats and minecarts", TrustLevel.VETERANS, DamageHandler.Vehicle.class),
+    ENTITY_DAMAGE_NL("Damage Non-Living Entities", "Cause damage to things like armor stands and decoations", TrustLevel.VETERANS, DamageHandler.NonLiving.class),
+    ENTITY_DAMAGE_MISC("Damage Miscellaneous  Entities", "Cause damage to entities that don't fall into any other group", TrustLevel.ALL, DamageHandler.Misc.class),
     ITEM_DROP("Drop Items", "Drop items", TrustLevel.ALL, DropHandler.class),
     MANAGE("Manage Claim", "Modify the claim settings", TrustLevel.NONE),
     DELETE("Remove Claim", "Remove the claim", TrustLevel.NONE);
+
+    /**
+     * Wraps #valueOf with legacy support
+     * @param name Name of the permission
+     * @return The permission, or null if that permission is no longer supported.
+     * @throws IllegalArgumentException No permission has existed with that name
+     */
+    public static @Nullable Permission fromName(@NotNull String name) throws IllegalArgumentException {
+        Permission p;
+        try {
+            p = valueOf(name);
+        } catch (IllegalArgumentException e) {
+            // check for legacy names
+            p = switch (name) {
+                case "ENTITY_DAMAGE" -> Permission.ENTITY_DAMAGE_NL;
+                case "MOB_DAMAGE" -> Permission.ENTITY_DAMAGE_HOSTILE;
+                case "FRIENDLY_MOB_DAMAGE" -> Permission.ENTITY_DAMAGE_FRIENDLY;
+                case "LIVING_ENTITY_DAMAGE" -> null;
+                default -> throw e;
+            };
+        }
+        return p;
+    }
 
     private final String printName;
     private final String description;
