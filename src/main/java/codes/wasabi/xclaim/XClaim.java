@@ -41,6 +41,24 @@ public final class XClaim extends JavaPlugin {
         logger.log(Level.INFO, "Loading general config");
         saveDefaultConfig();
         mainConfig = getConfig();
+        logger.log(Level.INFO, "Checking for Dynmap...");
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("dynmap");
+        if (plugin != null) {
+            if (plugin.isEnabled()) {
+                try {
+                    if (plugin instanceof org.dynmap.bukkit.DynmapPlugin dynmapPlugin) {
+                        logger.log(Level.INFO, "Found Dynmap version " + dynmapPlugin.getDynmapVersion() + ", hooking...");
+                        dynmapInterface = new codes.wasabi.xclaim.dynmap.DynmapInterface(dynmapPlugin);
+                        hasDynmap = true;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.log(Level.WARNING, "Check failed unexpectedly");
+                }
+            } else {
+                logger.log(Level.WARNING, "Dynmap appears to be installed, but not enabled.");
+            }
+        }
         logger.log(Level.INFO, "Loading trusted players");
         File dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, "Created data folder");
@@ -88,24 +106,6 @@ public final class XClaim extends JavaPlugin {
         commandManager.registerDefaults();
         logger.log(Level.INFO, "Starting movement routine");
         MovementRoutine.initialize();
-        logger.log(Level.INFO, "Checking for Dynmap...");
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("dynmap");
-        if (plugin != null) {
-            if (plugin.isEnabled()) {
-                try {
-                    if (plugin instanceof org.dynmap.bukkit.DynmapPlugin dynmapPlugin) {
-                        logger.log(Level.INFO, "Found Dynmap version " + dynmapPlugin.getDynmapVersion() + ", hooking...");
-                        dynmapInterface = new codes.wasabi.xclaim.dynmap.DynmapInterface(dynmapPlugin);
-                        hasDynmap = true;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.log(Level.WARNING, "Check failed unexpectedly");
-                }
-            } else {
-                logger.log(Level.WARNING, "Dynmap appears to be installed, but not enabled.");
-            }
-        }
         logger.log(Level.INFO, "Done");
     }
 
