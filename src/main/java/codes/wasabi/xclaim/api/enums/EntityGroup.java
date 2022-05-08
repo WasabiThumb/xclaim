@@ -59,33 +59,37 @@ public enum EntityGroup {
         return ret;
     }
 
-    private static final EnumSet<EntityType> miscTypes = EnumSet.of(
-            EntityType.AREA_EFFECT_CLOUD,
-            EntityType.ARROW,
-            EntityType.DRAGON_FIREBALL,
-            EntityType.DROPPED_ITEM,
-            EntityType.EGG,
-            EntityType.ENDER_CRYSTAL,
-            EntityType.ENDER_PEARL,
-            EntityType.ENDER_SIGNAL,
-            EntityType.EVOKER_FANGS,
-            EntityType.EXPERIENCE_ORB,
-            EntityType.FALLING_BLOCK,
-            EntityType.FIREBALL,
-            EntityType.FIREWORK,
-            EntityType.FISHING_HOOK,
-            EntityType.LIGHTNING,
-            EntityType.LLAMA_SPIT,
-            EntityType.MARKER,
-            EntityType.SMALL_FIREBALL,
-            EntityType.SNOWBALL,
-            EntityType.SPECTRAL_ARROW,
-            EntityType.SPLASH_POTION,
-            EntityType.THROWN_EXP_BOTTLE,
-            EntityType.TRIDENT,
-            EntityType.UNKNOWN
-    );
+    private static EnumSet<EntityType> miscTypes = null;
     private static boolean isMiscellaneous(@NotNull EntityType et) {
+        // idk why i need to do this but java dies if i dont
+        if (miscTypes == null) {
+            miscTypes = EnumSet.of(
+                    EntityType.AREA_EFFECT_CLOUD,
+                    EntityType.ARROW,
+                    EntityType.DRAGON_FIREBALL,
+                    EntityType.DROPPED_ITEM,
+                    EntityType.EGG,
+                    EntityType.ENDER_CRYSTAL,
+                    EntityType.ENDER_PEARL,
+                    EntityType.ENDER_SIGNAL,
+                    EntityType.EVOKER_FANGS,
+                    EntityType.EXPERIENCE_ORB,
+                    EntityType.FALLING_BLOCK,
+                    EntityType.FIREBALL,
+                    EntityType.FIREWORK,
+                    EntityType.FISHING_HOOK,
+                    EntityType.LIGHTNING,
+                    EntityType.LLAMA_SPIT,
+                    EntityType.MARKER,
+                    EntityType.SMALL_FIREBALL,
+                    EntityType.SNOWBALL,
+                    EntityType.SPECTRAL_ARROW,
+                    EntityType.SPLASH_POTION,
+                    EntityType.THROWN_EXP_BOTTLE,
+                    EntityType.TRIDENT,
+                    EntityType.UNKNOWN
+            );
+        }
         return miscTypes.contains(et);
     }
 
