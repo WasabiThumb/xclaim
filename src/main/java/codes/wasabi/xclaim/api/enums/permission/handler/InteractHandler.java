@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.api.enums.permission.handler;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,6 +25,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class InteractHandler extends PermissionHandler {
@@ -94,10 +96,17 @@ public class InteractHandler extends PermissionHandler {
             if (!getClaim().contains(loc)) return false;
             if (mat.equals(Material.FLINT_AND_STEEL) || mat.equals(Material.FIRE_CHARGE)) {
                 event.setCancelled(true);
+                stdError(ply);
                 return true;
             }
         } else {
-            if (mat.equals(Material.WRITABLE_BOOK) || mat.equals(Material.WRITTEN_BOOK) || mat.equals(Material.KNOWLEDGE_BOOK)) return true;
+            if (mat.equals(Material.WRITTEN_BOOK)) {
+                if (getClaim().contains(loc)) {
+                    event.setCancelled(true);
+                    ply.openBook(is);
+                }
+                return true;
+            }
         }
         return false;
     }
