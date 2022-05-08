@@ -14,6 +14,7 @@ import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -229,10 +230,20 @@ public class ChunkEditor {
             }
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onDeath(@NotNull PlayerDeathEvent event) {
             Player ply = event.getPlayer();
-            stopEditing(ply);
+            if (stopEditing(ply)) {
+                boolean keepInventory = false;
+                Boolean value = ply.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
+                if (value == null) value = ply.getWorld().getGameRuleDefault(GameRule.KEEP_INVENTORY);
+                if (value != null) keepInventory = value;
+                if (!keepInventory) {
+                    List<ItemStack> drops = event.getDrops();
+                    drops.clear();
+                    drops.addAll(Arrays.asList(ply.getInventory().getContents()));
+                }
+            }
         }
 
         @EventHandler
