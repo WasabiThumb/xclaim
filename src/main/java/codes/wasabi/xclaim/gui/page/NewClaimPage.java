@@ -1,7 +1,9 @@
 package codes.wasabi.xclaim.gui.page;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
+import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.util.DisplayItem;
@@ -124,6 +126,9 @@ public class NewClaimPage extends Page {
             );
             ply.playSound(ply.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
             getParent().close();
+            if (XClaim.mainConfig.getBoolean("enter-chunk-editor-on-create", true)) {
+                ChunkEditor.startEditing(ply, newClaim);
+            }
         } else if (slot == 15) {
             switchPage(new MainPage(getParent()));
         }

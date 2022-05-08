@@ -4,6 +4,7 @@ stop-editing-on-leave: true
 exempt-claim-owner-from-permission-rules: true
 enforce-adjacent-claim-chunks: true
 allow-diagonal-claim-chunks: true
+enter-chunk-editor-on-create: true
 limits:
   default:
      max-chunks: 20

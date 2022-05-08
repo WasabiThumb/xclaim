@@ -447,7 +447,8 @@ public class Claim {
      * @return If false, this claim was already canonical.
      */
     public boolean claim() {
-        for (Claim c : registry) {
+        // prevent ConcurrentModificationException
+        for (Claim c : new HashSet<>(registry)) {
             if (c == this) continue;
             if (c.name.equals(name)) {
                 c.unclaim();
