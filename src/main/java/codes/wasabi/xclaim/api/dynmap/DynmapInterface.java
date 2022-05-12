@@ -2,8 +2,9 @@ package codes.wasabi.xclaim.api.dynmap;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.dynmap.outline.ChunkBitmap;
+import codes.wasabi.xclaim.api.dynmap.outline.Point;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
-import codes.wasabi.xclaim.util.hull.Point;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -51,10 +52,19 @@ public class DynmapInterface {
         return new String(Base64.getEncoder().encode(claim.getName().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
     }
 
+    private @NotNull MarkerSet getMarkerSet() {
+        MarkerAPI api = dynmap.getMarkerAPI();
+        MarkerSet ms = api.getMarkerSet("claim_marker_set");
+        if (ms == null) {
+            ms = api.createMarkerSet("claim_marker_set", "Claims", null, false);
+        }
+        return ms;
+    }
+
     public @Nullable AreaMarker getMarker(@NotNull Claim claim) {
         World w = claim.getWorld();
         if (w == null) return null;
-        MarkerSet set = dynmap.getMarkerAPI().getMarkerSet(MarkerSet.DEFAULT);
+        MarkerSet set = getMarkerSet();
         String identifier = "claim_marker_" + getClaimIdentifier(claim);
         AreaMarker marker = set.findAreaMarker(identifier);
         if (marker == null) {
@@ -71,23 +81,29 @@ public class DynmapInterface {
         int minHeight = 0;
         World w = claim.getWorld();
         if (w != null) minHeight = w.getMinHeight();
-        List<Point> points = new ArrayList<>();
-        for (Chunk c : claim.getChunks()) {
-            Block cornerBlock = c.getBlock(0, minHeight, 0);
-            int cornerX = cornerBlock.getX();
-            int cornerZ = cornerBlock.getZ();
-            points.add(new Point(cornerX        , cornerZ        ));
-            points.add(new Point(cornerX + 16, cornerZ        ));
-            points.add(new Point(cornerX        , cornerZ + 16));
-            points.add(new Point(cornerX + 16, cornerZ + 16));
+        List<Point> points;
+        if (XClaim.mainConfig.getBoolean("dynmap-integration.use-old-outline-style", false)) {
+            points = new ArrayList<>();
+            for (Chunk c : claim.getChunks()) {
+                Block cornerBlock = c.getBlock(0, minHeight, 0);
+                int cornerX = cornerBlock.getX();
+                int cornerZ = cornerBlock.getZ();
+                points.add(new Point(cornerX, cornerZ));
+                points.add(new Point(cornerX + 16, cornerZ));
+                points.add(new Point(cornerX, cornerZ + 16));
+                points.add(new Point(cornerX + 16, cornerZ + 16));
+            }
+            points = ConvexHull.makeHull(points);
+        } else {
+            ChunkBitmap bmp = new ChunkBitmap(claim.getChunks());
+            points = bmp.traceBlocks();
         }
-        points = ConvexHull.makeHull(points);
         double[] xLocations = new double[points.size()];
         double[] zLocations = new double[points.size()];
         for (int i=0; i < points.size(); i++) {
             Point point = points.get(i);
-            xLocations[i] = point.x;
-            zLocations[i] = point.y;
+            xLocations[i] = point.x();
+            zLocations[i] = point.y();
         }
         marker.setCornerLocations(xLocations, zLocations);
     }

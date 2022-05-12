@@ -18,28 +18,20 @@ import org.jetbrains.annotations.Range;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import static codes.wasabi.xclaim.util.IntLongConverter.*;
+
 public class ImportCommand implements Command {
 
     private static class UUIDPlane {
 
         private final Map<Long, UUID> backingMap = new HashMap<>();
 
-        public long coordsToKey(int x, int z) {
-            return (((long) x) << 32) | (z & 0xFFFFFFFFL);
-        }
-
-        public int[] keyToCoords(long key) {
-            int x = (int) (key >> 32);
-            int z = (int) key;
-            return new int[]{ x, z };
-        }
-
         public void set(int x, int z, UUID uuid) {
-            backingMap.put(coordsToKey(x, z), uuid);
+            backingMap.put(intToLong(x, z), uuid);
         }
 
         public UUID get(int x, int z) {
-            return backingMap.get(coordsToKey(x, z));
+            return backingMap.get(intToLong(x, z));
         }
 
         public List<int[]> pullClump(long curKey) {
@@ -50,16 +42,16 @@ public class ImportCommand implements Command {
             queue.add(curKey);
             while (queue.size() > 0) {
                 long l = queue.remove(0);
-                int[] coords = keyToCoords(l);
+                int[] coords = longToInt(l);
                 int _x = coords[0];
                 int _z = coords[1];
                 if (Objects.equals(get(_x, _z), uuid)) {
                     backingMap.remove(l);
                     ret.add(new int[]{ _x, _z });
-                    long leftKey = coordsToKey(_x - 1, _z);
-                    long rightKey = coordsToKey(_x + 1, _z);
-                    long upKey = coordsToKey(_x, _z - 1);
-                    long downKey = coordsToKey(_x, _z + 1);
+                    long leftKey = intToLong(_x - 1, _z);
+                    long rightKey = intToLong(_x + 1, _z);
+                    long upKey = intToLong(_x, _z - 1);
+                    long downKey = intToLong(_x, _z + 1);
                     if (!queue.contains(leftKey)) queue.add(leftKey);
                     if (!queue.contains(rightKey)) queue.add(rightKey);
                     if (!queue.contains(upKey)) queue.add(upKey);

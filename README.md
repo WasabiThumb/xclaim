@@ -25,6 +25,8 @@ This process should be done without any players online. The server should have C
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-chunks | Sets the max chunks for a group. See Permissions for more info. | |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims | Sets the max claims for a group. See Permissions for more info. | |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.give-after | The time in seconds it takes for a player to play until they are automatically entered into this group. Values less than 0 signify "never". | -1 |
+| dynmap-integration.enabled | If true, XClaim will look for dynmap on startup and hook into it. Mild speedup if turned off. | true |
+| dynmap-integration.use-old-outline-style | If true, the dynmap will use the old convex hull outlines on claims. This is mainly for debugging, as the new outline system is experimental. | false |
 
 ### Permissions
 Don't worry, there aren't that many.
@@ -50,7 +52,4 @@ Don't worry, there aren't that many.
 | importclaims | Import claims from ClaimChunk |
 
 ### Roadmap
-* Improve Dynmap integration
-  * More accurate hulls
-  * Icons
 * Add more management commands
