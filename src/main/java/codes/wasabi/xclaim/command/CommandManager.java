@@ -169,6 +169,18 @@ public class CommandManager {
         }
     }
 
+    public void unregisterAll() {
+        for (String cmd : new HashSet<>(map.keySet())) {
+            Handler handler = map.remove(cmd);
+            if (handler != null) {
+                PluginCommand bukkitCmd = handler.bukkitCmd;
+                if (bukkitCmd == null) return;
+                bukkitCmd.setExecutor(null);
+                bukkitCmd.setTabCompleter(null);
+            }
+        }
+    }
+
     public void registerDefaults() {
         Reflections reflections = new Reflections("codes.wasabi.xclaim.command");
         Set<Class<? extends codes.wasabi.xclaim.command.Command>> set = reflections.getSubTypesOf(codes.wasabi.xclaim.command.Command.class);

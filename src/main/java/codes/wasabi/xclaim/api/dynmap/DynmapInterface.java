@@ -105,4 +105,9 @@ public class DynmapInterface {
         marker.setCornerLocations(xLocations, zLocations);
     }
 
+    public void cleanup() {
+        MarkerSet ms = getMarkerSet();
+        ms.deleteMarkerSet();
+    }
+
 }

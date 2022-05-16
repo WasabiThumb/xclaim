@@ -2,6 +2,7 @@ package codes.wasabi.xclaim;
 
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.MovementRoutine;
+import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import org.bukkit.Bukkit;
@@ -9,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -31,39 +31,53 @@ public final class XClaim extends JavaPlugin {
     public static File jarFile;
     public static boolean hasDynmap = false;
     public static codes.wasabi.xclaim.api.dynmap.DynmapInterface dynmapInterface = null;
+    public static File dataFolder;
 
     @Override
     public void onEnable() {
         instance = this;
         logger = getLogger();
+        dataFolder = getDataFolder();
+        if (dataFolder.mkdirs()) logger.log(Level.INFO, "Created data folder");
+        locateJarFile();
+        loadGeneralConfig();
+        loadDynmap();
+        loadTrustedPlayers();
+        loadClaims();
+        startServices();
+        logger.log(Level.INFO, "Done");
+    }
+
+    @Override
+    public void onDisable() {
+        saveTrustedPlayers();
+        saveClaims();
+        stopServices();
+        logger.log(Level.INFO, "Done");
+    }
+
+    /* BEGIN STARTUP TASKS */
+    private void locateJarFile() {
         logger.log(Level.INFO, "Locating JAR file");
         jarFile = new File(XClaim.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+    }
+
+    private void loadGeneralConfig() {
         logger.log(Level.INFO, "Loading general config");
         saveDefaultConfig();
         mainConfig = getConfig();
+    }
+
+    private void loadDynmap() {
         if (mainConfig.getBoolean("dynmap-integration.enabled", true)) {
             logger.log(Level.INFO, "Checking for Dynmap...");
-            Plugin plugin = Bukkit.getPluginManager().getPlugin("dynmap");
-            if (plugin != null) {
-                if (plugin.isEnabled()) {
-                    try {
-                        if (plugin instanceof org.dynmap.bukkit.DynmapPlugin dynmapPlugin) {
-                            logger.log(Level.INFO, "Found Dynmap version " + dynmapPlugin.getDynmapVersion() + ", hooking...");
-                            dynmapInterface = new codes.wasabi.xclaim.api.dynmap.DynmapInterface(dynmapPlugin);
-                            hasDynmap = true;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        logger.log(Level.WARNING, "Check failed unexpectedly");
-                    }
-                } else {
-                    logger.log(Level.WARNING, "Dynmap appears to be installed, but not enabled.");
-                }
-            }
+            dynmapInterface = DynmapInterfaceFactory.createElseNull();
+            hasDynmap = dynmapInterface != null;
         }
+    }
+
+    private void loadTrustedPlayers() {
         logger.log(Level.INFO, "Loading trusted players");
-        File dataFolder = getDataFolder();
-        if (dataFolder.mkdirs()) logger.log(Level.INFO, "Created data folder");
         trustFile = new File(dataFolder, "trust.yml");
         trustConfig = new YamlConfiguration();
         try {
@@ -73,6 +87,9 @@ public final class XClaim extends JavaPlugin {
             logger.log(Level.WARNING, "An error occurred while loading trusted players. See details below.");
             e.printStackTrace();
         }
+    }
+
+    private void loadClaims() {
         logger.log(Level.INFO, "Loading claims");
         claimsFile = new File(dataFolder, "claims.yml");
         claimsConfig = new YamlConfiguration();
@@ -100,6 +117,9 @@ public final class XClaim extends JavaPlugin {
             }
             claim.claim();
         }
+    }
+
+    private void startServices() {
         logger.log(Level.INFO, "Initializing chunk editor");
         ChunkEditor.initialize();
         logger.log(Level.INFO, "Loading command manager");
@@ -108,12 +128,11 @@ public final class XClaim extends JavaPlugin {
         commandManager.registerDefaults();
         logger.log(Level.INFO, "Starting movement routine");
         MovementRoutine.initialize();
-        logger.log(Level.INFO, "Done");
     }
+    /* END STARTUP TASKS */
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    /* BEGIN SHUTDOWN TASKS */
+    private void saveTrustedPlayers() {
         logger.log(Level.INFO, "Saving trusted players");
         try {
             if (!trustFile.exists()) {
@@ -126,6 +145,9 @@ public final class XClaim extends JavaPlugin {
             logger.log(Level.WARNING, "An error occurred while saving trusted players. See details below.");
             e.printStackTrace();
         }
+    }
+
+    private void saveClaims() {
         logger.log(Level.INFO, "Saving claims");
         Set<String> removeKeys = claimsConfig.getKeys(false);
         for (Claim claim : Claim.getAll()) {
@@ -148,10 +170,25 @@ public final class XClaim extends JavaPlugin {
             logger.log(Level.WARNING, "An error occurred while saving claims. See details below.");
             e.printStackTrace();
         }
+    }
+
+    private void stopServices() {
+        logger.log(Level.INFO, "Stopping services");
         if (mainConfig.getBoolean("stop-editing-on-shutdown", false)) {
             for (Player ply : Bukkit.getOnlinePlayers()) ChunkEditor.stopEditing(ply);
         }
-        logger.log(Level.INFO, "Done");
+        commandManager.unregisterAll();
+        MovementRoutine.cleanup();
+        unloadDynmap();
     }
+
+    private void unloadDynmap() {
+        if (hasDynmap) {
+            dynmapInterface.cleanup();
+        }
+        hasDynmap = false;
+        dynmapInterface = null;
+    }
+    /* END SHUTDOWN TASKS */
 
 }

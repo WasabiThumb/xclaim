@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,13 @@ public class MovementRoutine implements Listener {
         instance = new MovementRoutine();
         Bukkit.getPluginManager().registerEvents(instance, XClaim.instance);
         initialized = true;
+    }
+
+    public static void cleanup() {
+        if (!initialized) return;
+        HandlerList.unregisterAll(instance);
+        instance = null;
+        initialized = false;
     }
 
     private MovementRoutine() { }
