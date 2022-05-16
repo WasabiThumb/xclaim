@@ -45,6 +45,7 @@ Don't worry, there aren't that many.
 | xclaim.admin | Allows you to modify/delete any claim |
 | xclaim.import | Allows you to import claims from the ClaimChunk plugin |
 | xclaim.update | Allows you to use the auto-updater |
+| xclaim.restart | Allows you to restart xclaim |
 | xclaim.group.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦 | If a player has this permission, they are a part of this group. Players will inherit the maximum values from each group they are in. If the group is named "default", all players are in this group implicitly. |
 
 ## Commands
@@ -57,6 +58,7 @@ Don't worry, there aren't that many.
 | xclaim update | Scans for new versions of XClaim and, if desired, runs the auto-updater |
 | xclaim chunks \[claim_name] | Opens the chunk editor for the specified claim or, if absent, the current residing claim |
 | xclaim current | Gets info about the current claim you are in |
+| xclaim restart | Restart XClaim without restarting the server (experimental) |
 | claimgui | Old command equivalent to /xclaim or /xclaim gui. May be removed in the future. |
 | importclaims | Import claims from ClaimChunk |
 

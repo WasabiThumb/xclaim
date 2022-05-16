@@ -22,6 +22,9 @@ permissions:
   xclaim.update:
     description: Allows you to update xclaim with /xclaim update
     default: false
+  xclaim.restart:
+    description: Allows you to restart xclaim with /xclaim restart
+    default: false
 commands:
   xclaim:
     description: XClaim main command

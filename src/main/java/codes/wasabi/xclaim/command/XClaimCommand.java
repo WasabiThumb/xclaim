@@ -23,6 +23,7 @@ public class XClaimCommand implements Command {
                 new InfoCommand(),
                 new CurrentCommand(),
                 new UpdateCommand(),
+                new RestartCommand(),
                 guiCommmand,
                 new ChunksCommand()
         );
