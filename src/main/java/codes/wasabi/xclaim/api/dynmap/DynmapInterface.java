@@ -4,6 +4,7 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.dynmap.outline.ChunkBitmap;
 import codes.wasabi.xclaim.api.dynmap.outline.Point;
+import codes.wasabi.xclaim.util.ColorUtil;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
@@ -38,11 +39,7 @@ public class DynmapInterface {
         UUID uuid = op.getUniqueId();
         Color color = colorMap.get(uuid);
         if (color == null) {
-            Random random = new Random(op.getUniqueId().hashCode());
-            int red = random.nextInt(256);
-            int green = random.nextInt(256);
-            int blue = random.nextInt(256);
-            color = new Color(red, green, blue);
+            color = ColorUtil.uuidToColor(uuid);
             colorMap.put(uuid, color);
         }
         return color;
@@ -71,8 +68,8 @@ public class DynmapInterface {
             marker = set.createAreaMarker(identifier, claim.getName(), false, w.getName(), new double[]{ 0, 0 }, new double[]{ 0, 0 }, false);
             Color color = getClaimColor(claim);
             int rgb = color.getRGB();
-            marker.setFillStyle(0.5d, rgb);
-            marker.setLineStyle(3, 0.8d, rgb);
+            marker.setFillStyle(0.4d, rgb);
+            marker.setLineStyle(3, 0.6d, rgb);
         }
         return marker;
     }
