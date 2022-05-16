@@ -100,6 +100,7 @@ public final class AutoUpdater {
                         }
                     }
                     if (!XClaim.jarFile.delete()) throw new IOException("Failed to delete existing jar file!");
+                    XClaim.jarFile = output;
                     updated = true;
                     return null;
                 });

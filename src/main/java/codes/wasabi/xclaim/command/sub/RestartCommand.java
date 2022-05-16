@@ -14,14 +14,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.SimplePluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RestartCommand implements Command {
 
@@ -70,35 +71,37 @@ public class RestartCommand implements Command {
         if (confirmed) {
             PluginManager pm = Bukkit.getPluginManager();
             sender.sendMessage(Component.text("Disabling XClaim...").color(NamedTextColor.GREEN));
-            AtomicBoolean awaitEnabled = new AtomicBoolean(false);
-            Executors.newSingleThreadExecutor().execute(() -> {
-                boolean waiting = true;
-                while (waiting) {
-                    Plugin plugin = pm.getPlugin("XClaim");
-                    if (plugin != null) {
-                        if (awaitEnabled.get()) {
-                            if (plugin.isEnabled()) {
-                                sender.sendMessage(Component.text("Enabled XClaim version " + plugin.getDescription().getVersion()).color(NamedTextColor.GOLD));
-                                break;
-                            }
-                        } else {
-                            if (!plugin.isEnabled()) {
-                                sender.sendMessage(Component.text("Enabling XClaim...").color(NamedTextColor.GREEN));
-                                pm.enablePlugin(plugin);
-                                awaitEnabled.set(true);
-                            }
-                        }
-                    }
-                    try {
-                        TimeUnit.SECONDS.sleep(1L);
-                    } catch (InterruptedException e) {
-                        sender.sendMessage(Component.text("Restart stopped abruptly! Is the server shutting down?").color(NamedTextColor.RED));
-                        waiting = false;
-                    }
-                }
-            });
+            File jarFile = XClaim.jarFile;
             HandlerList.unregisterAll(XClaim.instance);
             pm.disablePlugin(XClaim.instance);
+            try {
+                if (pm instanceof SimplePluginManager spm) {
+                    Class<? extends SimplePluginManager> clazz = spm.getClass();
+                    Field field = clazz.getDeclaredField("plugins");
+                    field.setAccessible(true);
+                    List<?> list = (List<?>) field.get(spm);
+                    list.remove(XClaim.instance);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                sender.sendMessage(Component.text("Failed to remove XClaim from plugin manager. Continuing...").color(NamedTextColor.YELLOW));
+            }
+            sender.sendMessage(Component.text("Enabling XClaim...").color(NamedTextColor.GREEN));
+            Plugin plugin;
+            try {
+                plugin = Objects.requireNonNull(pm.loadPlugin(jarFile));
+            } catch (Exception e) {
+                e.printStackTrace();
+                sender.sendMessage(Component.text("Failed to load XClaim").color(NamedTextColor.RED));
+                return;
+            }
+            try {
+                pm.enablePlugin(plugin);
+            } catch (Exception e) {
+                sender.sendMessage(Component.text("Failed to enable XClaim").color(NamedTextColor.RED));
+                return;
+            }
+            sender.sendMessage(Component.text("Enabled XClaim version " + plugin.getDescription().getVersion()).color(NamedTextColor.GOLD));
         } else {
             boolean isPlayer = (sender instanceof Player);
             sender.sendMessage(Component.empty()

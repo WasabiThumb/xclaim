@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.util.AutoUpdater;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +97,24 @@ public class UpdateCommand implements Command {
                     e.printStackTrace();
                     sender.sendMessage(Component.text("* Failed to update. See console for more details.").color(NamedTextColor.RED));
                 }
-                sender.sendMessage(Component.text("* Updated successfully! Changes will reflect on next restart. Restarting soon is recommended to avoid any unpredictable bugs").color(NamedTextColor.GREEN));
+                sender.sendMessage(Component.text("* Updated successfully! Changes will reflect on next restart. Restarting soon is recommended to avoid any unpredictable bugs.").color(NamedTextColor.GREEN));
+                if (sender instanceof Player) {
+                    sender.sendMessage(Component.empty()
+                            .append(Component.text("NEW: ").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
+                            .append(Component.text("Click ").color(NamedTextColor.YELLOW))
+                            .append(Component.text("here").color(NamedTextColor.GOLD).decorate(TextDecoration.UNDERLINED).clickEvent(ClickEvent.runCommand("/xc restart yes")))
+                            .append(Component.text(" to restart XClaim without restarting the server ").color(NamedTextColor.YELLOW))
+                            .append(Component.text("(EXPERIMENTAL)").color(NamedTextColor.DARK_RED))
+                    );
+                } else {
+                    sender.sendMessage(Component.empty()
+                            .append(Component.text("NEW: ").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
+                            .append(Component.text("Run ").color(NamedTextColor.YELLOW))
+                            .append(Component.text("/xclaim restart yes").color(NamedTextColor.GOLD))
+                            .append(Component.text(" to restart XClaim without restarting the server ").color(NamedTextColor.YELLOW))
+                            .append(Component.text("(EXPERIMENTAL)").color(NamedTextColor.DARK_RED))
+                    );
+                }
             } else {
                 AutoUpdater.UpdateOption opt;
                 try {
