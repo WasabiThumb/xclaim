@@ -14,10 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InaccessibleObjectException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -173,14 +170,39 @@ public class CommandManager {
         }
     }
 
+    // Remember, when you see this, that's when you know jank is around the corner!
+    @SuppressWarnings("unchecked")
     private void unregister(Collection<Command> commands) {
+        // This could easily be cleaned up 500x if Spigot added a simple method for exposing the command map
         try {
             Server server = Bukkit.getServer();
             Class<? extends Server> clazz = server.getClass();
-            Field f = clazz.getDeclaredField("commandMap");
+            Field f = null;
+            try {
+                f = clazz.getDeclaredField("commandMap");
+            } catch (NoSuchFieldException e) {
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (CommandMap.class.isAssignableFrom(field.getDeclaringClass())) {
+                        f = field;
+                        break;
+                    }
+                }
+            }
+            Objects.requireNonNull(f);
             f.setAccessible(true);
             CommandMap cm = (CommandMap) f.get(server);
-            Map<String, Command> known = cm.getKnownCommands();
+            Class<? extends CommandMap> clazz1 = cm.getClass();
+            Map<String, Command> known;
+            try {
+                // I hope I get fired for this trick...
+                // Oh wait, I'm not getting paid ;__;
+                Method m = clazz1.getMethod("getKnownCommands");
+                known = (Map<String, Command>) m.invoke(cm);
+            } catch (ReflectiveOperationException | NullPointerException | SecurityException | ClassCastException e) {
+                Field f1 = clazz1.getField("knownCommands");
+                f1.setAccessible(true);
+                known = (Map<String, Command>) f1.get(cm);
+            }
             for (Map.Entry<String, Command> entry : new HashSet<>(known.entrySet())) {
                 String key = entry.getKey();
                 Command value = entry.getValue();
