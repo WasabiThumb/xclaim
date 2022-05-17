@@ -5,6 +5,8 @@ import codes.wasabi.xclaim.command.argument.Argument;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -13,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -169,7 +173,31 @@ public class CommandManager {
         }
     }
 
+    private void unregister(Collection<Command> commands) {
+        try {
+            Server server = Bukkit.getServer();
+            Class<? extends Server> clazz = server.getClass();
+            Field f = clazz.getDeclaredField("commandMap");
+            f.setAccessible(true);
+            CommandMap cm = (CommandMap) f.get(server);
+            Map<String, Command> known = cm.getKnownCommands();
+            for (Map.Entry<String, Command> entry : new HashSet<>(known.entrySet())) {
+                String key = entry.getKey();
+                Command value = entry.getValue();
+                for (Command cmd : commands) {
+                    if (Objects.equals(cmd, value)) {
+                        known.remove(key);
+                        break;
+                    }
+                }
+            }
+        } catch (InaccessibleObjectException | NoSuchFieldException | IllegalAccessException | SecurityException | NullPointerException | ClassCastException | ExceptionInInitializerError e) {
+            e.printStackTrace();
+        }
+    }
+
     public void unregisterAll() {
+        List<Command> commands = new ArrayList<>();
         for (String cmd : new HashSet<>(map.keySet())) {
             Handler handler = map.remove(cmd);
             if (handler != null) {
@@ -177,8 +205,10 @@ public class CommandManager {
                 if (bukkitCmd == null) return;
                 bukkitCmd.setExecutor(null);
                 bukkitCmd.setTabCompleter(null);
+                commands.add(bukkitCmd);
             }
         }
+        unregister(commands);
     }
 
     public void registerDefaults() {
