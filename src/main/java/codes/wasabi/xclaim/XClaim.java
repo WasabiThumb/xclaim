@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.gui.ChunkEditor;
+import codes.wasabi.xclaim.gui.GUIHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -179,6 +180,7 @@ public final class XClaim extends JavaPlugin {
         }
         commandManager.unregisterAll();
         MovementRoutine.cleanup();
+        GUIHandler.closeAll();
         unloadDynmap();
     }
 

@@ -23,8 +23,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class GUIHandler implements InventoryHolder, Listener {
+
+    private static final Set<GUIHandler> openHandlers = new CopyOnWriteArraySet<>();
+
+    public static void closeAll() {
+        for (GUIHandler handler : openHandlers) {
+            handler.close();
+        }
+    }
 
     private final Player target;
     private final Inventory inventory;
@@ -38,6 +48,7 @@ public class GUIHandler implements InventoryHolder, Listener {
         switchPage(new MainPage(this));
         target.openInventory(inventory);
         Bukkit.getPluginManager().registerEvents(this, XClaim.instance);
+        openHandlers.add(this);
     }
 
     public boolean getShouldTick() {
@@ -98,6 +109,7 @@ public class GUIHandler implements InventoryHolder, Listener {
             if (tick != null) tick.cancel();
         }
         if (this.page != null) this.page.onExit();
+        openHandlers.remove(this);
     }
 
     @Override
