@@ -32,14 +32,18 @@ public class ChoiceType extends Type<String> {
         int len = choices.size();
         if (len == 0) return "Nothing";
         StringBuilder sb = new StringBuilder("Choice of ");
-        Iterator<String> iter = choices.iterator();
-        for (int i=0; i < len; i++) {
-            sb.append(iter.next());
-            if ((i + 1) < len) {
-                if ((i + 2) == len) {
-                    sb.append(" and ");
-                } else {
-                    sb.append(", ");
+        if (choices.size() > 5) {
+            sb.append("many");
+        } else {
+            Iterator<String> iter = choices.iterator();
+            for (int i = 0; i < len; i++) {
+                sb.append(iter.next());
+                if ((i + 1) < len) {
+                    if ((i + 2) == len) {
+                        sb.append(" or ");
+                    } else {
+                        sb.append(", ");
+                    }
                 }
             }
         }

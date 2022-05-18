@@ -2,9 +2,13 @@ package codes.wasabi.xclaim.command.sub;
 
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
-import codes.wasabi.xclaim.command.argument.type.IntType;
+import codes.wasabi.xclaim.command.argument.type.ChoiceType;
+import codes.wasabi.xclaim.command.argument.type.ComboType;
+import codes.wasabi.xclaim.command.argument.type.RangeType;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -39,15 +43,21 @@ public class HelpCommand implements Command {
 
     @Override
     public @NotNull String getDescription() {
-        return "Provides a list of possible commands";
+        return "Provides a list of possible commands or detailed info for a specific command";
     }
 
-    private final Argument[] args = new Argument[] {
-            new Argument(new IntType(), "Page number", "The page of help to view (starts at 1)")
-    };
     @Override
     public @NotNull Argument @NotNull [] getArguments() {
-        return args;
+        return new Argument[] {
+                new Argument(
+                        new ComboType(
+                                new RangeType(1, (int) Math.floor(Math.max(commands.size() - 1, 0) / 10d) + 1),
+                                new ChoiceType(commands.stream().map(Command::getName).toArray(String[]::new))
+                        ),
+                        "Page number or command name",
+                        "The page of help to view, or the name of the command to view detailed information about"
+                )
+        };
     }
 
     @Override
@@ -64,8 +74,51 @@ public class HelpCommand implements Command {
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
         int pageNum = 1;
         if (arguments.length > 0) {
-            Integer arg = (Integer) arguments[0];
-            pageNum = Objects.requireNonNullElse(arg, pageNum);
+            Object arg = arguments[0];
+            if (arg instanceof Integer num){
+                pageNum = Objects.requireNonNullElse(num, pageNum);
+            } else if (arg instanceof String str) {
+                Optional<Command> opt = commands.stream().filter((Command c) -> c.getName().equalsIgnoreCase(str)).findFirst();
+                if (opt.isEmpty()) {
+                    sender.sendMessage(Component.text("* Can't find that command").color(NamedTextColor.RED));
+                } else {
+                    Command com = opt.get();
+                    int numRequired = com.getNumRequiredArguments();
+                    Argument[] args = com.getArguments();
+                    StringBuilder argNames = new StringBuilder();
+                    Component argDefs = Component.empty();
+                    for (int i=0; i < args.length; i++) {
+                        boolean required = i < numRequired;
+                        Argument _a = args[i];
+                        argNames
+                                .append(" ")
+                                .append(required ? '<' : '[')
+                                .append(_a.name().toLowerCase(Locale.ROOT))
+                                .append(required ? '>' : ']');
+                        if (i > 0) {
+                            argDefs = argDefs.append(Component.newline()).append(Component.newline());
+                        }
+                        argDefs = argDefs
+                                .append(Component.text(_a.name().toLowerCase(Locale.ROOT) + " ").color(NamedTextColor.LIGHT_PURPLE))
+                                .append(Component.text("(" + _a.type().getTypeName().toLowerCase(Locale.ROOT) + ")").color(NamedTextColor.DARK_PURPLE))
+                                .append(Component.newline())
+                                .append(Component.text(_a.description()).color(NamedTextColor.DARK_AQUA));
+                    }
+                    String exec = "/xclaim " + com.getName() + argNames;
+                    Component component = Component.empty()
+                            .append(Component.text(exec).color(NamedTextColor.GOLD).decorate(TextDecoration.UNDERLINED).clickEvent(ClickEvent.suggestCommand(exec)))
+                            .append(Component.newline())
+                            .append(Component.text(com.getDescription()).color(NamedTextColor.YELLOW))
+                            .append(Component.newline());
+                    if (args.length > 0) {
+                        component = component.append(Component.newline()).append(argDefs);
+                    } else {
+                        component = component.append(Component.text("No arguments").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC));
+                    }
+                    sender.sendMessage(component);
+                }
+                return;
+            }
         }
         int maxPage = (int) Math.floor(Math.max(commands.size() - 1, 0) / 10d) + 1;
         pageNum = Math.max(Math.min(pageNum, maxPage), 1);
