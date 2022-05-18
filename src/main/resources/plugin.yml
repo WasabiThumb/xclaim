@@ -31,7 +31,7 @@ permissions:
 commands:
   xclaim:
     description: XClaim main command
-    aliases: [ xc, claimgui, claims, cg ]
+    aliases: [ xc ]
   importclaims:
     description: Safely imports claims from the ClaimChunk plugin
     permission: xclaim.import

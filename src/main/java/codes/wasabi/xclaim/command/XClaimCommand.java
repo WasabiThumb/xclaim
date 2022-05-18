@@ -2,8 +2,6 @@ package codes.wasabi.xclaim.command;
 
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.sub.*;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,9 +59,6 @@ public class XClaimCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull Object @NotNull ... arguments) throws Exception {
-        if (alias.equalsIgnoreCase("claimgui") || alias.equalsIgnoreCase("claims") || alias.equalsIgnoreCase("cg")) {
-            sender.sendMessage(Component.text("Warning: The /" + alias + " command is being replaced with /xclaim (alias: /xc) or /xclaim gui. This command may be deleted in a future update.").color(NamedTextColor.YELLOW));
-        }
         guiCommmand.execute(sender, alias, arguments);
     }
 
