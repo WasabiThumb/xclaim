@@ -146,9 +146,10 @@ public class Claim {
 
     private String name;
     private final Set<Chunk> chunks;
-    private final XCPlayer owner;
+    private XCPlayer owner;
     private final Map<Permission, TrustLevel> globalPerms;
     private final Map<UUID, EnumSet<Permission>> playerPerms;
+    private final List<java.util.function.Consumer<Claim>> ownerChangeCallbacks = new ArrayList<>();
     private BoundingBox outerBounds;
     private boolean manageHandlers = false;
 
@@ -217,6 +218,15 @@ public class Claim {
 
     public XCPlayer getOwner() {
         return owner;
+    }
+
+    public void setOwner(@NotNull OfflinePlayer op) {
+        this.owner = XCPlayer.of(op);
+        ownerChangeCallbacks.forEach((java.util.function.Consumer<Claim> consumer) -> consumer.accept(this));
+    }
+
+    public void onOwnerChanged(@NotNull java.util.function.Consumer<Claim> callback) {
+        ownerChangeCallbacks.add(callback);
     }
 
     public @NotNull @UnmodifiableView Set<Chunk> getChunks() {
@@ -475,6 +485,7 @@ public class Claim {
         manageHandlers = false;
         if (registry.remove(this)) {
             removeHandlers();
+            ownerChangeCallbacks.clear();
             if (XClaim.hasDynmap) {
                 org.dynmap.markers.AreaMarker marker = XClaim.dynmapInterface.getMarker(this);
                 if (marker != null) marker.deleteMarker();

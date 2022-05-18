@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Color;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class DynmapInterface {
@@ -66,10 +67,15 @@ public class DynmapInterface {
         AreaMarker marker = set.findAreaMarker(identifier);
         if (marker == null) {
             marker = set.createAreaMarker(identifier, claim.getName(), false, w.getName(), new double[]{ 0, 0 }, new double[]{ 0, 0 }, false);
-            Color color = getClaimColor(claim);
-            int rgb = color.getRGB();
-            marker.setFillStyle(0.4d, rgb);
-            marker.setLineStyle(3, 0.6d, rgb);
+            AreaMarker finalMarker = marker;
+            Consumer<Claim> updateColor = ((Claim c) -> {
+                Color color = getClaimColor(c);
+                int rgb = color.getRGB();
+                finalMarker.setFillStyle(0.4d, rgb);
+                finalMarker.setLineStyle(3, 0.6d, rgb);
+            });
+            updateColor.accept(claim);
+            claim.onOwnerChanged(updateColor);
         }
         return marker;
     }
