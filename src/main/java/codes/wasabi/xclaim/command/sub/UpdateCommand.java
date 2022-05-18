@@ -51,6 +51,10 @@ public class UpdateCommand implements Command {
     private final Map<UUID, AutoUpdater.UpdateOption> map = new HashMap<>();
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) {
+        if (!(sender.hasPermission("xclaim.update") || sender.isOp())) {
+            sender.sendMessage(Component.text("* You don't have permission to run this command!").color(NamedTextColor.RED));
+            return;
+        }
         Executors.newSingleThreadExecutor().execute(() -> {
             boolean console = true;
             boolean permitted = true;

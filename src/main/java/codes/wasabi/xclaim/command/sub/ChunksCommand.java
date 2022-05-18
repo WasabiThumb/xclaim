@@ -4,7 +4,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
-import codes.wasabi.xclaim.command.argument.type.StringType;
+import codes.wasabi.xclaim.command.argument.type.StandardTypes;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -30,7 +30,7 @@ public class ChunksCommand implements Command {
     }
 
     private final Argument[] args = new Argument[] {
-            new Argument(new StringType(), "Claim name", "Name of the claim to edit. If absent, the current residing claim is assumed.")
+            new Argument(StandardTypes.STRING, "Claim name", "Name of the claim to edit. If absent, the current residing claim is assumed.")
     };
     @Override
     public @NotNull Argument @NotNull [] getArguments() {

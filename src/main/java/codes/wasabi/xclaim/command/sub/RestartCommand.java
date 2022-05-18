@@ -61,6 +61,10 @@ public class RestartCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @Nullable Object @NotNull ... arguments) throws Exception {
+        if (!(sender.hasPermission("xclaim.restart") || sender.isOp())) {
+            sender.sendMessage(Component.text("* You don't have permission to run this command!").color(NamedTextColor.RED));
+            return;
+        }
         boolean confirmed = false;
         if (arguments.length > 0) {
             String yesno = (String) arguments[0];

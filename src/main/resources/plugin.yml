@@ -25,6 +25,9 @@ permissions:
   xclaim.restart:
     description: Allows you to restart xclaim with /xclaim restart
     default: false
+  xclaim.clear:
+    description: Allows you to clear other players' claims with /xclaim clear
+    default: false
 commands:
   xclaim:
     description: XClaim main command

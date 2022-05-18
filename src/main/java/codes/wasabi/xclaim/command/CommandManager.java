@@ -157,6 +157,7 @@ public class CommandManager {
         }
         bukkitCmd.setExecutor(handler);
         bukkitCmd.setTabCompleter(handler);
+        bukkitCmd.setDescription(command.getDescription());
         map.put(name, new Handler(command));
     }
 

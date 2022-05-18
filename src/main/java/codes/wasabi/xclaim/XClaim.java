@@ -4,6 +4,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
+import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import org.bukkit.Bukkit;
@@ -124,6 +125,7 @@ public final class XClaim extends JavaPlugin {
         logger.log(Level.INFO, "Initializing chunk editor");
         ChunkEditor.initialize();
         logger.log(Level.INFO, "Loading command manager");
+        OfflinePlayerType.initializeListener();
         commandManager = new CommandManager();
         logger.log(Level.INFO, "Registering default commands");
         commandManager.registerDefaults();
@@ -179,6 +181,7 @@ public final class XClaim extends JavaPlugin {
             for (Player ply : Bukkit.getOnlinePlayers()) ChunkEditor.stopEditing(ply);
         }
         commandManager.unregisterAll();
+        OfflinePlayerType.clearListener();
         MovementRoutine.cleanup();
         GUIHandler.closeAll();
         unloadDynmap();

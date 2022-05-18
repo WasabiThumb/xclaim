@@ -18,7 +18,7 @@ public class PlayerType extends Type<Player> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Player";
+        return "Online Player";
     }
 
     @Override
