@@ -70,7 +70,9 @@ public class DynmapInterface {
             AreaMarker finalMarker = marker;
             Consumer<Claim> updateColor = ((Claim c) -> {
                 Color color = getClaimColor(c);
-                int rgb = color.getRGB();
+                int rgb = (color.getRed() << 16)
+                        | (color.getGreen() << 8)
+                        | color.getBlue();
                 finalMarker.setFillStyle(0.4d, rgb);
                 finalMarker.setLineStyle(3, 0.6d, rgb);
             });
