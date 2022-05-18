@@ -61,6 +61,7 @@ Don't worry, there aren't that many.
 | xclaim current | Gets info about the current claim you are in |
 | xclaim restart | Restart XClaim without restarting the server (experimental) |
 | xclaim clear | Clear all claims from a player |
+| xclaim list | Lists all claims a player owns |
 | claimgui | Old command equivalent to /xclaim or /xclaim gui. May be removed in the future. |
 | importclaims | Import claims from ClaimChunk |
 

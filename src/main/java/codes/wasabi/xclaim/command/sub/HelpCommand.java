@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 
 public class HelpCommand implements Command {
 
+    private int commandsPerPage = 8;
+    private double d_commandsPerPage = commandsPerPage;
+
     private Set<Command> commands = new LinkedHashSet<>();
 
     public void setCommands(@NotNull Collection<Command> commands) {
@@ -51,7 +54,7 @@ public class HelpCommand implements Command {
         return new Argument[] {
                 new Argument(
                         new ComboType(
-                                new RangeType(1, (int) Math.floor(Math.max(commands.size() - 1, 0) / 10d) + 1),
+                                new RangeType(1, (int) Math.floor(Math.max(commands.size() - 1, 0) / d_commandsPerPage) + 1),
                                 new ChoiceType(commands.stream().map(Command::getName).toArray(String[]::new))
                         ),
                         "Page number or command name",
@@ -120,15 +123,27 @@ public class HelpCommand implements Command {
                 return;
             }
         }
-        int maxPage = (int) Math.floor(Math.max(commands.size() - 1, 0) / 10d) + 1;
+        int maxPage = (int) Math.floor(Math.max(commands.size() - 1, 0) / d_commandsPerPage) + 1;
         pageNum = Math.max(Math.min(pageNum, maxPage), 1);
         Component ret = Component.empty();
-        ret = ret.append(Component.text("= ").color(NamedTextColor.GOLD));
-        ret = ret.append(Component.text("Page " + pageNum).color(NamedTextColor.YELLOW));
-        ret = ret.append(Component.text(" =").color(NamedTextColor.GOLD));
+        Component head = Component.empty();
+        head = head.append(Component.text("= ").color(NamedTextColor.GOLD));
+        if (pageNum > 1) {
+            head = head.append(Component.text("< ").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum - 1))));
+        } else {
+            head = head.append(Component.text("  "));
+        }
+        head = head.append(Component.text("Page " + pageNum).color(NamedTextColor.YELLOW));
+        if (pageNum < maxPage) {
+            head = head.append(Component.text(" >").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum + 1))));
+        } else {
+            head = head.append(Component.text("  "));
+        }
+        head = head.append(Component.text(" =").color(NamedTextColor.GOLD));
+        ret = ret.append(head);
         ret = ret.append(Component.newline());
-        int fromIndex = (maxPage - 1) * 10;
-        int toIndex = fromIndex + 10;
+        int fromIndex = (pageNum - 1) * commandsPerPage;
+        int toIndex = fromIndex + commandsPerPage;
         int i = -1;
         for (Command cmd : commands) {
             i++;
@@ -139,9 +154,7 @@ public class HelpCommand implements Command {
             ret = ret.append(Component.text(cmd.getDescription())).color(NamedTextColor.LIGHT_PURPLE);
             ret = ret.append(Component.newline());
         }
-        ret = ret.append(Component.text("= ").color(NamedTextColor.GOLD));
-        ret = ret.append(Component.text("Page " + pageNum).color(NamedTextColor.YELLOW));
-        ret = ret.append(Component.text(" =").color(NamedTextColor.GOLD));
+        ret = ret.append(head);
         sender.sendMessage(ret);
     }
 

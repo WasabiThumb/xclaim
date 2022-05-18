@@ -26,7 +26,8 @@ public class XClaimCommand implements Command {
                 new RestartCommand(),
                 guiCommmand,
                 new ChunksCommand(),
-                new ClearCommand()
+                new ClearCommand(),
+                new ListCommand()
         );
         helpCommand.setCommands(subCommands);
     }

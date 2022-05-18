@@ -125,7 +125,7 @@ public class CommandManager {
                 }
             }
             String finalTail = tail;
-            return entries.stream().sorted(Comparator.comparingInt((String s) -> sd.apply(finalTail, s))).collect(Collectors.toList());
+            return entries.stream().sorted(Comparator.comparingInt((String s) -> sd.apply(finalTail, s)).reversed()).collect(Collectors.toList());
         }
 
         public @NotNull codes.wasabi.xclaim.command.Command getCommand() {
