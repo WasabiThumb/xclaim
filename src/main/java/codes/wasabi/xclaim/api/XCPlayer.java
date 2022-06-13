@@ -469,6 +469,11 @@ public class XCPlayer implements OfflinePlayer {
     }
 
     @Override
+    public @Nullable Location getLastDeathLocation() {
+        return op.getLastDeathLocation();
+    }
+
+    @Override
     public @NotNull Map<String, Object> serialize() {
         return op.serialize();
     }
