@@ -48,8 +48,8 @@ public class VersionInfoPage extends Page {
             meta.displayName(Component.text("Author").color(NamedTextColor.GOLD));
             String name = Objects.requireNonNullElse(author.getName(), "Wasabi_Thumbs");
             meta.lore(Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
+            if (meta instanceof SkullMeta sm) sm.setOwningPlayer(author);
         });
-        skull.editMeta(SkullMeta.class, (SkullMeta sm) -> sm.setOwningPlayer(author));
         AUTHOR_STACK = skull;
     }
 

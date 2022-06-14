@@ -1,12 +1,12 @@
 package codes.wasabi.xclaim.command.sub;
 
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -56,7 +56,7 @@ public class CurrentCommand implements Command {
             return;
         }
         Component ownerName;
-        OfflinePlayer owner = claim.getOwner();
+        XCPlayer owner = claim.getOwner();
         Player player = owner.getPlayer();
         if (player != null) {
             ownerName = player.displayName();

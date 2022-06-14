@@ -76,13 +76,24 @@ public final class AutoUpdater {
                 try (InputStream cfgIs = cfgConn.getInputStream()) {
                     Map<String, Object> map = yaml.load(cfgIs);
                     String api = (String) map.get("api-version");
+                    String[] seg = api.split("\\.");
+                    String[] mySeg = apiVersion.split("\\.");
+                    if (seg.length > 0 && mySeg.length > 0) {
+                        if (!seg[0].equals(mySeg[0])) continue;
+                        if (seg.length > 1 && mySeg.length > 1) {
+                            int targetMinor = Integer.parseInt(seg[1]);
+                            int curMinor = Integer.parseInt(mySeg[1]);
+                            if (targetMinor > curMinor) continue;
+                        }
+                    }
                     if (!api.equalsIgnoreCase(apiVersion)) continue;
                 } catch (Exception ignored) { }
                 String finalLink = assetLink;
                 String finalName = assetName;
                 return new UpdateOption(tagName, () -> {
                     if (updated) return null;
-                    File output = new File(Bukkit.getPluginsFolder(), finalName);
+                    File pluginsFolder = XClaim.jarFile.getParentFile();
+                    File output = new File(pluginsFolder, finalName);
                     if (output.exists()) {
                         throw new IOException("File " + finalName + " already exists!");
                     }

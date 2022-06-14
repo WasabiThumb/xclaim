@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +51,9 @@ public class TransferPage extends Page {
         ItemStack head;
         if (matchPlayer != null) {
             head = DisplayItem.create(Material.PLAYER_HEAD, matchPlayer.displayName());
-            head.editMeta(SkullMeta.class, (SkullMeta sm) -> sm.setOwningPlayer(matchPlayer));
+            head.editMeta((ItemMeta im) -> {
+                if (im instanceof SkullMeta sm) sm.setOwningPlayer(matchPlayer);
+            });
         } else {
             head = DisplayItem.create(Material.PLAYER_HEAD, "Unknown Player", NamedTextColor.RED);
         }

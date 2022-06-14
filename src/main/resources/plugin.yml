@@ -1,7 +1,7 @@
 name: XClaim
 version: '${project.version}'
 main: codes.wasabi.xclaim.XClaim
-api-version: 1.19
+api-version: 1.17
 prefix: XC
 authors: [ WasabiThumbs ]
 softdepend:

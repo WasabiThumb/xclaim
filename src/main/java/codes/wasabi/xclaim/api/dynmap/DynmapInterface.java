@@ -2,12 +2,12 @@ package codes.wasabi.xclaim.api.dynmap;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.dynmap.outline.ChunkBitmap;
 import codes.wasabi.xclaim.api.dynmap.outline.Point;
 import codes.wasabi.xclaim.util.ColorUtil;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
 import org.bukkit.Chunk;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.dynmap.bukkit.DynmapPlugin;
@@ -36,8 +36,8 @@ public class DynmapInterface {
 
     private final Map<UUID, Color> colorMap = new HashMap<>();
     public @NotNull Color getClaimColor(@NotNull Claim claim) {
-        OfflinePlayer op = claim.getOwner();
-        UUID uuid = op.getUniqueId();
+        XCPlayer ply = claim.getOwner();
+        UUID uuid = ply.getUniqueId();
         Color color = colorMap.get(uuid);
         if (color == null) {
             color = ColorUtil.uuidToColor(uuid);

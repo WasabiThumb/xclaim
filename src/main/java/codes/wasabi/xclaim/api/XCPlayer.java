@@ -3,16 +3,14 @@ package codes.wasabi.xclaim.api;
 import codes.wasabi.xclaim.XClaim;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.profile.PlayerProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-public class XCPlayer implements OfflinePlayer {
+public class XCPlayer {
 
     public static @NotNull XCPlayer of(@NotNull OfflinePlayer ply) {
         if (ply instanceof XCPlayer xcp) return xcp;
@@ -22,14 +20,21 @@ public class XCPlayer implements OfflinePlayer {
     private final String uuidString;
     private final OfflinePlayer op;
 
-    XCPlayer(@NotNull UUID uuid) {
+    protected XCPlayer(@NotNull UUID uuid) {
         uuidString = uuid.toString();
         op = Bukkit.getOfflinePlayer(uuid);
     }
 
-    XCPlayer(@NotNull OfflinePlayer ply) {
-        uuidString = ply.getUniqueId().toString();
-        op = ply;
+    protected XCPlayer(@NotNull OfflinePlayer ply) {
+        this(ply.getUniqueId());
+    }
+
+    public @NotNull OfflinePlayer getOfflinePlayer() {
+        return op;
+    }
+
+    public @Nullable Player getPlayer() {
+        return op.getPlayer();
     }
 
     public boolean trustPlayer(@NotNull OfflinePlayer player) {
@@ -58,10 +63,6 @@ public class XCPlayer implements OfflinePlayer {
             }
         }
         return false;
-    }
-
-    public @NotNull OfflinePlayer getOfflinePlayer() {
-        return op;
     }
 
     private @NotNull List<OfflinePlayer> getCurrentTrustedPlayers() {
@@ -182,7 +183,7 @@ public class XCPlayer implements OfflinePlayer {
 
             @Override
             public boolean containsAll(@NotNull Collection<?> c) {
-                return getCurrentTrustedPlayers().containsAll(c);
+                return new HashSet<>(getCurrentTrustedPlayers()).containsAll(c);
             }
 
             @Override
@@ -308,209 +309,12 @@ public class XCPlayer implements OfflinePlayer {
         return "XCPlayer[uuid=" + op.getUniqueId() + "]";
     }
 
-    @Override
-    public boolean isOnline() {
-        return op.isOnline();
-    }
-
-    @Override
-    public @Nullable String getName() {
-        return op.getName();
-    }
-
-    @Override
     public @NotNull UUID getUniqueId() {
         return op.getUniqueId();
     }
 
-    @Override
-    public @NotNull PlayerProfile getPlayerProfile() {
-        return op.getPlayerProfile();
-    }
-
-    @Override
-    public boolean isBanned() {
-        return op.isBanned();
-    }
-
-    @Override
-    public boolean isWhitelisted() {
-        return op.isWhitelisted();
-    }
-
-    @Override
-    public void setWhitelisted(boolean value) {
-        op.setWhitelisted(value);
-    }
-
-    @Override
-    public @Nullable Player getPlayer() {
-        return op.getPlayer();
-    }
-
-    @Override
-    public long getFirstPlayed() {
-        return op.getFirstPlayed();
-    }
-
-    @Override
-    public long getLastPlayed() {
-        return op.getLastPlayed();
-    }
-
-    @Override
-    public boolean hasPlayedBefore() {
-        return op.hasPlayedBefore();
-    }
-
-    @Override
-    public @Nullable Location getBedSpawnLocation() {
-        return op.getBedSpawnLocation();
-    }
-
-    @Override
-    public long getLastLogin() {
-        return op.getLastLogin();
-    }
-
-    @Override
-    public long getLastSeen() {
-        return op.getLastSeen();
-    }
-
-    @Override
-    public void incrementStatistic(@NotNull Statistic statistic) throws IllegalArgumentException {
-        op.incrementStatistic(statistic);
-    }
-
-    @Override
-    public void decrementStatistic(@NotNull Statistic statistic) throws IllegalArgumentException {
-        op.decrementStatistic(statistic);
-    }
-
-    @Override
-    public void incrementStatistic(@NotNull Statistic statistic, int amount) throws IllegalArgumentException {
-        op.incrementStatistic(statistic, amount);
-    }
-
-    @Override
-    public void decrementStatistic(@NotNull Statistic statistic, int amount) throws IllegalArgumentException {
-        op.decrementStatistic(statistic, amount);
-    }
-
-    @Override
-    public void setStatistic(@NotNull Statistic statistic, int newValue) throws IllegalArgumentException {
-        op.setStatistic(statistic, newValue);
-    }
-
-    @Override
-    public int getStatistic(@NotNull Statistic statistic) throws IllegalArgumentException {
-        return op.getStatistic(statistic);
-    }
-
-    @Override
-    public void incrementStatistic(@NotNull Statistic statistic, @NotNull Material material) throws IllegalArgumentException {
-        op.incrementStatistic(statistic, material);
-    }
-
-    @Override
-    public void decrementStatistic(@NotNull Statistic statistic, @NotNull Material material) throws IllegalArgumentException {
-        op.decrementStatistic(statistic, material);
-    }
-
-    @Override
-    public int getStatistic(@NotNull Statistic statistic, @NotNull Material material) throws IllegalArgumentException {
-        return op.getStatistic(statistic, material);
-    }
-
-    @Override
-    public void incrementStatistic(@NotNull Statistic statistic, @NotNull Material material, int amount) throws IllegalArgumentException {
-        op.incrementStatistic(statistic, material, amount);
-    }
-
-    @Override
-    public void decrementStatistic(@NotNull Statistic statistic, @NotNull Material material, int amount) throws IllegalArgumentException {
-        op.decrementStatistic(statistic, material, amount);
-    }
-
-    @Override
-    public void setStatistic(@NotNull Statistic statistic, @NotNull Material material, int newValue) throws IllegalArgumentException {
-        op.setStatistic(statistic, material, newValue);
-    }
-
-    @Override
-    public void incrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException {
-        op.incrementStatistic(statistic, entityType);
-    }
-
-    @Override
-    public void decrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException {
-        op.decrementStatistic(statistic, entityType);
-    }
-
-    @Override
-    public int getStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType) throws IllegalArgumentException {
-        return op.getStatistic(statistic, entityType);
-    }
-
-    @Override
-    public void incrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int amount) throws IllegalArgumentException {
-        op.incrementStatistic(statistic, entityType, amount);
-    }
-
-    @Override
-    public void decrementStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int amount) {
-        op.decrementStatistic(statistic, entityType, amount);
-    }
-
-    @Override
-    public void setStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int newValue) {
-        op.setStatistic(statistic, entityType, newValue);
-    }
-
-    @Override
-    public @Nullable Location getLastDeathLocation() {
-        return op.getLastDeathLocation();
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return op.serialize();
-    }
-
-    @Override
-    public boolean isOp() {
-        return op.isOp();
-    }
-
-    @Override
-    public void setOp(boolean value) {
-        op.setOp(value);
-    }
-
-    @Override
-    public @NotNull BanEntry banPlayer(@Nullable String reason) {
-        return op.banPlayer(reason);
-    }
-
-    @Override
-    public @NotNull BanEntry banPlayer(@Nullable String reason, @Nullable String source) {
-        return op.banPlayer(reason, source);
-    }
-
-    @Override
-    public @NotNull BanEntry banPlayer(@Nullable String reason, @Nullable Date expires) {
-        return op.banPlayer(reason, expires);
-    }
-
-    @Override
-    public @NotNull BanEntry banPlayer(@Nullable String reason, @Nullable Date expires, @Nullable String source) {
-        return op.banPlayer(reason, expires, source);
-    }
-
-    @Override
-    public @NotNull BanEntry banPlayer(@Nullable String reason, @Nullable Date expires, @Nullable String source, boolean kickIfOnline) {
-        return op.banPlayer(reason, expires, source, kickIfOnline);
+    public @Nullable String getName() {
+        return op.getName();
     }
 
 }

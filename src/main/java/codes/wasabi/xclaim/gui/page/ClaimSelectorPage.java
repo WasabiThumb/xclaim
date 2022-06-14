@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.gui.page;
 
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
@@ -59,7 +60,7 @@ public class ClaimSelectorPage extends Page {
                 if (i >= claims.size()) break outer;
                 int idx = getPageIndex(x, y);
                 Claim claim = claims.get(i);
-                OfflinePlayer owner = claim.getOwner();
+                XCPlayer owner = claim.getOwner();
                 Component name;
                 Player ply;
                 if ((ply = owner.getPlayer()) != null) {

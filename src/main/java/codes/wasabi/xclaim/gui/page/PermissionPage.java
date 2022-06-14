@@ -109,7 +109,7 @@ public class PermissionPage extends Page {
                 PlayerCombinatorPage combinator = new PlayerCombinatorPage(getParent()) {
                     @Override
                     protected @NotNull List<OfflinePlayer> getList() {
-                        return claim.getUserPermissions().keySet().stream().map((XCPlayer xcp) -> (OfflinePlayer) xcp).collect(Collectors.toList());
+                        return claim.getUserPermissions().keySet().stream().map(XCPlayer::getOfflinePlayer).collect(Collectors.toList());
                     }
 
                     @Override

@@ -72,7 +72,7 @@ public class MovementRoutine implements Listener {
         Player ply = event.getPlayer();
         if (toSet) {
             if (!toClaim.equals(fromClaim)) {
-                OfflinePlayer claimOwner = toClaim.getOwner();
+                XCPlayer claimOwner = toClaim.getOwner();
                 Player online = claimOwner.getPlayer();
                 Component name;
                 if (online != null) {

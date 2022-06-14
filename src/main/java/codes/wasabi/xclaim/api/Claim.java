@@ -141,7 +141,7 @@ public class Claim {
             }
             players.put(uuid, set);
         }
-        return new Claim(name, chunks, new XCPlayer(owner), global, players);
+        return new Claim(name, chunks, XCPlayer.of(owner), global, players);
     }
 
     private String name;
@@ -390,7 +390,7 @@ public class Claim {
 
     public void serialize(@NotNull ConfigurationSection section) {
         section.set("name", name);
-        section.set("owner", owner.getOfflinePlayer().getUniqueId().toString());
+        section.set("owner", owner.getUniqueId().toString());
         section.set("world", "");
         ConfigurationSection sec;
         sec = section.getConfigurationSection("chunks");

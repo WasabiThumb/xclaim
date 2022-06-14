@@ -232,7 +232,7 @@ public class ChunkEditor {
 
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onDeath(@NotNull PlayerDeathEvent event) {
-            Player ply = event.getPlayer();
+            Player ply = event.getEntity();
             if (stopEditing(ply)) {
                 boolean keepInventory = false;
                 Boolean value = ply.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
@@ -263,9 +263,9 @@ public class ChunkEditor {
                     } else {
                         Claim cl = Claim.getByChunk(toChunk);
                         if (cl != null) {
-                            OfflinePlayer op = cl.getOwner().getOfflinePlayer();
-                            ownerName = Objects.requireNonNullElse(op.getName(), "Unknown");
-                            ownState = (op.getUniqueId().equals(ply.getUniqueId()) ? 2 : 3);
+                            XCPlayer xcp = cl.getOwner();
+                            ownerName = Objects.requireNonNullElse(xcp.getName(), "Unknown");
+                            ownState = (xcp.getUniqueId().equals(ply.getUniqueId()) ? 2 : 3);
                         }
                     }
                     Color color = Color.GRAY;
@@ -343,7 +343,7 @@ public class ChunkEditor {
         Claim ret = null;
         if (!editingMap.containsKey(uuid)) {
             PersistentDataContainer pdc = ply.getPersistentDataContainer();
-            if (pdc.has(KEY_FLAG)) {
+            if (pdc.has(KEY_FLAG, PersistentDataType.BYTE)) {
                 boolean flag = pdc.getOrDefault(KEY_FLAG, PersistentDataType.BYTE, (byte) 0) != ((byte) 0);
                 if (flag) {
                     String name = pdc.get(KEY_NAME, PersistentDataType.STRING);

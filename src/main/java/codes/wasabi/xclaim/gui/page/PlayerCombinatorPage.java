@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.gui.page;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.util.DisplayItem;
+import codes.wasabi.xclaim.util.NameToPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -83,7 +84,9 @@ public abstract class PlayerCombinatorPage extends Page {
                     meta.lore(Collections.singletonList(Component.text(realName).color(NamedTextColor.GRAY)));
                 }
             });
-            is.editMeta(SkullMeta.class, (SkullMeta sm) -> sm.setOwningPlayer(ply));
+            is.editMeta((ItemMeta im) -> {
+                if (im instanceof SkullMeta sm) sm.setOwningPlayer(ply);
+            });
             setItem(i, is);
         }
         if (pageIndex > 0) {
@@ -118,7 +121,7 @@ public abstract class PlayerCombinatorPage extends Page {
             goBack();
         } else if (slot == 21) {
             prompt("Enter player name: ", (String name) -> {
-                Player ply = Bukkit.getPlayer(name);
+                OfflinePlayer ply = NameToPlayer.getPlayer(name);
                 if (ply == null) {
                     getTarget().sendMessage(Component.text("* Couldn't find a player with that name.").color(NamedTextColor.RED));
                     return;
