@@ -1,13 +1,14 @@
 package codes.wasabi.xclaim.api.dynmap;
 
-import codes.wasabi.xclaim.api.dynmap.exception.DynmapException;
-import codes.wasabi.xclaim.api.dynmap.exception.DynmapInitializationException;
-import codes.wasabi.xclaim.api.dynmap.exception.DynmapNotEnabledException;
-import codes.wasabi.xclaim.api.dynmap.exception.DynmapNotFoundException;
+import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.api.dynmap.exception.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 public final class DynmapInterfaceFactory {
 
@@ -17,6 +18,17 @@ public final class DynmapInterfaceFactory {
             if (plugin.isEnabled()) {
                 try {
                     if (plugin instanceof org.dynmap.bukkit.DynmapPlugin dynmapPlugin) {
+                        boolean corePresent = false;
+                        try {
+                            Field f = org.dynmap.bukkit.DynmapPlugin.class.getDeclaredField("core");
+                            f.trySetAccessible();
+                            corePresent = (f.get(dynmapPlugin) != null);
+                        } catch (Exception e) {
+                            XClaim.logger.log(Level.WARNING, "Failed to validate Dynmap core, proceeding anyways...");
+                        }
+                        if (!corePresent) {
+                            throw new DynmapMissingCoreException("Dynmap plugin core is null");
+                        }
                         return new codes.wasabi.xclaim.api.dynmap.DynmapInterface(dynmapPlugin);
                     } else {
                         throw new DynmapNotFoundException("Plugin named \"dynmap\" exists, but does not contain the known Dynmap API");
