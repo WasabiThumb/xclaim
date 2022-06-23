@@ -56,8 +56,8 @@
                                     <shadedPattern>codes.wasabi.xclaim.paperlib</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>net.kyori.adventure</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.adventure</shadedPattern>
+                                    <pattern>net.kyori.adventure.platform</pattern>
+                                    <shadedPattern>codes.wasabi.xclaim.adventure.platform</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
