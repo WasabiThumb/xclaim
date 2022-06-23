@@ -2,9 +2,9 @@ package codes.wasabi.xclaim.gui;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui.page.MainPage;
-import io.papermc.paper.event.player.AsyncChatEvent;
+import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.platform.PlatformChatListener;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -42,12 +42,15 @@ public class GUIHandler implements InventoryHolder, Listener {
     private boolean open = true;
     private BukkitTask tick = null;
     private boolean shouldTick = false;
+    private final PlatformChatListener chatListener;
     public GUIHandler(@NotNull Player target) {
         this.target = target;
-        this.inventory = Bukkit.createInventory(this, 27, Component.text("XClaim Config"));
+        this.inventory = Platform.get().createInventory(this, 27, Component.text("XClaim Config"));
         switchPage(new MainPage(this));
         target.openInventory(inventory);
         Bukkit.getPluginManager().registerEvents(this, XClaim.instance);
+        chatListener = Platform.get().onChat();
+        chatListener.onChat(this::onMessage);
         openHandlers.add(this);
     }
 
@@ -102,8 +105,9 @@ public class GUIHandler implements InventoryHolder, Listener {
     public void close() {
         if (!open) return;
         open = false;
-        inventory.close();
         HandlerList.unregisterAll(this);
+        Platform.get().closeInventory(inventory);
+        chatListener.unregister();
         if (shouldTick) {
             shouldTick = false;
             if (tick != null) tick.cancel();
@@ -153,13 +157,12 @@ public class GUIHandler implements InventoryHolder, Listener {
         }
     }
 
-    @EventHandler
-    public void onMessage(@NotNull AsyncChatEvent event) {
+    public void onMessage(@NotNull PlatformChatListener.PlatformChatListenerData data) {
         if (!open) return;
-        Player ply = event.getPlayer();
+        Player ply = data.ply();
         if (ply.getUniqueId().equals(target.getUniqueId())) {
             if (page != null) {
-                if (page.onMessage(PlainTextComponentSerializer.plainText().serialize(event.originalMessage()))) event.setCancelled(true);
+                if (page.onMessage(data.message())) data.cancel().run();
             }
         }
     }

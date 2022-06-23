@@ -4,6 +4,8 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.ChoiceType;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -61,8 +63,9 @@ public class RestartCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @Nullable Object @NotNull ... arguments) throws Exception {
+        Audience audience = Platform.getAdventure().sender(sender);
         if (!(sender.hasPermission("xclaim.restart") || sender.isOp())) {
-            sender.sendMessage(Component.text("* You don't have permission to run this command!").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* You don't have permission to run this command!").color(NamedTextColor.RED));
             return;
         }
         boolean confirmed = false;
@@ -74,7 +77,7 @@ public class RestartCommand implements Command {
         }
         if (confirmed) {
             PluginManager pm = Bukkit.getPluginManager();
-            sender.sendMessage(Component.text("Disabling XClaim...").color(NamedTextColor.GREEN));
+            audience.sendMessage(Component.text("Disabling XClaim...").color(NamedTextColor.GREEN));
             File jarFile = XClaim.jarFile;
             HandlerList.unregisterAll(XClaim.instance);
             pm.disablePlugin(XClaim.instance);
@@ -88,27 +91,27 @@ public class RestartCommand implements Command {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                sender.sendMessage(Component.text("Failed to remove XClaim from plugin manager. Continuing...").color(NamedTextColor.YELLOW));
+                audience.sendMessage(Component.text("Failed to remove XClaim from plugin manager. Continuing...").color(NamedTextColor.YELLOW));
             }
-            sender.sendMessage(Component.text("Enabling XClaim...").color(NamedTextColor.GREEN));
+            audience.sendMessage(Component.text("Enabling XClaim...").color(NamedTextColor.GREEN));
             Plugin plugin;
             try {
                 plugin = Objects.requireNonNull(pm.loadPlugin(jarFile));
             } catch (Exception e) {
                 e.printStackTrace();
-                sender.sendMessage(Component.text("Failed to load XClaim").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("Failed to load XClaim").color(NamedTextColor.RED));
                 return;
             }
             try {
                 pm.enablePlugin(plugin);
             } catch (Exception e) {
-                sender.sendMessage(Component.text("Failed to enable XClaim").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("Failed to enable XClaim").color(NamedTextColor.RED));
                 return;
             }
-            sender.sendMessage(Component.text("Enabled XClaim version " + plugin.getDescription().getVersion()).color(NamedTextColor.GOLD));
+            audience.sendMessage(Component.text("Enabled XClaim version " + plugin.getDescription().getVersion()).color(NamedTextColor.GOLD));
         } else {
             boolean isPlayer = (sender instanceof Player);
-            sender.sendMessage(Component.empty()
+            audience.sendMessage(Component.empty()
                     .append(Component.text("WARNING!").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
                     .append(isPlayer ? Component.newline() : Component.text(" "))
                     .append(Component.text("This feature is ").color(NamedTextColor.RED))
@@ -116,13 +119,13 @@ public class RestartCommand implements Command {
                     .append(Component.text(".").color(NamedTextColor.RED))
             );
             if (isPlayer) {
-                sender.sendMessage(Component.empty()
+                audience.sendMessage(Component.empty()
                         .append(Component.text("Click ").color(NamedTextColor.YELLOW))
                         .append(Component.text("here").clickEvent(ClickEvent.runCommand("/xclaim restart yes")).color(NamedTextColor.GOLD))
                         .append(Component.text(" to continue anyway.").color(NamedTextColor.YELLOW))
                 );
             } else {
-                sender.sendMessage(Component.empty()
+                audience.sendMessage(Component.empty()
                         .append(Component.text("Run ").color(NamedTextColor.YELLOW))
                         .append(Component.text("/xclaim restart yes").color(NamedTextColor.GOLD))
                         .append(Component.text(" to continue anyway.").color(NamedTextColor.YELLOW))

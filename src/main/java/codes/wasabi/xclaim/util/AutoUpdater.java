@@ -4,8 +4,8 @@ import codes.wasabi.xclaim.XClaim;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.papermc.lib.PaperLib;
 import org.apache.commons.io.IOUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public final class AutoUpdater {
         String pluginVersion = descriptionFile.getVersion();
         String apiVersion = descriptionFile.getAPIVersion();
         if (apiVersion == null) {
-            apiVersion = Bukkit.getMinecraftVersion();
+            apiVersion = "1." + PaperLib.getMinecraftVersion();
         }
         URL listEndpoint = new URL("https://api.github.com/repos/WasabiThumb/xclaim/releases");
         URLConnection conn = listEndpoint.openConnection();

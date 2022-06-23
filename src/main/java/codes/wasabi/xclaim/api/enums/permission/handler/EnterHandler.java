@@ -48,6 +48,7 @@ public class EnterHandler extends PermissionHandler {
         //
         Location from = event.getFrom();
         Location to = event.getTo();
+        if (to == null) return;
         boolean fromWithin = getClaim().contains(from);
         boolean toWithin = getClaim().contains(to);
         //

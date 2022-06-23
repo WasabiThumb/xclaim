@@ -2,6 +2,8 @@ package codes.wasabi.xclaim.command;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.argument.Argument;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -59,12 +61,13 @@ public class CommandManager {
         @Override
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
             if (!Objects.equals(command, bukkitCmd)) return false;
+            Audience audience = Platform.getAdventure().sender(sender);
             Resolution res = resolveSubcommands(this.cmd, args);
             codes.wasabi.xclaim.command.Command cmd = res.cmd();
             args = res.args();
             if (cmd.requiresPlayerExecutor()) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(Component.text("* You must be a player to run this command!").color(NamedTextColor.RED));
+                    audience.sendMessage(Component.text("* You must be a player to run this command!").color(NamedTextColor.RED));
                     return true;
                 }
             }
@@ -72,11 +75,11 @@ public class CommandManager {
             int len = args.length;
             int required = cmd.getNumRequiredArguments();
             if (len < required) {
-                sender.sendMessage(Component.text("* Not enough arguments! This command requires at least " + required).color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("* Not enough arguments! This command requires at least " + required).color(NamedTextColor.RED));
                 return true;
             }
             if (len > argDefs.length) {
-                sender.sendMessage(Component.text("* Too many arguments! This command takes at most " + argDefs.length).color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("* Too many arguments! This command takes at most " + argDefs.length).color(NamedTextColor.RED));
                 return true;
             }
             Object[] obs = new Object[argDefs.length];
@@ -87,7 +90,7 @@ public class CommandManager {
                     obs[i] = def.type().parse(arg);
                 }
             } catch (IllegalArgumentException e) {
-                sender.sendMessage(Component.text("* Bad arguments! See help page for more info").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("* Bad arguments! See help page for more info").color(NamedTextColor.RED));
                 return true;
             }
             for (int i=len; i < argDefs.length; i++) {
@@ -96,7 +99,7 @@ public class CommandManager {
             try {
                 cmd.execute(sender, label, obs);
             } catch (Exception e) {
-                sender.sendMessage(Component.text("* An unexpected exception (" + e.getClass().getName() + ") occurred while executing this command.").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("* An unexpected exception (" + e.getClass().getName() + ") occurred while executing this command.").color(NamedTextColor.RED));
                 e.printStackTrace();
             }
             return true;

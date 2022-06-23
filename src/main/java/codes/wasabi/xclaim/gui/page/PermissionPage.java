@@ -180,7 +180,7 @@ public class PermissionPage extends Page {
                     case TRUSTED -> trustedItem;
                 };
                 ItemMeta meta = enchanted.getItemMeta();
-                meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+                if (meta != null) meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
                 enchanted.setItemMeta(meta);
                 setItem(10, curTrust == TrustLevel.NONE ? enchanted : noneItem);
                 setItem(12, curTrust == TrustLevel.TRUSTED ? enchanted : trustedItem);

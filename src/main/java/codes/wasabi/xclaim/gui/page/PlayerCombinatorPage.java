@@ -2,12 +2,11 @@ package codes.wasabi.xclaim.gui.page;
 
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.NameToPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -69,24 +68,22 @@ public abstract class PlayerCombinatorPage extends Page {
             OfflinePlayer ply = players.get(listIndex);
             assoc.put(i, ply);
             ItemStack is = new ItemStack(Material.PLAYER_HEAD, 1);
-            is.editMeta((ItemMeta meta) -> {
+            ItemMeta meta = is.getItemMeta();
+            if (meta != null) {
                 String realName = ply.getName();
                 if (realName == null) realName = ply.getUniqueId().toString();
                 Component niceName;
                 if (ply instanceof Player onlinePlayer) {
-                    niceName = onlinePlayer.displayName();
+                    niceName = Platform.get().playerDisplayName(onlinePlayer);
                 } else {
                     niceName = Component.text(realName);
                 }
                 meta.addItemFlags(ItemFlag.values());
-                meta.displayName(niceName);
-                if (!Objects.equals(realName, PlainTextComponentSerializer.plainText().serializeOrNull(niceName))) {
-                    meta.lore(Collections.singletonList(Component.text(realName).color(NamedTextColor.GRAY)));
-                }
-            });
-            is.editMeta((ItemMeta im) -> {
-                if (im instanceof SkullMeta sm) sm.setOwningPlayer(ply);
-            });
+                Platform.get().metaDisplayName(meta, niceName);
+                Platform.get().metaLore(meta, Collections.singletonList(Component.text(realName).color(NamedTextColor.GRAY)));
+                if (meta instanceof SkullMeta sm) sm.setOwningPlayer(ply);
+            }
+            is.setItemMeta(meta);
             setItem(i, is);
         }
         if (pageIndex > 0) {
@@ -123,7 +120,7 @@ public abstract class PlayerCombinatorPage extends Page {
             prompt("Enter player name: ", (String name) -> {
                 OfflinePlayer ply = NameToPlayer.getPlayer(name);
                 if (ply == null) {
-                    getTarget().sendMessage(Component.text("* Couldn't find a player with that name.").color(NamedTextColor.RED));
+                    Platform.getAdventure().player(getTarget()).sendMessage(Component.text("* Couldn't find a player with that name.").color(NamedTextColor.RED));
                     return;
                 }
                 add(ply);

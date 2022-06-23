@@ -6,6 +6,7 @@ import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -84,7 +85,7 @@ public class NewClaimPage extends Page {
             if (cur != null) {
                 if (!cur.getOwner().getUniqueId().equals(ply.getUniqueId())) {
                     if (!ply.hasPermission("xclaim.override")) {
-                        ply.sendMessage(Component.text("* This chunk is already claimed!").color(NamedTextColor.RED));
+                        Platform.getAdventure().player(ply).sendMessage(Component.text("* This chunk is already claimed!").color(NamedTextColor.RED));
                         getParent().close();
                         return;
                     }
@@ -103,19 +104,19 @@ public class NewClaimPage extends Page {
                 }
             }
             if (curClaims >= maxClaims) {
-                ply.sendMessage(Component.text("* You've reached your maximum number of claims! Try deleting some.").color(NamedTextColor.RED));
+                Platform.getAdventure().player(ply).sendMessage(Component.text("* You've reached your maximum number of claims! Try deleting some.").color(NamedTextColor.RED));
                 getParent().close();
                 return;
             }
             if (curChunks >= maxChunks) {
-                ply.sendMessage(Component.text("* Can't create this claim, it will exceed your maximum number of chunks.").color(NamedTextColor.RED));
+                Platform.getAdventure().player(ply).sendMessage(Component.text("* Can't create this claim, it will exceed your maximum number of chunks.").color(NamedTextColor.RED));
                 getParent().close();
                 return;
             }
             String name = "New Claim #" + nextIndex();
             Claim newClaim = new Claim(name, Set.of(chunk), ply);
             newClaim.claim();
-            ply.sendMessage(
+            Platform.getAdventure().player(ply).sendMessage(
                     Component
                             .empty()
                             .append(

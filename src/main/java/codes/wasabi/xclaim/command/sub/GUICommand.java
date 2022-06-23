@@ -4,6 +4,8 @@ import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
@@ -40,9 +42,10 @@ public class GUICommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) {
+        Audience audience = Platform.getAdventure().sender(sender);
         Player ply = (Player) sender;
         if (ChunkEditor.getEditing(ply) != null) {
-            sender.sendMessage(Component.text("* You must exit the chunk editor before using the GUI.").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* You must exit the chunk editor before using the GUI.").color(NamedTextColor.RED));
             return;
         }
         new GUIHandler((Player) sender);

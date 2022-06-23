@@ -4,11 +4,13 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
+import codes.wasabi.xclaim.platform.Platform;
+import io.papermc.lib.PaperLib;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
@@ -43,16 +45,17 @@ public class InfoCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
+        Audience audience = Platform.getAdventure().sender(sender);
         PluginDescriptionFile description = XClaim.instance.getDescription();
         String apiVersion = description.getAPIVersion();
-        if (apiVersion == null) apiVersion = Bukkit.getMinecraftVersion() + "(?)";
+        if (apiVersion == null) apiVersion = "1." + PaperLib.getMinecraftVersion() + "(?)";
         int claimCount = 0;
         int chunkCount = 0;
         for (Claim c : Claim.getAll()) {
             claimCount++;
             chunkCount += c.getChunks().size();
         }
-        sender.sendMessage(Component.text()
+        audience.sendMessage(Component.text()
                 .append(Component.text("XClaim").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
                 .append(Component.newline())
                 .append(Component.text("Made by ").color(NamedTextColor.GOLD))

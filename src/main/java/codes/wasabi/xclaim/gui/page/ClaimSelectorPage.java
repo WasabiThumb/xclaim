@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -64,7 +65,7 @@ public class ClaimSelectorPage extends Page {
                 Component name;
                 Player ply;
                 if ((ply = owner.getPlayer()) != null) {
-                    name = ply.displayName();
+                    name = Platform.get().playerDisplayName(ply);
                 } else {
                     String nm = owner.getName();
                     if (nm == null) nm = owner.getUniqueId().toString();

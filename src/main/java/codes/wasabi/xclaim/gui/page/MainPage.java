@@ -6,6 +6,7 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -109,7 +110,7 @@ public class MainPage extends Page {
                 World cw = claim.getWorld();
                 if (cw != null) {
                     if (w != cw) {
-                        ply.sendMessage(Component.text("* You can't have claims across worlds!").color(NamedTextColor.RED));
+                        Platform.getAdventure().player(ply).sendMessage(Component.text("* You can't have claims across worlds!").color(NamedTextColor.RED));
                         getParent().close();
                         return;
                     }
@@ -121,7 +122,7 @@ public class MainPage extends Page {
                 switchPage(MainPage.this);
                 prompt("Enter a new name for the claim: ", (String name) -> {
                     if (name.length() > 50) {
-                        getTarget().sendMessage(Component.text("* Name too long! Has to be less than 50 characters").color(NamedTextColor.RED));
+                        Platform.getAdventure().player(getTarget()).sendMessage(Component.text("* Name too long! Has to be less than 50 characters").color(NamedTextColor.RED));
                     } else {
                         claim.setName(name);
                     }
