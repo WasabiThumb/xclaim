@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.util;
 
+import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -26,9 +27,12 @@ public final class DisplayItem {
     public static @NotNull ItemStack create(@NotNull Material material, @NotNull Component name, @NotNull List<Component> lore, int count) {
         ItemStack is = new ItemStack(material, count);
         ItemMeta meta = is.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_UNBREAKABLE);
-        meta.displayName(name);
-        meta.lore(lore);
+        if (meta != null) {
+            Platform platform = Platform.get();
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_UNBREAKABLE);
+            platform.metaDisplayName(meta, name);
+            platform.metaLore(meta, lore);
+        }
         is.setItemMeta(meta);
         return is;
     }

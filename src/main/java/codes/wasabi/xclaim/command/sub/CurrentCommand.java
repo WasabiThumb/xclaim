@@ -4,6 +4,8 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
@@ -42,6 +44,7 @@ public class CurrentCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
+        Audience audience = Platform.getAdventure().sender(sender);
         Player ply = (Player) sender;
         Location loc = ply.getLocation();
         Claim claim = null;
@@ -52,14 +55,14 @@ public class CurrentCommand implements Command {
             }
         }
         if (claim == null) {
-            sender.sendMessage(Component.text("* You are not in a claim!").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* You are not in a claim!").color(NamedTextColor.RED));
             return;
         }
         Component ownerName;
         XCPlayer owner = claim.getOwner();
         Player player = owner.getPlayer();
         if (player != null) {
-            ownerName = player.displayName();
+            ownerName = Platform.get().playerDisplayName(player);
         } else {
             String name = owner.getName();
             if (name == null) name = owner.getUniqueId().toString();
@@ -69,7 +72,7 @@ public class CurrentCommand implements Command {
         String worldName = "Unset";
         World w = claim.getWorld();
         if (w != null) worldName = w.getName();
-        sender.sendMessage(Component.empty()
+        audience.sendMessage(Component.empty()
                 .append(Component.text("= ").color(NamedTextColor.GOLD))
                 .append(Component.text(claim.getName()).color(NamedTextColor.DARK_AQUA))
                 .append(Component.text(" =").color(NamedTextColor.GOLD))

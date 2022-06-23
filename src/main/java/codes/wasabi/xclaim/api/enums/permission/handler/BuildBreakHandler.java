@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.api.enums.permission.handler;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -53,7 +54,7 @@ public class BuildBreakHandler extends PermissionHandler {
     public void onPlace(@NotNull BlockPlaceEvent event) {
         if (!place) return;
         if (getClaim().hasPermission(event.getPlayer(), Permission.BUILD)) return;
-        if (check(event, event.getBlock().getLocation().toCenterLocation())) {
+        if (check(event, Platform.get().toCenterLocation(event.getBlock().getLocation()))) {
             stdError(event.getPlayer());
         }
     }
@@ -63,7 +64,7 @@ public class BuildBreakHandler extends PermissionHandler {
         if (!place) return;
         if (getClaim().hasPermission(event.getPlayer(), Permission.BUILD)) return;
         for (BlockState bs : event.getReplacedBlockStates()) {
-            if (check(event, bs.getLocation().toCenterLocation())) {
+            if (check(event, Platform.get().toCenterLocation(bs.getLocation()))) {
                 stdError(event.getPlayer());
                 break;
             }
@@ -92,15 +93,15 @@ public class BuildBreakHandler extends PermissionHandler {
                         Block relBlock = block.getRelative(face);
                         Material type = relBlock.getType();
                         hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
-                        loc = relBlock.getLocation().toCenterLocation();
+                        loc = Platform.get().toCenterLocation(relBlock.getLocation());
                     } else {
-                        loc = block.getLocation().toCenterLocation();
+                        loc = Platform.get().toCenterLocation(block.getLocation());
                     }
                 } else {
                     Block relBlock = block.getRelative(face);
                     Material type = relBlock.getType();
                     hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
-                    loc = relBlock.getLocation().toCenterLocation();
+                    loc = Platform.get().toCenterLocation(relBlock.getLocation());
                 }
             }
             if (trueIfPlace == hasWater) return;
@@ -124,7 +125,7 @@ public class BuildBreakHandler extends PermissionHandler {
     public void onBreak(@NotNull BlockBreakEvent event) {
         if (!brk) return;
         if (getClaim().hasPermission(event.getPlayer(), Permission.BREAK)) return;
-        if (check(event, event.getBlock().getLocation().toCenterLocation())) {
+        if (check(event, Platform.get().toCenterLocation(event.getBlock().getLocation()))) {
             stdError(event.getPlayer());
         }
     }
@@ -147,7 +148,7 @@ public class BuildBreakHandler extends PermissionHandler {
         if (!brk) return;
         Player ply = event.getPlayer();
         if (getClaim().hasPermission(ply, Permission.BREAK)) return;
-        if (check(event, event.getBlock().getLocation().toCenterLocation())) {
+        if (check(event, Platform.get().toCenterLocation(event.getBlock().getLocation()))) {
             stdError(ply);
         }
     }
@@ -163,7 +164,7 @@ public class BuildBreakHandler extends PermissionHandler {
                 if (type.equals(Material.LEGACY_SOIL) || type.equals(Material.FARMLAND)) {
                     Player ply = event.getPlayer();
                     if (getClaim().hasPermission(ply, Permission.BREAK)) return;
-                    if (check(event, block.getLocation().toCenterLocation())) stdError(ply);
+                    if (check(event, Platform.get().toCenterLocation(block.getLocation()))) stdError(ply);
                 }
             }
         }

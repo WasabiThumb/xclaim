@@ -3,20 +3,23 @@ package codes.wasabi.xclaim.gui;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
-import com.destroystokyo.paper.ParticleBuilder;
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -47,10 +50,12 @@ public class ChunkEditor {
         }
 
         @EventHandler
-        public void onPickup(@NotNull PlayerAttemptPickupItemEvent event) {
-            Player ply = event.getPlayer();
-            if (getEditing(ply) != null) {
-                event.setCancelled(true);
+        public void onPickup(@NotNull EntityPickupItemEvent event) {
+            Entity ent = event.getEntity();
+            if (ent instanceof Player ply) {
+                if (getEditing(ply) != null) {
+                    event.setCancelled(true);
+                }
             }
         }
 
@@ -116,7 +121,7 @@ public class ChunkEditor {
                         if (existing != null) {
                             if (!existing.getOwner().getUniqueId().equals(ply.getUniqueId())) {
                                 if (!(ply.hasPermission("xclaim.override") || ply.isOp())) {
-                                    ply.sendMessage(Component.text("* This chunk is already taken!").color(NamedTextColor.RED));
+                                    Platform.getAdventure().player(ply).sendMessage(Component.text("* This chunk is already taken!").color(NamedTextColor.RED));
                                     break;
                                 }
                             }
@@ -124,7 +129,7 @@ public class ChunkEditor {
                         World w = claim.getWorld();
                         if (w != null) {
                             if (!w.getName().equalsIgnoreCase(chunk.getWorld().getName())) {
-                                ply.sendMessage(Component.text("* You can't add chunks from this world to this claim!").color(NamedTextColor.RED));
+                                Platform.getAdventure().player(ply).sendMessage(Component.text("* You can't add chunks from this world to this claim!").color(NamedTextColor.RED));
                                 break;
                             }
                         }
@@ -181,7 +186,7 @@ public class ChunkEditor {
                                 }
                             }
                             if (!nextTo) {
-                                ply.sendMessage(Component.text("* Chunks in your claim must be next to each other!").color(NamedTextColor.RED));
+                                Platform.getAdventure().player(ply).sendMessage(Component.text("* Chunks in your claim must be next to each other!").color(NamedTextColor.RED));
                                 break;
                             }
                         }
@@ -194,11 +199,11 @@ public class ChunkEditor {
                             }
                         }
                         if (numChunks >= maxChunks) {
-                            ply.sendMessage(Component.text("* You've reached your maximum number of chunks, Try deleting some.").color(NamedTextColor.RED));
+                            Platform.getAdventure().player(ply).sendMessage(Component.text("* You've reached your maximum number of chunks, Try deleting some.").color(NamedTextColor.RED));
                             break;
                         }
                         if (claim.addChunk(chunk)) {
-                            ply.sendMessage(Component.empty()
+                            Platform.getAdventure().player(ply).sendMessage(Component.empty()
                                     .append(Component.text("* Claimed chunk at ").color(NamedTextColor.GREEN))
                                     .append(Component.text("X").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
                                     .append(Component.text("=" + chunk.getX() + ", ").color(NamedTextColor.WHITE))
@@ -206,15 +211,15 @@ public class ChunkEditor {
                                     .append(Component.text("=" + chunk.getZ()).color(NamedTextColor.WHITE))
                             );
                         } else {
-                            ply.sendMessage(Component.text("* This claim already contains this chunk.").color(NamedTextColor.YELLOW));
+                            Platform.getAdventure().player(ply).sendMessage(Component.text("* This claim already contains this chunk.").color(NamedTextColor.YELLOW));
                         }
                     }
                     case 4 -> {
                         Chunk chunk = ply.getLocation().getChunk();
                         if (claim.removeChunk(chunk)) {
-                            ply.sendMessage(Component.text("* Unclaimed chunk!").color(NamedTextColor.GREEN));
+                            Platform.getAdventure().player(ply).sendMessage(Component.text("* Unclaimed chunk!").color(NamedTextColor.GREEN));
                         } else {
-                            ply.sendMessage(Component.text("* This chunk was already not part of this claim.").color(NamedTextColor.YELLOW));
+                            Platform.getAdventure().player(ply).sendMessage(Component.text("* This chunk was already not part of this claim.").color(NamedTextColor.YELLOW));
                         }
                     }
                     case 7 -> stopEditing(ply);
@@ -283,28 +288,31 @@ public class ChunkEditor {
                         refer = "Taken by " + ownerName;
                     }
                     TextColor tc = TextColor.color(color.asRGB());
-                    ply.sendMessage(Component.empty()
+                    Platform.getAdventure().player(ply).sendMessage(Component.empty()
                             .append(Component.text("= Chunk at " + toChunk.getX() + ", " + toChunk.getZ() + " =").color(NamedTextColor.GOLD))
                             .append(Component.newline())
                             .append(Component.text(refer).color(tc))
                     );
                     ply.playSound(ply.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                    World w = toChunk.getWorld();
-                    double eyeY = to.getY() + ply.getEyeHeight();
-                    int targetY = Math.min(Math.max((int) Math.round(eyeY), w.getMinHeight()), w.getMaxHeight() - 1);
-                    for (int y = targetY - 2; y < targetY + 3; y++) {
-                        Location origin = toChunk.getBlock(0, y, 0).getLocation();
-                        for (double x = 0; x <= 16; x += 0.5d) {
-                            Location aPos = origin.clone().add(x, 0, 0);
-                            Location bPos = origin.clone().add(x, 0, 16);
-                            (new ParticleBuilder(Particle.REDSTONE)).color(color).location(aPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
-                            (new ParticleBuilder(Particle.REDSTONE)).color(color).location(bPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
-                        }
-                        for (double z = 0; z <= 16; z += 0.5d) {
-                            Location aPos = origin.clone().add(0, 0, z);
-                            Location bPos = origin.clone().add(16, 0, z);
-                            (new ParticleBuilder(Particle.REDSTONE)).color(color).location(aPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
-                            (new ParticleBuilder(Particle.REDSTONE)).color(color).location(bPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
+                    // TODO : Provide Spigot alternative
+                    if (PaperLib.isPaper()) {
+                        World w = toChunk.getWorld();
+                        double eyeY = to.getY() + ply.getEyeHeight();
+                        int targetY = Math.min(Math.max((int) Math.round(eyeY), w.getMinHeight()), w.getMaxHeight() - 1);
+                        for (int y = targetY - 2; y < targetY + 3; y++) {
+                            Location origin = toChunk.getBlock(0, y, 0).getLocation();
+                            for (double x = 0; x <= 16; x += 0.5d) {
+                                Location aPos = origin.clone().add(x, 0, 0);
+                                Location bPos = origin.clone().add(x, 0, 16);
+                                (new com.destroystokyo.paper.ParticleBuilder(Particle.REDSTONE)).color(color).location(aPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
+                                (new com.destroystokyo.paper.ParticleBuilder(Particle.REDSTONE)).color(color).location(bPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
+                            }
+                            for (double z = 0; z <= 16; z += 0.5d) {
+                                Location aPos = origin.clone().add(0, 0, z);
+                                Location bPos = origin.clone().add(16, 0, z);
+                                (new com.destroystokyo.paper.ParticleBuilder(Particle.REDSTONE)).color(color).location(aPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
+                                (new com.destroystokyo.paper.ParticleBuilder(Particle.REDSTONE)).color(color).location(bPos).receivers(ply).count(1).offset(0.02d, 0.02d, 0.02d).spawn();
+                            }
                         }
                     }
                 }

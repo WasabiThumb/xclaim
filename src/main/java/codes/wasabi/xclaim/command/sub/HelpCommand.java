@@ -5,6 +5,8 @@ import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.ChoiceType;
 import codes.wasabi.xclaim.command.argument.type.ComboType;
 import codes.wasabi.xclaim.command.argument.type.RangeType;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -75,6 +77,7 @@ public class HelpCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
+        Audience audience = Platform.getAdventure().sender(sender);
         int pageNum = 1;
         if (arguments.length > 0) {
             Object arg = arguments[0];
@@ -83,7 +86,7 @@ public class HelpCommand implements Command {
             } else if (arg instanceof String str) {
                 Optional<Command> opt = commands.stream().filter((Command c) -> c.getName().equalsIgnoreCase(str)).findFirst();
                 if (opt.isEmpty()) {
-                    sender.sendMessage(Component.text("* Can't find that command").color(NamedTextColor.RED));
+                    audience.sendMessage(Component.text("* Can't find that command").color(NamedTextColor.RED));
                 } else {
                     Command com = opt.get();
                     int numRequired = com.getNumRequiredArguments();
@@ -118,7 +121,7 @@ public class HelpCommand implements Command {
                     } else {
                         component = component.append(Component.text("No arguments").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC));
                     }
-                    sender.sendMessage(component);
+                    audience.sendMessage(component);
                 }
                 return;
             }
@@ -155,7 +158,7 @@ public class HelpCommand implements Command {
             ret = ret.append(Component.newline());
         }
         ret = ret.append(head);
-        sender.sendMessage(ret);
+        audience.sendMessage(ret);
     }
 
 }

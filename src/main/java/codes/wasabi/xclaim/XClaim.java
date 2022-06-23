@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,6 +40,7 @@ public final class XClaim extends JavaPlugin {
     public void onEnable() {
         instance = this;
         logger = getLogger();
+        Platform.init();
         dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, "Created data folder");
         locateJarFile();
@@ -55,6 +57,7 @@ public final class XClaim extends JavaPlugin {
         saveTrustedPlayers();
         saveClaims();
         stopServices();
+        Platform.cleanup();
         logger.log(Level.INFO, "Done");
     }
 

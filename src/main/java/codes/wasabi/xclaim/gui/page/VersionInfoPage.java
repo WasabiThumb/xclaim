@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.gui.page;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,14 +28,17 @@ public class VersionInfoPage extends Page {
 
     static {
         ItemStack ver = new ItemStack(Material.BOOK, 1);
-        ver.editMeta((ItemMeta meta) -> {
+        ItemMeta meta = ver.getItemMeta();
+        if (meta != null) {
             PluginDescriptionFile description = XClaim.instance.getDescription();
-            meta.displayName(Component.text("Version").color(NamedTextColor.GOLD));
-            meta.lore(Arrays.asList(
+            Platform p = Platform.get();
+            p.metaDisplayName(meta, Component.text("Version").color(NamedTextColor.GOLD));
+            p.metaLore(meta, Arrays.asList(
                     Component.text(description.getVersion()).color(NamedTextColor.LIGHT_PURPLE),
                     Component.text("Made for MC Version " + Objects.requireNonNullElse(description.getAPIVersion(), "Unspecified")).color(NamedTextColor.LIGHT_PURPLE)
             ));
-        });
+        }
+        ver.setItemMeta(meta);
         VERSION_STACK = ver;
     }
 
@@ -44,12 +48,15 @@ public class VersionInfoPage extends Page {
         UUID authorID = new UUID(-7814744758566370837L, -7422362746895434695L);
         OfflinePlayer author = Bukkit.getOfflinePlayer(authorID);
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
-        skull.editMeta((ItemMeta meta) -> {
-            meta.displayName(Component.text("Author").color(NamedTextColor.GOLD));
+        ItemMeta meta = skull.getItemMeta();
+        if (meta != null) {
+            Platform p = Platform.get();
+            p.metaDisplayName(meta, Component.text("Author").color(NamedTextColor.GOLD));
             String name = Objects.requireNonNullElse(author.getName(), "Wasabi_Thumbs");
-            meta.lore(Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
+            p.metaLore(meta, Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
             if (meta instanceof SkullMeta sm) sm.setOwningPlayer(author);
-        });
+        }
+        skull.setItemMeta(meta);
         AUTHOR_STACK = skull;
     }
 

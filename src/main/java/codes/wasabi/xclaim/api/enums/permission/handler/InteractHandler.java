@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.api.enums.permission.handler;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -82,7 +83,7 @@ public class InteractHandler extends PermissionHandler {
             is = ply.getInventory().getItem(slot);
             Block block = pie.getClickedBlock();
             if (block != null) {
-                loc = block.getRelative(pie.getBlockFace()).getLocation().toCenterLocation();
+                loc = Platform.get().toCenterLocation(block.getRelative(pie.getBlockFace()).getLocation());
             }
         } else {
             is = ply.getItemInUse();
@@ -120,7 +121,7 @@ public class InteractHandler extends PermissionHandler {
                 if (bs instanceof Container) {
                     Player ply = event.getPlayer();
                     if (getClaim().hasPermission(ply, Permission.CHEST_OPEN)) return;
-                    if (test(event, block.getLocation().toCenterLocation())) {
+                    if (test(event, Platform.get().toCenterLocation(block.getLocation()))) {
                         stdError(ply);
                     }
                 }
@@ -134,11 +135,11 @@ public class InteractHandler extends PermissionHandler {
         }
         if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
         if (itemCheck(event)) return;
-        Location loc = event.getInteractionPoint();
+        Location loc = Platform.get().getInteractionPoint(event);
         if (loc == null) {
             Block b = event.getClickedBlock();
             if (b != null) {
-                loc = b.getLocation().toCenterLocation();
+                loc = Platform.get().toCenterLocation(b.getLocation());
             } else {
                 loc = event.getPlayer().getLocation();
             }
@@ -192,7 +193,7 @@ public class InteractHandler extends PermissionHandler {
                 } catch (IllegalStateException ignored) {
                     return;
                 }
-                Location loc = b.getLocation().toCenterLocation();
+                Location loc = Platform.get().toCenterLocation(b.getLocation());
                 if (getClaim().contains(loc)) {
                     event.setCancelled(true);
                     stdError(ply);

@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.util;
 
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ public final class InventorySerializer {
             if (is == null) {
                 bos.writeBytes(zeroBytes);
             } else {
-                byte[] bytes = is.serializeAsBytes();
+                byte[] bytes = Platform.get().itemStackSerializeBytes(is);
                 bos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(bytes.length).array());
                 bos.writeBytes(bytes);
             }
@@ -48,7 +49,7 @@ public final class InventorySerializer {
                     ret[i] = null;
                 } else {
                     byte[] bs = bis.readNBytes(len);
-                    ret[i] = ItemStack.deserializeBytes(bs);
+                    ret[i] = Platform.get().itemStackDeserializeBytes(bs);
                 }
             }
             return ret;

@@ -1,6 +1,6 @@
 package codes.wasabi.xclaim.util;
 
-// This class has been lifted from Apache Commons Lang, which was at a time a dependency for Paper
+// This class has been lifted from Apache Commons Lang
 public final class WordWrap {
 
     public static String wrap(String str, int wrapLength) {

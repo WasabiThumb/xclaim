@@ -1,9 +1,11 @@
 package codes.wasabi.xclaim.gui;
 
 import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +48,7 @@ public abstract class Page {
     }
     public void onTick() {
         if (awaiting) {
-            getTarget().sendMessage(
+            Platform.getAdventure().player(getTarget()).sendMessage(
                     Component.text("\n".repeat(100) + awaitPrompt + "\n")
             );
         }
@@ -115,7 +117,8 @@ public abstract class Page {
         if (suspended == suspend) return;
         if (suspend) {
             suspended = true;
-            parent.getInventory().close();
+            Inventory iv = parent.getInventory();
+            Platform.get().closeInventory(iv);
         } else {
             parent.getTarget().openInventory(parent.getInventory());
             suspended = false;

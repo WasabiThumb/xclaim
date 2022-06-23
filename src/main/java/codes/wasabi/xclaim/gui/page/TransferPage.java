@@ -4,6 +4,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -50,10 +51,12 @@ public class TransferPage extends Page {
     private void populate() {
         ItemStack head;
         if (matchPlayer != null) {
-            head = DisplayItem.create(Material.PLAYER_HEAD, matchPlayer.displayName());
-            head.editMeta((ItemMeta im) -> {
+            head = DisplayItem.create(Material.PLAYER_HEAD, Platform.get().playerDisplayName(matchPlayer));
+            ItemMeta im = head.getItemMeta();
+            if (im != null) {
                 if (im instanceof SkullMeta sm) sm.setOwningPlayer(matchPlayer);
-            });
+            }
+            head.setItemMeta(im);
         } else {
             head = DisplayItem.create(Material.PLAYER_HEAD, "Unknown Player", NamedTextColor.RED);
         }
@@ -68,7 +71,7 @@ public class TransferPage extends Page {
         prompt("Enter the username of the player to transfer to: ", (String s) -> {
             List<Player> matches = Bukkit.matchPlayer(s);
             if (matches.size() < 1) {
-                getTarget().sendMessage(Component.text("* Cannot find that player!").color(NamedTextColor.RED));
+                Platform.getAdventure().player(getTarget()).sendMessage(Component.text("* Cannot find that player!").color(NamedTextColor.RED));
                 getParent().close();
             }
             matchPlayer = matches.get(0);
@@ -83,7 +86,7 @@ public class TransferPage extends Page {
                 Player target = getTarget();
                 claim.setOwner(matchPlayer);
                 claim.setUserPermission(target, Permission.MANAGE, true);
-                target.sendMessage(Component.text("* Ownership transferred").color(NamedTextColor.GREEN));
+                Platform.getAdventure().player(target).sendMessage(Component.text("* Ownership transferred").color(NamedTextColor.GREEN));
                 target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
                 switchPage(new MainPage(getParent()));
             }

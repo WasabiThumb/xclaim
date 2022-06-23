@@ -6,6 +6,8 @@ import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.StandardTypes;
 import codes.wasabi.xclaim.gui.ChunkEditor;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
@@ -49,9 +51,10 @@ public class ChunksCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) {
+        Audience audience = Platform.getAdventure().sender(sender);
         Player ply = (Player) sender;
         if (ChunkEditor.getEditing(ply) != null) {
-            sender.sendMessage(Component.text("* You are already in the chunk editor! Exit it first!").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* You are already in the chunk editor! Exit it first!").color(NamedTextColor.RED));
         }
         Claim claim = null;
         if (arguments.length > 0) {
@@ -70,15 +73,15 @@ public class ChunksCommand implements Command {
                 }
             }
             if (claim == null) {
-                sender.sendMessage(Component.text("* You aren't currently in a claim!").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("* You aren't currently in a claim!").color(NamedTextColor.RED));
                 return;
             }
         }
         if (!claim.hasPermission(ply, Permission.MANAGE)) {
-            ply.sendMessage(Component.text("* You do not have permission to manage this claim!").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* You do not have permission to manage this claim!").color(NamedTextColor.RED));
             return;
         }
-        ply.sendActionBar(
+        Platform.get().sendActionBar(ply,
                 Component.empty()
                         .append(Component.text("Editing ").color(NamedTextColor.GREEN))
                         .append(Component.text(claim.getName()).color(NamedTextColor.GOLD))

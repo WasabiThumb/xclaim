@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.api;
 
 import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -102,7 +103,7 @@ public class XCPlayer {
                             ply.addAttachment(XClaim.instance, "xclaim.group." + groupName, true);
                             inGroup = true;
                         } else if (giveAfter > 0) {
-                            long elapsed = op.getLastSeen() - op.getFirstPlayed();
+                            long elapsed = Platform.get().getLastSeen(op) - op.getFirstPlayed();
                             int seconds = (int) Math.round(Math.min((elapsed / 1000d), Integer.MAX_VALUE));
                             if (seconds >= giveAfter) {
                                 ply.addAttachment(XClaim.instance, "xclaim.group." + groupName, true);

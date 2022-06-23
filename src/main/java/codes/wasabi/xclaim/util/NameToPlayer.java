@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.util;
 
+import codes.wasabi.xclaim.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public final class NameToPlayer {
     public static @Nullable OfflinePlayer getPlayer(@NotNull String name) {
         OfflinePlayer ply = Bukkit.getPlayer(name);
         if (ply != null) return ply;
-        ply = Bukkit.getOfflinePlayerIfCached(name);
+        ply = Platform.get().getOfflinePlayerIfCached(name);
         if (ply != null) return ply;
         // Must make a web request to Mojang APIs now
         try {

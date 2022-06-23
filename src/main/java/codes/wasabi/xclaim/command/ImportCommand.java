@@ -2,6 +2,8 @@ package codes.wasabi.xclaim.command;
 
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.command.argument.Argument;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -105,27 +107,28 @@ public class ImportCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
+        Audience audience = Platform.getAdventure().sender(sender);
         Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("ClaimChunk");
         if (plugin != null) {
             if (!plugin.isEnabled()) {
-                sender.sendMessage(Component.text("The claimchunk plugin does not seem to be enabled.").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("The claimchunk plugin does not seem to be enabled.").color(NamedTextColor.RED));
                 return;
             }
             com.cjburkey.claimchunk.ClaimChunk qual = (com.cjburkey.claimchunk.ClaimChunk) plugin;
-            sender.sendMessage(Component.text("Getting data handler...").color(NamedTextColor.GREEN));
+            audience.sendMessage(Component.text("Getting data handler...").color(NamedTextColor.GREEN));
             com.cjburkey.claimchunk.data.newdata.IClaimChunkDataHandler dataHandler;
             try {
                 Field field = qual.getClass().getDeclaredField("dataHandler");
                 field.setAccessible(true);
                 dataHandler = (com.cjburkey.claimchunk.data.newdata.IClaimChunkDataHandler) field.get(qual);
             } catch (Exception e) {
-                sender.sendMessage(Component.text("Failed. See details in console.").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("Failed. See details in console.").color(NamedTextColor.RED));
                 e.printStackTrace();
                 return;
             }
             int importIndex = 1;
             for (World w : Bukkit.getWorlds()) {
-                sender.sendMessage(Component.empty()
+                audience.sendMessage(Component.empty()
                         .append(Component.text("Processing world ").color(NamedTextColor.DARK_GREEN).decorate(TextDecoration.ITALIC))
                         .append(Component.text(w.getName()).color(NamedTextColor.GOLD))
                 );
@@ -133,7 +136,7 @@ public class ImportCommand implements Command {
                 for (com.cjburkey.claimchunk.chunk.DataChunk chk : dataHandler.getClaimedChunks()) {
                     com.cjburkey.claimchunk.chunk.ChunkPos pos = chk.chunk;
                     if (pos.getWorld().equalsIgnoreCase(w.getName())) {
-                        sender.sendMessage(
+                        audience.sendMessage(
                                 Component.empty()
                                         .append(Component.text("Found claimed chunk at ").color(NamedTextColor.GREEN))
                                         .append(Component.text(pos.getX() + ", " + pos.getZ()).color(NamedTextColor.GOLD))
@@ -142,7 +145,7 @@ public class ImportCommand implements Command {
                         plane.set(pos.getX(), pos.getZ(), ownerUUID);
                     }
                 };
-                sender.sendMessage(Component.text("Performing flood fill algorithm").color(NamedTextColor.GREEN));
+                audience.sendMessage(Component.text("Performing flood fill algorithm").color(NamedTextColor.GREEN));
                 Map<UUID, List<List<int[]>>> clumps = plane.pullClumps();
                 for (Map.Entry<UUID, List<List<int[]>>> entry : clumps.entrySet()) {
                     UUID uuid = entry.getKey();
@@ -150,13 +153,13 @@ public class ImportCommand implements Command {
                     Component name;
                     Player online = op.getPlayer();
                     if (online != null) {
-                        name = online.displayName();
+                        name = Platform.get().playerDisplayName(online);
                     } else {
                         String n = op.getName();
                         if (n == null) n = uuid.toString();
                         name = Component.text(n);
                     }
-                    sender.sendMessage(Component.empty()
+                    audience.sendMessage(Component.empty()
                             .append(Component.text("Creating claims for player ").color(NamedTextColor.GREEN))
                             .append(name.color(NamedTextColor.GOLD))
                     );
@@ -169,14 +172,14 @@ public class ImportCommand implements Command {
                         claim.claim();
                         importIndex++;
                     }
-                    sender.sendMessage(Component.text("Success").color(NamedTextColor.GREEN));
+                    audience.sendMessage(Component.text("Success").color(NamedTextColor.GREEN));
                 }
             }
-            sender.sendMessage(Component.text("Processed all worlds successfully. Disabling ClaimChunk plugin...").color(NamedTextColor.GREEN));
+            audience.sendMessage(Component.text("Processed all worlds successfully. Disabling ClaimChunk plugin...").color(NamedTextColor.GREEN));
             qual.disable();
-            sender.sendMessage(Component.text("Done").color(NamedTextColor.GREEN));
+            audience.sendMessage(Component.text("Done").color(NamedTextColor.GREEN));
         } else {
-            sender.sendMessage(Component.text("* ClaimChunk does not appear to be installed and enabled").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* ClaimChunk does not appear to be installed and enabled").color(NamedTextColor.RED));
         }
     }
 

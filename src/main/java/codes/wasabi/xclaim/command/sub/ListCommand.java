@@ -4,6 +4,8 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.StandardTypes;
+import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Chunk;
@@ -50,6 +52,7 @@ public class ListCommand implements Command {
 
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
+        Audience audience = Platform.getAdventure().sender(sender);
         OfflinePlayer op = null;
         if (arguments.length > 0) {
             op = (OfflinePlayer) arguments[0];
@@ -58,7 +61,7 @@ public class ListCommand implements Command {
             if (sender instanceof Player p) {
                 op = p;
             } else {
-                sender.sendMessage(Component.text("* You need to specify a player (you are not a player)!").color(NamedTextColor.RED));
+                audience.sendMessage(Component.text("* You need to specify a player (you are not a player)!").color(NamedTextColor.RED));
                 return;
             }
         }
@@ -95,10 +98,10 @@ public class ListCommand implements Command {
                 i++;
             }
         } else {
-            ret = ret.append(op instanceof Player p ? p.displayName() : Component.text(Objects.requireNonNullElse(op.getName(), "Unknown")));
+            ret = ret.append(op instanceof Player p ? Platform.get().playerDisplayName(p) : Component.text(Objects.requireNonNullElse(op.getName(), "Unknown")));
             ret = ret.append(Component.text(" has no claims").color(NamedTextColor.DARK_GRAY));
         }
-        sender.sendMessage(ret);
+        audience.sendMessage(ret);
     }
 
 }

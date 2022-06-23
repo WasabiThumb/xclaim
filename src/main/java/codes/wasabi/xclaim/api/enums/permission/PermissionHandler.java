@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.api.enums.permission;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -31,7 +32,7 @@ public abstract class PermissionHandler implements Listener {
     }
 
     protected void stdError(@NotNull Player ply) {
-        ply.sendMessage(
+        Platform.getAdventure().player(ply).sendMessage(
                 Component.empty()
                         .append(Component.text("Hey!").color(NamedTextColor.RED).decorate(TextDecoration.BOLD))
                         .append(Component.text(" You can't do that here.").color(NamedTextColor.GRAY))
