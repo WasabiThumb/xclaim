@@ -4,7 +4,7 @@
 A better chunk claim system for Paper servers\
 *Get it? It sounds like exclaim...*\
 \
-| [Installation](#installation) | [Features](#features) | [Config](#config) | [Permissions](#permissions) | [Commands](#commands) | [Roadmap](#roadmap) |
+| [Installation](#installation) | [Features](#features) | [Config](#config) | [Permissions](#permissions) | [Commands](#commands) | [Support](#support) | [Roadmap](#roadmap) |
 
 ## Installation
 You can download a build from the [releases tab](https://github.com/WasabiThumb/xclaim/releases) on the right, or [build the plugin yourself](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#build-the-project) if you want. Then, place the JAR into your plugins folder. Don't use the JAR labelled "original" unless you know what you are doing.
@@ -63,6 +63,15 @@ Don't worry, there aren't that many.
 | xclaim clear | Clear all claims from a player |
 | xclaim list | Lists all claims a player owns |
 | importclaims | Import claims from ClaimChunk |
+
+## Support
+|         | 1.17 | 1.18 | 1.19 | Paper | Spigot |
+| --:     | :-:  | :-:  | :-:  | :-:   | :-:    |
+| < 1.3.1 |      | ✔    |      | ✔     |        |
+| 1.3.1   |      | ✔    | ✔    | ✔     |        |
+| 1.4.x   | ✔    | ✔    | ✔    | ✔     |        |
+| 1.5.x+  | ✔    | ✔    | ✔    | ✔     | ✔      |
+
 
 ## Roadmap
 * Add more management commands
