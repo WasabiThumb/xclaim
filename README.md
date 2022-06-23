@@ -14,7 +14,7 @@ The main command is /xclaim (alias /xc). This allows players to create and manag
 
 ### Dynmap Integration
 Dynmap integration should work out-of-the-box as long as it is [configured properly](#config). If it does not, please create an Issue on the [Issues page](https://github.com/WasabiThumb/xclaim/issues).\
-View the Dynmap on the [HL21st Minecraft Server](https://www.planetminecraft.com/server/half-life-21st-century-humor-official/) live by clicking [here](http://54.39.202.91:8044/).\
+View the Dynmap on the [HL21st Minecraft Server](https://www.planetminecraft.com/server/half-life-21st-century-humor-official/) live by clicking [here](http://hl21st.com:8104/).\
 \
 <img src="https://wasabicodes.xyz/cdn/e536fc60213f22701f2e55858f8f87f9/dynmap.png" alt="Dynmap integration working on the HL21st Minecraft Server, captured on 5/13/22" title="HL21st Minecraft Server" style="width: 30em">
 
