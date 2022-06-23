@@ -92,7 +92,7 @@ public class SpigotPlatform extends Platform {
 
     @Override
     public void closeInventory(@NotNull Inventory iv) {
-        for (HumanEntity he : iv.getViewers()) {
+        for (HumanEntity he : new ArrayList<>(iv.getViewers())) {
             he.closeInventory();
         }
     }
