@@ -282,7 +282,10 @@ public final class XClaim extends JavaPlugin {
     public static class Lang {
 
         private static final Pattern pattern = Pattern.compile("(\\$\\d+)");
-        private static final MiniMessage mm = MiniMessage.miniMessage();
+        private static final MiniMessage mm = MiniMessage
+                .builder()
+                .strict(true)
+                .build();
 
         private final Map<String, String> map = new HashMap<>();
 
