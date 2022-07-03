@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.ChoiceType;
@@ -20,8 +21,8 @@ import java.util.stream.Collectors;
 
 public class HelpCommand implements Command {
 
-    private int commandsPerPage = 8;
-    private double d_commandsPerPage = commandsPerPage;
+    private final int commandsPerPage = 8;
+    private final double d_commandsPerPage = commandsPerPage;
 
     private Set<Command> commands = new LinkedHashSet<>();
 
@@ -43,12 +44,12 @@ public class HelpCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "help";
+        return XClaim.lang.get("cmd-help-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Provides a list of possible commands or detailed info for a specific command";
+        return XClaim.lang.get("cmd-help-description");
     }
 
     @Override
@@ -59,8 +60,8 @@ public class HelpCommand implements Command {
                                 new RangeType(1, (int) Math.floor(Math.max(commands.size() - 1, 0) / d_commandsPerPage) + 1),
                                 new ChoiceType(commands.stream().map(Command::getName).toArray(String[]::new))
                         ),
-                        "Page number or command name",
-                        "The page of help to view, or the name of the command to view detailed information about"
+                        XClaim.lang.get("cmd-help-arg-name"),
+                        XClaim.lang.get("cmd-help-arg-description")
                 )
         };
     }
@@ -86,7 +87,7 @@ public class HelpCommand implements Command {
             } else if (arg instanceof String str) {
                 Optional<Command> opt = commands.stream().filter((Command c) -> c.getName().equalsIgnoreCase(str)).findFirst();
                 if (opt.isEmpty()) {
-                    audience.sendMessage(Component.text("* Can't find that command").color(NamedTextColor.RED));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-help-err-404"));
                 } else {
                     Command com = opt.get();
                     int numRequired = com.getNumRequiredArguments();
@@ -119,7 +120,7 @@ public class HelpCommand implements Command {
                     if (args.length > 0) {
                         component = component.append(Component.newline()).append(argDefs);
                     } else {
-                        component = component.append(Component.text("No arguments").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC));
+                        component = component.append(XClaim.lang.getComponent("cmd-help-no-args"));
                     }
                     audience.sendMessage(component);
                 }
@@ -136,7 +137,7 @@ public class HelpCommand implements Command {
         } else {
             head = head.append(Component.text("  "));
         }
-        head = head.append(Component.text("Page " + pageNum).color(NamedTextColor.YELLOW));
+        head = head.append(XClaim.lang.getComponent("cmd-help-page", pageNum));
         if (pageNum < maxPage) {
             head = head.append(Component.text(" >").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum + 1))));
         } else {

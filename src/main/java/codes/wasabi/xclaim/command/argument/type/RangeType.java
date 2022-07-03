@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -33,7 +34,11 @@ public class RangeType extends Type<Integer> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Integer between " + sampleValues.get(0) + " and " + sampleValues.get(sampleValues.size() - 1);
+        return XClaim.lang.get(
+                "arg-range-name",
+                sampleValues.get(0),
+                sampleValues.get(sampleValues.size() - 1)
+        );
     }
 
     @Override

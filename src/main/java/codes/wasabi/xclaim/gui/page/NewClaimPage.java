@@ -8,9 +8,6 @@ import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -27,8 +24,9 @@ public class NewClaimPage extends Page {
     private static int nextIndex() {
         AtomicInteger index = new AtomicInteger(head);
         Claim.getAll().stream().sorted(Comparator.comparing(Claim::getName)).forEachOrdered((Claim c) -> {
+            String root = XClaim.lang.get("new-claim").toLowerCase(Locale.ROOT) + " #";
             String n = c.getName().toLowerCase(Locale.ROOT);
-            if (n.startsWith("new claim #")) {
+            if (n.startsWith(root)) {
                 String remainder = n.substring(11);
                 int num;
                 try {
@@ -47,20 +45,20 @@ public class NewClaimPage extends Page {
 
     private static final ItemStack YES_STACK = DisplayItem.create(
             Material.GREEN_CONCRETE,
-            Component.text("Confirm").color(NamedTextColor.DARK_GREEN),
+            XClaim.lang.getComponent("gui-new-confirm"),
             Arrays.asList(
-                    Component.text("Create a new claim").color(NamedTextColor.GREEN),
-                    Component.text("starting in your current").color(NamedTextColor.GREEN),
-                    Component.text("chunk.").color(NamedTextColor.GREEN)
+                    XClaim.lang.getComponent("gui-new-confirm-line1"),
+                    XClaim.lang.getComponent("gui-new-confirm-line2"),
+                    XClaim.lang.getComponent("gui-new-confirm-line3")
             )
     );
 
     private static final ItemStack NO_STACK = DisplayItem.create(
             Material.RED_CONCRETE,
-            Component.text("Cancel").color(NamedTextColor.DARK_RED),
+            XClaim.lang.getComponent("gui-new-cancel"),
             Arrays.asList(
-                    Component.text("Return to the").color(NamedTextColor.RED),
-                    Component.text("main menu.").color(NamedTextColor.RED)
+                    XClaim.lang.getComponent("gui-new-cancel-line1"),
+                    XClaim.lang.getComponent("gui-new-cancel-line2")
             )
     );
 
@@ -85,7 +83,7 @@ public class NewClaimPage extends Page {
             if (cur != null) {
                 if (!cur.getOwner().getUniqueId().equals(ply.getUniqueId())) {
                     if (!ply.hasPermission("xclaim.override")) {
-                        Platform.getAdventure().player(ply).sendMessage(Component.text("* This chunk is already claimed!").color(NamedTextColor.RED));
+                        Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-claimed"));
                         getParent().close();
                         return;
                     }
@@ -104,27 +102,19 @@ public class NewClaimPage extends Page {
                 }
             }
             if (curClaims >= maxClaims) {
-                Platform.getAdventure().player(ply).sendMessage(Component.text("* You've reached your maximum number of claims! Try deleting some.").color(NamedTextColor.RED));
+                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-max-claims"));
                 getParent().close();
                 return;
             }
             if (curChunks >= maxChunks) {
-                Platform.getAdventure().player(ply).sendMessage(Component.text("* Can't create this claim, it will exceed your maximum number of chunks.").color(NamedTextColor.RED));
+                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-max-chunks"));
                 getParent().close();
                 return;
             }
-            String name = "New Claim #" + nextIndex();
+            String name = XClaim.lang.get("new-claim") + " #" + nextIndex();
             Claim newClaim = new Claim(name, Set.of(chunk), ply);
             newClaim.claim();
-            Platform.getAdventure().player(ply).sendMessage(
-                    Component
-                            .empty()
-                            .append(
-                                    Component.text("* Created new claim ").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD)
-                            ).append(
-                                    Component.text(name).color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD).decorate(TextDecoration.ITALIC)
-                            )
-            );
+            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-success", name));
             ply.playSound(ply.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
             getParent().close();
             if (XClaim.mainConfig.getBoolean("enter-chunk-editor-on-create", true)) {

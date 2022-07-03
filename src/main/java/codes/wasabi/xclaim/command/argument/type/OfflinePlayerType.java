@@ -54,7 +54,7 @@ public class OfflinePlayerType extends Type<OfflinePlayer> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Player";
+        return XClaim.lang.get("arg-offlinePlayer-name");
     }
 
     @Override

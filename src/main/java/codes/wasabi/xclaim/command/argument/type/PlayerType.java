@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ public class PlayerType extends Type<Player> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Online Player";
+        return XClaim.lang.get("arg-player-name");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.gui.ChunkEditor;
@@ -17,12 +18,12 @@ public class GUICommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "gui";
+        return XClaim.lang.get("cmd-gui-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "An acessible gui for all XClaim functions";
+        return XClaim.lang.get("cmd-gui-description");
     }
 
     @Override
@@ -45,7 +46,7 @@ public class GUICommand implements Command {
         Audience audience = Platform.getAdventure().sender(sender);
         Player ply = (Player) sender;
         if (ChunkEditor.getEditing(ply) != null) {
-            audience.sendMessage(Component.text("* You must exit the chunk editor before using the GUI.").color(NamedTextColor.RED));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-gui-err-restricted"));
             return;
         }
         new GUIHandler((Player) sender);

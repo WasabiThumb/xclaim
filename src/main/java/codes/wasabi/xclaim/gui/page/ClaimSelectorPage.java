@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.gui.page;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
@@ -9,7 +10,6 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -73,31 +73,21 @@ public class ClaimSelectorPage extends Page {
                 }
                 slotAssoc.put(idx, claim);
                 List<Component> lore = new ArrayList<>();
-                lore.add(Component.empty()
-                        .append(Component.text("Owned by ").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
-                        .append(name.color(NamedTextColor.GOLD))
-                );
+                lore.add(XClaim.lang.getComponent("gui-sel-owned", name));
                 Set<Chunk> chunks = claim.getChunks();
                 int chunkCount = chunks.size();
-                lore.add(Component.empty()
-                        .append(Component.text(chunkCount).color(NamedTextColor.GOLD))
-                        .append(Component.text(" chunk" + (chunkCount == 1 ? "" : "s")).color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
-                );
+                if (chunkCount == 1) {
+                    lore.add(XClaim.lang.getComponent("gui-sel-chunk-count", chunkCount));
+                } else {
+                    lore.add(XClaim.lang.getComponent("gui-sel-chunk-count-plural", chunkCount));
+                }
                 if (chunkCount > 0) {
                     Chunk c = chunks.iterator().next();
                     Block b = c.getBlock(8, c.getWorld().getMinHeight(), 8);
-                    lore.add(Component.empty()
-                            .append(Component.text("Chunk #1 at ").color(NamedTextColor.DARK_GRAY))
-                            .append(Component.text("X=").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
-                            .append(Component.text(b.getX()).color(NamedTextColor.GOLD))
-                            .append(Component.text(", Z=").color(NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
-                            .append(Component.text(b.getZ()).color(NamedTextColor.GOLD))
-                    );
+                    lore.add(XClaim.lang.getComponent("gui-sel-first-chunk", b.getX(), b.getZ()));
                 }
                 if (i == 0 && addedWithin) {
-                    lore.add(Component.empty()
-                            .append(Component.text("Currently within").color(NamedTextColor.GRAY))
-                    );
+                    lore.add(XClaim.lang.getComponent("gui-sel-within"));
                 }
                 setItem(idx, DisplayItem.create(
                         Material.GREEN_DYE,
@@ -108,14 +98,14 @@ public class ClaimSelectorPage extends Page {
             }
         }
         if (pageIndex > 0) {
-            setItem(8, DisplayItem.create(Material.ARROW, "Previous", NamedTextColor.GOLD));
+            setItem(8, DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-sel-previous")));
         } else {
-            setItem(8, DisplayItem.create(Material.SPYGLASS, "Search", NamedTextColor.DARK_PURPLE));
+            setItem(8, DisplayItem.create(Material.SPYGLASS, XClaim.lang.getComponent("gui-sel-search")));
         }
         //
-        setItem(17, DisplayItem.create(Material.BARRIER, "Cancel", NamedTextColor.RED));
+        setItem(17, DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("gui-sel-cancel")));
         if (pageIndex < maxPage) {
-            setItem(26, DisplayItem.create(Material.ARROW, "Next", NamedTextColor.GOLD));
+            setItem(26, DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-sel-next")));
         }
     }
 
@@ -133,7 +123,7 @@ public class ClaimSelectorPage extends Page {
                 pageIndex--;
                 populate();
             } else {
-                prompt("Enter search term: ", (String term) -> {
+                prompt(XClaim.lang.get("gui-sel-prompt"), (String term) -> {
                     sorter = Comparator.comparingInt((Claim claim) -> LevenshteinDistance.getDefaultInstance().apply(claim.getName(), term));
                     populate();
                 });

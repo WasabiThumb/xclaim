@@ -1,3 +1,4 @@
+language: en-US # must match a language from lang/*.json
 veteran-time: 604800 # measured in seconds
 stop-editing-on-shutdown: false
 stop-editing-on-leave: true

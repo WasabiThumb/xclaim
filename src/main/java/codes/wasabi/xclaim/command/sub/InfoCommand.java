@@ -20,12 +20,12 @@ public class InfoCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "info";
+        return XClaim.lang.get("cmd-info-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Prints out basic info about XClaim";
+        return XClaim.lang.get("cmd-info-description");
     }
 
     @Override
@@ -55,20 +55,23 @@ public class InfoCommand implements Command {
             claimCount++;
             chunkCount += c.getChunks().size();
         }
+        String pluralType = (claimCount == 1 ? (
+                chunkCount == 1 ? "not" : "chunk"
+        ) : "both");
+        Component claimText = XClaim.lang.getComponent("cmd-info-claims-" + pluralType + "-plural", claimCount, chunkCount);
         audience.sendMessage(Component.text()
                 .append(Component.text("XClaim").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
                 .append(Component.newline())
-                .append(Component.text("Made by ").color(NamedTextColor.GOLD))
-                .append(Component.text("WasabiThumbs").color(NamedTextColor.GREEN).clickEvent(ClickEvent.runCommand("Boy, I sure do love Wasabi and think he makes some pretty great plugins!")))
+                .append(XClaim.lang.getComponent(
+                        "cmd-info-author",
+                        Component.text("WasabiThumbs").color(NamedTextColor.GREEN).clickEvent(ClickEvent.runCommand("Boy, I sure do love Wasabi and think he makes some pretty great plugins!"))
+                ))
                 .append(Component.newline())
-                .append(Component.text("Version " + description.getVersion()).color(NamedTextColor.GOLD))
+                .append(XClaim.lang.getComponent("cmd-info-version", description.getVersion()))
                 .append(Component.newline())
-                .append(Component.text("API Version " + apiVersion).color(NamedTextColor.GOLD))
+                .append(XClaim.lang.getComponent("cmd-info-apiVersion", apiVersion))
                 .append(Component.newline())
-                .append(Component.text(claimCount).color(NamedTextColor.WHITE))
-                .append(Component.text(" total claim" + (claimCount == 1 ? "" : "s") + " covering ").color(NamedTextColor.GOLD))
-                .append(Component.text(chunkCount).color(NamedTextColor.WHITE))
-                .append(Component.text(" chunk" + (chunkCount == 1 ? "" : "s")).color(NamedTextColor.GOLD))
+                .append(claimText)
         );
     }
 

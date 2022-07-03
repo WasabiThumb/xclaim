@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.sub.*;
 import org.bukkit.command.CommandSender;
@@ -37,7 +38,7 @@ public class XClaimCommand implements Command {
 
     @Override
     public @NotNull String getDescription() {
-        return "XClaim main command";
+        return XClaim.lang.get("cmd-xc-description");
     }
 
     private final Argument[] args = new Argument[0];

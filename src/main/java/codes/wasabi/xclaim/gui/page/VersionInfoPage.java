@@ -32,10 +32,10 @@ public class VersionInfoPage extends Page {
         if (meta != null) {
             PluginDescriptionFile description = XClaim.instance.getDescription();
             Platform p = Platform.get();
-            p.metaDisplayName(meta, Component.text("Version").color(NamedTextColor.GOLD));
+            p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-version")).color(NamedTextColor.GOLD));
             p.metaLore(meta, Arrays.asList(
                     Component.text(description.getVersion()).color(NamedTextColor.LIGHT_PURPLE),
-                    Component.text("Made for MC Version " + Objects.requireNonNullElse(description.getAPIVersion(), "Unspecified")).color(NamedTextColor.LIGHT_PURPLE)
+                    Component.text(XClaim.lang.get("gui-vinf-mc-version", Objects.requireNonNullElse(description.getAPIVersion(), XClaim.lang.get("gui-vinf-mc-version-unspecified")))).color(NamedTextColor.LIGHT_PURPLE)
             ));
         }
         ver.setItemMeta(meta);
@@ -51,7 +51,7 @@ public class VersionInfoPage extends Page {
         ItemMeta meta = skull.getItemMeta();
         if (meta != null) {
             Platform p = Platform.get();
-            p.metaDisplayName(meta, Component.text("Author").color(NamedTextColor.GOLD));
+            p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(NamedTextColor.GOLD));
             String name = Objects.requireNonNullElse(author.getName(), "Wasabi_Thumbs");
             p.metaLore(meta, Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
             if (meta instanceof SkullMeta sm) sm.setOwningPlayer(author);
@@ -60,7 +60,7 @@ public class VersionInfoPage extends Page {
         AUTHOR_STACK = skull;
     }
 
-    private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, "Back", NamedTextColor.RED);
+    private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.get("gui-vinf-back"), NamedTextColor.RED);
 
     public VersionInfoPage(@NotNull GUIHandler parent) {
         super(parent);

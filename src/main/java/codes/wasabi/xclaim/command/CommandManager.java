@@ -4,8 +4,6 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -67,7 +65,7 @@ public class CommandManager {
             args = res.args();
             if (cmd.requiresPlayerExecutor()) {
                 if (!(sender instanceof Player)) {
-                    audience.sendMessage(Component.text("* You must be a player to run this command!").color(NamedTextColor.RED));
+                    audience.sendMessage(XClaim.lang.getComponent("cmdmgr-err-player"));
                     return true;
                 }
             }
@@ -75,11 +73,11 @@ public class CommandManager {
             int len = args.length;
             int required = cmd.getNumRequiredArguments();
             if (len < required) {
-                audience.sendMessage(Component.text("* Not enough arguments! This command requires at least " + required).color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmdmgr-err-min-args", required));
                 return true;
             }
             if (len > argDefs.length) {
-                audience.sendMessage(Component.text("* Too many arguments! This command takes at most " + argDefs.length).color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmdmgr-err-max-args", argDefs.length));
                 return true;
             }
             Object[] obs = new Object[argDefs.length];
@@ -90,7 +88,7 @@ public class CommandManager {
                     obs[i] = def.type().parse(arg);
                 }
             } catch (IllegalArgumentException e) {
-                audience.sendMessage(Component.text("* Bad arguments! See help page for more info").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmdmgr-err-malformed"));
                 return true;
             }
             for (int i=len; i < argDefs.length; i++) {
@@ -99,7 +97,7 @@ public class CommandManager {
             try {
                 cmd.execute(sender, label, obs);
             } catch (Exception e) {
-                audience.sendMessage(Component.text("* An unexpected exception (" + e.getClass().getName() + ") occurred while executing this command.").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmdmgr-err-unexpected", e.getClass().getName()));
                 e.printStackTrace();
             }
             return true;
@@ -155,7 +153,7 @@ public class CommandManager {
         Handler handler = new Handler(command);
         PluginCommand bukkitCmd = handler.bukkitCmd;
         if (bukkitCmd == null) {
-            XClaim.logger.warning("Could not register command \"" + name + "\", does not exist in plugin.yml");
+            XClaim.logger.warning(XClaim.lang.get("cmdmgr-err-undefined", name));
             return;
         }
         bukkitCmd.setExecutor(handler);
@@ -256,7 +254,7 @@ public class CommandManager {
             try {
                 com = con.newInstance();
             } catch (IllegalAccessException e) {
-                XClaim.logger.warning("Could not access constructor for class " + clazz.getName() + ", see details below");
+                XClaim.logger.warning(XClaim.lang.get("cmdmgr-err-reflect", clazz.getName()));
                 e.printStackTrace();
                 continue;
             } catch (ReflectiveOperationException e) {

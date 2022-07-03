@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.ChoiceType;
@@ -9,7 +10,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,16 +24,23 @@ public class UpdateCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "update";
+        return XClaim.lang.get("cmd-update-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Searches for updates for XClaim online";
+        return XClaim.lang.get("cmd-update-description");
     }
 
     private final Argument[] args = new Argument[] {
-            new Argument(new ChoiceType("yes", "no"), "proceed", "Whether or not to proceed with the update once found")
+            new Argument(
+                    new ChoiceType(
+                            XClaim.lang.get("cmd-update-arg-proceed-yes"),
+                            XClaim.lang.get("cmd-update-arg-proceed-no")
+                    ),
+                    "proceed",
+                    XClaim.lang.get("cmd-update-arg-proceed-description")
+            )
     };
     @Override
     public @NotNull Argument @NotNull [] getArguments() {
@@ -55,7 +62,7 @@ public class UpdateCommand implements Command {
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) {
         Audience audience = Platform.getAdventure().sender(sender);
         if (!(sender.hasPermission("xclaim.update") || sender.isOp())) {
-            audience.sendMessage(Component.text("* You don't have permission to run this command!").color(NamedTextColor.RED));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-update-err-perms"));
             return;
         }
         Executors.newSingleThreadExecutor().execute(() -> {
@@ -68,88 +75,76 @@ public class UpdateCommand implements Command {
                 uuid = ply.getUniqueId();
             }
             if (!permitted) {
-                audience.sendMessage(Component.text("* You do not have permission to update XClaim!").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-update-err-perms2"));
             }
             String yesno = null;
             if (arguments.length > 0) {
                 yesno = (String) arguments[0];
             }
             if (yesno != null) {
-                if (yesno.equalsIgnoreCase("no")) {
+                if (yesno.equalsIgnoreCase(XClaim.lang.get("cmd-update-arg-proceed-no"))) {
                     map.remove(uuid);
-                    audience.sendMessage(Component.text("* Declined update.").color(NamedTextColor.GREEN));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-declined"));
                     return;
                 }
                 AutoUpdater.UpdateOption opt;
                 if (!map.containsKey(uuid)) {
-                    audience.sendMessage(Component.text("* Looking for updates...").color(NamedTextColor.YELLOW));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-searching"));
                     try {
                         opt = AutoUpdater.check();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        audience.sendMessage(Component.text("* Failed to find any version to update to. See console for more details.").color(NamedTextColor.RED));
+                        audience.sendMessage(XClaim.lang.getComponent("cmd-update-err-check"));
                         return;
                     }
                 } else {
                     opt = map.get(uuid);
                 }
                 if (opt == null) {
-                    audience.sendMessage(Component.text("* No valid versions to update to found.").color(NamedTextColor.RED));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-none"));
                     return;
                 }
-                audience.sendMessage(Component.text("* Installing update...").color(NamedTextColor.YELLOW));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-update-start"));
                 try {
                     opt.update();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    audience.sendMessage(Component.text("* Failed to update. See console for more details.").color(NamedTextColor.RED));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-err-unexpected"));
                 }
-                audience.sendMessage(Component.text("* Updated successfully! Changes will reflect on next restart. Restarting soon is recommended to avoid any unpredictable bugs.").color(NamedTextColor.GREEN));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-update-success"));
                 if (sender instanceof Player) {
                     audience.sendMessage(Component.empty()
-                            .append(Component.text("NEW: ").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-                            .append(Component.text("Click ").color(NamedTextColor.YELLOW))
-                            .append(Component.text("here").color(NamedTextColor.GOLD).decorate(TextDecoration.UNDERLINED).clickEvent(ClickEvent.runCommand("/xc restart yes")))
-                            .append(Component.text(" to restart XClaim without restarting the server ").color(NamedTextColor.YELLOW))
-                            .append(Component.text("(EXPERIMENTAL)").color(NamedTextColor.DARK_RED))
+                            .append(XClaim.lang.getComponent("cmd-update-promote-restart-player-pre"))
+                            .append(XClaim.lang.getComponent("cmd-update-promote-restart-player-click").clickEvent(ClickEvent.runCommand("/xc restart yes")))
+                            .append(XClaim.lang.getComponent("cmd-update-promote-restart-player-post"))
                     );
                 } else {
-                    audience.sendMessage(Component.empty()
-                            .append(Component.text("NEW: ").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-                            .append(Component.text("Run ").color(NamedTextColor.YELLOW))
-                            .append(Component.text("/xclaim restart yes").color(NamedTextColor.GOLD))
-                            .append(Component.text(" to restart XClaim without restarting the server ").color(NamedTextColor.YELLOW))
-                            .append(Component.text("(EXPERIMENTAL)").color(NamedTextColor.DARK_RED))
-                    );
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-promote-restart-console"));
                 }
             } else {
                 AutoUpdater.UpdateOption opt;
                 try {
-                    audience.sendMessage(Component.text("* Looking for updates...").color(NamedTextColor.YELLOW));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-searching"));
                     opt = AutoUpdater.check();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    audience.sendMessage(Component.text("* Failed to find any version to update to. See console for more details.").color(NamedTextColor.RED));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-err-check"));
                     return;
                 }
                 map.put(uuid, opt);
                 if (opt == null) {
-                    audience.sendMessage(Component.text("* You are already using the latest compatible version of XClaim!").color(NamedTextColor.GREEN));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-redundant"));
                     return;
                 }
-                audience.sendMessage(
-                        Component.empty()
-                                .append(Component.text("* Found version ").color(NamedTextColor.GREEN))
-                                .append(Component.text(opt.updateOption()).color(NamedTextColor.GOLD))
-                );
+                audience.sendMessage(XClaim.lang.getComponent("cmd-update-found", opt.updateOption()));
                 if (console) {
-                    audience.sendMessage(Component.text("* Use /xclaim update yes to install this version.").color(NamedTextColor.GREEN));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-update-confirm-console"));
                 } else {
                     audience.sendMessage(Component.empty()
-                            .append(Component.text("* Install this version? (").color(NamedTextColor.GRAY))
-                            .append(Component.text("Yes").color(NamedTextColor.GREEN).clickEvent(ClickEvent.runCommand("/xclaim update yes")))
+                            .append(Component.text("* " + XClaim.lang.get("cmd-update-confirm-player-prompt") + " (").color(NamedTextColor.GRAY))
+                            .append(XClaim.lang.getComponent("cmd-update-confirm-player-yes").clickEvent(ClickEvent.runCommand("/xclaim update " + XClaim.lang.get("cmd-update-arg-proceed-yes"))))
                             .append(Component.text("/").color(NamedTextColor.GRAY))
-                            .append(Component.text("No").color(NamedTextColor.RED).clickEvent(ClickEvent.runCommand("/xclaim update no")))
+                            .append(XClaim.lang.getComponent("cmd-update-confirm-player-no").clickEvent(ClickEvent.runCommand("/xclaim update " + XClaim.lang.get("cmd-update-arg-proceed-no"))))
                             .append(Component.text(")").color(NamedTextColor.GRAY))
                     );
                 }

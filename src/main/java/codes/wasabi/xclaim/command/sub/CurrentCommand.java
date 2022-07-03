@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.command.Command;
@@ -19,12 +20,12 @@ public class CurrentCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "current";
+        return XClaim.lang.get("cmd-current-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Gets info about the current claim you are in";
+        return XClaim.lang.get("cmd-current-description");
     }
 
     @Override
@@ -55,7 +56,7 @@ public class CurrentCommand implements Command {
             }
         }
         if (claim == null) {
-            audience.sendMessage(Component.text("* You are not in a claim!").color(NamedTextColor.RED));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-current-err-404"));
             return;
         }
         Component ownerName;
@@ -69,23 +70,22 @@ public class CurrentCommand implements Command {
             ownerName = Component.text(name);
         }
         int chunkCount = claim.getChunks().size();
-        String worldName = "Unset";
+        String worldName = XClaim.lang.get("cmd-current-world-unset");
         World w = claim.getWorld();
         if (w != null) worldName = w.getName();
         audience.sendMessage(Component.empty()
-                .append(Component.text("= ").color(NamedTextColor.GOLD))
-                .append(Component.text(claim.getName()).color(NamedTextColor.DARK_AQUA))
-                .append(Component.text(" =").color(NamedTextColor.GOLD))
+                .append(XClaim.lang.getComponent("cmd-current-output-line1", claim.getName()))
                 .append(Component.newline())
-                .append(Component.text("Owned by ").color(NamedTextColor.DARK_GRAY))
-                .append(ownerName.color(NamedTextColor.GRAY))
+                .append(XClaim.lang.getComponent("cmd-current-output-line2", ownerName))
                 .append(Component.newline())
-                .append(Component.text("In world ").color(NamedTextColor.DARK_GRAY))
-                .append(Component.text(worldName).color(NamedTextColor.GRAY))
+                .append(XClaim.lang.getComponent("cmd-current-output-line3", worldName))
                 .append(Component.newline())
-                .append(Component.text("With ").color(NamedTextColor.DARK_GRAY))
-                .append(Component.text(chunkCount).color(NamedTextColor.GRAY))
-                .append(Component.text(" chunk" + (chunkCount == 1 ? "" : "s")).color(NamedTextColor.DARK_GRAY))
+                .append(
+                        chunkCount == 1 ?
+                                XClaim.lang.getComponent("cmd-current-output-line4-singular", chunkCount)
+                                :
+                                XClaim.lang.getComponent("cmd-current-output-line4-plural", chunkCount)
+                )
         );
     }
 

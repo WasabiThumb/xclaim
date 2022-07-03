@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
@@ -7,7 +8,6 @@ import codes.wasabi.xclaim.command.argument.type.StandardTypes;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -23,17 +23,17 @@ public class ListCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "list";
+        return XClaim.lang.get("cmd-list-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Lists the claims of the specified player";
+        return XClaim.lang.get("cmd-list-description");
     }
 
     private final Argument[] args = new Argument[] {
-            new Argument(StandardTypes.OFFLINE_PLAYER, "player", "The player to list the claims of, or yourself if not specified and you are a player"),
-            new Argument(StandardTypes.INTEGER, "max chunks", "The maximum chunks to show from each claim, defaults to 3")
+            new Argument(StandardTypes.OFFLINE_PLAYER, "player", XClaim.lang.get("cmd-list-arg-player-description")),
+            new Argument(StandardTypes.INTEGER, "max chunks", XClaim.lang.get("cmd-list-arg-chunks-description"))
     };
     @Override
     public @NotNull Argument @NotNull [] getArguments() {
@@ -61,7 +61,7 @@ public class ListCommand implements Command {
             if (sender instanceof Player p) {
                 op = p;
             } else {
-                audience.sendMessage(Component.text("* You need to specify a player (you are not a player)!").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-list-err-player"));
                 return;
             }
         }
@@ -77,7 +77,7 @@ public class ListCommand implements Command {
                 if (i > 0) {
                     ret = ret.append(Component.newline()).append(Component.newline());
                 }
-                ret = ret.append(Component.text("Claim #" + (i + 1) + ": " + c.getName()).color(NamedTextColor.DARK_PURPLE));
+                ret = ret.append(XClaim.lang.getComponent("cmd-list-claim-header", Integer.toString(i + 1), c.getName()));
                 Set<Chunk> chunks = c.getChunks();
                 int count = Math.min(maxChunks, chunks.size());
                 int z = 0;
@@ -85,21 +85,23 @@ public class ListCommand implements Command {
                     if (z >= count) break;
                     Location cornerLoc = chunk.getBlock(0, chunk.getWorld().getMinHeight(), 0).getLocation();
                     ret = ret.append(Component.newline());
-                    ret = ret.append(Component.text("  Chunk at X=" + cornerLoc.getBlockX() + ", Z=" + cornerLoc.getBlockZ()).color(NamedTextColor.LIGHT_PURPLE));
+                    ret = ret.append(Component.text("  "));
+                    ret = ret.append(XClaim.lang.getComponent("cmd-list-claim-chunk", cornerLoc.getBlockX(), cornerLoc.getBlockZ()));
                     z++;
                 }
                 if (maxChunks > 0) {
                     int remaining = chunks.size() - count;
                     if (remaining > 0) {
                         ret = ret.append(Component.newline());
-                        ret = ret.append(Component.text("  and " + remaining + " more...").color(NamedTextColor.DARK_GRAY));
+                        ret = ret.append(Component.text("  "));
+                        ret = ret.append(XClaim.lang.getComponent("cmd-list-claim-more", remaining));
                     }
                 }
                 i++;
             }
         } else {
-            ret = ret.append(op instanceof Player p ? Platform.get().playerDisplayName(p) : Component.text(Objects.requireNonNullElse(op.getName(), "Unknown")));
-            ret = ret.append(Component.text(" has no claims").color(NamedTextColor.DARK_GRAY));
+            Component name = (op instanceof Player p ? Platform.get().playerDisplayName(p) : Component.text(Objects.requireNonNullElse(op.getName(), XClaim.lang.get("unknown"))));
+            ret = ret.append(XClaim.lang.getComponent("cmd-list-none", name));
         }
         audience.sendMessage(ret);
     }

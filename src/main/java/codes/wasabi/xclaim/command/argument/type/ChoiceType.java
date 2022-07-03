@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -30,19 +31,21 @@ public class ChoiceType extends Type<String> {
     @Override
     public @NotNull String getTypeName() {
         int len = choices.size();
-        if (len == 0) return "Nothing";
-        StringBuilder sb = new StringBuilder("Choice of ");
+        if (len == 0) return XClaim.lang.get("arg-choice-nothing");
+        StringBuilder sb = new StringBuilder(XClaim.lang.get("arg-choice-root"));
         if (choices.size() > 5) {
-            sb.append("many");
+            sb.append(XClaim.lang.get("arg-choice-many"));
         } else {
+            String sep = XClaim.lang.get("arg-choice-separator");
+            String or = XClaim.lang.get("arg-choice-or");
             Iterator<String> iter = choices.iterator();
             for (int i = 0; i < len; i++) {
                 sb.append(iter.next());
                 if ((i + 1) < len) {
                     if ((i + 2) == len) {
-                        sb.append(" or ");
+                        sb.append(or);
                     } else {
-                        sb.append(", ");
+                        sb.append(sep);
                     }
                 }
             }

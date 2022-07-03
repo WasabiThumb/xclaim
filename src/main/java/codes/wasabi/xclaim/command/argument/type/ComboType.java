@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -24,15 +25,17 @@ public class ComboType extends Type<Object> {
         samples = Collections.unmodifiableSet(sampleValues);
         StringBuilder sb = new StringBuilder();
         if (names.size() > 5) {
-            sb.append("Many");
+            sb.append(XClaim.lang.get("arg-combo-many"));
         } else {
+            String sep = XClaim.lang.get("arg-combo-separator");
+            String or = XClaim.lang.get("arg-combo-or");
             int i = 0;
             for (String name : names) {
                 if (i > 0) {
                     if (i < (names.size() - 1)) {
-                        sb.append(", ");
+                        sb.append(sep);
                     } else {
-                        sb.append(" or ");
+                        sb.append(or);
                     }
                 }
                 sb.append(name);

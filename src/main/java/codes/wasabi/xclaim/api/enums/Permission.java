@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.api.enums;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.api.enums.permission.handler.*;
@@ -9,22 +10,22 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 
 public enum Permission {
-    BUILD("Build", "Place blocks", TrustLevel.TRUSTED, BuildBreakHandler.Build.class),
-    BREAK("Break", "Break blocks", TrustLevel.TRUSTED, BuildBreakHandler.Break.class),
-    ENTER("Enter", "Walk into the area", TrustLevel.ALL, EnterHandler.class),
-    INTERACT("Interact", "Interact with buttons, chests, etc.", TrustLevel.VETERANS, InteractHandler.class),
-    CHEST_OPEN("Open Chests", "Interact with chests, for general interaction see Interact.", TrustLevel.TRUSTED, InteractHandler.Chests.class, (byte) 1),
-    ENT_PLACE("Place Entities", "Put down boats, minecarts, armor stands, etc.", TrustLevel.VETERANS, InteractHandler.Entities.class, (byte) 1),
-    VEHICLE_PLACE("Place Vehicles", "Put down vehicles like minecarts", TrustLevel.VETERANS, InteractHandler.Vehicles.class, (byte) 2),
-    FIRE_USE("Use Flammables", "Use flint & steel and fire charges", TrustLevel.TRUSTED, InteractHandler.Flammable.class, (byte) 1),
-    ENTITY_DAMAGE_FRIENDLY("Damage Friendly Entities", "Cause damage to things like cows, sheep, squid, etc", TrustLevel.VETERANS, DamageHandler.Friendly.class),
-    ENTITY_DAMAGE_HOSTILE("Damage Hostile Entities", "Cause damage to things like zombies, skeletons, slimes, etc", TrustLevel.VETERANS, DamageHandler.Hostile.class),
-    ENTITY_DAMAGE_VEHICLE("Damage Vehicles", "Cause damage to things like boats and minecarts", TrustLevel.VETERANS, DamageHandler.Vehicle.class),
-    ENTITY_DAMAGE_NL("Damage Non-Living Entities", "Cause damage to things like armor stands and decoations", TrustLevel.VETERANS, DamageHandler.NonLiving.class),
-    ENTITY_DAMAGE_MISC("Damage Miscellaneous  Entities", "Cause damage to entities that don't fall into any other group", TrustLevel.ALL, DamageHandler.Misc.class),
-    ITEM_DROP("Drop Items", "Drop items", TrustLevel.ALL, DropHandler.class),
-    MANAGE("Manage Claim", "Modify the claim settings", TrustLevel.NONE),
-    DELETE("Remove Claim", "Remove the claim", TrustLevel.NONE);
+    BUILD("perm-build-name", "perm-build-description", TrustLevel.TRUSTED, BuildBreakHandler.Build.class),
+    BREAK("perm-break-name", "perm-break-description", TrustLevel.TRUSTED, BuildBreakHandler.Break.class),
+    ENTER("perm-enter-name", "perm-enter-description", TrustLevel.ALL, EnterHandler.class),
+    INTERACT("perm-interact-name", "perm-interact-description", TrustLevel.VETERANS, InteractHandler.class),
+    CHEST_OPEN("perm-chest-open-name", "perm-chest-open-description", TrustLevel.TRUSTED, InteractHandler.Chests.class, (byte) 1),
+    ENT_PLACE("perm-ent-place-name", "perm-ent-place-description", TrustLevel.VETERANS, InteractHandler.Entities.class, (byte) 1),
+    VEHICLE_PLACE("perm-vehicle-place-name", "perm-vehicle-place-description", TrustLevel.VETERANS, InteractHandler.Vehicles.class, (byte) 2),
+    FIRE_USE("perm-fire-use-name", "perm-fire-use-description", TrustLevel.TRUSTED, InteractHandler.Flammable.class, (byte) 1),
+    ENTITY_DAMAGE_FRIENDLY("perm-entity-damage-friendly-name", "perm-entity-damage-friendly-description", TrustLevel.VETERANS, DamageHandler.Friendly.class),
+    ENTITY_DAMAGE_HOSTILE("perm-entity-damage-hostile-name", "perm-entity-damage-hostile-description", TrustLevel.VETERANS, DamageHandler.Hostile.class),
+    ENTITY_DAMAGE_VEHICLE("perm-entity-damage-vehicle-name", "perm-entity-damage-vehicle-description", TrustLevel.VETERANS, DamageHandler.Vehicle.class),
+    ENTITY_DAMAGE_NL("perm-entity-damage-nl-name", "perm-entity-damage-nl-description", TrustLevel.VETERANS, DamageHandler.NonLiving.class),
+    ENTITY_DAMAGE_MISC("perm-entity-damage-misc-name", "perm-entity-damage-misc-description", TrustLevel.ALL, DamageHandler.Misc.class),
+    ITEM_DROP("perm-item-drop-name", "perm-item-drop-description", TrustLevel.ALL, DropHandler.class),
+    MANAGE("perm-manage-name", "perm-manage-description", TrustLevel.NONE),
+    DELETE("perm-delete-name", "perm-delete-description", TrustLevel.NONE);
 
     /**
      * Wraps #valueOf with legacy support
@@ -75,11 +76,11 @@ public enum Permission {
     }
 
     public String getDescription() {
-        return description;
+        return XClaim.lang.get(description);
     }
 
     public String getPrintName() {
-        return printName;
+        return XClaim.lang.get(printName);
     }
 
     public TrustLevel getDefaultTrust() {

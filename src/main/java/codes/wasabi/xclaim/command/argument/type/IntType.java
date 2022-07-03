@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class IntType extends Type<Integer> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Integer";
+        return XClaim.lang.get("arg-int-name");
     }
 
     @Override

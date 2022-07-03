@@ -45,7 +45,7 @@ public class GUIHandler implements InventoryHolder, Listener {
     private final PlatformChatListener chatListener;
     public GUIHandler(@NotNull Player target) {
         this.target = target;
-        this.inventory = Platform.get().createInventory(this, 27, Component.text("XClaim Config"));
+        this.inventory = Platform.get().createInventory(this, 27, XClaim.lang.getComponent("gui-name"));
         switchPage(new MainPage(this));
         target.openInventory(inventory);
         Bukkit.getPluginManager().registerEvents(this, XClaim.instance);

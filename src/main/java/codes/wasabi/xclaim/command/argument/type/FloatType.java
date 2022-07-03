@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -14,7 +15,7 @@ public class FloatType extends Type<Float> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Decimal";
+        return XClaim.lang.get("arg-float-name");
     }
 
     @Override

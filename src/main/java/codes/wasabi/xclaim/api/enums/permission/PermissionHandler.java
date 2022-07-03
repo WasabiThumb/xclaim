@@ -32,11 +32,7 @@ public abstract class PermissionHandler implements Listener {
     }
 
     protected void stdError(@NotNull Player ply) {
-        Platform.getAdventure().player(ply).sendMessage(
-                Component.empty()
-                        .append(Component.text("Hey!").color(NamedTextColor.RED).decorate(TextDecoration.BOLD))
-                        .append(Component.text(" You can't do that here.").color(NamedTextColor.GRAY))
-        );
+        Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("permHandler-stdError"));
     }
 
     private boolean registered = false;

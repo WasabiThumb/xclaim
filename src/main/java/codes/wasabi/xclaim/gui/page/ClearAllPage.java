@@ -1,11 +1,10 @@
 package codes.wasabi.xclaim.gui.page;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,28 +15,28 @@ public class ClearAllPage extends Page {
 
     private static final ItemStack YES_STACK = DisplayItem.create(
             Material.GREEN_CONCRETE,
-            Component.text("Yes, I am sure").color(NamedTextColor.GREEN),
+            XClaim.lang.getComponent("gui-clear-yes"),
             Arrays.asList(
-                    Component.text("This action cannot").color(NamedTextColor.GRAY),
-                    Component.text("be undone!").color(NamedTextColor.GRAY)
+                    XClaim.lang.getComponent("gui-clear-yes-line1"),
+                    XClaim.lang.getComponent("gui-clear-yes-line2")
             )
     );
 
     private static final ItemStack YES_REALLY_STACK = DisplayItem.create(
             Material.GREEN_CONCRETE,
-            Component.text("I'm really sure!").color(NamedTextColor.GREEN),
+            XClaim.lang.getComponent("gui-clear-yes2"),
             Arrays.asList(
-                    Component.text("This action cannot").color(NamedTextColor.GRAY),
-                    Component.text("be undone!").color(NamedTextColor.GRAY)
+                    XClaim.lang.getComponent("gui-clear-yes-line1"),
+                    XClaim.lang.getComponent("gui-clear-yes-line2")
             )
     );
 
     private static final ItemStack NO_STACK = DisplayItem.create(
             Material.RED_CONCRETE,
-            Component.text("No, take me back").color(NamedTextColor.GREEN),
+            XClaim.lang.getComponent("gui-clear-no"),
             Arrays.asList(
-                    Component.text("Keep your claims the").color(NamedTextColor.GRAY),
-                    Component.text("way they are").color(NamedTextColor.GRAY)
+                    XClaim.lang.getComponent("gui-clear-no-line1"),
+                    XClaim.lang.getComponent("gui-clear-no-line2")
             )
     );
 

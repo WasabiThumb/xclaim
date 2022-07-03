@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.argument.type;
 
+import codes.wasabi.xclaim.XClaim;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ public class MaterialType extends Type<Material> {
 
     @Override
     public @NotNull String getTypeName() {
-        return "Material";
+        return XClaim.lang.get("arg-material-name");
     }
 
     @Override

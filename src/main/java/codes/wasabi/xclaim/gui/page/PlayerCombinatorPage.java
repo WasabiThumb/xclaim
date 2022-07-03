@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.gui.page;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
@@ -87,13 +88,13 @@ public abstract class PlayerCombinatorPage extends Page {
             setItem(i, is);
         }
         if (pageIndex > 0) {
-            setItem(18, DisplayItem.create(Material.ARROW, "Previous Page", NamedTextColor.GOLD));
+            setItem(18, DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-comb-previous")));
         }
         if (pageIndex < maxIndex) {
-            setItem(26, DisplayItem.create(Material.ARROW, "Next Page", NamedTextColor.GOLD));
+            setItem(26, DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-comb-next")));
         }
-        setItem(21, DisplayItem.create(Material.EMERALD, "Add Player", NamedTextColor.GREEN));
-        setItem(23, DisplayItem.create(Material.BARRIER, "Back", NamedTextColor.RED));
+        setItem(21, DisplayItem.create(Material.EMERALD, XClaim.lang.getComponent("gui-comb-add")));
+        setItem(23, DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("gui-comb-back")));
     }
 
     @Override
@@ -117,10 +118,10 @@ public abstract class PlayerCombinatorPage extends Page {
         } else if (slot == 23) {
             goBack();
         } else if (slot == 21) {
-            prompt("Enter player name: ", (String name) -> {
+            prompt(XClaim.lang.get("gui-comb-prompt"), (String name) -> {
                 OfflinePlayer ply = NameToPlayer.getPlayer(name);
                 if (ply == null) {
-                    Platform.getAdventure().player(getTarget()).sendMessage(Component.text("* Couldn't find a player with that name.").color(NamedTextColor.RED));
+                    Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-comb-prompt-fail"));
                     return;
                 }
                 add(ply);

@@ -24,7 +24,7 @@ public final class DynmapInterfaceFactory {
                             f.trySetAccessible();
                             corePresent = (f.get(dynmapPlugin) != null);
                         } catch (Exception e) {
-                            XClaim.logger.log(Level.WARNING, "Failed to validate Dynmap core, proceeding anyways...");
+                            XClaim.logger.log(Level.WARNING, XClaim.lang.get("dynmap-warn-core"));
                         }
                         if (!corePresent) {
                             throw new DynmapMissingCoreException("Dynmap plugin core is null");

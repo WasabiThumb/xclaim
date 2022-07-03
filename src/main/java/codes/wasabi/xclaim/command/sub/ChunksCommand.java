@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.command.Command;
@@ -23,16 +24,20 @@ public class ChunksCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "chunks";
+        return XClaim.lang.get("cmd-chunks-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Opens the claim chunk editor. If a claim name is specified, then it will edit that claim. Otherwise, it uses the current residing claim.";
+        return XClaim.lang.get("cmd-chunks-description");
     }
 
     private final Argument[] args = new Argument[] {
-            new Argument(StandardTypes.STRING, "Claim name", "Name of the claim to edit. If absent, the current residing claim is assumed.")
+            new Argument(
+                    StandardTypes.STRING,
+                    XClaim.lang.get("cmd-chunks-arg-name"),
+                    XClaim.lang.get("cmd-chunks-arg-description")
+            )
     };
     @Override
     public @NotNull Argument @NotNull [] getArguments() {
@@ -54,7 +59,7 @@ public class ChunksCommand implements Command {
         Audience audience = Platform.getAdventure().sender(sender);
         Player ply = (Player) sender;
         if (ChunkEditor.getEditing(ply) != null) {
-            audience.sendMessage(Component.text("* You are already in the chunk editor! Exit it first!").color(NamedTextColor.RED));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-state"));
         }
         Claim claim = null;
         if (arguments.length > 0) {
@@ -73,19 +78,18 @@ public class ChunksCommand implements Command {
                 }
             }
             if (claim == null) {
-                audience.sendMessage(Component.text("* You aren't currently in a claim!").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-404"));
                 return;
             }
         }
         if (!claim.hasPermission(ply, Permission.MANAGE)) {
-            audience.sendMessage(Component.text("* You do not have permission to manage this claim!").color(NamedTextColor.RED));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-perm"));
             return;
         }
-        Platform.get().sendActionBar(ply,
-                Component.empty()
-                        .append(Component.text("Editing ").color(NamedTextColor.GREEN))
-                        .append(Component.text(claim.getName()).color(NamedTextColor.GOLD))
-        );
+        Platform.get().sendActionBar(ply, XClaim.lang.getComponent(
+                "cmd-chunks-success",
+                claim.getName()
+        ));
         ply.playSound(ply.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1f, 1f);
         ChunkEditor.startEditing(ply, claim);
     }

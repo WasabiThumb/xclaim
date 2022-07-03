@@ -8,9 +8,7 @@ import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -121,7 +119,7 @@ public class ChunkEditor {
                         if (existing != null) {
                             if (!existing.getOwner().getUniqueId().equals(ply.getUniqueId())) {
                                 if (!(ply.hasPermission("xclaim.override") || ply.isOp())) {
-                                    Platform.getAdventure().player(ply).sendMessage(Component.text("* This chunk is already taken!").color(NamedTextColor.RED));
+                                    Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-taken"));
                                     break;
                                 }
                             }
@@ -129,7 +127,7 @@ public class ChunkEditor {
                         World w = claim.getWorld();
                         if (w != null) {
                             if (!w.getName().equalsIgnoreCase(chunk.getWorld().getName())) {
-                                Platform.getAdventure().player(ply).sendMessage(Component.text("* You can't add chunks from this world to this claim!").color(NamedTextColor.RED));
+                                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-wrong-world"));
                                 break;
                             }
                         }
@@ -186,7 +184,7 @@ public class ChunkEditor {
                                 }
                             }
                             if (!nextTo) {
-                                Platform.getAdventure().player(ply).sendMessage(Component.text("* Chunks in your claim must be next to each other!").color(NamedTextColor.RED));
+                                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-adjacent"));
                                 break;
                             }
                         }
@@ -199,27 +197,21 @@ public class ChunkEditor {
                             }
                         }
                         if (numChunks >= maxChunks) {
-                            Platform.getAdventure().player(ply).sendMessage(Component.text("* You've reached your maximum number of chunks, Try deleting some.").color(NamedTextColor.RED));
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-max"));
                             break;
                         }
                         if (claim.addChunk(chunk)) {
-                            Platform.getAdventure().player(ply).sendMessage(Component.empty()
-                                    .append(Component.text("* Claimed chunk at ").color(NamedTextColor.GREEN))
-                                    .append(Component.text("X").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-                                    .append(Component.text("=" + chunk.getX() + ", ").color(NamedTextColor.WHITE))
-                                    .append(Component.text("Z").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
-                                    .append(Component.text("=" + chunk.getZ()).color(NamedTextColor.WHITE))
-                            );
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-add", chunk.getX(), chunk.getZ()));
                         } else {
-                            Platform.getAdventure().player(ply).sendMessage(Component.text("* This claim already contains this chunk.").color(NamedTextColor.YELLOW));
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-redundant-add"));
                         }
                     }
                     case 4 -> {
                         Chunk chunk = ply.getLocation().getChunk();
                         if (claim.removeChunk(chunk)) {
-                            Platform.getAdventure().player(ply).sendMessage(Component.text("* Unclaimed chunk!").color(NamedTextColor.GREEN));
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-remove"));
                         } else {
-                            Platform.getAdventure().player(ply).sendMessage(Component.text("* This chunk was already not part of this claim.").color(NamedTextColor.YELLOW));
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-redundant-remove"));
                         }
                     }
                     case 7 -> stopEditing(ply);
@@ -262,34 +254,33 @@ public class ChunkEditor {
                 Chunk toChunk = to.getChunk();
                 if (toChunk.getX() != fromChunk.getX() || toChunk.getZ() != fromChunk.getZ()) {
                     int ownState = 0;
-                    String ownerName = "Unknown";
+                    String langUnknown = XClaim.lang.get("unknown");
+                    String ownerName = langUnknown;
                     if (editing.contains(to)) {
                         ownState = 1;
                     } else {
                         Claim cl = Claim.getByChunk(toChunk);
                         if (cl != null) {
                             XCPlayer xcp = cl.getOwner();
-                            ownerName = Objects.requireNonNullElse(xcp.getName(), "Unknown");
+                            ownerName = Objects.requireNonNullElse(xcp.getName(), langUnknown);
                             ownState = (xcp.getUniqueId().equals(ply.getUniqueId()) ? 2 : 3);
                         }
                     }
                     Color color = Color.GRAY;
-                    String refer = "Open";
+                    String refer = XClaim.lang.get("chunk-editor-info-open");
                     if (ownState == 1) {
                         color = Color.GREEN;
-                        refer = "Claimed";
-                    }
-                    if (ownState == 2) {
+                        refer = XClaim.lang.get("chunk-editor-info-claimed");
+                    } else if (ownState == 2) {
                         color = Color.YELLOW;
-                        refer = "In a different claim you own";
-                    }
-                    if (ownState == 3) {
+                        refer = XClaim.lang.get("chunk-editor-info-owned");
+                    } else if (ownState == 3) {
                         color = Color.RED;
-                        refer = "Taken by " + ownerName;
+                        refer = XClaim.lang.get("chunk-editor-info-taken", ownerName);
                     }
                     TextColor tc = TextColor.color(color.asRGB());
                     Platform.getAdventure().player(ply).sendMessage(Component.empty()
-                            .append(Component.text("= Chunk at " + toChunk.getX() + ", " + toChunk.getZ() + " =").color(NamedTextColor.GOLD))
+                            .append(XClaim.lang.getComponent("chunk-editor-info", toChunk.getX(), toChunk.getZ()))
                             .append(Component.newline())
                             .append(Component.text(refer).color(tc))
                     );
@@ -321,9 +312,9 @@ public class ChunkEditor {
 
     }
 
-    private static final ItemStack CLAIM_STACK = DisplayItem.create(Material.GREEN_DYE, "Claim", NamedTextColor.GREEN);
-    private static final ItemStack UNCLAIM_STACK = DisplayItem.create(Material.RED_DYE, "Unclaim", NamedTextColor.RED);
-    private static final ItemStack QUIT_STACK = DisplayItem.create(Material.BARRIER, "Quit", NamedTextColor.DARK_RED);
+    private static ItemStack CLAIM_STACK;
+    private static ItemStack UNCLAIM_STACK;
+    private static ItemStack QUIT_STACK;
 
     private static NamespacedKey KEY_FLAG;
     private static NamespacedKey KEY_NAME;
@@ -338,6 +329,9 @@ public class ChunkEditor {
     public static void initialize() {
         if (initialized) return;
         initialized = true;
+        CLAIM_STACK = DisplayItem.create(Material.GREEN_DYE, XClaim.lang.getComponent("chunk-editor-claim"));
+        UNCLAIM_STACK = DisplayItem.create(Material.RED_DYE, XClaim.lang.getComponent("chunk-editor-unclaim"));
+        QUIT_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("chunk-editor-quit"));
         KEY_FLAG = Objects.requireNonNull(NamespacedKey.fromString("ce_flag", XClaim.instance));
         KEY_NAME = Objects.requireNonNull(NamespacedKey.fromString("ce_name", XClaim.instance));
         KEY_INVENTORY = Objects.requireNonNull(NamespacedKey.fromString("ce_inventory", XClaim.instance));

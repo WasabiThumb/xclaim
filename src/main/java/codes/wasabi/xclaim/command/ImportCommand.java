@@ -1,12 +1,11 @@
 package codes.wasabi.xclaim.command;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
@@ -82,12 +81,12 @@ public class ImportCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "importclaims";
+        return XClaim.lang.get("cmd-import-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Imports claims from the ClaimChunk plugin";
+        return XClaim.lang.get("cmd-import-description");
     }
 
     @Override
@@ -111,41 +110,34 @@ public class ImportCommand implements Command {
         Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("ClaimChunk");
         if (plugin != null) {
             if (!plugin.isEnabled()) {
-                audience.sendMessage(Component.text("The claimchunk plugin does not seem to be enabled.").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-import-err-disabled"));
                 return;
             }
             com.cjburkey.claimchunk.ClaimChunk qual = (com.cjburkey.claimchunk.ClaimChunk) plugin;
-            audience.sendMessage(Component.text("Getting data handler...").color(NamedTextColor.GREEN));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-handler"));
             com.cjburkey.claimchunk.data.newdata.IClaimChunkDataHandler dataHandler;
             try {
                 Field field = qual.getClass().getDeclaredField("dataHandler");
                 field.setAccessible(true);
                 dataHandler = (com.cjburkey.claimchunk.data.newdata.IClaimChunkDataHandler) field.get(qual);
             } catch (Exception e) {
-                audience.sendMessage(Component.text("Failed. See details in console.").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-import-err-reflect"));
                 e.printStackTrace();
                 return;
             }
             int importIndex = 1;
             for (World w : Bukkit.getWorlds()) {
-                audience.sendMessage(Component.empty()
-                        .append(Component.text("Processing world ").color(NamedTextColor.DARK_GREEN).decorate(TextDecoration.ITALIC))
-                        .append(Component.text(w.getName()).color(NamedTextColor.GOLD))
-                );
+                audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-world", w.getName()));
                 UUIDPlane plane = new UUIDPlane();
                 for (com.cjburkey.claimchunk.chunk.DataChunk chk : dataHandler.getClaimedChunks()) {
                     com.cjburkey.claimchunk.chunk.ChunkPos pos = chk.chunk;
                     if (pos.getWorld().equalsIgnoreCase(w.getName())) {
-                        audience.sendMessage(
-                                Component.empty()
-                                        .append(Component.text("Found claimed chunk at ").color(NamedTextColor.GREEN))
-                                        .append(Component.text(pos.getX() + ", " + pos.getZ()).color(NamedTextColor.GOLD))
-                        );
+                        audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-chunk", pos.getX(), pos.getZ()));
                         UUID ownerUUID = chk.player;
                         plane.set(pos.getX(), pos.getZ(), ownerUUID);
                     }
-                };
-                audience.sendMessage(Component.text("Performing flood fill algorithm").color(NamedTextColor.GREEN));
+                }
+                audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-fill"));
                 Map<UUID, List<List<int[]>>> clumps = plane.pullClumps();
                 for (Map.Entry<UUID, List<List<int[]>>> entry : clumps.entrySet()) {
                     UUID uuid = entry.getKey();
@@ -159,10 +151,7 @@ public class ImportCommand implements Command {
                         if (n == null) n = uuid.toString();
                         name = Component.text(n);
                     }
-                    audience.sendMessage(Component.empty()
-                            .append(Component.text("Creating claims for player ").color(NamedTextColor.GREEN))
-                            .append(name.color(NamedTextColor.GOLD))
-                    );
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-player", name));
                     for (List<int[]> cells : entry.getValue()) {
                         Set<Chunk> set = new HashSet<>();
                         for (int[] cell : cells) {
@@ -172,14 +161,14 @@ public class ImportCommand implements Command {
                         claim.claim();
                         importIndex++;
                     }
-                    audience.sendMessage(Component.text("Success").color(NamedTextColor.GREEN));
+                    audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-success"));
                 }
             }
-            audience.sendMessage(Component.text("Processed all worlds successfully. Disabling ClaimChunk plugin...").color(NamedTextColor.GREEN));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-disabling"));
             qual.disable();
-            audience.sendMessage(Component.text("Done").color(NamedTextColor.GREEN));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-done"));
         } else {
-            audience.sendMessage(Component.text("* ClaimChunk does not appear to be installed and enabled").color(NamedTextColor.RED));
+            audience.sendMessage(XClaim.lang.getComponent("cmd-import-err-installed"));
         }
     }
 

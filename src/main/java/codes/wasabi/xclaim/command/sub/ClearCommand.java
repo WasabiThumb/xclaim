@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.command.sub;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
@@ -24,17 +25,24 @@ public class ClearCommand implements Command {
 
     @Override
     public @NotNull String getName() {
-        return "clear";
+        return XClaim.lang.get("cmd-clear-name");
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Removes all existing claims for a player";
+        return XClaim.lang.get("cmd-clear-description");
     }
 
     private final Argument[] args = new Argument[] {
-            new Argument(StandardTypes.OFFLINE_PLAYER, "player", "The player to clear the claims of, or yourself if not specified and you are a player"),
-            new Argument(new ChoiceType("yes", "no"), "confirm", "If yes, then this command will execute without confirmation")
+            new Argument(StandardTypes.OFFLINE_PLAYER, "player", XClaim.lang.get("cmd-clear-arg-player-description")),
+            new Argument(
+                    new ChoiceType(
+                            XClaim.lang.get("cmd-clear-arg-confirm-yes"),
+                            XClaim.lang.get("cmd-clear-arg-confirm-no")
+                    ),
+                    "confirm",
+                    XClaim.lang.get("cmd-clear-arg-confirm-description")
+            )
     };
     @Override
     public @NotNull Argument @NotNull [] getArguments() {
@@ -67,55 +75,43 @@ public class ClearCommand implements Command {
                 target = ply;
                 permitted = true;
             } else {
-                audience.sendMessage(Component.text("* You need to specify a player (you are not a player)!").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-clear-err-missing"));
                 return;
             }
         }
         if (!permitted) {
             if (!(sender.hasPermission("xclaim.clear") || sender.isOp())) {
-                audience.sendMessage(Component.text("* You don't have permission to clear other players' commands!").color(NamedTextColor.RED));
+                audience.sendMessage(XClaim.lang.getComponent("cmd-clear-err-perm"));
                 return;
             }
         }
         Object protoConfirm = (arguments.length < 2 ? null : arguments[1]);
         if (protoConfirm != null) {
-            if (((String) protoConfirm).equalsIgnoreCase("yes")) {
+            if (((String) protoConfirm).equalsIgnoreCase(XClaim.lang.get("cmd-clear-arg-confirm-yes"))) {
+                Component name = (target instanceof Player targetPly ? Platform.get().playerDisplayName(targetPly) : Component.text(Objects.requireNonNullElse(target.getName(), XClaim.lang.get("cmd-clear-player-unknown"))));
                 Claim.getByOwner(target).forEach(Claim::unclaim);
-                audience.sendMessage(Component.empty()
-                        .append(Component.text("* Cleared all of ").color(NamedTextColor.GREEN))
-                        .append(target instanceof Player targetPly ? Platform.get().playerDisplayName(targetPly) : Component.text(Objects.requireNonNullElse(target.getName(), "Unknown")))
-                        .append(Component.text("'s claims").color(NamedTextColor.GREEN))
-                );
+                audience.sendMessage(XClaim.lang.getComponent("cmd-clear-success", name));
                 if ((!permitted) && target instanceof Player targetPly) {
-                    Platform.getAdventure().player(targetPly).sendMessage(
-                            Component.empty()
-                                    .append(Component.text("* Your claims were cleared by ").color(NamedTextColor.GRAY))
-                                    .append(sender instanceof Player ply ? Platform.get().playerDisplayName(ply) : Component.text("CONSOLE").color(NamedTextColor.DARK_GRAY))
-                    );
+                    Component name2 = (sender instanceof Player ply ? Platform.get().playerDisplayName(ply) : Component.text(XClaim.lang.get("cmd-clear-player-console")).color(NamedTextColor.DARK_GRAY));
+                    Platform.getAdventure().player(targetPly).sendMessage(XClaim.lang.getComponent("cmd-clear-notify", name2));
                 }
                 return;
             }
         }
-        audience.sendMessage(
-                Component.empty()
-                        .append(Component.text("Are you sure you want to clear all of ").color(NamedTextColor.RED))
-                        .append(target instanceof Player targetPly ? Platform.get().playerDisplayName(targetPly) : Component.text(Objects.requireNonNullElse(target.getName(), "Unknown")))
-                        .append(Component.text("'s claims?").color(NamedTextColor.RED))
-        );
+        Component name3 = (target instanceof Player targetPly ? Platform.get().playerDisplayName(targetPly) : Component.text(Objects.requireNonNullElse(target.getName(), "Unknown")));
+        audience.sendMessage(XClaim.lang.getComponent("cmd-clear-prompt", name3));
         if (sender instanceof Player) {
             audience.sendMessage(
                     Component.empty()
-                            .append(Component.text("Click ").color(NamedTextColor.GOLD))
-                            .append(Component.text("here").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/xc clear " + target.getName() + " yes")).decorate(TextDecoration.UNDERLINED))
-                            .append(Component.text(" to confirm").color(NamedTextColor.GOLD))
+                            .append(XClaim.lang.getComponent("cmd-clear-prompt-player-pre"))
+                            .append(XClaim.lang.getComponent("cmd-clear-prompt-player-click").clickEvent(ClickEvent.runCommand("/xc clear " + target.getName() + " " + XClaim.lang.get("cmd-clear-arg-confirm-yes"))))
+                            .append(XClaim.lang.getComponent("cmd-clear-prompt-player-post"))
             );
         } else {
-            audience.sendMessage(
-                    Component.empty()
-                            .append(Component.text("Run ").color(NamedTextColor.GOLD))
-                            .append(Component.text("/xc clear " + target.getName() + " yes").color(NamedTextColor.YELLOW))
-                            .append(Component.text(" to confirm").color(NamedTextColor.GOLD))
-            );
+            audience.sendMessage(XClaim.lang.getComponent(
+                    "cmd-clear-prompt-console",
+                    "/xc clear " + target.getName() + " " + XClaim.lang.get("cmd-clear-arg-confirm-yes")
+            ));
         }
     }
 

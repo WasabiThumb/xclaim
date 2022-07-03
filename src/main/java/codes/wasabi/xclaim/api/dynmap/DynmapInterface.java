@@ -27,7 +27,7 @@ public class DynmapInterface {
 
     public DynmapInterface(DynmapPlugin plugin) {
         dynmap = plugin;
-        XClaim.logger.log(Level.INFO, "Hooked into Dynmap version " + dynmap.getDynmapVersion());
+        XClaim.logger.log(Level.INFO, XClaim.lang.get("dynmap-hooked", dynmap.getDynmapVersion()));
     }
 
     public String getVersion() {
@@ -54,7 +54,7 @@ public class DynmapInterface {
         MarkerAPI api = dynmap.getMarkerAPI();
         MarkerSet ms = api.getMarkerSet("claim_marker_set");
         if (ms == null) {
-            ms = api.createMarkerSet("claim_marker_set", "Claims", null, false);
+            ms = api.createMarkerSet("claim_marker_set", XClaim.lang.get("dynmap-marker-name"), null, false);
         }
         return ms;
     }

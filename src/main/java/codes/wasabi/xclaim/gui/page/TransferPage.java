@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.gui.page;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui.GUIHandler;
@@ -24,20 +25,20 @@ public class TransferPage extends Page {
 
     private static final ItemStack YES_ITEM = DisplayItem.create(
             Material.GREEN_CONCRETE,
-            Component.text("Yes").color(NamedTextColor.DARK_GREEN),
+            XClaim.lang.getComponent("gui-tx-yes"),
             Arrays.asList(
-                    Component.text("I am sure that I want").color(NamedTextColor.GRAY),
-                    Component.text("to transfer ownership to").color(NamedTextColor.GRAY),
-                    Component.text("this user").color(NamedTextColor.GRAY)
+                    XClaim.lang.getComponent("gui-tx-yes-line1"),
+                    XClaim.lang.getComponent("gui-tx-yes-line2"),
+                    XClaim.lang.getComponent("gui-tx-yes-line3")
             )
     );
 
     private static final ItemStack NO_ITEM = DisplayItem.create(
             Material.RED_CONCRETE,
-            Component.text("No").color(NamedTextColor.DARK_RED),
+            XClaim.lang.getComponent("gui-tx-no"),
             Arrays.asList(
-                    Component.text("Take me back to").color(NamedTextColor.GRAY),
-                    Component.text("safety!").color(NamedTextColor.GRAY)
+                    XClaim.lang.getComponent("gui-tx-no-line1"),
+                    XClaim.lang.getComponent("gui-tx-no-line2")
             )
     );
 
@@ -58,7 +59,7 @@ public class TransferPage extends Page {
             }
             head.setItemMeta(im);
         } else {
-            head = DisplayItem.create(Material.PLAYER_HEAD, "Unknown Player", NamedTextColor.RED);
+            head = DisplayItem.create(Material.PLAYER_HEAD, XClaim.lang.get("unknown"), NamedTextColor.RED);
         }
         setItem(4, head);
         setItem(11, YES_ITEM);
@@ -68,10 +69,10 @@ public class TransferPage extends Page {
     @Override
     public void onEnter() {
         clear();
-        prompt("Enter the username of the player to transfer to: ", (String s) -> {
+        prompt(XClaim.lang.get("gui-tx-prompt"), (String s) -> {
             List<Player> matches = Bukkit.matchPlayer(s);
             if (matches.size() < 1) {
-                Platform.getAdventure().player(getTarget()).sendMessage(Component.text("* Cannot find that player!").color(NamedTextColor.RED));
+                Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-tx-prompt-fail"));
                 getParent().close();
             }
             matchPlayer = matches.get(0);
@@ -86,7 +87,7 @@ public class TransferPage extends Page {
                 Player target = getTarget();
                 claim.setOwner(matchPlayer);
                 claim.setUserPermission(target, Permission.MANAGE, true);
-                Platform.getAdventure().player(target).sendMessage(Component.text("* Ownership transferred").color(NamedTextColor.GREEN));
+                Platform.getAdventure().player(target).sendMessage(XClaim.lang.getComponent("gui-tx-success"));
                 target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
                 switchPage(new MainPage(getParent()));
             }

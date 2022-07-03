@@ -80,21 +80,19 @@ public class MovementRoutine implements Listener {
                     name = Platform.get().playerDisplayName(online);
                 } else {
                     String n = claimOwner.getName();
-                    if (n == null) n = "Unknown";
+                    if (n == null) n = XClaim.lang.get("unknown");
                     name = Component.text(n);
                 }
-                Platform.get().sendActionBar(ply, Component.empty()
-                        .append(Component.text("Entering ").color(NamedTextColor.WHITE))
-                        .append(name.color(NamedTextColor.GOLD))
-                        .append(Component.text("'s ").color(NamedTextColor.WHITE))
-                        .append(Component.text(toClaim.getName()).color(NamedTextColor.GREEN))
-                );
+                Platform.get().sendActionBar(ply, XClaim.lang.getComponent(
+                        "move-enter",
+                        name, Component.text(toClaim.getName())
+                ));
             }
         } else if (fromSet) {
-            Platform.get().sendActionBar(ply, Component.empty()
-                    .append(Component.text("Leaving ").color(NamedTextColor.WHITE))
-                    .append(Component.text(fromClaim.getName()).color(NamedTextColor.GREEN))
-            );
+            Platform.get().sendActionBar(ply, XClaim.lang.getComponent(
+                    "move-exit",
+                    fromClaim.getName()
+            ));
         }
     }
 

@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.gui.page;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
@@ -26,27 +27,27 @@ public class PermissionPage extends Page {
 
     private static final ItemStack GLOBAL_STACK = DisplayItem.create(
             Material.CAULDRON,
-            Component.text("General Permissions").color(NamedTextColor.DARK_GRAY),
+            XClaim.lang.getComponent("gui-perm-general"),
             Arrays.asList(
-                    Component.text("Manage permissions for").color(NamedTextColor.GRAY),
-                    Component.text("general groups (trusted").color(NamedTextColor.GRAY),
-                    Component.text("players, veterans, etc)").color(NamedTextColor.GRAY)
+                    XClaim.lang.getComponent("gui-perm-general-line1"),
+                    XClaim.lang.getComponent("gui-perm-general-line2"),
+                    XClaim.lang.getComponent("gui-perm-general-line3")
             )
     );
 
     private static final ItemStack PLAYER_STACK = DisplayItem.create(
             Material.SKELETON_SKULL,
-            Component.text("Player Permissions").color(NamedTextColor.DARK_AQUA),
+            XClaim.lang.getComponent("gui-perm-player"),
             Arrays.asList(
-                    Component.text("Manage per-player").color(NamedTextColor.AQUA),
-                    Component.text("permission exceptions").color(NamedTextColor.AQUA),
-                    Component.text("(for instance, stop").color(NamedTextColor.AQUA),
-                    Component.text("a specific player").color(NamedTextColor.AQUA),
-                    Component.text("from entering)").color(NamedTextColor.AQUA)
+                    XClaim.lang.getComponent("gui-perm-player-line1"),
+                    XClaim.lang.getComponent("gui-perm-player-line2"),
+                    XClaim.lang.getComponent("gui-perm-player-line3"),
+                    XClaim.lang.getComponent("gui-perm-player-line4"),
+                    XClaim.lang.getComponent("gui-perm-player-line5")
             )
     );
 
-    private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, "Back", NamedTextColor.RED);
+    private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("gui-perm-back"));
 
     private final Claim claim;
     private int subPage = 0;
@@ -140,36 +141,36 @@ public class PermissionPage extends Page {
             case 3 -> {
                 ItemStack noneItem = DisplayItem.create(
                         Material.RED_DYE,
-                        Component.text("None").color(NamedTextColor.RED),
+                        XClaim.lang.getComponent("gui-perm-tl-none"),
                         Arrays.asList(
-                                Component.text("Nobody except you"),
-                                Component.text("has this permission.")
+                                XClaim.lang.getComponent("gui-perm-tl-none-line1"),
+                                XClaim.lang.getComponent("gui-perm-tl-none-line2")
                         )
                 );
                 ItemStack trustedItem = DisplayItem.create(
                         Material.ORANGE_DYE,
-                        Component.text("Trusted").color(NamedTextColor.GOLD),
+                        XClaim.lang.getComponent("gui-perm-tl-trusted"),
                         Arrays.asList(
-                                Component.text("Only players you have"),
-                                Component.text("specifically trusted"),
-                                Component.text("have this permission,")
+                                XClaim.lang.getComponent("gui-perm-tl-trusted-line1"),
+                                XClaim.lang.getComponent("gui-perm-tl-trusted-line2"),
+                                XClaim.lang.getComponent("gui-perm-tl-trusted-line3")
                         )
                 );
                 ItemStack vetItem = DisplayItem.create(
                         Material.YELLOW_DYE,
-                        Component.text("Veterans").color(NamedTextColor.YELLOW),
+                        XClaim.lang.getComponent("gui-perm-tl-veterans"),
                         Arrays.asList(
-                                Component.text("Only players who have"),
-                                Component.text("played for some time"),
-                                Component.text("have this permission,")
+                                XClaim.lang.getComponent("gui-perm-tl-veterans-line1"),
+                                XClaim.lang.getComponent("gui-perm-tl-veterans-line2"),
+                                XClaim.lang.getComponent("gui-perm-tl-veterans-line3")
                         )
                 );
                 ItemStack allItem = DisplayItem.create(
                         Material.LIME_DYE,
-                        Component.text("All").color(NamedTextColor.GREEN),
+                        XClaim.lang.getComponent("gui-perm-tl-all"),
                         Arrays.asList(
-                                Component.text("All players can access"),
-                                Component.text("this permission,")
+                                XClaim.lang.getComponent("gui-perm-tl-all-line1"),
+                                XClaim.lang.getComponent("gui-perm-tl-all-line2")
                         )
                 );
                 TrustLevel curTrust = claim.getPermission(modifyingPermission);
@@ -202,10 +203,10 @@ public class PermissionPage extends Page {
                     if (it.hasNext()) {
                         Permission perm = it.next();
                         boolean value = set.contains(perm);
+                        Component text = XClaim.lang.getComponent(value ? "gui-perm-enabled" : "gui-perm-disabled");
                         TextColor tc = (value ? NamedTextColor.GREEN : NamedTextColor.RED);
-                        String lore = (value ? "Enabled" : "Disabled");
                         Material mat = (value ? Material.LIME_DYE : Material.RED_DYE);
-                        setItem(i, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(Component.text(lore).color(NamedTextColor.GRAY))));
+                        setItem(i, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(text.color(NamedTextColor.GRAY))));
                         pickKeys.put(i, perm);
                     } else {
                         break;
@@ -214,14 +215,14 @@ public class PermissionPage extends Page {
                 setItem(22, BACK_STACK);
             }
             case 5 -> {
-                setItem(11, DisplayItem.create(Material.GREEN_CONCRETE, Component.text("Enabled").color(NamedTextColor.GREEN), Arrays.asList(
-                        Component.text("Make this player have").color(NamedTextColor.GRAY),
-                        Component.text("this permission.").color(NamedTextColor.GRAY)
+                setItem(11, DisplayItem.create(Material.GREEN_CONCRETE, XClaim.lang.getComponent("gui-perm-enabled"), Arrays.asList(
+                        XClaim.lang.getComponent("gui-perm-enabled-line1"),
+                        XClaim.lang.getComponent("gui-perm-enabled-line2")
                 )));
-                setItem(15, DisplayItem.create(Material.RED_CONCRETE, Component.text("Disabled").color(NamedTextColor.RED), Arrays.asList(
-                        Component.text("Unset this permission for").color(NamedTextColor.GRAY),
-                        Component.text("this player. Permission will").color(NamedTextColor.GRAY),
-                        Component.text("defer to general groups.").color(NamedTextColor.GRAY)
+                setItem(15, DisplayItem.create(Material.RED_CONCRETE, XClaim.lang.getComponent("gui-perm-disabled"), Arrays.asList(
+                        XClaim.lang.getComponent("gui-perm-disabled-line1"),
+                        XClaim.lang.getComponent("gui-perm-disabled-line2"),
+                        XClaim.lang.getComponent("gui-perm-disabled-line3")
                 )));
             }
         }
