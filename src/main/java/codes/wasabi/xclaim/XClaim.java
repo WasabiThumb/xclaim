@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
+import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.platform.Platform;
@@ -54,6 +55,11 @@ public final class XClaim extends JavaPlugin {
         logger = getLogger();
         loadGeneralConfig();
         setupLang();
+        if (!Economy.isAvailable()) {
+            if (mainConfig.getBoolean("use-economy", false)) {
+                logger.log(Level.WARNING, lang.get("eco-fail"));
+            }
+        }
         Platform.init();
         dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, lang.get("data-folder-created"));
