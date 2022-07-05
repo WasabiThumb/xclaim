@@ -19,19 +19,24 @@ public abstract class Economy {
         return has;
     }
 
+    private static void internalGet() {
+        try {
+            instance = new codes.wasabi.xclaim.economy.impl.VaultEconomy();
+            return;
+        } catch (Throwable ignored) {
+        }
+        try {
+            instance = new codes.wasabi.xclaim.economy.impl.EssentialsEconomy();
+        } catch (Throwable ignored) {
+        }
+    }
+
     public static @Nullable Economy get() {
         if (checked) return instance;
         checked = true;
         instance = null;
         if (XClaim.mainConfig.getBoolean("use-economy", false)) {
-            try {
-                instance = new codes.wasabi.xclaim.economy.impl.VaultEconomy();
-            } catch (Exception ignored) {
-            }
-            try {
-                instance = new codes.wasabi.xclaim.economy.impl.EssentialsEconomy();
-            } catch (Exception ignored) {
-            }
+            internalGet();
         }
         has = (instance != null);
         return instance;
