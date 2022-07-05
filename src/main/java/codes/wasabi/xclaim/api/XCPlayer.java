@@ -85,11 +85,14 @@ public class XCPlayer {
         XClaim.trustConfig.set(uuidString, list);
     }
 
-    private int[] getPermGroup() {
+    private double[] getPermGroup() {
         ConfigurationSection section = XClaim.mainConfig.getConfigurationSection("limits");
-        if (section == null) return new int[]{ 0, 0 };
+        if (section == null) return new double[]{ 0, 0, 0, 0, 0 };
         int maxChunks = 0;
         int maxClaims = 0;
+        double claimPrice = -1;
+        double unclaimReward = 0;
+        int freeChunks = 0;
         for (String groupName : section.getKeys(false)) {
             boolean inGroup = true;
             if (!groupName.equalsIgnoreCase("default")) {
@@ -116,17 +119,38 @@ public class XCPlayer {
             if (inGroup) {
                 maxChunks = Math.max(maxChunks, section.getInt(groupName + ".max-chunks", 0));
                 maxClaims = Math.max(maxClaims, section.getInt(groupName + ".max-claims", 0));
+                double proposed = section.getDouble(groupName + ".claim-price", -1);
+                if (claimPrice < 0) {
+                    claimPrice = proposed;
+                } else if (proposed > 0) {
+                    claimPrice = Math.min(claimPrice, proposed);
+                }
+                unclaimReward = Math.max(unclaimReward, section.getDouble(groupName + ".unclaim-reward", 0));
+                freeChunks = Math.max(freeChunks, section.getInt(groupName + ".free-chunks", 0));
             }
         }
-        return new int[]{ maxChunks, maxClaims };
+        if (claimPrice < 0) claimPrice = 0;
+        return new double[]{ maxChunks, maxClaims, claimPrice, unclaimReward, freeChunks };
     }
 
     public int getMaxChunks() {
-        return getPermGroup()[0];
+        return (int) getPermGroup()[0];
     }
 
     public int getMaxClaims() {
-        return getPermGroup()[1];
+        return (int) getPermGroup()[1];
+    }
+
+    public double getClaimPrice() {
+        return getPermGroup()[2];
+    }
+
+    public double getUnclaimReward() {
+        return getPermGroup()[3];
+    }
+
+    public int getFreeChunks() {
+        return (int) getPermGroup()[4];
     }
 
     public @NotNull List<OfflinePlayer> getTrustedPlayers() {

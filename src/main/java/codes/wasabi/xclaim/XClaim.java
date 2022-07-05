@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
+import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.platform.Platform;
@@ -54,6 +55,11 @@ public final class XClaim extends JavaPlugin {
         logger = getLogger();
         loadGeneralConfig();
         setupLang();
+        if (!Economy.isAvailable()) {
+            if (mainConfig.getBoolean("use-economy", false)) {
+                logger.log(Level.WARNING, lang.get("eco-fail"));
+            }
+        }
         Platform.init();
         dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, lang.get("data-folder-created"));
@@ -282,7 +288,8 @@ public final class XClaim extends JavaPlugin {
     public static class Lang {
 
         private static final Pattern pattern = Pattern.compile("(\\$\\d+)");
-        private static final MiniMessage mm = MiniMessage
+        private static final MiniMessage mm = MiniMessage.miniMessage();
+        private static final MiniMessage strict = MiniMessage
                 .builder()
                 .strict(true)
                 .build();
@@ -312,24 +319,51 @@ public final class XClaim extends JavaPlugin {
         public String get(String key, String... args) {
             String base = rawGet(key);
             if (base != null) {
-                Matcher matcher = pattern.matcher(base);
-                return matcher.replaceAll((MatchResult res) -> {
-                    String s = res.group();
-                    if (s.length() > 1) {
-                        String sub = s.substring(1);
-                        int idx;
-                        try {
-                            idx = Integer.parseInt(sub);
-                        } catch (NumberFormatException e) {
-                            return s;
+                StringBuilder out = new StringBuilder();
+                StringBuilder term = null;
+                boolean buildingTerm = false;
+                for (char c : base.toCharArray()) {
+                    if (buildingTerm) {
+                        if (c >= '0' && c <= '9') {
+                            term.append(c);
+                        } else {
+                            buildingTerm = false;
+                            String brk = term.toString();
+                            try {
+                                int val = Integer.parseInt(brk);
+                                if (val < 1 || val > args.length) {
+                                    throw new IllegalArgumentException();
+                                }
+                                String arg = args[val - 1];
+                                out.append(arg);
+                            } catch (Exception e) {
+                                out.append("$").append(term);
+                            }
+                            out.append(c);
                         }
-                        if (idx < 1) return s;
-                        if (idx > args.length) return "?";
-                        return args[idx - 1];
-                    } else {
-                        return s;
+                        continue;
                     }
-                });
+                    if (c == '$') {
+                        buildingTerm = true;
+                        term = new StringBuilder();
+                    } else {
+                        out.append(c);
+                    }
+                }
+                if (buildingTerm) {
+                    String brk = term.toString();
+                    try {
+                        int val = Integer.parseInt(brk);
+                        if (val < 1 || val > args.length) {
+                            throw new IllegalArgumentException();
+                        }
+                        String arg = args[val - 1];
+                        out.append(arg);
+                    } catch (Exception e) {
+                        out.append("$").append(term);
+                    }
+                }
+                return out.toString();
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (int i=0; i < args.length; i++) {
@@ -356,7 +390,7 @@ public final class XClaim extends JavaPlugin {
         public Component getComponent(String key, Component... args) {
             String[] argStrings = new String[args.length];
             for (int i=0; i < args.length; i++) {
-                argStrings[i] = mm.serializeOrNull(args[i]);
+                argStrings[i] = strict.serializeOrNull(args[i]);
             }
             String string = get(key, argStrings);
             return mm.deserialize(string);

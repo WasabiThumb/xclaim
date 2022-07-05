@@ -30,6 +30,16 @@ The plugin decides what language to use based on the "language" option in the [c
 \
 If you want to make your own language pack, copy an existing one as an example (e.g. ``/plugins/XClaim/lang/en-US.json``) and rename it [accordingly](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. ``fr.json``). You can then translate the contents of that file. Knowledge of [JSON](https://en.wikipedia.org/wiki/JSON#Syntax) and [MiniMessage](https://docs.adventure.kyori.net/minimessage/index.html) is highly suggested. Do not translate the keys, only the values. Language packs may become less human-readable after encoding, so it is suggested to get your language pack base from [the source](https://github.com/WasabiThumb/xclaim/tree/master/src/main/resources/lang). There are some cases where the symbols ``$1``, ``$2``, etc. are used. This means that "something is inserted here", for example ``Hello $1!`` may resolve to ``Hello Username!`` ingame.
 
+### Economy
+By default, economy features are disabled. To enable them, set "use-economy" in the config to true.\
+If use-economy is enabled, XClaim will attempt to hook into the following economy plugins if present:
+- Vault
+- EssentialsX
+
+Players will then pay depending on the permission group the player is in (see [here](#permissions)).\
+For instance, if you wanted to set the default price for a claim to 2.25, then you would set ``limits.default.claim-price`` to ``2.25``.\
+See all options in the [config section](#config).
+
 ## Config
 | Name | Description | Default Value |
 | --: | :-: | :-- |
@@ -41,9 +51,13 @@ If you want to make your own language pack, copy an existing one as an example (
 | enforce-adjacent-claim-chunks | Whether or not chunks in a claim must be next to each other | true |
 | allow-diagonal-claim-chunks | If enforce-adjacent-claim-chunks is true, this sets if chunks diagonal from each other are considered as "next to" each other. Otherwise, does nothing. | true |
 | enter-chunk-editor-on-create | If true, then players will enter the chunk editor when they make a new claim | true |
+| use-economy | Whether to use economy features | false |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-chunks | Sets the max chunks for a group. See Permissions for more info. | |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims | Sets the max claims for a group. See Permissions for more info. | |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.give-after | The time in seconds it takes for a player to play until they are automatically entered into this group. Values less than 0 signify "never". | -1 |
+| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price | If economy is enabled, sets the price for claiming a chunk. | 20 |
+| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.unclaim-reward | If economy is enabled, sets the refund amount for unclaiming a chunk. | 0 |
+| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.free-chunks | If economy is enabled, sets the amount of chunks a player can claim for free before the next chunk requires a payment of ``limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price``. | 4 |
 | dynmap-integration.enabled | If true, XClaim will look for dynmap on startup and hook into it. Mild speedup if turned off. | true |
 | dynmap-integration.use-old-outline-style | If true, the dynmap will use the old convex hull outlines on claims. This is mainly for debugging, as the new outline system is experimental. | false |
 
@@ -57,7 +71,7 @@ Don't worry, there aren't that many.
 | xclaim.update | Allows you to use the auto-updater |
 | xclaim.restart | Allows you to restart xclaim |
 | xclaim.clear | Allows clearing claims from players with /xclaim clear |
-| xclaim.group.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦 | If a player has this permission, they are a part of this group. Players will inherit the maximum values from each group they are in. If the group is named "default", all players are in this group implicitly. |
+| xclaim.group.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦 | If a player has this permission, they are a part of this group. Players will inherit the "best" values from each group they are in. If the group is named "default", all players are in this group implicitly. |
 
 ## Commands
 | Name | Description |

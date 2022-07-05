@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.gui;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
+import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
@@ -31,6 +32,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class ChunkEditor {
@@ -188,8 +190,9 @@ public class ChunkEditor {
                                 break;
                             }
                         }
+                        XCPlayer xcp = XCPlayer.of(ply);
                         int numChunks = 0;
-                        int maxChunks = XCPlayer.of(ply).getMaxChunks();
+                        int maxChunks = xcp.getMaxChunks();
                         UUID uuid = ply.getUniqueId();
                         for (Claim c : Claim.getAll()) {
                             if (c.getOwner().getUniqueId().equals(uuid)) {
@@ -201,6 +204,26 @@ public class ChunkEditor {
                             break;
                         }
                         if (claim.addChunk(chunk)) {
+                            if (Economy.isAvailable()) {
+                                if (numChunks >= xcp.getFreeChunks()) {
+                                    Economy eco = Economy.getAssert();
+                                    double price = xcp.getClaimPrice();
+                                    if (price > 0) {
+                                        BigDecimal bd = BigDecimal.valueOf(price);
+                                        if (!eco.canAfford(ply, bd)) {
+                                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-cant-afford", eco.format(bd)));
+                                            claim.removeChunk(chunk);
+                                            break;
+                                        }
+                                        if (!eco.take(ply, bd)) {
+                                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-pay-fail", eco.format(bd)));
+                                            claim.removeChunk(chunk);
+                                            break;
+                                        }
+                                        Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-pay-success", eco.format(bd)));
+                                    }
+                                }
+                            }
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-add", chunk.getX(), chunk.getZ()));
                         } else {
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-redundant-add"));
@@ -209,6 +232,22 @@ public class ChunkEditor {
                     case 4 -> {
                         Chunk chunk = ply.getLocation().getChunk();
                         if (claim.removeChunk(chunk)) {
+                            if (Economy.isAvailable()) {
+                                Economy eco = Economy.getAssert();
+                                XCPlayer xcp = XCPlayer.of(ply);
+                                int numChunks = 0;
+                                UUID uuid = ply.getUniqueId();
+                                for (Claim c : Claim.getAll()) {
+                                    if (c.getOwner().getUniqueId().equals(uuid)) {
+                                        numChunks += c.getChunks().size();
+                                    }
+                                }
+                                if (numChunks >= xcp.getFreeChunks()) {
+                                    BigDecimal bd = BigDecimal.valueOf(xcp.getUnclaimReward());
+                                    eco.give(ply, bd);
+                                    Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-reward", eco.format(bd)));
+                                }
+                            }
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-remove"));
                         } else {
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-redundant-remove"));

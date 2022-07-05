@@ -6,10 +6,14 @@ exempt-claim-owner-from-permission-rules: true
 enforce-adjacent-claim-chunks: true
 allow-diagonal-claim-chunks: true
 enter-chunk-editor-on-create: true
+use-economy: false
 limits:
   default:
      max-chunks: 20
      max-claims: 5
+     claim-price: 20
+     unclaim-reward: 0
+     free-chunks: 4
   sample-1:
     max-chunks: 50
     max-claims: 10
