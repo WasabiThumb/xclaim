@@ -288,7 +288,8 @@ public final class XClaim extends JavaPlugin {
     public static class Lang {
 
         private static final Pattern pattern = Pattern.compile("(\\$\\d+)");
-        private static final MiniMessage mm = MiniMessage
+        private static final MiniMessage mm = MiniMessage.miniMessage();
+        private static final MiniMessage strict = MiniMessage
                 .builder()
                 .strict(true)
                 .build();
@@ -319,23 +320,27 @@ public final class XClaim extends JavaPlugin {
             String base = rawGet(key);
             if (base != null) {
                 Matcher matcher = pattern.matcher(base);
-                return matcher.replaceAll((MatchResult res) -> {
-                    String s = res.group();
-                    if (s.length() > 1) {
-                        String sub = s.substring(1);
-                        int idx;
-                        try {
-                            idx = Integer.parseInt(sub);
-                        } catch (NumberFormatException e) {
+                try {
+                    return matcher.replaceAll((MatchResult res) -> {
+                        String s = res.group();
+                        if (s.length() > 1) {
+                            String sub = s.substring(1);
+                            int idx;
+                            try {
+                                idx = Integer.parseInt(sub);
+                            } catch (NumberFormatException e) {
+                                return s;
+                            }
+                            if (idx < 1) return s;
+                            if (idx > args.length) return "?";
+                            return args[idx - 1];
+                        } else {
                             return s;
                         }
-                        if (idx < 1) return s;
-                        if (idx > args.length) return "?";
-                        return args[idx - 1];
-                    } else {
-                        return s;
-                    }
-                });
+                    });
+                } catch (Exception e) {
+                    return base;
+                }
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (int i=0; i < args.length; i++) {
@@ -362,7 +367,7 @@ public final class XClaim extends JavaPlugin {
         public Component getComponent(String key, Component... args) {
             String[] argStrings = new String[args.length];
             for (int i=0; i < args.length; i++) {
-                argStrings[i] = mm.serializeOrNull(args[i]);
+                argStrings[i] = strict.serializeOrNull(args[i]);
             }
             String string = get(key, argStrings);
             return mm.deserialize(string);

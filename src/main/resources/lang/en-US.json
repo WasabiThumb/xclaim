@@ -316,7 +316,7 @@
   "arg-choice-many": "Many",
   "arg-choice-separator": ", ",
   "arg-choice-or": " or ",
-  "move-enter": "<white>Entering <gold>$1</gold>'s <green>$2</green>",
+  "move-enter": "<white>Entering <gold>$1</gold>'s <green>$2</green></white>",
   "move-exit": "<white>Leaving <green>$1</green></white>",
   "unknown": "Unknown"
 }
