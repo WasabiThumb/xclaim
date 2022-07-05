@@ -205,7 +205,7 @@ public class ChunkEditor {
                         }
                         if (claim.addChunk(chunk)) {
                             if (Economy.isAvailable()) {
-                                if (numChunks < xcp.getFreeChunks()) {
+                                if (numChunks >= xcp.getFreeChunks()) {
                                     Economy eco = Economy.getAssert();
                                     double price = xcp.getClaimPrice();
                                     if (price > 0) {
@@ -220,6 +220,7 @@ public class ChunkEditor {
                                             claim.removeChunk(chunk);
                                             break;
                                         }
+                                        Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-pay-success", eco.format(bd)));
                                     }
                                 }
                             }

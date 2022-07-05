@@ -7,6 +7,9 @@ authors: [ WasabiThumbs ]
 softdepend:
   - ClaimChunk
   - dynmap
+  - Essentials
+  - EssentialsX
+  - Vault
 description: A fully-featured chunk claiming system for community servers
 website: https://wasabi.codes/
 permissions:

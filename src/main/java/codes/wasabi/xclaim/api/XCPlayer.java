@@ -120,16 +120,16 @@ public class XCPlayer {
                 maxChunks = Math.max(maxChunks, section.getInt(groupName + ".max-chunks", 0));
                 maxClaims = Math.max(maxClaims, section.getInt(groupName + ".max-claims", 0));
                 double proposed = section.getDouble(groupName + ".claim-price", -1);
-                if (claimPrice == -1) {
+                if (claimPrice < 0) {
                     claimPrice = proposed;
-                } else {
+                } else if (proposed > 0) {
                     claimPrice = Math.min(claimPrice, proposed);
                 }
                 unclaimReward = Math.max(unclaimReward, section.getDouble(groupName + ".unclaim-reward", 0));
                 freeChunks = Math.max(freeChunks, section.getInt(groupName + ".free-chunks", 0));
             }
         }
-        if (claimPrice == -1) claimPrice = 0;
+        if (claimPrice < 0) claimPrice = 0;
         return new double[]{ maxChunks, maxClaims, claimPrice, unclaimReward, freeChunks };
     }
 

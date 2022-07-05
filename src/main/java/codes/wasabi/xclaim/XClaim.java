@@ -319,28 +319,51 @@ public final class XClaim extends JavaPlugin {
         public String get(String key, String... args) {
             String base = rawGet(key);
             if (base != null) {
-                Matcher matcher = pattern.matcher(base);
-                try {
-                    return matcher.replaceAll((MatchResult res) -> {
-                        String s = res.group();
-                        if (s.length() > 1) {
-                            String sub = s.substring(1);
-                            int idx;
-                            try {
-                                idx = Integer.parseInt(sub);
-                            } catch (NumberFormatException e) {
-                                return s;
-                            }
-                            if (idx < 1) return s;
-                            if (idx > args.length) return "?";
-                            return args[idx - 1];
+                StringBuilder out = new StringBuilder();
+                StringBuilder term = null;
+                boolean buildingTerm = false;
+                for (char c : base.toCharArray()) {
+                    if (buildingTerm) {
+                        if (c >= '0' && c <= '9') {
+                            term.append(c);
                         } else {
-                            return s;
+                            buildingTerm = false;
+                            String brk = term.toString();
+                            try {
+                                int val = Integer.parseInt(brk);
+                                if (val < 1 || val > args.length) {
+                                    throw new IllegalArgumentException();
+                                }
+                                String arg = args[val - 1];
+                                out.append(arg);
+                            } catch (Exception e) {
+                                out.append("$").append(term);
+                            }
+                            out.append(c);
                         }
-                    });
-                } catch (Exception e) {
-                    return base;
+                        continue;
+                    }
+                    if (c == '$') {
+                        buildingTerm = true;
+                        term = new StringBuilder();
+                    } else {
+                        out.append(c);
+                    }
                 }
+                if (buildingTerm) {
+                    String brk = term.toString();
+                    try {
+                        int val = Integer.parseInt(brk);
+                        if (val < 1 || val > args.length) {
+                            throw new IllegalArgumentException();
+                        }
+                        String arg = args[val - 1];
+                        out.append(arg);
+                    } catch (Exception e) {
+                        out.append("$").append(term);
+                    }
+                }
+                return out.toString();
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (int i=0; i < args.length; i++) {

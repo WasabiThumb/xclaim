@@ -45,6 +45,7 @@
   "chunk-editor-quit": "<dark_red>Quit</dark_red>",
   "chunk-editor-cant-afford": "<red>* You need <gold>$1</gold> in order to purchase this chunk!</red>",
   "chunk-editor-pay-fail": "<red>* Failed to deduct <gold>$1</gold> from your account.</red>",
+  "chunk-editor-pay-success": "<green>* Paid <gold>$1</gold> for this chunk</green>",
   "chunk-editor-reward": "<green>* Rewarded <gold>$1</gold> for unclaiming this chunk</green>",
   "permHandler-stdError": "<b><red>Hey!</red></b> <gray>You can't do that here.</gray>",
   "perm-build-name": "Build",
