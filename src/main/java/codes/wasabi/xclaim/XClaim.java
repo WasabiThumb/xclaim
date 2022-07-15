@@ -29,8 +29,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class XClaim extends JavaPlugin {
@@ -120,19 +118,27 @@ public final class XClaim extends JavaPlugin {
             if (exists) {
                 try {
                     curJson = gson.fromJson(new FileReader(bundledFile), JsonObject.class);
-                    FileUtils.forceDelete(bundledFile);
                 } catch (Exception e) {
                     curJson = new JsonObject();
+                }
+                try {
+                    FileUtils.forceDelete(bundledFile);
+                } catch (Exception e) {
+                    XClaim.logger.log(Level.WARNING, "Failed to delete \"" + bundledFile.getPath() + "\", see details below");
+                    e.printStackTrace();
                 }
             } else {
                 curJson = new JsonObject();
             }
             try {
-                if (!bundledFile.createNewFile()) throw new IOException();
+                if (!bundledFile.createNewFile()) {
+                    XClaim.logger.log(Level.WARNING, "Failed to create \"" + bundledFile.getPath() + "\", does it already exist? Continuing...");
+                }
                 try (InputStream is = Objects.requireNonNull(getResource("lang/" + bundled + ".json"))) {
                     JsonObject model = gson.fromJson(new InputStreamReader(is), JsonObject.class);
                     for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
-                        curJson.add(entry.getKey(), entry.getValue());
+                        String key = entry.getKey();
+                        if (!curJson.has(key)) curJson.add(key, entry.getValue());
                     }
                 }
                 try (OutputStream os = new FileOutputStream(bundledFile)) {
