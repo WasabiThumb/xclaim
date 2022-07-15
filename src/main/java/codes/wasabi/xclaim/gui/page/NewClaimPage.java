@@ -27,7 +27,7 @@ public class NewClaimPage extends Page {
             String root = XClaim.lang.get("new-claim").toLowerCase(Locale.ROOT) + " #";
             String n = c.getName().toLowerCase(Locale.ROOT);
             if (n.startsWith(root)) {
-                String remainder = n.substring(11);
+                String remainder = n.substring(root.length());
                 int num;
                 try {
                     num = Integer.parseInt(remainder);
