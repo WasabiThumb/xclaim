@@ -16,15 +16,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SpigotPlatform extends Platform {
 
@@ -40,35 +38,22 @@ public class SpigotPlatform extends Platform {
 
     @Override
     public byte @NotNull [] itemStackSerializeBytes(@NotNull ItemStack is) {
-        Map<String, Object> map = is.serialize();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeInt(map.size());
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String key = entry.getKey();
-                byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
-                oos.writeInt(keyBytes.length);
-                oos.write(keyBytes);
-                oos.writeObject(entry.getValue());
-            }
+        try (BukkitObjectOutputStream oos = new BukkitObjectOutputStream(bos)) {
+            oos.writeObject(is);
         } catch (IOException ignored) { }
         return bos.toByteArray();
     }
 
     @Override
     public @NotNull ItemStack itemStackDeserializeBytes(byte @NotNull [] bytes) {
-        Map<String, Object> map = new HashMap<>();
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        try (ObjectInputStream ois = new ObjectInputStream(bis)) {
-            int size = ois.readInt();
-            for (int i=0; i < size; i++) {
-                int len = ois.readInt();
-                String key = new String(ois.readNBytes(len), StandardCharsets.UTF_8);
-                Object value = ois.readObject();
-                map.put(key, value);
-            }
-        } catch (IOException | ClassNotFoundException ignored) { }
-        return ItemStack.deserialize(map);
+        ItemStack is = null;
+        try (BukkitObjectInputStream ois = new BukkitObjectInputStream(bis)) {
+            Object ob = ois.readObject();
+            is = (ItemStack) ob;
+        } catch (IOException | ClassNotFoundException ignored) {}
+        return Objects.requireNonNull(is);
     }
 
     @Override
