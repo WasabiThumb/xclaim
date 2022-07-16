@@ -121,19 +121,17 @@ public final class XClaim extends JavaPlugin {
                 } catch (Exception e) {
                     curJson = new JsonObject();
                 }
-                try {
-                    FileUtils.forceDelete(bundledFile);
-                } catch (Exception e) {
-                    XClaim.logger.log(Level.WARNING, "Failed to delete \"" + bundledFile.getPath() + "\", see details below");
-                    e.printStackTrace();
-                }
             } else {
                 curJson = new JsonObject();
+                try {
+                    if (!bundledFile.createNewFile()) {
+                        throw new IOException();
+                    }
+                } catch (IOException e) {
+                    XClaim.logger.log(Level.WARNING, "Failed to create \"" + bundledFile.getPath() + "\", continuing...");
+                }
             }
             try {
-                if (!bundledFile.createNewFile()) {
-                    XClaim.logger.log(Level.WARNING, "Failed to create \"" + bundledFile.getPath() + "\", does it already exist? Continuing...");
-                }
                 try (InputStream is = Objects.requireNonNull(getResource("lang/" + bundled + ".json"))) {
                     JsonObject model = gson.fromJson(new InputStreamReader(is), JsonObject.class);
                     for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
@@ -141,7 +139,7 @@ public final class XClaim extends JavaPlugin {
                         if (!curJson.has(key)) curJson.add(key, entry.getValue());
                     }
                 }
-                try (OutputStream os = new FileOutputStream(bundledFile)) {
+                try (OutputStream os = new FileOutputStream(bundledFile, false)) {
                     String json = gson.toJson(curJson);
                     os.write(json.getBytes(StandardCharsets.UTF_8));
                     os.flush();
