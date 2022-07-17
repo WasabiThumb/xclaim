@@ -99,3 +99,4 @@ Don't worry, there aren't that many.
 
 ## Roadmap
 * Add more management commands
+* 1.16 support
