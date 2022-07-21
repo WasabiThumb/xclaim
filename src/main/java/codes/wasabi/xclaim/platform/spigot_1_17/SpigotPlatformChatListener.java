@@ -1,18 +1,15 @@
-package codes.wasabi.xclaim.platform.paper;
+package codes.wasabi.xclaim.platform.spigot_1_17;
 
 import codes.wasabi.xclaim.platform.PlatformChatListener;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
-
-import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class PaperPlatformChatListener implements PlatformChatListener {
+public class SpigotPlatformChatListener implements PlatformChatListener {
 
     private final List<Consumer<PlatformChatListenerData>> callbacks = new ArrayList<>();
 
@@ -28,10 +25,10 @@ public class PaperPlatformChatListener implements PlatformChatListener {
     }
 
     @EventHandler
-    public void onMessage(@NotNull AsyncChatEvent event) {
+    public void onMessage(AsyncPlayerChatEvent event) {
         PlatformChatListenerData data = new PlatformChatListenerData(
                 event.getPlayer(),
-                PlainTextComponentSerializer.plainText().serialize(event.originalMessage()),
+                event.getMessage(),
                 () -> event.setCancelled(true)
         );
         for (Consumer<PlatformChatListenerData> consumer : callbacks) consumer.accept(data);

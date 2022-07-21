@@ -86,7 +86,7 @@ public class InteractHandler extends PermissionHandler {
                 loc = Platform.get().toCenterLocation(block.getRelative(pie.getBlockFace()).getLocation());
             }
         } else {
-            is = ply.getItemInUse();
+            is = Platform.get().getPlayerItemInUse(ply);
             if (event instanceof PlayerInteractEntityEvent entityEvent) {
                 loc = entityEvent.getRightClicked().getLocation();
             }

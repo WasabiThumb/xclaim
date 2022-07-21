@@ -328,7 +328,7 @@ public class ChunkEditor {
                     if (PaperLib.isPaper()) {
                         World w = toChunk.getWorld();
                         double eyeY = to.getY() + ply.getEyeHeight();
-                        int targetY = Math.min(Math.max((int) Math.round(eyeY), w.getMinHeight()), w.getMaxHeight() - 1);
+                        int targetY = Math.min(Math.max((int) Math.round(eyeY), Platform.get().getWorldMinHeight(w)), w.getMaxHeight() - 1);
                         for (int y = targetY - 2; y < targetY + 3; y++) {
                             Location origin = toChunk.getBlock(0, y, 0).getLocation();
                             for (double x = 0; x <= 16; x += 0.5d) {
@@ -371,9 +371,9 @@ public class ChunkEditor {
         CLAIM_STACK = DisplayItem.create(Material.GREEN_DYE, XClaim.lang.getComponent("chunk-editor-claim"));
         UNCLAIM_STACK = DisplayItem.create(Material.RED_DYE, XClaim.lang.getComponent("chunk-editor-unclaim"));
         QUIT_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("chunk-editor-quit"));
-        KEY_FLAG = Objects.requireNonNull(NamespacedKey.fromString("ce_flag", XClaim.instance));
-        KEY_NAME = Objects.requireNonNull(NamespacedKey.fromString("ce_name", XClaim.instance));
-        KEY_INVENTORY = Objects.requireNonNull(NamespacedKey.fromString("ce_inventory", XClaim.instance));
+        KEY_FLAG = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_flag"));
+        KEY_NAME = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_name"));
+        KEY_INVENTORY = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_inventory"));
         EVENTS = new Events();
         Bukkit.getPluginManager().registerEvents(EVENTS, XClaim.instance);
     }

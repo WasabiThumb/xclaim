@@ -83,7 +83,7 @@ public class ListCommand implements Command {
                 int z = 0;
                 for (Chunk chunk : chunks) {
                     if (z >= count) break;
-                    Location cornerLoc = chunk.getBlock(0, chunk.getWorld().getMinHeight(), 0).getLocation();
+                    Location cornerLoc = chunk.getBlock(0, Platform.get().getWorldMinHeight(chunk.getWorld()), 0).getLocation();
                     ret = ret.append(Component.newline());
                     ret = ret.append(Component.text("  "));
                     ret = ret.append(XClaim.lang.getComponent("cmd-list-claim-chunk", cornerLoc.getBlockX(), cornerLoc.getBlockZ()));

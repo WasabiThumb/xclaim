@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.api.dynmap.outline;
 
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -55,7 +56,7 @@ public class ChunkBitmap implements Bitmap {
                 zMax = Math.max(zMax, c.getZ());
             }
             Chunk originChunk = world.getChunkAt(xMin, zMin);
-            Block originBlock = originChunk.getBlock(0, world.getMinHeight(), 0);
+            Block originBlock = originChunk.getBlock(0, Platform.get().getWorldMinHeight(world), 0);
             originX = originBlock.getX();
             originZ = originBlock.getZ();
             width = xMax - xMin + 1;

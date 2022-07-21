@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.dynmap.outline.ChunkBitmap;
 import codes.wasabi.xclaim.api.dynmap.outline.Point;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.ColorUtil;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
 import org.bukkit.Chunk;
@@ -85,7 +86,7 @@ public class DynmapInterface {
     public void updateMarker(@NotNull AreaMarker marker, @NotNull Claim claim) {
         int minHeight = 0;
         World w = claim.getWorld();
-        if (w != null) minHeight = w.getMinHeight();
+        if (w != null) minHeight = Platform.get().getWorldMinHeight(w);
         List<Point> points;
         if (XClaim.mainConfig.getBoolean("dynmap-integration.use-old-outline-style", false)) {
             points = new ArrayList<>();

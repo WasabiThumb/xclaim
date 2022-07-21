@@ -83,7 +83,7 @@ public class ClaimSelectorPage extends Page {
                 }
                 if (chunkCount > 0) {
                     Chunk c = chunks.iterator().next();
-                    Block b = c.getBlock(8, c.getWorld().getMinHeight(), 8);
+                    Block b = c.getBlock(8, Platform.get().getWorldMinHeight(c.getWorld()), 8);
                     lore.add(XClaim.lang.getComponent("gui-sel-first-chunk", b.getX(), b.getZ()));
                 }
                 if (i == 0 && addedWithin) {
@@ -100,7 +100,7 @@ public class ClaimSelectorPage extends Page {
         if (pageIndex > 0) {
             setItem(8, DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-sel-previous")));
         } else {
-            setItem(8, DisplayItem.create(Material.SPYGLASS, XClaim.lang.getComponent("gui-sel-search")));
+            setItem(8, DisplayItem.create(Platform.get().getSpyglassMaterial(), XClaim.lang.getComponent("gui-sel-search")));
         }
         //
         setItem(17, DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("gui-sel-cancel")));

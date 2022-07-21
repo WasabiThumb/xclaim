@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.TrustLevel;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.gui.ChunkEditor;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -155,7 +156,7 @@ public class Claim {
 
     private BoundingBox getChunkBounds(Chunk c) {
         World w = c.getWorld();
-        return BoundingBox.of(c.getBlock(0, w.getMinHeight(), 0), c.getBlock(15, w.getMaxHeight() - 1, 15));
+        return BoundingBox.of(c.getBlock(0, Platform.get().getWorldMinHeight(w), 0), c.getBlock(15, w.getMaxHeight() - 1, 15));
     }
 
     private void validateMarkers() {

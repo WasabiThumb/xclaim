@@ -4,17 +4,19 @@ import codes.wasabi.xclaim.XClaim;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public abstract class Platform {
@@ -25,11 +27,14 @@ public abstract class Platform {
 
     public static void init() {
         if (initialized) return;
-        if (PaperLib.isPaper()) {
-            instance = new codes.wasabi.xclaim.platform.paper.PaperPlatform();
-        } else {
+        boolean isNew = PaperLib.isVersion(17);
+        if (!PaperLib.isPaper()) {
             PaperLib.suggestPaper(XClaim.instance);
-            instance = new codes.wasabi.xclaim.platform.spigot.SpigotPlatform();
+        }
+        if (isNew) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform();
+        } else {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_16.OldSpigotPlatform();
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
@@ -78,5 +83,15 @@ public abstract class Platform {
     public abstract @NotNull Location toCenterLocation(@NotNull Location loc);
 
     public abstract @Nullable Location getInteractionPoint(@NotNull PlayerInteractEvent event);
+
+    public abstract int getWorldMinHeight(@NotNull World world);
+
+    public abstract NamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name);
+
+    public abstract Material getSpyglassMaterial();
+
+    public abstract EnumSet<EntityType> getMiscTypes();
+
+    public abstract @Nullable ItemStack getPlayerItemInUse(Player ply);
 
 }
