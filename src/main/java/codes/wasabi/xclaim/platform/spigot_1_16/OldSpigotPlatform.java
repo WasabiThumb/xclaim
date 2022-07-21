@@ -1,9 +1,9 @@
-package codes.wasabi.xclaim.platform.old;
+package codes.wasabi.xclaim.platform.spigot_1_16;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformChatListener;
-import codes.wasabi.xclaim.platform.spigot.SpigotPlatformChatListener;
+import codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatformChatListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
@@ -29,9 +29,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
-public class OldPlatform extends Platform {
+public class OldSpigotPlatform extends Platform {
 
-    public OldPlatform() { }
+    public OldSpigotPlatform() { }
 
     @Override
     public @Nullable OfflinePlayer getOfflinePlayerIfCached(@NotNull String name) {

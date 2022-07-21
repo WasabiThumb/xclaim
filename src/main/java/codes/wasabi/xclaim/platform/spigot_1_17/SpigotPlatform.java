@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.spigot;
+package codes.wasabi.xclaim.platform.spigot_1_17;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;

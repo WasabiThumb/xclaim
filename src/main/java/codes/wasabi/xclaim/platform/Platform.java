@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.logging.Level;
 
 public abstract class Platform {
 
@@ -29,24 +28,15 @@ public abstract class Platform {
     public static void init() {
         if (initialized) return;
         boolean isNew = PaperLib.isVersion(17);
-        if (PaperLib.isPaper()) {
-            if (isNew) {
-                instance = new codes.wasabi.xclaim.platform.paper.PaperPlatform();
-                adventure = new codes.wasabi.xclaim.platform.paper.PaperAudiences();
-            } else {
-                XClaim.logger.log(Level.WARNING, "You are using a Minecraft version earlier than 1.17. Please update to enjoy more of Paper's features.");
-                instance = new codes.wasabi.xclaim.platform.old.OldPlatform();
-                adventure = BukkitAudiences.create(XClaim.instance);
-            }
-        } else {
+        if (!PaperLib.isPaper()) {
             PaperLib.suggestPaper(XClaim.instance);
-            if (isNew) {
-                instance = new codes.wasabi.xclaim.platform.spigot.SpigotPlatform();
-            } else {
-                instance = new codes.wasabi.xclaim.platform.old.OldPlatform();
-            }
-            adventure = BukkitAudiences.create(XClaim.instance);
         }
+        if (isNew) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform();
+        } else {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_16.OldSpigotPlatform();
+        }
+        adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
     }
 
