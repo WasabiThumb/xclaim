@@ -89,14 +89,14 @@ Don't worry, there aren't that many.
 | importclaims | Import claims from ClaimChunk |
 
 ## Support
-|         | 1.17 | 1.18 | 1.19 | Paper | Spigot |
-| --:     | :-:  | :-:  | :-:  | :-:   | :-:    |
-| < 1.3.1 |      | ✔    |      | ✔     |        |
-| 1.3.1   |      | ✔    | ✔    | ✔     |        |
-| 1.4.x   | ✔    | ✔    | ✔    | ✔     |        |
-| 1.5.x+  | ✔    | ✔    | ✔    | ✔     | ✔      |
+|         | 1.16 | 1.17 | 1.18 | 1.19 | Paper | Spigot |
+| --:     | :-:  | :-:  | :-:  | :-:  | :-:   | :-:    |
+| < 1.3.1 |      |      | ✔    |      | ✔     |        |
+| 1.3.1   |      |      | ✔    | ✔    | ✔     |        |
+| 1.4.x   |      | ✔    | ✔    | ✔    | ✔     |        |
+| 1.5.x   |      | ✔    | ✔    | ✔    | ✔     | ✔      |
+| 1.8.x+  | ✔    | ✔    | ✔    | ✔    | ✔     | ✔      |
 
 
 ## Roadmap
 * Add more management commands
-* 1.16 support
