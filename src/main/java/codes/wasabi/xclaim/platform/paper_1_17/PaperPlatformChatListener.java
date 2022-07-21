@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.paper;
+package codes.wasabi.xclaim.platform.paper_1_17;
 
 import codes.wasabi.xclaim.platform.PlatformChatListener;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;

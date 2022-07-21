@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.paper;
+package codes.wasabi.xclaim.platform.paper_1_17;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
