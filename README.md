@@ -97,6 +97,7 @@ Don't worry, there aren't that many.
 | 1.5.0   | ❌   | ✔    | ✔    | ✔    | ✔     | ✔      |
 | 1.8.0+  | ✔    | ✔    | ✔    | ✔    | ✔     | ✔      |
 
+Versions before 1.5.0 are no longer supported
 
 ## Roadmap
 * Add more management commands
