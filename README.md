@@ -1,6 +1,12 @@
 # <img src="https://wasabicodes.xyz/cdn/15852266ddef4696b804677658f11651/xc_logo.png" alt="XClaim" title="XClaim" style="width: 12em">
+<h2>
+<a href="https://github.com/WasabiThumb/xclaim/blob/master/README.md">🇬🇧</a>
+&nbsp;
+<a href="https://github.com/WasabiThumb/xclaim/blob/master/README.de.md">🇩🇪</a>
+</h2>
 
-[![Java CI with Maven](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml)\
+[![Java CI with Maven](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml)
+
 A better chunk claim system for Paper servers\
 *Get it? It sounds like exclaim...*\
 \
