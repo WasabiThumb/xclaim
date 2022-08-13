@@ -4,7 +4,7 @@
 Ein besseres Chunk-anspruch Plugin für Paper Server.\
 *Verstanden? Es klingt wie exclaim...*\
 \
-| [Installation](#Installation) | [Features](#Features) | [Konfiguration](#Konfiguration) | [Berechtigungen](#Berechtigungen) | [Befehle](#Befehle) | [Unterstützte Versionen](<#Unterstützte Versionen>) | [Entwicklungsplan](#Entwicklungsplan) |
+| [Installation](#Installation) | [Features](#Features) | [Konfiguration](#Konfiguration) | [Berechtigungen](#Berechtigungen) | [Befehle](#Befehle) | [Unterstützte Versionen](<#unterstützte-versionen>) | [Entwicklungsplan](#Entwicklungsplan) |
 
 ## Installation
 Sie können ein Build vom ["Releases"-tab](https://github.com/WasabiThumb/xclaim/releases) auf der rechten Seite oder [selbst das Plugin builden](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#build-the-project), wenn Sie wollen. Platzieren Sie danach die .jar Datei in Ihren "plugins" Ordner. Nutzen Sie nicht die .jar Datei namens "original", außer Sie wissen, was Sie da tun!
