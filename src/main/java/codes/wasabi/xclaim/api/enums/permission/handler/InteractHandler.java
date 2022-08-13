@@ -80,7 +80,7 @@ public class InteractHandler extends PermissionHandler {
         if (event instanceof PlayerInteractEvent pie) {
             EquipmentSlot slot = pie.getHand();
             if (slot == null) return false;
-            is = ply.getInventory().getItem(slot);
+            is = Platform.get().playerInventoryGetItem(ply.getInventory(), slot);
             Block block = pie.getClickedBlock();
             if (block != null) {
                 loc = Platform.get().toCenterLocation(block.getRelative(pie.getBlockFace()).getLocation());
@@ -103,8 +103,16 @@ public class InteractHandler extends PermissionHandler {
         } else {
             if (mat.equals(Material.WRITTEN_BOOK)) {
                 if (getClaim().contains(loc)) {
-                    event.setCancelled(true);
-                    ply.openBook(is);
+                    Platform p = Platform.get();
+                    if (p.supportsArtificialBookOpen()) {
+                        event.setCancelled(true);
+                        p.artificialBookOpen(ply, is);
+                    } else {
+                        if (ply.isSneaking()) {
+                            event.setCancelled(true);
+                            stdError(ply);
+                        }
+                    }
                 }
                 return true;
             } else if (mat.equals(Material.FIREWORK_ROCKET)) {

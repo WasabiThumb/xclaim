@@ -59,6 +59,10 @@
                                     <pattern>net.kyori.adventure</pattern>
                                     <shadedPattern>codes.wasabi.xclaim.adventure</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>xyz.xenondevs.particle</pattern>
+                                    <shadedPattern>codes.wasabi.xclaim.particle</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
@@ -101,15 +105,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
-        <!--
-        <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.14-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         -->
@@ -199,6 +195,12 @@
             <artifactId>EssentialsX</artifactId>
             <version>2.19.4</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.xenondevs</groupId>
+            <artifactId>particle</artifactId>
+            <version>1.8.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

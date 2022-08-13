@@ -1,31 +1,35 @@
-package codes.wasabi.xclaim.platform.spigot_1_17;
+package codes.wasabi.xclaim.platform.spigot_1_14;
 
-import codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16;
-import org.bukkit.*;
+import codes.wasabi.xclaim.platform.spigot.SpigotPlatform;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.EnumSet;
 
-public class SpigotPlatform_1_17 extends SpigotPlatform_1_16 {
+public class SpigotPlatform_1_14 extends SpigotPlatform {
 
     @Override
     public int getWorldMinHeight(@NotNull World world) {
-        return world.getMinHeight();
+        return 0;
     }
 
     @Override
     public NamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name) {
-        return NamespacedKey.fromString(name, plugin);
+        return new NamespacedKey(plugin, name);
     }
 
     @Override
     public Material getSpyglassMaterial() {
-        return Material.SPYGLASS;
+        return Material.GLASS_BOTTLE;
     }
 
     private EnumSet<EntityType> miscTypes = null;
@@ -49,7 +53,6 @@ public class SpigotPlatform_1_17 extends SpigotPlatform_1_16 {
                     EntityType.FISHING_HOOK,
                     EntityType.LIGHTNING,
                     EntityType.LLAMA_SPIT,
-                    EntityType.MARKER,
                     EntityType.SMALL_FIREBALL,
                     EntityType.SNOWBALL,
                     EntityType.SPECTRAL_ARROW,
@@ -64,7 +67,31 @@ public class SpigotPlatform_1_17 extends SpigotPlatform_1_16 {
 
     @Override
     public @Nullable ItemStack getPlayerItemInUse(Player ply) {
-        return ply.getItemInUse();
+        PlayerInventory inv = ply.getInventory();
+        int slot = inv.getHeldItemSlot();
+        return inv.getItem(slot);
+    }
+
+    @Override
+    public @Nullable ItemStack playerInventoryGetItem(PlayerInventory inv, EquipmentSlot slot) {
+        return switch (slot) {
+            case HAND -> inv.getItemInMainHand();
+            case OFF_HAND -> inv.getItemInOffHand();
+            case HEAD -> inv.getHelmet();
+            case CHEST -> inv.getChestplate();
+            case LEGS -> inv.getLeggings();
+            case FEET -> inv.getBoots();
+        };
+    }
+
+    @Override
+    public boolean supportsArtificialBookOpen() {
+        return false;
+    }
+
+    @Override
+    public void artificialBookOpen(Player ply, ItemStack book) {
+
     }
 
 }

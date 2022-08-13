@@ -8,9 +8,7 @@ import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -27,19 +25,22 @@ public abstract class Platform {
 
     public static void init() {
         if (initialized) return;
-        boolean isNew = PaperLib.isVersion(17);
         boolean isPaper = PaperLib.isPaper();
         if (!isPaper) {
             PaperLib.suggestPaper(XClaim.instance);
         }
-        if (isNew) {
+        if (PaperLib.isVersion(17)) {
             if (isPaper) {
                 instance = new codes.wasabi.xclaim.platform.paper_1_17.PaperPlatform();
             } else {
                 instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform_1_17();
             }
-        } else {
+        } else if (PaperLib.isVersion(16)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16();
+        } else if (PaperLib.isVersion(15)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_15.SpigotPlatform_1_15();
+        } else {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_14.SpigotPlatform_1_14();
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
@@ -102,5 +103,11 @@ public abstract class Platform {
     public abstract boolean supportsArtificalElytraBoost();
 
     public abstract void artificialElytraBoost(Player ply, ItemStack is);
+
+    public abstract @Nullable ItemStack playerInventoryGetItem(PlayerInventory inv, EquipmentSlot slot);
+
+    public abstract boolean supportsArtificialBookOpen();
+
+    public abstract void artificialBookOpen(Player ply, ItemStack book);
 
 }

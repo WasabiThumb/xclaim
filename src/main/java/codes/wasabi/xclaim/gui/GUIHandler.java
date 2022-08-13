@@ -4,7 +4,6 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui.page.MainPage;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformChatListener;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

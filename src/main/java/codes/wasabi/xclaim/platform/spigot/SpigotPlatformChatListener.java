@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.spigot_1_17;
+package codes.wasabi.xclaim.platform.spigot;
 
 import codes.wasabi.xclaim.platform.PlatformChatListener;
 import org.bukkit.event.EventHandler;

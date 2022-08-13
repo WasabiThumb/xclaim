@@ -3,7 +3,6 @@ package codes.wasabi.xclaim.platform.spigot;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformChatListener;
-import codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatformChatListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
