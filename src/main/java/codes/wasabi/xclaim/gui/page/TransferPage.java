@@ -9,7 +9,6 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +22,7 @@ import java.util.List;
 public class TransferPage extends Page {
 
     private static final ItemStack YES_ITEM = DisplayItem.create(
-            Material.GREEN_CONCRETE,
+            Platform.get().getGreenConcreteMaterial(),
             XClaim.lang.getComponent("gui-tx-yes"),
             Arrays.asList(
                     XClaim.lang.getComponent("gui-tx-yes-line1"),
@@ -33,7 +32,7 @@ public class TransferPage extends Page {
     );
 
     private static final ItemStack NO_ITEM = DisplayItem.create(
-            Material.RED_CONCRETE,
+            Platform.get().getRedConcreteMaterial(),
             XClaim.lang.getComponent("gui-tx-no"),
             Arrays.asList(
                     XClaim.lang.getComponent("gui-tx-no-line1"),
@@ -51,14 +50,14 @@ public class TransferPage extends Page {
     private void populate() {
         ItemStack head;
         if (matchPlayer != null) {
-            head = DisplayItem.create(Material.PLAYER_HEAD, Platform.get().playerDisplayName(matchPlayer));
+            head = DisplayItem.create(Platform.get().getPlayerHeadMaterial(), Platform.get().playerDisplayName(matchPlayer));
             ItemMeta im = head.getItemMeta();
             if (im != null) {
-                if (im instanceof SkullMeta) ((SkullMeta) im).setOwningPlayer(matchPlayer);
+                if (im instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) im, matchPlayer);
             }
             head.setItemMeta(im);
         } else {
-            head = DisplayItem.create(Material.PLAYER_HEAD, XClaim.lang.get("unknown"), NamedTextColor.RED);
+            head = DisplayItem.create(Platform.get().getPlayerHeadMaterial(), XClaim.lang.get("unknown"), NamedTextColor.RED);
         }
         setItem(4, head);
         setItem(11, YES_ITEM);

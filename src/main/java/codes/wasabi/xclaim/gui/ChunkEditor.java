@@ -5,6 +5,8 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
+import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
@@ -26,14 +28,13 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
 import java.math.BigDecimal;
+import java.nio.BufferUnderflowException;
 import java.util.*;
 
 public class ChunkEditor {
@@ -271,15 +272,11 @@ public class ChunkEditor {
             }
         }
 
-        @EventHandler(priority = EventPriority.HIGHEST)
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onDeath(@NotNull PlayerDeathEvent event) {
             Player ply = event.getEntity();
             if (stopEditing(ply)) {
-                boolean keepInventory = false;
-                Boolean value = ply.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
-                if (value == null) value = ply.getWorld().getGameRuleDefault(GameRule.KEEP_INVENTORY);
-                if (value != null) keepInventory = value;
-                if (!keepInventory) {
+                if (!Platform.get().worldKeepInventory(ply.getWorld())) {
                     List<ItemStack> drops = event.getDrops();
                     drops.clear();
                     drops.addAll(Arrays.asList(ply.getInventory().getContents()));
@@ -371,8 +368,8 @@ public class ChunkEditor {
     public static void initialize() {
         if (initialized) return;
         initialized = true;
-        CLAIM_STACK = DisplayItem.create(Material.GREEN_DYE, XClaim.lang.getComponent("chunk-editor-claim"));
-        UNCLAIM_STACK = DisplayItem.create(Material.RED_DYE, XClaim.lang.getComponent("chunk-editor-unclaim"));
+        CLAIM_STACK = DisplayItem.create(Platform.get().getGreenToken(), XClaim.lang.getComponent("chunk-editor-claim"));
+        UNCLAIM_STACK = DisplayItem.create(Platform.get().getRedToken(), XClaim.lang.getComponent("chunk-editor-unclaim"));
         QUIT_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("chunk-editor-quit"));
         KEY_FLAG = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_flag"));
         KEY_NAME = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_name"));
@@ -386,11 +383,11 @@ public class ChunkEditor {
         UUID uuid = ply.getUniqueId();
         Claim ret = null;
         if (!editingMap.containsKey(uuid)) {
-            PersistentDataContainer pdc = ply.getPersistentDataContainer();
-            if (pdc.has(KEY_FLAG, PersistentDataType.BYTE)) {
-                boolean flag = pdc.getOrDefault(KEY_FLAG, PersistentDataType.BYTE, (byte) 0) != ((byte) 0);
+            PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
+            if (pdc.has(KEY_FLAG, PlatformPersistentDataType.BYTE)) {
+                boolean flag = pdc.getOrDefaultAssert(KEY_FLAG, PlatformPersistentDataType.BYTE, Byte.class, (byte) 0) != ((byte) 0);
                 if (flag) {
-                    String name = pdc.get(KEY_NAME, PersistentDataType.STRING);
+                    String name = pdc.getAssert(KEY_NAME, PlatformPersistentDataType.STRING, String.class);
                     if (name != null) {
                         ret = Claim.getByName(name);
                         editingMap.put(uuid, ret);
@@ -406,11 +403,11 @@ public class ChunkEditor {
     public static boolean startEditing(@NotNull Player ply, @NotNull Claim claim) {
         if (getEditing(ply) != null) return false;
         UUID uuid = ply.getUniqueId();
-        PersistentDataContainer pdc = ply.getPersistentDataContainer();
-        pdc.set(KEY_NAME, PersistentDataType.STRING, claim.getName());
-        pdc.set(KEY_INVENTORY, PersistentDataType.BYTE_ARRAY, InventorySerializer.serialize(ply.getInventory()));
+        PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
+        pdc.set(KEY_NAME, PlatformPersistentDataType.STRING, claim.getName());
+        pdc.set(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, InventorySerializer.serialize(ply.getInventory()));
         editingMap.put(uuid, claim);
-        pdc.set(KEY_FLAG, PersistentDataType.BYTE, (byte) 1);
+        pdc.set(KEY_FLAG, PlatformPersistentDataType.BYTE, (byte) 1);
         PlayerInventory inv = ply.getInventory();
         inv.clear();
         inv.setItem(1, CLAIM_STACK);
@@ -422,11 +419,11 @@ public class ChunkEditor {
     public static boolean stopEditing(@NotNull Player ply) {
         if (getEditing(ply) == null) return false;
         UUID uuid = ply.getUniqueId();
-        PersistentDataContainer pdc = ply.getPersistentDataContainer();
-        pdc.set(KEY_FLAG, PersistentDataType.BYTE, (byte) 0);
+        PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
+        pdc.set(KEY_FLAG, PlatformPersistentDataType.BYTE, (byte) 0);
         try {
-            InventorySerializer.deserialize(pdc.getOrDefault(KEY_INVENTORY, PersistentDataType.BYTE_ARRAY, new byte[0]), ply.getInventory());
-        } catch (IllegalArgumentException e) {
+            InventorySerializer.deserialize(pdc.getOrDefaultAssert(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, byte[].class, new byte[0]), ply.getInventory());
+        } catch (IllegalArgumentException | BufferUnderflowException e) {
             ply.getInventory().clear();
         }
         editingMap.remove(uuid);

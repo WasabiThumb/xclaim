@@ -10,6 +10,7 @@ import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.platform.Platform;
 import com.google.gson.*;
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
@@ -51,6 +52,7 @@ public final class XClaim extends JavaPlugin {
     public void onEnable() {
         instance = this;
         logger = getLogger();
+        if (nbtApiCheck()) return;
         loadGeneralConfig();
         setupLang();
         if (!Economy.isAvailable()) {
@@ -79,6 +81,20 @@ public final class XClaim extends JavaPlugin {
     }
 
     /* BEGIN STARTUP TASKS */
+    private boolean nbtApiCheck() {
+        if (PaperLib.isVersion(14)) return false;
+        try {
+            Class.forName("de.tr7zw.nbtapi.plugin.NBTAPI");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "You are using a version older than 1.14 however you do not appear to have NBTAPI installed!");
+            logger.log(Level.SEVERE, "NBTAPI is required for older versions of Minecraft!");
+            logger.log(Level.SEVERE, "You can download it here: https://www.spigotmc.org/resources/nbt-api.7939/");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return true;
+        }
+        return false;
+    }
+
     private void locateJarFile() {
         logger.log(Level.INFO, lang.get("locating-jar"));
         jarFile = new File(XClaim.class.getProtectionDomain().getCodeSource().getLocation().getPath());

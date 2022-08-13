@@ -25,10 +25,10 @@ public class MainPage extends Page {
     private static final ItemStack NEW_STACK = DisplayItem.create(Material.NETHER_STAR, XClaim.lang.getComponent("gui-main-new"));
 
     private static final int EDIT_TRUST_POS = 12;
-    private static final ItemStack EDIT_TRUST_STACK = DisplayItem.create(Material.SKELETON_SKULL, XClaim.lang.getComponent("gui-main-edit-trust"));
+    private static final ItemStack EDIT_TRUST_STACK = DisplayItem.create(Platform.get().getSkeletonSkullMaterial(), XClaim.lang.getComponent("gui-main-edit-trust"));
 
     private static final int EDIT_CHUNK_POS = 13;
-    private static final ItemStack EDIT_CHUNK_STACK = DisplayItem.create(Material.CRAFTING_TABLE, XClaim.lang.getComponent("gui-main-edit-chunk"));
+    private static final ItemStack EDIT_CHUNK_STACK = DisplayItem.create(Platform.get().getCraftingTableMaterial(), XClaim.lang.getComponent("gui-main-edit-chunk"));
 
     private static final int RENAME_CHUNK_POS = 14;
     private static final ItemStack RENAME_CHUNK_STACK = DisplayItem.create(Material.NAME_TAG, XClaim.lang.getComponent("gui-main-rename-chunk"));
@@ -37,7 +37,7 @@ public class MainPage extends Page {
     private static final ItemStack EDIT_PERM_STACK = DisplayItem.create(Material.SHIELD, XClaim.lang.getComponent("gui-main-edit-perm"));
 
     private static final int TRANSFER_OWNER_POS = 20;
-    private static final ItemStack TRANSFER_OWNER_STACK = DisplayItem.create(Material.CHEST_MINECART, XClaim.lang.getComponent("gui-main-transfer-owner"));
+    private static final ItemStack TRANSFER_OWNER_STACK = DisplayItem.create(Platform.get().getChestMinecartMaterial(), XClaim.lang.getComponent("gui-main-transfer-owner"));
 
     private static final int CLEAR_ALL_POS = 21;
     private static final ItemStack CLEAR_ALL_STACK = DisplayItem.create(Material.TNT, XClaim.lang.getComponent("gui-main-clear-all"));
@@ -46,7 +46,7 @@ public class MainPage extends Page {
     private static final ItemStack DELETE_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.getComponent("gui-main-delete"));
 
     private static final int VERSION_POS = 23;
-    private static final ItemStack VERSION_STACK = DisplayItem.create(Material.ENCHANTING_TABLE, XClaim.lang.getComponent("gui-main-version"));
+    private static final ItemStack VERSION_STACK = DisplayItem.create(Platform.get().getEnchantingTableMaterial(), XClaim.lang.getComponent("gui-main-version"));
 
     private static final int EXIT_POS = 24;
     private static final ItemStack EXIT_STACK = DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-main-exit"));

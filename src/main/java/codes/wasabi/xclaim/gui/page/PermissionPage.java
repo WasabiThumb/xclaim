@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.TrustLevel;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.WordWrap;
 import net.kyori.adventure.text.Component;
@@ -36,7 +37,7 @@ public class PermissionPage extends Page {
     );
 
     private static final ItemStack PLAYER_STACK = DisplayItem.create(
-            Material.SKELETON_SKULL,
+            Platform.get().getSkeletonSkullMaterial(),
             XClaim.lang.getComponent("gui-perm-player"),
             Arrays.asList(
                     XClaim.lang.getComponent("gui-perm-player-line1"),
@@ -78,19 +79,19 @@ public class PermissionPage extends Page {
                     TextColor col;
                     switch (tl) {
                         case NONE:
-                            mat = Material.RED_DYE;
+                            mat = Platform.get().getRedToken();
                             col = NamedTextColor.RED;
                             break;
                         case TRUSTED:
-                            mat = Material.ORANGE_DYE;
+                            mat = Platform.get().getOrangeToken();
                             col = NamedTextColor.GOLD;
                             break;
                         case VETERANS:
-                            mat = Material.YELLOW_DYE;
+                            mat = Platform.get().getYellowToken();
                             col = NamedTextColor.YELLOW;
                             break;
                         case ALL:
-                            mat = Material.LIME_DYE;
+                            mat = Platform.get().getLimeToken();
                             col = NamedTextColor.GREEN;
                             break;
                         default:
@@ -139,7 +140,7 @@ public class PermissionPage extends Page {
                 break;
             case 3:
                 ItemStack noneItem = DisplayItem.create(
-                        Material.RED_DYE,
+                        Platform.get().getRedToken(),
                         XClaim.lang.getComponent("gui-perm-tl-none"),
                         Arrays.asList(
                                 XClaim.lang.getComponent("gui-perm-tl-none-line1"),
@@ -147,7 +148,7 @@ public class PermissionPage extends Page {
                         )
                 );
                 ItemStack trustedItem = DisplayItem.create(
-                        Material.ORANGE_DYE,
+                        Platform.get().getOrangeToken(),
                         XClaim.lang.getComponent("gui-perm-tl-trusted"),
                         Arrays.asList(
                                 XClaim.lang.getComponent("gui-perm-tl-trusted-line1"),
@@ -156,7 +157,7 @@ public class PermissionPage extends Page {
                         )
                 );
                 ItemStack vetItem = DisplayItem.create(
-                        Material.YELLOW_DYE,
+                        Platform.get().getYellowToken(),
                         XClaim.lang.getComponent("gui-perm-tl-veterans"),
                         Arrays.asList(
                                 XClaim.lang.getComponent("gui-perm-tl-veterans-line1"),
@@ -165,7 +166,7 @@ public class PermissionPage extends Page {
                         )
                 );
                 ItemStack allItem = DisplayItem.create(
-                        Material.LIME_DYE,
+                        Platform.get().getLimeToken(),
                         XClaim.lang.getComponent("gui-perm-tl-all"),
                         Arrays.asList(
                                 XClaim.lang.getComponent("gui-perm-tl-all-line1"),
@@ -213,7 +214,7 @@ public class PermissionPage extends Page {
                         boolean value = set.contains(perm);
                         Component text = XClaim.lang.getComponent(value ? "gui-perm-enabled" : "gui-perm-disabled");
                         TextColor tc = (value ? NamedTextColor.GREEN : NamedTextColor.RED);
-                        Material mat = (value ? Material.LIME_DYE : Material.RED_DYE);
+                        Material mat = (value ? Platform.get().getLimeToken() : Platform.get().getRedToken());
                         setItem(i1, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(text.color(NamedTextColor.GRAY))));
                         pickKeys.put(i1, perm);
                     } else {
@@ -223,11 +224,11 @@ public class PermissionPage extends Page {
                 setItem(22, BACK_STACK);
                 break;
             case 5:
-                setItem(11, DisplayItem.create(Material.GREEN_CONCRETE, XClaim.lang.getComponent("gui-perm-enabled"), Arrays.asList(
+                setItem(11, DisplayItem.create(Platform.get().getGreenConcreteMaterial(), XClaim.lang.getComponent("gui-perm-enabled"), Arrays.asList(
                         XClaim.lang.getComponent("gui-perm-enabled-line1"),
                         XClaim.lang.getComponent("gui-perm-enabled-line2")
                 )));
-                setItem(15, DisplayItem.create(Material.RED_CONCRETE, XClaim.lang.getComponent("gui-perm-disabled"), Arrays.asList(
+                setItem(15, DisplayItem.create(Platform.get().getRedConcreteMaterial(), XClaim.lang.getComponent("gui-perm-disabled"), Arrays.asList(
                         XClaim.lang.getComponent("gui-perm-disabled-line1"),
                         XClaim.lang.getComponent("gui-perm-disabled-line2"),
                         XClaim.lang.getComponent("gui-perm-disabled-line3")

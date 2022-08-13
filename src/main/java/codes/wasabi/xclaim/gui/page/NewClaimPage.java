@@ -44,7 +44,7 @@ public class NewClaimPage extends Page {
     }
 
     private static final ItemStack YES_STACK = DisplayItem.create(
-            Material.GREEN_CONCRETE,
+            Platform.get().getGreenConcreteMaterial(),
             XClaim.lang.getComponent("gui-new-confirm"),
             Arrays.asList(
                     XClaim.lang.getComponent("gui-new-confirm-line1"),
@@ -54,7 +54,7 @@ public class NewClaimPage extends Page {
     );
 
     private static final ItemStack NO_STACK = DisplayItem.create(
-            Material.RED_CONCRETE,
+            Platform.get().getRedConcreteMaterial(),
             XClaim.lang.getComponent("gui-new-cancel"),
             Arrays.asList(
                     XClaim.lang.getComponent("gui-new-cancel-line1"),

@@ -4,19 +4,16 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.platform.Platform;
-import org.bukkit.Bukkit;
+import codes.wasabi.xclaim.platform.PlatformEntityPlaceListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -26,7 +23,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class InteractHandler extends PermissionHandler {
@@ -73,6 +69,22 @@ public class InteractHandler extends PermissionHandler {
         this(claim, Mode.ALL);
     }
 
+    private PlatformEntityPlaceListener entityPlaceListener = null;
+    @Override
+    protected void onRegister() {
+        if (mode.equals(Mode.PLACE_ENTS) || mode.equals(Mode.PLACE_MOBILES)) {
+            entityPlaceListener = Platform.get().getPlaceListener();
+            if (entityPlaceListener != null) {
+                entityPlaceListener.on(this::onPlaceEntity);
+            }
+        }
+    }
+
+    @Override
+    protected void onUnregister() {
+        if (entityPlaceListener != null) entityPlaceListener.unregister();
+    }
+
     private <T extends PlayerEvent & Cancellable> boolean itemCheck(@NotNull T event) {
         Player ply = event.getPlayer();
         ItemStack is;
@@ -96,7 +108,12 @@ public class InteractHandler extends PermissionHandler {
         Material mat = is.getType();
         if (mode.equals(Mode.FLAMMABLE)) {
             if (!getClaim().contains(loc)) return false;
-            if (mat.equals(Material.FLINT_AND_STEEL) || mat.equals(Material.FIRE_CHARGE)) {
+            boolean isFireCharge = false;
+            Platform p = Platform.get();
+            if (p.hasFireChargeMaterial()) {
+                isFireCharge = mat.equals(p.getFireChargeMaterial());
+            }
+            if (mat.equals(Material.FLINT_AND_STEEL) || isFireCharge) {
                 event.setCancelled(true);
                 stdError(ply);
                 return true;
@@ -116,7 +133,7 @@ public class InteractHandler extends PermissionHandler {
                     }
                 }
                 return true;
-            } else if (mat.equals(Material.FIREWORK_ROCKET)) {
+            } else if (mat.equals(Platform.get().getFireworkRocketMaterial())) {
                 if (ply.isGliding()) {
                     Platform p = Platform.get();
                     if (getClaim().contains(loc) && p.supportsArtificalElytraBoost()) {
@@ -221,21 +238,18 @@ public class InteractHandler extends PermissionHandler {
         }
     }
 
-    @EventHandler
-    public void onPlaceEntity(@NotNull EntityPlaceEvent event) {
+    private void onPlaceEntity(@NotNull PlatformEntityPlaceListener.Data data) {
         if (!mode.equals(Mode.PLACE_ENTS) && !mode.equals(Mode.PLACE_MOBILES)) return;
-        Player ply = event.getPlayer();
+        Player ply = data.player;
         if (ply == null) return;
-        Entity placed = event.getEntity();
         if (mode.equals(Mode.PLACE_ENTS)) {
             if (getClaim().hasPermission(ply, Permission.ENT_PLACE)) return;
         } else {
             if (getClaim().hasPermission(ply, Permission.VEHICLE_PLACE)) return;
-            if (!(placed instanceof Vehicle)) return;
+            if (!(data.isVehicle)) return;
         }
-        if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
-        if (getClaim().contains(placed.getLocation())) {
-            event.setCancelled(true);
+        if (getClaim().contains(data.location)) {
+            data.cancel.run();
             stdError(ply);
         }
     }

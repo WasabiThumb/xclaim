@@ -35,7 +35,7 @@ public class VersionInfoPage extends Page {
             p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-version")).color(NamedTextColor.GOLD));
             p.metaLore(meta, Arrays.asList(
                     Component.text(description.getVersion()).color(NamedTextColor.LIGHT_PURPLE),
-                    Component.text(XClaim.lang.get("gui-vinf-mc-version", Objects.requireNonNullElse(description.getAPIVersion(), XClaim.lang.get("gui-vinf-mc-version-unspecified")))).color(NamedTextColor.LIGHT_PURPLE)
+                    Component.text(XClaim.lang.get("gui-vinf-mc-version", Objects.requireNonNullElse(Platform.get().getApiVersion(description), XClaim.lang.get("gui-vinf-mc-version-unspecified")))).color(NamedTextColor.LIGHT_PURPLE)
             ));
         }
         ver.setItemMeta(meta);
@@ -47,14 +47,14 @@ public class VersionInfoPage extends Page {
     static {
         UUID authorID = new UUID(-7814744758566370837L, -7422362746895434695L);
         OfflinePlayer author = Bukkit.getOfflinePlayer(authorID);
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        ItemStack skull = new ItemStack(Platform.get().getPlayerHeadMaterial(), 1);
         ItemMeta meta = skull.getItemMeta();
         if (meta != null) {
             Platform p = Platform.get();
             p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(NamedTextColor.GOLD));
             String name = Objects.requireNonNullElse(author.getName(), "Wasabi_Thumbs");
             p.metaLore(meta, Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
-            if (meta instanceof SkullMeta) ((SkullMeta) meta).setOwningPlayer(author);
+            if (meta instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) meta, author);
         }
         skull.setItemMeta(meta);
         AUTHOR_STACK = skull;

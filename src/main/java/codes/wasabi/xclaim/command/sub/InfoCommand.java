@@ -47,7 +47,7 @@ public class InfoCommand implements Command {
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) throws Exception {
         Audience audience = Platform.getAdventure().sender(sender);
         PluginDescriptionFile description = XClaim.instance.getDescription();
-        String apiVersion = description.getAPIVersion();
+        String apiVersion = Platform.get().getApiVersion(description);
         if (apiVersion == null) apiVersion = "1." + PaperLib.getMinecraftVersion() + "(?)";
         int claimCount = 0;
         int chunkCount = 0;
