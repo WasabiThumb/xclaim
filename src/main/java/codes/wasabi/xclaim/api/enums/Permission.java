@@ -23,6 +23,7 @@ public enum Permission {
     ENTITY_DAMAGE_VEHICLE("perm-entity-damage-vehicle-name", "perm-entity-damage-vehicle-description", TrustLevel.VETERANS, DamageHandler.Vehicle.class),
     ENTITY_DAMAGE_NL("perm-entity-damage-nl-name", "perm-entity-damage-nl-description", TrustLevel.VETERANS, DamageHandler.NonLiving.class),
     ENTITY_DAMAGE_MISC("perm-entity-damage-misc-name", "perm-entity-damage-misc-description", TrustLevel.ALL, DamageHandler.Misc.class),
+    EXPLODE("perm-explode-name", "perm-explode-description", TrustLevel.TRUSTED, ExplosionHandler.class),
     ITEM_DROP("perm-item-drop-name", "perm-item-drop-description", TrustLevel.ALL, DropHandler.class),
     MANAGE("perm-manage-name", "perm-manage-description", TrustLevel.NONE),
     DELETE("perm-delete-name", "perm-delete-description", TrustLevel.NONE);

@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.platform.spigot_1_17;
 
 import codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -65,6 +66,11 @@ public class SpigotPlatform_1_17 extends SpigotPlatform_1_16 {
     @Override
     public @Nullable ItemStack getPlayerItemInUse(Player ply) {
         return ply.getItemInUse();
+    }
+
+    @Override
+    public void createExplosion(World w, Location loc, float power, boolean setFire, boolean breakBlocks, Entity source) {
+        w.createExplosion(loc, power, setFire, breakBlocks, source);
     }
 
 }

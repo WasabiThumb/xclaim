@@ -5,6 +5,7 @@ import io.papermc.lib.PaperLib;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -39,6 +40,8 @@ public abstract class Platform {
             instance = new codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16();
         } else if (PaperLib.isVersion(15)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_15.SpigotPlatform_1_15();
+        } else if (PaperLib.isVersion(14, 4)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_14_4.SpigotPlatform_1_14_4();
         } else {
             instance = new codes.wasabi.xclaim.platform.spigot_1_14.SpigotPlatform_1_14();
         }
@@ -109,5 +112,7 @@ public abstract class Platform {
     public abstract boolean supportsArtificialBookOpen();
 
     public abstract void artificialBookOpen(Player ply, ItemStack book);
+
+    public abstract void createExplosion(World w, Location loc, float power, boolean setFire, boolean breakBlocks, Entity source);
 
 }

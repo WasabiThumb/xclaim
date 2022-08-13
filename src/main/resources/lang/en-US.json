@@ -74,6 +74,8 @@
   "perm-entity-damage-nl-description": "Cause damage to things like armor stands and decorations",
   "perm-entity-damage-misc-name": "Damage Miscellaneous Entities",
   "perm-entity-damage-misc-description": "Cause damage to entities that don't fall into any other group",
+  "perm-explode-name": "Explosions",
+  "perm-explode-description": "Cause explosions; when the source of an explosion is unclear, TRUSTED and VETERAN groups act like NONE",
   "perm-item-drop-name": "Drop Items",
   "perm-item-drop-description": "Drop items",
   "perm-manage-name": "Manage Claim",

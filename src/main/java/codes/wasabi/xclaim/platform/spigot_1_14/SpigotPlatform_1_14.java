@@ -1,9 +1,11 @@
 package codes.wasabi.xclaim.platform.spigot_1_14;
 
 import codes.wasabi.xclaim.platform.spigot.SpigotPlatform;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -100,6 +102,11 @@ public class SpigotPlatform_1_14 extends SpigotPlatform {
     @Override
     public void artificialBookOpen(Player ply, ItemStack book) {
 
+    }
+
+    @Override
+    public void createExplosion(World w, Location loc, float power, boolean setFire, boolean breakBlocks, Entity source) {
+        w.createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks);
     }
 
 }
