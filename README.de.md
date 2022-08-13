@@ -13,8 +13,8 @@ Sie können ein Build vom ["Releases"-tab](https://github.com/WasabiThumb/xclaim
 Der Hauptbefehl ist "/xclaim" (alias "/xc"). Dieser erlaubt es Spielern Gebiete zu beanspruchen und zu verwalten. In diesen Gebieten können Berechtigungen umgestellt werden, entweder nach allgemeinen Gruppen (Niemand, vertrauenswürdige Spieler, Veteranen, jeder) oder individuell. Das GUI erlaubt es zudem Spieler der Liste an vertrauenswürdigen Spielern hinzuzufügen oder zu entfernen.
 
 ### Dynmap-Integration
-Die Dynmap-Integration sollte "out-of-the-box" funktionieren, solange alles [ordnungsgemäß konfiguriert](#Konfiguration) ist. Ist dies nicht der Fall, melden Sie das Problem auf der [Issues-Seite](https://github.com/WasabiThumb/xclaim/issues).\
-Sehen Sie sich als Beispiel die Dynmap vom [HL21st Minecraft Server](https://www.planetminecraft.com/server/half-life-21st-century-humor-official/) live an: [here](http://hl21st.com:8104/).\
+Die Dynmap-Integration sollte "out-of-the-box" funktionieren, solange alles [ordnungsgemäß konfiguriert](#Konfiguration) ist. Ist dies nicht der Fall, melden Sie das Problem bitte auf der [Issues-Seite](https://github.com/WasabiThumb/xclaim/issues).\
+Sehen Sie sich als Beispiel die Dynmap vom [HL21st Minecraft Server](https://www.planetminecraft.com/server/half-life-21st-century-humor-official/) live an: [hier](http://hl21st.com:8104/).\
 \
 <img src="https://wasabicodes.xyz/cdn/e536fc60213f22701f2e55858f8f87f9/dynmap.png" alt="Funktionsbeispiel der Dynmap Integration auf dem HL21st Minecraft Server, aufgenommen am 5/13/22" title="HL21st Minecraft Server" style="width: 30em">
 
