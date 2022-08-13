@@ -24,6 +24,7 @@ This process should be done without any players online. The server should have C
 ### Languages
 As of version 1.6.x, multiple languages are supported. When the plugin starts, default language packs are loaded into ``/plugins/XClaim/lang``. Below are a list of default language packs:
 - en-US (American English)
+- de (German)
 
 The plugin decides what language to use based on the "language" option in the [config](#config).
 \
@@ -45,10 +46,10 @@ See all options in the [config section](#config).
 | --: | :-: | :-- |
 | language | The language to use, must be a valid language pack from ``/plugins/XClaim/lang`` otherwise falls back to en-US | en-US |
 | veteran-time | The time in seconds it takes for a player to be on the server in order for Veteran status to take effect | 604800 (1 week) |
-| stop-editing-on-shutdown | Whether or not players should be booted out of the chunk editor on shutdown | false |
-| stop-editing-on-leave | Whether or not players should be booted out of the chunk editor when they leave voluntarily | true |
+| stop-editing-on-shutdown | Whether players should be booted out of the chunk editor on shutdown | false |
+| stop-editing-on-leave | Whether players should be booted out of the chunk editor when they leave voluntarily | true |
 | exempt-claim-owner-from-permission-rules | If claim owners should have access to all permissions on the claim implicitly. You shouldn't change this, it's mainly for debugging | true |
-| enforce-adjacent-claim-chunks | Whether or not chunks in a claim must be next to each other | true |
+| enforce-adjacent-claim-chunks | Whether chunks in a claim must be next to each other | true |
 | allow-diagonal-claim-chunks | If enforce-adjacent-claim-chunks is true, this sets if chunks diagonal from each other are considered as "next to" each other. Otherwise, does nothing. | true |
 | enter-chunk-editor-on-create | If true, then players will enter the chunk editor when they make a new claim | true |
 | use-economy | Whether to use economy features | false |
