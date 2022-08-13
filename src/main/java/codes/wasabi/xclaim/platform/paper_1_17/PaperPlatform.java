@@ -2,8 +2,10 @@ package codes.wasabi.xclaim.platform.paper_1_17;
 
 import codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform_1_17;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +34,16 @@ public class PaperPlatform extends SpigotPlatform_1_17 {
     @Override
     public @Nullable Location getInteractionPoint(@NotNull PlayerInteractEvent event) {
         return event.getInteractionPoint();
+    }
+
+    @Override
+    public boolean supportsArtificalElytraBoost() {
+        return true;
+    }
+
+    @Override
+    public void artificialElytraBoost(Player ply, ItemStack is) {
+        ply.boostElytra(is);
     }
 
 }

@@ -99,4 +99,8 @@ public abstract class Platform {
 
     public abstract @Nullable ItemStack getPlayerItemInUse(Player ply);
 
+    public abstract boolean supportsArtificalElytraBoost();
+
+    public abstract void artificialElytraBoost(Player ply, ItemStack is);
+
 }

@@ -107,6 +107,15 @@ public class InteractHandler extends PermissionHandler {
                     ply.openBook(is);
                 }
                 return true;
+            } else if (mat.equals(Material.FIREWORK_ROCKET)) {
+                if (ply.isGliding()) {
+                    Platform p = Platform.get();
+                    if (getClaim().contains(loc) && p.supportsArtificalElytraBoost()) {
+                        event.setCancelled(true);
+                        p.artificialElytraBoost(ply, is);
+                    }
+                    return true;
+                }
             }
         }
         return false;

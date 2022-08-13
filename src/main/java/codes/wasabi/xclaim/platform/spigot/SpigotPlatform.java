@@ -136,4 +136,14 @@ public abstract class SpigotPlatform extends Platform {
         return null;
     }
 
+    @Override
+    public boolean supportsArtificalElytraBoost() {
+        return false;
+    }
+
+    @Override
+    public void artificialElytraBoost(Player ply, ItemStack is) {
+
+    }
+
 }
