@@ -28,13 +28,18 @@ public abstract class Platform {
     public static void init() {
         if (initialized) return;
         boolean isNew = PaperLib.isVersion(17);
-        if (!PaperLib.isPaper()) {
+        boolean isPaper = PaperLib.isPaper();
+        if (!isPaper) {
             PaperLib.suggestPaper(XClaim.instance);
         }
         if (isNew) {
-            instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform();
+            if (isPaper) {
+                instance = new codes.wasabi.xclaim.platform.paper_1_17.PaperPlatform();
+            } else {
+                instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform_1_17();
+            }
         } else {
-            instance = new codes.wasabi.xclaim.platform.spigot_1_16.OldSpigotPlatform();
+            instance = new codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16();
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;

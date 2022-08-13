@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Since 1.8.0, Adventure is properly relocated and so Paper methods involving Components no longer work
+ */
+@Deprecated
 public class PaperPlatformChatListener implements PlatformChatListener {
 
     private final List<Consumer<PlatformChatListenerData>> callbacks = new ArrayList<>();

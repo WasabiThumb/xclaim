@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+/**
+ * Since 1.8.0, Adventure is properly relocated and so Paper methods involving Components no longer work
+ */
+@Deprecated
 public class PaperAudiences implements BukkitAudiences {
 
     public PaperAudiences() {

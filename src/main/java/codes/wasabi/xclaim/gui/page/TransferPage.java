@@ -74,6 +74,7 @@ public class TransferPage extends Page {
             if (matches.size() < 1) {
                 Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-tx-prompt-fail"));
                 getParent().close();
+                return;
             }
             matchPlayer = matches.get(0);
             populate();
