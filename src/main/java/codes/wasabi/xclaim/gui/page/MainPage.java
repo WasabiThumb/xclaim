@@ -9,8 +9,6 @@ import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -81,66 +79,86 @@ public class MainPage extends Page {
     @Override
     public void onClick(int slot) {
         switch (slot) {
-            case NEW_POS -> switchPage(new NewClaimPage(getParent()));
-            case EDIT_TRUST_POS -> switchPage(new PlayerCombinatorPage(getParent()) {
-                private final XCPlayer me = XCPlayer.of(getTarget());
+            case NEW_POS:
+                switchPage(new NewClaimPage(getParent()));
+                break;
+            case EDIT_TRUST_POS:
+                switchPage(new PlayerCombinatorPage(getParent()) {
+                    private final XCPlayer me = XCPlayer.of(getTarget());
 
-                @Override
-                protected @NotNull List<OfflinePlayer> getList() {
-                    return me.getTrustedPlayers();
-                }
-
-                @Override
-                protected void add(@NotNull OfflinePlayer ply) {
-                    me.trustPlayer(ply);
-                }
-
-                @Override
-                protected void remove(@NotNull OfflinePlayer ply) {
-                    me.untrustPlayer(ply);
-                }
-
-                @Override
-                protected void onSelect(@NotNull OfflinePlayer ply) {
-                    remove(ply);
-                }
-            });
-            case EDIT_CHUNK_POS -> switchPage(new ClaimSelectorPage(getParent(), claim -> {
-                Player ply = getTarget();
-                World w = ply.getWorld();
-                World cw = claim.getWorld();
-                if (cw != null) {
-                    if (w != cw) {
-                        Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-edit-chunk-fail"));
-                        getParent().close();
-                        return;
+                    @Override
+                    protected @NotNull List<OfflinePlayer> getList() {
+                        return me.getTrustedPlayers();
                     }
-                }
-                ChunkEditor.startEditing(ply, claim);
-                getParent().close();
-            }));
-            case RENAME_CHUNK_POS -> switchPage(new ClaimSelectorPage(getParent(), claim -> {
-                switchPage(MainPage.this);
-                prompt(XClaim.lang.get("gui-rename-chunk-prompt"), (String name) -> {
-                    if (name.length() > 50) {
-                        Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-rename-chunk-fail"));
-                    } else {
-                        claim.setName(name);
+
+                    @Override
+                    protected void add(@NotNull OfflinePlayer ply) {
+                        me.trustPlayer(ply);
                     }
-                    switchPage(new MainPage(getParent()));
+
+                    @Override
+                    protected void remove(@NotNull OfflinePlayer ply) {
+                        me.untrustPlayer(ply);
+                    }
+
+                    @Override
+                    protected void onSelect(@NotNull OfflinePlayer ply) {
+                        remove(ply);
+                    }
                 });
-            }));
-            case EDIT_PERM_POS -> switchPage(new ClaimSelectorPage(getParent(), claim -> switchPage(new PermissionPage(getParent(), claim))));
-            case TRANSFER_OWNER_POS -> switchPage(new ClaimSelectorPage(getParent(), claim -> switchPage(new TransferPage(getParent(), claim))));
-            case CLEAR_ALL_POS -> switchPage(new ClearAllPage(getParent()));
-            case DELETE_POS -> switchPage(new ClaimSelectorPage(getParent(), Claim::unclaim) {
-                @Override
-                protected boolean showClaim(@NotNull Claim claim, @NotNull OfflinePlayer ply) {
-                    return claim.hasPermission(ply, Permission.DELETE);
-                }
-            });
-            case VERSION_POS -> switchPage(new VersionInfoPage(getParent()));
-            case EXIT_POS -> getParent().close();
+                break;
+            case EDIT_CHUNK_POS:
+                switchPage(new ClaimSelectorPage(getParent(), claim -> {
+                    Player ply = getTarget();
+                    World w = ply.getWorld();
+                    World cw = claim.getWorld();
+                    if (cw != null) {
+                        if (w != cw) {
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-edit-chunk-fail"));
+                            getParent().close();
+                            return;
+                        }
+                    }
+                    ChunkEditor.startEditing(ply, claim);
+                    getParent().close();
+                }));
+                break;
+            case RENAME_CHUNK_POS:
+                switchPage(new ClaimSelectorPage(getParent(), claim -> {
+                    switchPage(MainPage.this);
+                    prompt(XClaim.lang.get("gui-rename-chunk-prompt"), (String name) -> {
+                        if (name.length() > 50) {
+                            Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-rename-chunk-fail"));
+                        } else {
+                            claim.setName(name);
+                        }
+                        switchPage(new MainPage(getParent()));
+                    });
+                }));
+                break;
+            case EDIT_PERM_POS:
+                switchPage(new ClaimSelectorPage(getParent(), claim -> switchPage(new PermissionPage(getParent(), claim))));
+                break;
+            case TRANSFER_OWNER_POS:
+                switchPage(new ClaimSelectorPage(getParent(), claim -> switchPage(new TransferPage(getParent(), claim))));
+                break;
+            case CLEAR_ALL_POS:
+                switchPage(new ClearAllPage(getParent()));
+                break;
+            case DELETE_POS:
+                switchPage(new ClaimSelectorPage(getParent(), Claim::unclaim) {
+                    @Override
+                    protected boolean showClaim(@NotNull Claim claim, @NotNull OfflinePlayer ply) {
+                        return claim.hasPermission(ply, Permission.DELETE);
+                    }
+                });
+                break;
+            case VERSION_POS:
+                switchPage(new VersionInfoPage(getParent()));
+                break;
+            case EXIT_POS:
+                getParent().close();
+                break;
         }
     }
 

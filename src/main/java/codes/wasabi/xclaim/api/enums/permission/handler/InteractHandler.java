@@ -77,7 +77,8 @@ public class InteractHandler extends PermissionHandler {
         Player ply = event.getPlayer();
         ItemStack is;
         Location loc = ply.getLocation();
-        if (event instanceof PlayerInteractEvent pie) {
+        if (event instanceof PlayerInteractEvent) {
+            PlayerInteractEvent pie = (PlayerInteractEvent) event;
             EquipmentSlot slot = pie.getHand();
             if (slot == null) return false;
             is = Platform.get().playerInventoryGetItem(ply.getInventory(), slot);
@@ -87,8 +88,8 @@ public class InteractHandler extends PermissionHandler {
             }
         } else {
             is = Platform.get().getPlayerItemInUse(ply);
-            if (event instanceof PlayerInteractEntityEvent entityEvent) {
-                loc = entityEvent.getRightClicked().getLocation();
+            if (event instanceof PlayerInteractEntityEvent) {
+                loc = ((PlayerInteractEntityEvent) event).getRightClicked().getLocation();
             }
         }
         if (is == null) return false;
@@ -199,14 +200,15 @@ public class InteractHandler extends PermissionHandler {
     public void onOpenChest(@NotNull InventoryOpenEvent event) {
         if (!mode.equals(Mode.CHESTS)) return;
         HumanEntity ent = event.getPlayer();
-        if (ent instanceof Player ply) {
+        if (ent instanceof Player) {
+            Player ply = (Player) ent;
             if (getClaim().hasPermission(ply, Permission.CHEST_OPEN)) return;
             Inventory inv = event.getInventory();
             InventoryHolder holder = inv.getHolder();
-            if (holder instanceof Container container) {
+            if (holder instanceof Container) {
                 Block b;
                 try {
-                    b = container.getBlock();
+                    b = ((Container) holder).getBlock();
                 } catch (IllegalStateException ignored) {
                     return;
                 }

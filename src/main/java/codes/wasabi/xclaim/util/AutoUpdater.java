@@ -17,13 +17,53 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 public final class AutoUpdater {
 
-    public record UpdateOption(@NotNull String updateOption, @NotNull Callable<Void> runner) {
+    public static class UpdateOption {
+        private final String updateOption;
+        private final Callable<Void> runner;
+
+        public UpdateOption(@NotNull String updateOption, @NotNull Callable<Void> runner) {
+            this.updateOption = updateOption;
+            this.runner = runner;
+        }
+
+        public final @NotNull String updateOption() {
+            return updateOption;
+        }
+
+        public final @NotNull Callable<Void> runner() {
+            return runner;
+        }
+
         public void update() throws Exception {
             runner.call();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(updateOption, runner);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (obj instanceof UpdateOption) {
+                UpdateOption other = (UpdateOption) obj;
+                if (Objects.equals(updateOption, other.updateOption)) {
+                    if (Objects.equals(runner, other.runner)) return true;
+                }
+            }
+            return super.equals(obj);
+        }
+
+        @Override
+        public String toString() {
+            return "AutoUpdater[updateOption=" + updateOption + ",runner=" + runner + "]";
         }
     }
 

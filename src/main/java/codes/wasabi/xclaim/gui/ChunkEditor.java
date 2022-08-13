@@ -53,8 +53,8 @@ public class ChunkEditor {
         @EventHandler
         public void onPickup(@NotNull EntityPickupItemEvent event) {
             Entity ent = event.getEntity();
-            if (ent instanceof Player ply) {
-                if (getEditing(ply) != null) {
+            if (ent instanceof Player) {
+                if (getEditing((Player) ent) != null) {
                     event.setCancelled(true);
                 }
             }
@@ -63,7 +63,8 @@ public class ChunkEditor {
         @EventHandler
         public void onClick(@NotNull InventoryClickEvent event) {
             HumanEntity ent = event.getWhoClicked();
-            if (ent instanceof Player ply) {
+            if (ent instanceof Player) {
+                Player ply = (Player) ent;
                 if (getEditing(ply) != null) {
                     Inventory inv = event.getClickedInventory();
                     if (Objects.equals(inv, ply.getInventory())) event.setCancelled(true);
@@ -74,7 +75,8 @@ public class ChunkEditor {
         @EventHandler
         public void onDrag(@NotNull InventoryDragEvent event) {
             HumanEntity ent = event.getWhoClicked();
-            if (ent instanceof Player ply) {
+            if (ent instanceof Player) {
+                Player ply = (Player) ent;
                 if (getEditing(ply) != null) {
                     Inventory inv = event.getInventory();
                     if (Objects.equals(inv, ply.getInventory())) event.setCancelled(true);
@@ -83,10 +85,10 @@ public class ChunkEditor {
         }
 
         private boolean checkInventory(@NotNull Inventory inv) {
-            if (inv instanceof PlayerInventory pinv) {
-                HumanEntity ent = pinv.getHolder();
-                if (ent instanceof Player ply) {
-                    return getEditing(ply) != null;
+            if (inv instanceof PlayerInventory) {
+                HumanEntity ent = ((PlayerInventory) inv).getHolder();
+                if (ent instanceof Player) {
+                    return getEditing((Player) ent) != null;
                 }
             }
             return false;
@@ -116,7 +118,7 @@ public class ChunkEditor {
                 PlayerInventory inv = ply.getInventory();
                 int slot = inv.getHeldItemSlot();
                 switch (slot) {
-                    case 1 -> {
+                    case 1:
                         Chunk chunk = ply.getLocation().getChunk();
                         Claim existing = Claim.getByChunk(chunk);
                         if (existing != null) {
@@ -229,22 +231,22 @@ public class ChunkEditor {
                         } else {
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-redundant-add"));
                         }
-                    }
-                    case 4 -> {
-                        Chunk chunk = ply.getLocation().getChunk();
-                        if (claim.removeChunk(chunk)) {
+                        break;
+                    case 4:
+                        Chunk chunk1 = ply.getLocation().getChunk();
+                        if (claim.removeChunk(chunk1)) {
                             if (Economy.isAvailable()) {
                                 Economy eco = Economy.getAssert();
-                                XCPlayer xcp = XCPlayer.of(ply);
-                                int numChunks = 0;
-                                UUID uuid = ply.getUniqueId();
+                                XCPlayer xcp1 = XCPlayer.of(ply);
+                                int numChunks1 = 0;
+                                UUID uuid1 = ply.getUniqueId();
                                 for (Claim c : Claim.getAll()) {
-                                    if (c.getOwner().getUniqueId().equals(uuid)) {
-                                        numChunks += c.getChunks().size();
+                                    if (c.getOwner().getUniqueId().equals(uuid1)) {
+                                        numChunks1 += c.getChunks().size();
                                     }
                                 }
-                                if (numChunks >= xcp.getFreeChunks()) {
-                                    BigDecimal bd = BigDecimal.valueOf(xcp.getUnclaimReward());
+                                if (numChunks1 >= xcp1.getFreeChunks()) {
+                                    BigDecimal bd = BigDecimal.valueOf(xcp1.getUnclaimReward());
                                     eco.give(ply, bd);
                                     Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-reward", eco.format(bd)));
                                 }
@@ -253,8 +255,10 @@ public class ChunkEditor {
                         } else {
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-redundant-remove"));
                         }
-                    }
-                    case 7 -> stopEditing(ply);
+                        break;
+                    case 7:
+                        stopEditing(ply);
+                        break;
                 }
             }
         }

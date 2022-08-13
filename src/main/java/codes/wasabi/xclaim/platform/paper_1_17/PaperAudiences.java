@@ -88,8 +88,8 @@ public class PaperAudiences implements BukkitAudiences {
         List<Audience> audienceList = new ArrayList<>();
         audienceList.add(Bukkit.getConsoleSender());
         World w = null;
-        if (world instanceof NamespacedKey nk) {
-            w = Bukkit.getWorld(nk);
+        if (world instanceof NamespacedKey) {
+            w = Bukkit.getWorld((NamespacedKey) world);
         } else {
             for (World wld : Bukkit.getWorlds()) {
                 if (wld.getKey().equals(world)) {

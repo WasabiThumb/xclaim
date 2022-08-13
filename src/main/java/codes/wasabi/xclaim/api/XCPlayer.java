@@ -9,12 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class XCPlayer {
 
     public static @NotNull XCPlayer of(@NotNull OfflinePlayer ply) {
-        if (ply instanceof XCPlayer xcp) return xcp;
+        if (ply instanceof XCPlayer) return (XCPlayer) ply;
         return new XCPlayer(ply);
     }
 
@@ -59,8 +60,8 @@ public class XCPlayer {
         String query = player.getUniqueId().toString();
         List<?> entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
         for (Object ob : entries) {
-            if (ob instanceof String str) {
-                if (str.equals(query)) return true;
+            if (ob instanceof String) {
+                if (Objects.equals(ob, query)) return true;
             }
         }
         return false;
@@ -70,9 +71,9 @@ public class XCPlayer {
         List<?> entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
         List<OfflinePlayer> ret = new ArrayList<>();
         for (Object ob : entries) {
-            if (ob instanceof String str) {
+            if (ob instanceof String) {
                 try {
-                    UUID uuid = UUID.fromString(str);
+                    UUID uuid = UUID.fromString((String) ob);
                     ret.add(Bukkit.getOfflinePlayer(uuid));
                 } catch (Exception ignored) {}
             }
@@ -81,7 +82,7 @@ public class XCPlayer {
     }
 
     public void setTrustedPlayers(@NotNull List<OfflinePlayer> players) {
-        List<String> list = players.stream().flatMap((OfflinePlayer op) -> Stream.of(op.getUniqueId().toString())).toList();
+        List<String> list = players.stream().flatMap((OfflinePlayer op) -> Stream.of(op.getUniqueId().toString())).collect(Collectors.toList());
         XClaim.trustConfig.set(uuidString, list);
     }
 
@@ -323,8 +324,8 @@ public class XCPlayer {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
-        if (obj instanceof XCPlayer xcp) {
-            return xcp.op.equals(op);
+        if (obj instanceof XCPlayer) {
+            return ((XCPlayer) obj).op.equals(op);
         }
         return super.equals(obj);
     }

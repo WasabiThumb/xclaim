@@ -11,7 +11,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -67,12 +66,12 @@ public class ClearCommand implements Command {
         boolean permitted = false;
         if (protoPlayer != null) {
             target = (OfflinePlayer) arguments[0];
-            if (sender instanceof Player ply) {
-                permitted = ply.getUniqueId().equals(target.getUniqueId());
+            if (sender instanceof Player) {
+                permitted = ((Player) sender).getUniqueId().equals(target.getUniqueId());
             }
         } else {
-            if (sender instanceof Player ply) {
-                target = ply;
+            if (sender instanceof Player) {
+                target = (Player) sender;
                 permitted = true;
             } else {
                 audience.sendMessage(XClaim.lang.getComponent("cmd-clear-err-missing"));
@@ -88,17 +87,17 @@ public class ClearCommand implements Command {
         Object protoConfirm = (arguments.length < 2 ? null : arguments[1]);
         if (protoConfirm != null) {
             if (((String) protoConfirm).equalsIgnoreCase(XClaim.lang.get("cmd-clear-arg-confirm-yes"))) {
-                Component name = (target instanceof Player targetPly ? Platform.get().playerDisplayName(targetPly) : Component.text(Objects.requireNonNullElse(target.getName(), XClaim.lang.get("cmd-clear-player-unknown"))));
+                Component name = (target instanceof Player ? Platform.get().playerDisplayName((Player) target) : Component.text(Objects.requireNonNullElse(target.getName(), XClaim.lang.get("cmd-clear-player-unknown"))));
                 Claim.getByOwner(target).forEach(Claim::unclaim);
                 audience.sendMessage(XClaim.lang.getComponent("cmd-clear-success", name));
-                if ((!permitted) && target instanceof Player targetPly) {
-                    Component name2 = (sender instanceof Player ply ? Platform.get().playerDisplayName(ply) : Component.text(XClaim.lang.get("cmd-clear-player-console")).color(NamedTextColor.DARK_GRAY));
-                    Platform.getAdventure().player(targetPly).sendMessage(XClaim.lang.getComponent("cmd-clear-notify", name2));
+                if ((!permitted) && target instanceof Player) {
+                    Component name2 = (sender instanceof Player ? Platform.get().playerDisplayName((Player) sender) : Component.text(XClaim.lang.get("cmd-clear-player-console")).color(NamedTextColor.DARK_GRAY));
+                    Platform.getAdventure().player((Player) target).sendMessage(XClaim.lang.getComponent("cmd-clear-notify", name2));
                 }
                 return;
             }
         }
-        Component name3 = (target instanceof Player targetPly ? Platform.get().playerDisplayName(targetPly) : Component.text(Objects.requireNonNullElse(target.getName(), "Unknown")));
+        Component name3 = (target instanceof Player ? Platform.get().playerDisplayName((Player) target) : Component.text(Objects.requireNonNullElse(target.getName(), "Unknown")));
         audience.sendMessage(XClaim.lang.getComponent("cmd-clear-prompt", name3));
         if (sender instanceof Player) {
             audience.sendMessage(

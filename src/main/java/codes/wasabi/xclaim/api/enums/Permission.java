@@ -39,12 +39,21 @@ public enum Permission {
             p = valueOf(name);
         } catch (IllegalArgumentException e) {
             // check for legacy names
-            p = switch (name) {
-                case "ENTITY_DAMAGE" -> Permission.ENTITY_DAMAGE_NL;
-                case "MOB_DAMAGE" -> Permission.ENTITY_DAMAGE_HOSTILE;
-                case "FRIENDLY_MOB_DAMAGE" -> Permission.ENTITY_DAMAGE_FRIENDLY;
-                case "LIVING_ENTITY_DAMAGE" -> null;
-                default -> throw e;
+            switch (name) {
+                case "ENTITY_DAMAGE":
+                    p = Permission.ENTITY_DAMAGE_NL;
+                    break;
+                case "MOB_DAMAGE":
+                    p = Permission.ENTITY_DAMAGE_HOSTILE;
+                    break;
+                case "FRIENDLY_MOB_DAMAGE":
+                    p = Permission.ENTITY_DAMAGE_FRIENDLY;
+                    break;
+                case "LIVING_ENTITY_DAMAGE":
+                    p = null;
+                    break;
+                default:
+                    throw e;
             };
         }
         return p;

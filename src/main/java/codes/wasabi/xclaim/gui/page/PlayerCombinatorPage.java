@@ -74,15 +74,15 @@ public abstract class PlayerCombinatorPage extends Page {
                 String realName = ply.getName();
                 if (realName == null) realName = ply.getUniqueId().toString();
                 Component niceName;
-                if (ply instanceof Player onlinePlayer) {
-                    niceName = Platform.get().playerDisplayName(onlinePlayer);
+                if (ply instanceof Player) {
+                    niceName = Platform.get().playerDisplayName((Player) ply);
                 } else {
                     niceName = Component.text(realName);
                 }
                 meta.addItemFlags(ItemFlag.values());
                 Platform.get().metaDisplayName(meta, niceName);
                 Platform.get().metaLore(meta, Collections.singletonList(Component.text(realName).color(NamedTextColor.GRAY)));
-                if (meta instanceof SkullMeta sm) sm.setOwningPlayer(ply);
+                if (meta instanceof SkullMeta) ((SkullMeta) meta).setOwningPlayer(ply);
             }
             is.setItemMeta(meta);
             setItem(i, is);

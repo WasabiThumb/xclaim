@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Claim {
@@ -127,7 +128,8 @@ public class Claim {
             if (list == null) throw new IllegalArgumentException("users." + key + " is not a list");
             for (int i=0; i < list.size(); i++) {
                 Object ob = list.get(i);
-                if (ob instanceof String str) {
+                if (ob instanceof String) {
+                    String str = (String) ob;
                     Permission perm;
                     try {
                         perm = Permission.fromName(str);
@@ -372,19 +374,16 @@ public class Claim {
         }
         TrustLevel tl = globalPerms.getOrDefault(permission, permission.getDefaultTrust());
         switch (tl) {
-            case VETERANS -> {
+            case VETERANS:
                 long firstLogin = player.getFirstPlayed();
                 if (firstLogin == 0L) return false;
                 long duration = (long) Math.floor((System.currentTimeMillis() - firstLogin) / 1000d);
                 long required = XClaim.mainConfig.getLong("veteran-time", 604800L);
                 return (duration >= required);
-            }
-            case TRUSTED -> {
+            case TRUSTED:
                 return owner.playerTrusted(player);
-            }
-            case ALL -> {
+            case ALL:
                 return true;
-            }
         }
         return false;
     }
@@ -414,7 +413,7 @@ public class Claim {
         sec = section.getConfigurationSection("users");
         if (sec == null) sec = section.createSection("users");
         for (Map.Entry<UUID, EnumSet<Permission>> entry : playerPerms.entrySet()) {
-            List<String> list = entry.getValue().stream().flatMap((Permission p) -> Stream.of(p.name())).toList();
+            List<String> list = entry.getValue().stream().flatMap((Permission p) -> Stream.of(p.name())).collect(Collectors.toList());
             sec.set(entry.getKey().toString(), list);
         }
     }

@@ -7,7 +7,6 @@ import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,7 +54,7 @@ public class TransferPage extends Page {
             head = DisplayItem.create(Material.PLAYER_HEAD, Platform.get().playerDisplayName(matchPlayer));
             ItemMeta im = head.getItemMeta();
             if (im != null) {
-                if (im instanceof SkullMeta sm) sm.setOwningPlayer(matchPlayer);
+                if (im instanceof SkullMeta) ((SkullMeta) im).setOwningPlayer(matchPlayer);
             }
             head.setItemMeta(im);
         } else {

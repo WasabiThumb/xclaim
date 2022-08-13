@@ -69,7 +69,8 @@ public class UpdateCommand implements Command {
             boolean console = true;
             boolean permitted = true;
             UUID uuid = new UUID(0L, 0L);
-            if (sender instanceof Player ply) {
+            if (sender instanceof Player) {
+                Player ply = (Player) sender;
                 console = false;
                 permitted = ply.isOp() || ply.hasPermission("xclaim.update");
                 uuid = ply.getUniqueId();

@@ -74,14 +74,22 @@ public class SpigotPlatform_1_14 extends SpigotPlatform {
 
     @Override
     public @Nullable ItemStack playerInventoryGetItem(PlayerInventory inv, EquipmentSlot slot) {
-        return switch (slot) {
-            case HAND -> inv.getItemInMainHand();
-            case OFF_HAND -> inv.getItemInOffHand();
-            case HEAD -> inv.getHelmet();
-            case CHEST -> inv.getChestplate();
-            case LEGS -> inv.getLeggings();
-            case FEET -> inv.getBoots();
-        };
+        switch (slot) {
+            case HAND:
+                return inv.getItemInMainHand();
+            case OFF_HAND:
+                return inv.getItemInOffHand();
+            case HEAD:
+                return inv.getHelmet();
+            case CHEST:
+                return inv.getChestplate();
+            case LEGS:
+                return inv.getLeggings();
+            case FEET:
+                return inv.getBoots();
+            default:
+                return null;
+        }
     }
 
     @Override

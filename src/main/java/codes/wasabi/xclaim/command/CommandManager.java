@@ -22,7 +22,23 @@ public class CommandManager {
 
     public static class Handler implements CommandExecutor, TabCompleter {
 
-        private record Resolution(@NotNull codes.wasabi.xclaim.command.Command cmd, @NotNull String[] args) {}
+        private static class Resolution {
+            private final codes.wasabi.xclaim.command.Command cmd;
+            private final String[] args;
+
+            Resolution(@NotNull codes.wasabi.xclaim.command.Command cmd, @NotNull String[] args) {
+                this.cmd = cmd;
+                this.args = args;
+            }
+
+            @NotNull codes.wasabi.xclaim.command.Command cmd() {
+                return cmd;
+            }
+
+            @NotNull String[] args() {
+                return args;
+            }
+        }
 
         private final codes.wasabi.xclaim.command.Command cmd;
         private final PluginCommand bukkitCmd;

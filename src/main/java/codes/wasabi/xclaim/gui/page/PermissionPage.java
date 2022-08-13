@@ -62,12 +62,12 @@ public class PermissionPage extends Page {
     private void populate() {
         clear();
         switch (subPage) {
-            case 0 -> {
+            case 0:
                 setItem(10, GLOBAL_STACK);
                 setItem(13, PLAYER_STACK);
                 setItem(16, BACK_STACK);
-            }
-            case 1 -> {
+                break;
+            case 1:
                 pickKeys.clear();
                 int i = 0;
                 for (Permission p : Permission.values()) {
@@ -77,25 +77,24 @@ public class PermissionPage extends Page {
                     Material mat;
                     TextColor col;
                     switch (tl) {
-                        case NONE -> {
+                        case NONE:
                             mat = Material.RED_DYE;
                             col = NamedTextColor.RED;
-                        }
-                        case TRUSTED -> {
+                            break;
+                        case TRUSTED:
                             mat = Material.ORANGE_DYE;
                             col = NamedTextColor.GOLD;
-                        }
-                        case VETERANS -> {
+                            break;
+                        case VETERANS:
                             mat = Material.YELLOW_DYE;
                             col = NamedTextColor.YELLOW;
-                        }
-                        case ALL -> {
+                            break;
+                        case ALL:
                             mat = Material.LIME_DYE;
                             col = NamedTextColor.GREEN;
-                        }
-                        default -> {
+                            break;
+                        default:
                             return;
-                        }
                     }
                     List<Component> lore = new ArrayList<>();
                     for (String s : WordWrap.wrap(p.getDescription(), 25).split(System.lineSeparator())) {
@@ -105,8 +104,8 @@ public class PermissionPage extends Page {
                     i++;
                 }
                 setItem(22, BACK_STACK);
-            }
-            case 2 -> {
+                break;
+            case 2:
                 PlayerCombinatorPage combinator = new PlayerCombinatorPage(getParent()) {
                     @Override
                     protected @NotNull List<OfflinePlayer> getList() {
@@ -137,8 +136,8 @@ public class PermissionPage extends Page {
                     }
                 };
                 switchPage(combinator);
-            }
-            case 3 -> {
+                break;
+            case 3:
                 ItemStack noneItem = DisplayItem.create(
                         Material.RED_DYE,
                         XClaim.lang.getComponent("gui-perm-tl-none"),
@@ -174,12 +173,21 @@ public class PermissionPage extends Page {
                         )
                 );
                 TrustLevel curTrust = claim.getPermission(modifyingPermission);
-                ItemStack enchanted = switch (curTrust) {
-                    case ALL -> allItem;
-                    case NONE -> noneItem;
-                    case VETERANS -> vetItem;
-                    case TRUSTED -> trustedItem;
-                };
+                ItemStack enchanted;
+                switch (curTrust) {
+                    case ALL:
+                        enchanted = allItem;
+                        break;
+                    case VETERANS:
+                        enchanted = vetItem;
+                        break;
+                    case TRUSTED:
+                        enchanted = trustedItem;
+                        break;
+                    default:
+                        enchanted = noneItem;
+                        break;
+                }
                 ItemMeta meta = enchanted.getItemMeta();
                 if (meta != null) meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
                 enchanted.setItemMeta(meta);
@@ -187,8 +195,8 @@ public class PermissionPage extends Page {
                 setItem(12, curTrust == TrustLevel.TRUSTED ? enchanted : trustedItem);
                 setItem(14, curTrust == TrustLevel.VETERANS ? enchanted : vetItem);
                 setItem(16, curTrust == TrustLevel.ALL ? enchanted : allItem);
-            }
-            case 4 -> {
+                break;
+            case 4:
                 UUID target = managingPlayer.getUniqueId();
                 EnumSet<Permission> set = EnumSet.noneOf(Permission.class);
                 for (Map.Entry<XCPlayer, EnumSet<Permission>> entry : claim.getUserPermissions().entrySet()) {
@@ -199,22 +207,22 @@ public class PermissionPage extends Page {
                 }
                 Iterator<Permission> it = Arrays.stream(Permission.values()).iterator();
                 pickKeys.clear();
-                for (int i = 0; i < 18; i++) {
+                for (int i1 = 0; i1 < 18; i1++) {
                     if (it.hasNext()) {
                         Permission perm = it.next();
                         boolean value = set.contains(perm);
                         Component text = XClaim.lang.getComponent(value ? "gui-perm-enabled" : "gui-perm-disabled");
                         TextColor tc = (value ? NamedTextColor.GREEN : NamedTextColor.RED);
                         Material mat = (value ? Material.LIME_DYE : Material.RED_DYE);
-                        setItem(i, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(text.color(NamedTextColor.GRAY))));
-                        pickKeys.put(i, perm);
+                        setItem(i1, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(text.color(NamedTextColor.GRAY))));
+                        pickKeys.put(i1, perm);
                     } else {
                         break;
                     }
                 }
                 setItem(22, BACK_STACK);
-            }
-            case 5 -> {
+                break;
+            case 5:
                 setItem(11, DisplayItem.create(Material.GREEN_CONCRETE, XClaim.lang.getComponent("gui-perm-enabled"), Arrays.asList(
                         XClaim.lang.getComponent("gui-perm-enabled-line1"),
                         XClaim.lang.getComponent("gui-perm-enabled-line2")
@@ -224,7 +232,7 @@ public class PermissionPage extends Page {
                         XClaim.lang.getComponent("gui-perm-disabled-line2"),
                         XClaim.lang.getComponent("gui-perm-disabled-line3")
                 )));
-            }
+                break;
         }
     }
 
@@ -237,7 +245,7 @@ public class PermissionPage extends Page {
     @Override
     public void onClick(int slot) {
         switch (subPage) {
-            case 0 -> {
+            case 0:
                 if (slot == 10) {
                     subPage = 1;
                 } else if (slot == 13) {
@@ -249,8 +257,8 @@ public class PermissionPage extends Page {
                     break;
                 }
                 populate();
-            }
-            case 1 -> {
+                break;
+            case 1:
                 if (slot == 22) {
                     subPage = 0;
                     populate();
@@ -258,14 +266,14 @@ public class PermissionPage extends Page {
                 }
                 Object ob = pickKeys.get(slot);
                 if (ob != null) {
-                    if (ob instanceof Permission perm) {
-                        modifyingPermission = perm;
+                    if (ob instanceof Permission) {
+                        modifyingPermission = ((Permission) ob);
                         subPage = 3;
                         populate();
                     }
                 }
-            }
-            case 3 -> {
+                break;
+            case 3:
                 if (slot < 10) break;
                 if (slot > 16) break;
                 TrustLevel set;
@@ -288,23 +296,23 @@ public class PermissionPage extends Page {
                 claim.setPermission(modifyingPermission, set);
                 subPage = 1;
                 populate();
-            }
-            case 4 -> {
+                break;
+            case 4:
                 if (slot == 22) {
                     subPage = 2;
                     populate();
                 } else if (slot < 18) {
                     Object match = pickKeys.get(slot);
                     if (match != null) {
-                        if (match instanceof Permission perm) {
-                            modifyingPermission = perm;
+                        if (match instanceof Permission) {
+                            modifyingPermission = ((Permission) match);
                             subPage = 5;
                             populate();
                         }
                     }
                 }
-            }
-            case 5 -> {
+                break;
+            case 5:
                 if (slot == 11) {
                     claim.setUserPermission(managingPlayer, modifyingPermission, true);
                     subPage = 4;
@@ -314,7 +322,7 @@ public class PermissionPage extends Page {
                     subPage = 4;
                     populate();
                 }
-            }
+                break;
         }
     }
 

@@ -87,8 +87,8 @@ public class BuildBreakHandler extends PermissionHandler {
             if (block != null) {
                 BlockFace face = event.getBlockFace();
                 BlockData bd = block.getBlockData();
-                if (bd instanceof Waterlogged wl) {
-                    hasWater = wl.isWaterlogged();
+                if (bd instanceof Waterlogged) {
+                    hasWater = ((Waterlogged) bd).isWaterlogged();
                     if (trueIfPlace && hasWater) {
                         Block relBlock = block.getRelative(face);
                         Material type = relBlock.getType();
@@ -136,7 +136,8 @@ public class BuildBreakHandler extends PermissionHandler {
         if (!getClaim().contains(event.getEntity().getLocation())) return;
         Entity remover = event.getRemover();
         if (remover == null) return;
-        if (remover instanceof Player ply) {
+        if (remover instanceof Player) {
+            Player ply = (Player) remover;
             if (getClaim().hasPermission(ply, Permission.BREAK)) return;
             event.setCancelled(true);
             stdError(ply);
@@ -174,7 +175,8 @@ public class BuildBreakHandler extends PermissionHandler {
     public void onBreakEndCrystal(@NotNull EntityDamageByEntityEvent event) {
         if (!brk) return;
         Entity ent = event.getDamager();
-        if (ent instanceof Player ply) {
+        if (ent instanceof Player) {
+            Player ply = (Player) ent;
             Entity victim = event.getEntity();
             if (victim instanceof EnderCrystal) {
                 if (getClaim().hasPermission(ply, Permission.BREAK)) return;

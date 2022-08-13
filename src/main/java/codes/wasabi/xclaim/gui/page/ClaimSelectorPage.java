@@ -42,7 +42,7 @@ public class ClaimSelectorPage extends Page {
         slotAssoc.clear();
         Player target = getTarget();
         List<Claim> claims = Claim.getByOwner(getTarget()).stream().sorted(sorter).collect(Collectors.toCollection(ArrayList::new));
-        claims.addAll(Claim.getAll().stream().filter((Claim c) -> (!claims.contains(c)) && showClaim(c, target)).sorted(sorter).toList());
+        Claim.getAll().stream().filter((Claim c) -> (!claims.contains(c)) && showClaim(c, target)).sorted(sorter).forEach(claims::add);
         Claim within = Claim.getByChunk(target.getLocation().getChunk());
         boolean addedWithin = false;
         if (within != null) {

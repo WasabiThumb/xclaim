@@ -17,7 +17,8 @@ public final class DynmapInterfaceFactory {
         if (plugin != null) {
             if (plugin.isEnabled()) {
                 try {
-                    if (plugin instanceof org.dynmap.bukkit.DynmapPlugin dynmapPlugin) {
+                    if (plugin instanceof org.dynmap.bukkit.DynmapPlugin) {
+                        org.dynmap.bukkit.DynmapPlugin dynmapPlugin = (org.dynmap.bukkit.DynmapPlugin) plugin;
                         boolean corePresent = false;
                         try {
                             Field f = org.dynmap.bukkit.DynmapPlugin.class.getDeclaredField("core");

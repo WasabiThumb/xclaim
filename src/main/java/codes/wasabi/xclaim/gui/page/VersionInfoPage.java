@@ -54,7 +54,7 @@ public class VersionInfoPage extends Page {
             p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(NamedTextColor.GOLD));
             String name = Objects.requireNonNullElse(author.getName(), "Wasabi_Thumbs");
             p.metaLore(meta, Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
-            if (meta instanceof SkullMeta sm) sm.setOwningPlayer(author);
+            if (meta instanceof SkullMeta) ((SkullMeta) meta).setOwningPlayer(author);
         }
         skull.setItemMeta(meta);
         AUTHOR_STACK = skull;

@@ -55,13 +55,13 @@ public class DamageHandler extends PermissionHandler {
         Player ply = null;
         boolean isPlayer = false;
         Entity damager = event.getDamager();
-        if (damager instanceof Player p) {
-            ply = p;
+        if (damager instanceof Player) {
+            ply = ((Player) damager);
             isPlayer = true;
-        } else if (damager instanceof Projectile projectile) {
-            ProjectileSource ps = projectile.getShooter();
-            if (ps instanceof Player p) {
-                ply = p;
+        } else if (damager instanceof Projectile) {
+            ProjectileSource ps = ((Projectile) damager).getShooter();
+            if (ps instanceof Player) {
+                ply = (Player) ps;
                 isPlayer = true;
             }
         }

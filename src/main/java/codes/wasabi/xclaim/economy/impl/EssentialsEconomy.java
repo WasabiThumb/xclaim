@@ -18,8 +18,8 @@ public class EssentialsEconomy extends Economy {
 
     private com.earth2me.essentials.User getUser(OfflinePlayer ply) {
         if (ply.isOnline()) {
-            if (ply instanceof Player op) {
-                return ess.getUser(op);
+            if (ply instanceof Player) {
+                return ess.getUser((Player) ply);
             }
         }
         return ess.getUser(ply.getUniqueId());

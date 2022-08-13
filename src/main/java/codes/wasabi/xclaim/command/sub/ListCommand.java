@@ -58,8 +58,8 @@ public class ListCommand implements Command {
             op = (OfflinePlayer) arguments[0];
         }
         if (op == null) {
-            if (sender instanceof Player p) {
-                op = p;
+            if (sender instanceof Player) {
+                op = (Player) sender;
             } else {
                 audience.sendMessage(XClaim.lang.getComponent("cmd-list-err-player"));
                 return;
@@ -100,7 +100,7 @@ public class ListCommand implements Command {
                 i++;
             }
         } else {
-            Component name = (op instanceof Player p ? Platform.get().playerDisplayName(p) : Component.text(Objects.requireNonNullElse(op.getName(), XClaim.lang.get("unknown"))));
+            Component name = (op instanceof Player ? Platform.get().playerDisplayName((Player) op) : Component.text(Objects.requireNonNullElse(op.getName(), XClaim.lang.get("unknown"))));
             ret = ret.append(XClaim.lang.getComponent("cmd-list-none", name));
         }
         audience.sendMessage(ret);

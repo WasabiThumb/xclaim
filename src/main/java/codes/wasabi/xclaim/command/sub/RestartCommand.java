@@ -87,7 +87,8 @@ public class RestartCommand implements Command {
             HandlerList.unregisterAll(XClaim.instance);
             pm.disablePlugin(XClaim.instance);
             try {
-                if (pm instanceof SimplePluginManager spm) {
+                if (pm instanceof SimplePluginManager) {
+                    SimplePluginManager spm = (SimplePluginManager) pm;
                     Class<? extends SimplePluginManager> clazz = spm.getClass();
                     Field field = clazz.getDeclaredField("plugins");
                     field.setAccessible(true);
