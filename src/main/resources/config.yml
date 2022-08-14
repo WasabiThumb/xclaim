@@ -11,6 +11,7 @@ limits:
   default:
      max-chunks: 20
      max-claims: 5
+     max-claims-in-world: 2
      claim-price: 20
      unclaim-reward: 0
      free-chunks: 4
