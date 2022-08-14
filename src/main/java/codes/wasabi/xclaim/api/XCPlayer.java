@@ -88,12 +88,13 @@ public class XCPlayer {
 
     private double[] getPermGroup() {
         ConfigurationSection section = XClaim.mainConfig.getConfigurationSection("limits");
-        if (section == null) return new double[]{ 0, 0, 0, 0, 0 };
+        if (section == null) return new double[]{ 0, 0, 0, 0, 0, -1 };
         int maxChunks = 0;
         int maxClaims = 0;
         double claimPrice = -1;
         double unclaimReward = 0;
         int freeChunks = 0;
+        int maxInWorld = -1;
         for (String groupName : section.getKeys(false)) {
             boolean inGroup = true;
             if (!groupName.equalsIgnoreCase("default")) {
@@ -128,10 +129,12 @@ public class XCPlayer {
                 }
                 unclaimReward = Math.max(unclaimReward, section.getDouble(groupName + ".unclaim-reward", 0));
                 freeChunks = Math.max(freeChunks, section.getInt(groupName + ".free-chunks", 0));
+                int candidate = section.getInt(groupName + ".max-claims-in-world", -1);
+                if (candidate > 0) maxInWorld = Math.max(maxInWorld, candidate);
             }
         }
         if (claimPrice < 0) claimPrice = 0;
-        return new double[]{ maxChunks, maxClaims, claimPrice, unclaimReward, freeChunks };
+        return new double[]{ maxChunks, maxClaims, claimPrice, unclaimReward, freeChunks, maxInWorld };
     }
 
     public int getMaxChunks() {
@@ -152,6 +155,12 @@ public class XCPlayer {
 
     public int getFreeChunks() {
         return (int) getPermGroup()[4];
+    }
+
+    public int getMaxClaimsInWorld() {
+        int ret = (int) getPermGroup()[5];
+        if (ret < 1) return Integer.MAX_VALUE;
+        return ret;
     }
 
     public @NotNull List<OfflinePlayer> getTrustedPlayers() {

@@ -9,8 +9,8 @@ import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -93,15 +93,22 @@ public class NewClaimPage extends Page {
             XCPlayer xcp = XCPlayer.of(ply);
             int maxChunks = xcp.getMaxChunks();
             int maxClaims = xcp.getMaxClaims();
+            int maxWorldClaims = xcp.getMaxClaimsInWorld();
             int curClaims = 0;
             int curChunks = 0;
+            int curInWorld = 0;
+            String curWorldName = ply.getWorld().getName();
             for (Claim c : Claim.getAll()) {
                 if (c.getOwner().getUniqueId().equals(uuid)) {
                     curClaims++;
                     curChunks += c.getChunks().size();
+                    World w = c.getWorld();
+                    if (w != null) {
+                        if (w.getName().equals(curWorldName)) curInWorld++;
+                    }
                 }
             }
-            if (curClaims >= maxClaims) {
+            if (curClaims >= maxClaims || curInWorld >= maxWorldClaims) {
                 Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-max-claims"));
                 getParent().close();
                 return;

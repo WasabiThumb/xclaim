@@ -65,6 +65,7 @@ See all options in the [config section](#config).
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price | If economy is enabled, sets the price for claiming a chunk. | 20 |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.unclaim-reward | If economy is enabled, sets the refund amount for unclaiming a chunk. | 0 |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.free-chunks | If economy is enabled, sets the amount of chunks a player can claim for free before the next chunk requires a payment of ``limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price``. | 4 |
+| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims-in-world | The maximum number of claims allowed at a time in each world. Values less than 1 signify no limit. | -1 |
 | dynmap-integration.enabled | If true, XClaim will look for dynmap on startup and hook into it. Mild speedup if turned off. | true |
 | dynmap-integration.use-old-outline-style | If true, the dynmap will use the old convex hull outlines on claims. This is mainly for debugging, as the new outline system is experimental. | false |
 
