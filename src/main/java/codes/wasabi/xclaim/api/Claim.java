@@ -6,12 +6,12 @@ import codes.wasabi.xclaim.api.enums.TrustLevel;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
+import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
+import codes.wasabi.xclaim.util.BoundingBox;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -212,8 +212,8 @@ public class Claim {
     public void setName(@NotNull String name) {
         for (Player ply : Bukkit.getOnlinePlayers()) {
             if (Objects.equals(ChunkEditor.getEditing(ply), this)) {
-                PersistentDataContainer pdc = ply.getPersistentDataContainer();
-                pdc.set(ChunkEditor.getNameKey(), PersistentDataType.STRING, name);
+                PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
+                pdc.set(ChunkEditor.getNameKey(), PlatformPersistentDataType.STRING, name);
             }
         }
         this.name = name;

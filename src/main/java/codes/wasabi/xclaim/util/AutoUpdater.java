@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.util;
 
 import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -63,7 +64,7 @@ public final class AutoUpdater {
 
         @Override
         public String toString() {
-            return "AutoUpdater[updateOption=" + updateOption + ",runner=" + runner + "]";
+            return "UpdateOption[updateOption=" + updateOption + ",runner=" + runner + "]";
         }
     }
 
@@ -75,7 +76,7 @@ public final class AutoUpdater {
         if (updated) return null;
         PluginDescriptionFile descriptionFile = XClaim.instance.getDescription();
         String pluginVersion = descriptionFile.getVersion();
-        String apiVersion = descriptionFile.getAPIVersion();
+        String apiVersion = Platform.get().getApiVersion(descriptionFile);
         if (apiVersion == null) {
             apiVersion = "1." + PaperLib.getMinecraftVersion();
         }
@@ -114,7 +115,7 @@ public final class AutoUpdater {
                 cfgConn.setDoOutput(false);
                 cfgConn.connect();
                 try (InputStream cfgIs = cfgConn.getInputStream()) {
-                    Map<String, Object> map = yaml.load(cfgIs);
+                    Map<?, ?> map = (Map<?, ?>) yaml.load(cfgIs);
                     String api = (String) map.get("api-version");
                     String[] seg = api.split("\\.");
                     String[] mySeg = apiVersion.split("\\.");

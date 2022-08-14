@@ -11,12 +11,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Platform {
 
@@ -42,8 +46,16 @@ public abstract class Platform {
             instance = new codes.wasabi.xclaim.platform.spigot_1_15.SpigotPlatform_1_15();
         } else if (PaperLib.isVersion(14, 4)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_14_4.SpigotPlatform_1_14_4();
-        } else {
+        } else if (PaperLib.isVersion(14)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_14.SpigotPlatform_1_14();
+        } else if (PaperLib.isVersion(13, 2)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_13_2.SpigotPlatform_1_13_2();
+        } else if (PaperLib.isVersion(13)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_13.SpigotPlatform_1_13();
+        } else if (PaperLib.isVersion(12, 2)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_12_2.SpigotPlatform_1_12_2();
+        } else {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_12.SpigotPlatform_1_12();
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
@@ -114,5 +126,57 @@ public abstract class Platform {
     public abstract void artificialBookOpen(Player ply, ItemStack book);
 
     public abstract void createExplosion(World w, Location loc, float power, boolean setFire, boolean breakBlocks, Entity source);
+
+    public abstract PlatformPersistentDataContainer getPersistentDataContainer(Entity entity);
+
+    public abstract Material getGreenToken();
+
+    public abstract Material getRedToken();
+
+    public abstract Material getYellowToken();
+
+    public abstract Material getOrangeToken();
+
+    public abstract Material getLimeToken();
+
+    public abstract boolean hasPlaceListener();
+
+    public abstract @Nullable PlatformEntityPlaceListener getPlaceListener();
+
+    public @NotNull PlatformEntityPlaceListener getPlaceListenerAssert() throws NullPointerException {
+        return Objects.requireNonNull(getPlaceListener());
+    }
+
+    public abstract String getApiVersion(PluginDescriptionFile descriptionFile);
+
+    public abstract boolean worldKeepInventory(World world);
+
+    public abstract Material getPlayerHeadMaterial();
+
+    public abstract Material getGreenConcreteMaterial();
+
+    public abstract Material getRedConcreteMaterial();
+
+    public abstract Material getSkeletonSkullMaterial();
+
+    public abstract Material getEnchantingTableMaterial();
+
+    public abstract Material getChestMinecartMaterial();
+
+    public abstract Material getCraftingTableMaterial();
+
+    public abstract Material getFireworkRocketMaterial();
+
+    public abstract Material[] getSoilMaterials();
+
+    public abstract boolean hasFireChargeMaterial();
+
+    public abstract Material getFireChargeMaterial();
+
+    public abstract void setOwningPlayer(SkullMeta sm, OfflinePlayer player);
+
+    public abstract boolean bukkitTaskCancelled(BukkitTask task);
+
+    public abstract ItemStack preparePlayerSkull(ItemStack is);
 
 }

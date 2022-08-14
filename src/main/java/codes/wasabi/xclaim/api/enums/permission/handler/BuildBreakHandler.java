@@ -4,6 +4,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.platform.Platform;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,6 +25,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -86,22 +88,25 @@ public class BuildBreakHandler extends PermissionHandler {
             boolean hasWater = false;
             if (block != null) {
                 BlockFace face = event.getBlockFace();
-                BlockData bd = block.getBlockData();
-                if (bd instanceof Waterlogged) {
-                    hasWater = ((Waterlogged) bd).isWaterlogged();
-                    if (trueIfPlace && hasWater) {
+                // Only available on 1.13 +
+                if (PaperLib.isVersion(13)) {
+                    BlockData bd = block.getBlockData();
+                    if (bd instanceof Waterlogged) {
+                        hasWater = ((Waterlogged) bd).isWaterlogged();
+                        if (trueIfPlace && hasWater) {
+                            Block relBlock = block.getRelative(face);
+                            Material type = relBlock.getType();
+                            hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
+                            loc = Platform.get().toCenterLocation(relBlock.getLocation());
+                        } else {
+                            loc = Platform.get().toCenterLocation(block.getLocation());
+                        }
+                    } else {
                         Block relBlock = block.getRelative(face);
                         Material type = relBlock.getType();
                         hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
                         loc = Platform.get().toCenterLocation(relBlock.getLocation());
-                    } else {
-                        loc = Platform.get().toCenterLocation(block.getLocation());
                     }
-                } else {
-                    Block relBlock = block.getRelative(face);
-                    Material type = relBlock.getType();
-                    hasWater = (type.equals(Material.WATER) || type.equals(Material.LEGACY_WATER) || type.equals(Material.LEGACY_STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.LEGACY_LAVA) || type.equals(Material.LEGACY_STATIONARY_LAVA));
-                    loc = Platform.get().toCenterLocation(relBlock.getLocation());
                 }
             }
             if (trueIfPlace == hasWater) return;
@@ -162,7 +167,7 @@ public class BuildBreakHandler extends PermissionHandler {
             Block block = event.getClickedBlock();
             if (block != null) {
                 Material type = block.getType();
-                if (type.equals(Material.LEGACY_SOIL) || type.equals(Material.FARMLAND)) {
+                if (Arrays.asList(Platform.get().getSoilMaterials()).contains(type)) {
                     Player ply = event.getPlayer();
                     if (getClaim().hasPermission(ply, Permission.BREAK)) return;
                     if (check(event, Platform.get().toCenterLocation(block.getLocation()))) stdError(ply);

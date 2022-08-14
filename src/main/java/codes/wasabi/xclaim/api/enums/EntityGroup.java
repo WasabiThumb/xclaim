@@ -42,19 +42,14 @@ public enum EntityGroup {
     private static boolean isMonster(@NotNull Class<? extends Entity> clazz) {
         boolean ret = Monster.class.isAssignableFrom(clazz);
         if (!ret) {
+            String className = clazz.getSimpleName();
             // None of these classes implement Monster for some reason. Fun!
-            if (EnderDragon.class.isAssignableFrom(clazz)) {
-                ret = true;
-            } else if (Ghast.class.isAssignableFrom(clazz)) {
-                ret = true;
-            } else if (MagmaCube.class.isAssignableFrom(clazz)) {
-                ret = true;
-            } else if (Phantom.class.isAssignableFrom(clazz)) {
-                ret = true;
-            } else if (Shulker.class.isAssignableFrom(clazz)) {
-                ret = true;
-            } else if (Slime.class.isAssignableFrom(clazz)) {
-                ret = true;
+            String[] monsters = new String[]{ "EnderDragon", "Ghast", "MagmaCube", "Phantom", "Shulker", "Slime" };
+            for (String monster : monsters) {
+                if (monster.equals(className)) {
+                    ret = true;
+                    break;
+                }
             }
         }
         return ret;

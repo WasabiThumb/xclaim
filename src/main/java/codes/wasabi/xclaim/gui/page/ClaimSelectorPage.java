@@ -90,7 +90,7 @@ public class ClaimSelectorPage extends Page {
                     lore.add(XClaim.lang.getComponent("gui-sel-within"));
                 }
                 setItem(idx, DisplayItem.create(
-                        Material.GREEN_DYE,
+                        Platform.get().getGreenToken(),
                         Component.text(claim.getName()).color(NamedTextColor.GREEN),
                         lore
                 ));

@@ -68,7 +68,7 @@ public abstract class PlayerCombinatorPage extends Page {
             if (listIndex >= players.size()) break;
             OfflinePlayer ply = players.get(listIndex);
             assoc.put(i, ply);
-            ItemStack is = new ItemStack(Material.PLAYER_HEAD, 1);
+            ItemStack is = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
             ItemMeta meta = is.getItemMeta();
             if (meta != null) {
                 String realName = ply.getName();
@@ -82,7 +82,7 @@ public abstract class PlayerCombinatorPage extends Page {
                 meta.addItemFlags(ItemFlag.values());
                 Platform.get().metaDisplayName(meta, niceName);
                 Platform.get().metaLore(meta, Collections.singletonList(Component.text(realName).color(NamedTextColor.GRAY)));
-                if (meta instanceof SkullMeta) ((SkullMeta) meta).setOwningPlayer(ply);
+                if (meta instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) meta, ply);
             }
             is.setItemMeta(meta);
             setItem(i, is);

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
 public final class InventorySerializer {
@@ -53,7 +54,7 @@ public final class InventorySerializer {
                 }
             }
             return ret;
-        } catch (IOException e) {
+        } catch (IOException | BufferUnderflowException e) {
             throw new IllegalArgumentException("Malformed bytes", e);
         }
     }

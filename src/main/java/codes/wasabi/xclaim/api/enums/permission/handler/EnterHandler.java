@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -38,7 +39,7 @@ public class EnterHandler extends PermissionHandler {
     @Override
     protected void onUnregister() {
         if (task == null) return;
-        if (!task.isCancelled()) task.cancel();
+        if (!Platform.get().bukkitTaskCancelled(task)) task.cancel();
     }
 
     @EventHandler
