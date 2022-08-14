@@ -50,14 +50,25 @@ public class TransferPage extends Page {
     private void populate() {
         ItemStack head;
         if (matchPlayer != null) {
-            head = DisplayItem.create(Platform.get().getPlayerHeadMaterial(), Platform.get().playerDisplayName(matchPlayer));
+            head = Platform.get().preparePlayerSkull(
+                    DisplayItem.create(
+                            Platform.get().getPlayerHeadMaterial(),
+                            Platform.get().playerDisplayName(matchPlayer)
+                    )
+            );
             ItemMeta im = head.getItemMeta();
             if (im != null) {
                 if (im instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) im, matchPlayer);
             }
             head.setItemMeta(im);
         } else {
-            head = DisplayItem.create(Platform.get().getPlayerHeadMaterial(), XClaim.lang.get("unknown"), NamedTextColor.RED);
+            head = Platform.get().preparePlayerSkull(
+                    DisplayItem.create(
+                            Platform.get().getPlayerHeadMaterial(),
+                            XClaim.lang.get("unknown"),
+                            NamedTextColor.RED
+                    )
+            );
         }
         setItem(4, head);
         setItem(11, YES_ITEM);

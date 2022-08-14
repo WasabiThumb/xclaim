@@ -3,6 +3,8 @@ package codes.wasabi.xclaim.platform.spigot_1_13;
 import codes.wasabi.xclaim.platform.spigot_1_12_2.SpigotPlatform_1_12_2;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.EnumSet;
@@ -137,6 +139,11 @@ public class SpigotPlatform_1_13 extends SpigotPlatform_1_12_2 {
     @Override
     public Material getFireChargeMaterial() {
         return Material.FIRE_CHARGE;
+    }
+
+    @Override
+    public ItemStack preparePlayerSkull(ItemStack is) {
+        return is;
     }
 
 }

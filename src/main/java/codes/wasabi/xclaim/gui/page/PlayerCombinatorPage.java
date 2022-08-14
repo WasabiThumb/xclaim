@@ -68,7 +68,7 @@ public abstract class PlayerCombinatorPage extends Page {
             if (listIndex >= players.size()) break;
             OfflinePlayer ply = players.get(listIndex);
             assoc.put(i, ply);
-            ItemStack is = new ItemStack(Platform.get().getPlayerHeadMaterial(), 1);
+            ItemStack is = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
             ItemMeta meta = is.getItemMeta();
             if (meta != null) {
                 String realName = ply.getName();

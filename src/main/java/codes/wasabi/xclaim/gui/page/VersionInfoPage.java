@@ -47,7 +47,7 @@ public class VersionInfoPage extends Page {
     static {
         UUID authorID = new UUID(-7814744758566370837L, -7422362746895434695L);
         OfflinePlayer author = Bukkit.getOfflinePlayer(authorID);
-        ItemStack skull = new ItemStack(Platform.get().getPlayerHeadMaterial(), 1);
+        ItemStack skull = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
         ItemMeta meta = skull.getItemMeta();
         if (meta != null) {
             Platform p = Platform.get();

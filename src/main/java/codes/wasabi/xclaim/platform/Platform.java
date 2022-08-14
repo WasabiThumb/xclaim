@@ -177,4 +177,6 @@ public abstract class Platform {
 
     public abstract boolean bukkitTaskCancelled(BukkitTask task);
 
+    public abstract ItemStack preparePlayerSkull(ItemStack is);
+
 }

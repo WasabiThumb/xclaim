@@ -34,7 +34,6 @@ import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
 import java.math.BigDecimal;
-import java.nio.BufferUnderflowException;
 import java.util.*;
 
 public class ChunkEditor {
@@ -423,7 +422,7 @@ public class ChunkEditor {
         pdc.set(KEY_FLAG, PlatformPersistentDataType.BYTE, (byte) 0);
         try {
             InventorySerializer.deserialize(pdc.getOrDefaultAssert(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, byte[].class, new byte[0]), ply.getInventory());
-        } catch (IllegalArgumentException | BufferUnderflowException e) {
+        } catch (IllegalArgumentException e) {
             ply.getInventory().clear();
         }
         editingMap.remove(uuid);

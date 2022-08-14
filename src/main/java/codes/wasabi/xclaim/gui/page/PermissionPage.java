@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class PermissionPage extends Page {
 
     private static final ItemStack GLOBAL_STACK = DisplayItem.create(
-            Material.CAULDRON,
+            Material.BUCKET,
             XClaim.lang.getComponent("gui-perm-general"),
             Arrays.asList(
                     XClaim.lang.getComponent("gui-perm-general-line1"),

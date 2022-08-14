@@ -1,22 +1,12 @@
 package codes.wasabi.xclaim.platform.spigot_1_12;
 
-import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformEntityPlaceListener;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
-import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
 import codes.wasabi.xclaim.platform.spigot.SpigotPlatform;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -27,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.Locale;
 
@@ -121,51 +112,9 @@ public class SpigotPlatform_1_12 extends SpigotPlatform {
         w.createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, setFire, breakBlocks);
     }
 
-    private PlatformPersistentDataContainer createNBTApiPDC(Entity entity) {
-        de.tr7zw.nbtapi.NBTEntity nbt = new de.tr7zw.nbtapi.NBTEntity(entity);
-        return new PlatformPersistentDataContainer() {
-            @Override
-            public void set(NamespacedKey key, PlatformPersistentDataType type, Object value) {
-                switch (type) {
-                    case BYTE:
-                        nbt.setByte(key.toString(), (Byte) value);
-                        break;
-                    case BYTE_ARRAY:
-                        nbt.setByteArray(key.toString(), (byte[]) value);
-                        break;
-                    case STRING:
-                        nbt.setString(key.toString(), (String) value);
-                        break;
-                }
-            }
-
-            @Override
-            public Object get(NamespacedKey key, PlatformPersistentDataType type) {
-                Object ret = null;
-                switch (type) {
-                    case BYTE:
-                        ret = nbt.getByte(key.toString());
-                        break;
-                    case BYTE_ARRAY:
-                        ret = nbt.getByteArray(key.toString());
-                        break;
-                    case STRING:
-                        ret = nbt.getString(key.toString());
-                        break;
-                }
-                return ret;
-            }
-
-            @Override
-            public boolean has(NamespacedKey key, PlatformPersistentDataType type) {
-                return nbt.hasKey(key.toString());
-            }
-        };
-    }
-
     @Override
     public PlatformPersistentDataContainer getPersistentDataContainer(Entity entity) {
-        return createNBTApiPDC(entity);
+        return new SpigotPlatformPersistentDataContainer_1_12(entity);
     }
 
     @Override
@@ -173,53 +122,9 @@ public class SpigotPlatform_1_12 extends SpigotPlatform {
         return true;
     }
 
-    private static class OldPlatformEntityPlaceListener extends PlatformEntityPlaceListener implements Listener {
-        public OldPlatformEntityPlaceListener() {
-            Bukkit.getPluginManager().registerEvents(this, XClaim.instance);
-        }
-
-        @EventHandler
-        public void onInteract(PlayerInteractEvent event) {
-            Player ply = event.getPlayer();
-            Action action = event.getAction();
-            if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
-                EquipmentSlot es = event.getHand();
-                if (es == null) es = EquipmentSlot.HAND;
-                ItemStack is = Platform.get().playerInventoryGetItem(ply.getInventory(), es);
-                if (is == null) return;
-                Material material = is.getType();
-                String matName = material.name().toUpperCase(Locale.ROOT);
-                Data data = new Data();
-                data.cancel = () -> event.setCancelled(true);
-                data.player = ply;
-                Location interactPos;
-                Block b = event.getClickedBlock();
-                if (b != null) {
-                    BlockFace face = event.getBlockFace();
-                    interactPos = Platform.get().toCenterLocation(b.getRelative(face).getLocation());
-                } else {
-                    interactPos = ply.getLocation();
-                }
-                data.location = interactPos;
-                if (matName.contains("MINECART") || matName.contains("BOAT")) {
-                    data.isVehicle = true;
-                    call(data);
-                } else if (matName.contains("ARMOR_STAND") || matName.contains("PAINTING") || matName.contains("ITEM_FRAME") || matName.contains("SPAWN_EGG")) {
-                    data.isVehicle = false;
-                    call(data);
-                }
-            }
-        }
-
-        @Override
-        protected void onUnregister() {
-            HandlerList.unregisterAll(this);
-        }
-    }
-
     @Override
     public @Nullable PlatformEntityPlaceListener getPlaceListener() {
-        return new OldPlatformEntityPlaceListener();
+        return new SpigotPlatformEntityPlaceListener_1_12();
     }
 
     @Override
@@ -270,12 +175,12 @@ public class SpigotPlatform_1_12 extends SpigotPlatform {
 
     @Override
     public Material getGreenConcreteMaterial() {
-        return Material.REDSTONE_BLOCK;
+        return Material.EMERALD_BLOCK;
     }
 
     @Override
     public Material getRedConcreteMaterial() {
-        return Material.EMERALD_BLOCK;
+        return Material.REDSTONE_BLOCK;
     }
 
     @Override
@@ -322,12 +227,26 @@ public class SpigotPlatform_1_12 extends SpigotPlatform {
 
     @Override
     public void setOwningPlayer(SkullMeta sm, OfflinePlayer player) {
-
+        String name = player.getName();
+        if (name == null) name = player.getUniqueId().toString();
+        Class<? extends SkullMeta> clazz = sm.getClass();
+        try {
+            Method method = clazz.getMethod("setOwner", String.class);
+            method.invoke(sm, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean bukkitTaskCancelled(BukkitTask task) {
         return false;
+    }
+
+    @Override
+    public ItemStack preparePlayerSkull(ItemStack is) {
+        is.setDurability((short) 3);
+        return is;
     }
 
 }
