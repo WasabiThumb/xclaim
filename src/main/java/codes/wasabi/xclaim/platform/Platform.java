@@ -60,8 +60,10 @@ public abstract class Platform {
             instance = new codes.wasabi.xclaim.platform.spigot_1_11.SpigotPlatform_1_11();
         } else if (PaperLib.isVersion(10)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_10.SpigotPlatform_1_10();
-        } else {
+        } else if (PaperLib.isVersion(9)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_9.SpigotPlatform_1_9();
+        } else {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_8.SpigotPlatform_1_8();
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
