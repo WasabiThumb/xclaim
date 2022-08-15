@@ -115,7 +115,7 @@ public abstract class Platform {
 
     public abstract int getWorldMinHeight(@NotNull World world);
 
-    public abstract NamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name);
+    public abstract PlatformNamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name);
 
     public abstract Material getSpyglassMaterial();
 

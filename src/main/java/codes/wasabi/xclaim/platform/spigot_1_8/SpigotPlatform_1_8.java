@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.platform.spigot_1_8;
 
 import codes.wasabi.xclaim.platform.PlatformEntityPlaceListener;
+import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.spigot.SpigotPlatform;
 import org.bukkit.*;
@@ -26,13 +27,13 @@ import java.util.Locale;
 public class SpigotPlatform_1_8 extends SpigotPlatform {
 
     @Override
-    public int getWorldMinHeight(@NotNull World world) {
-        return 0;
+    public PlatformNamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name) {
+        return new SpigotPlatformNamespacedKey_1_8(plugin.getName().toLowerCase(Locale.ROOT), name.toLowerCase(Locale.ROOT));
     }
 
     @Override
-    public NamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name) {
-        return new NamespacedKey(plugin, name);
+    public int getWorldMinHeight(@NotNull World world) {
+        return 0;
     }
 
     @Override

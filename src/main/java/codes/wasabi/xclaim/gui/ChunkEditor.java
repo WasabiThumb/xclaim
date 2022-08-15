@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
 import codes.wasabi.xclaim.util.DisplayItem;
@@ -354,13 +355,13 @@ public class ChunkEditor {
     private static ItemStack UNCLAIM_STACK;
     private static ItemStack QUIT_STACK;
 
-    private static NamespacedKey KEY_FLAG;
-    private static NamespacedKey KEY_NAME;
-    private static NamespacedKey KEY_INVENTORY;
+    private static PlatformNamespacedKey KEY_FLAG;
+    private static PlatformNamespacedKey KEY_NAME;
+    private static PlatformNamespacedKey KEY_INVENTORY;
     private static Events EVENTS;
     private static boolean initialized = false;
 
-    public static @NotNull NamespacedKey getNameKey() {
+    public static @NotNull PlatformNamespacedKey getNameKey() {
         return KEY_NAME;
     }
 

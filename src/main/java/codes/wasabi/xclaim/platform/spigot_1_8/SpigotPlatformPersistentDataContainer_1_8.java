@@ -1,9 +1,9 @@
 package codes.wasabi.xclaim.platform.spigot_1_8;
 
 import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 
 import java.io.*;
@@ -136,7 +136,7 @@ public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersis
     }
 
     @Override
-    public void set(NamespacedKey key, PlatformPersistentDataType type, Object value) {
+    public void set(PlatformNamespacedKey key, PlatformPersistentDataType type, Object value) {
         String ks = key.toString();
         byte tc = typeToCode(type);
         lock.lock();
@@ -171,7 +171,7 @@ public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersis
     }
 
     @Override
-    public Object get(NamespacedKey key, PlatformPersistentDataType type) {
+    public Object get(PlatformNamespacedKey key, PlatformPersistentDataType type) {
         String ks = key.toString();
         byte tc = typeToCode(type);
         Object ret = null;
@@ -196,7 +196,7 @@ public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersis
     }
 
     @Override
-    public boolean has(NamespacedKey key, PlatformPersistentDataType type) {
+    public boolean has(PlatformNamespacedKey key, PlatformPersistentDataType type) {
         return get(key, type) != null;
     }
 
