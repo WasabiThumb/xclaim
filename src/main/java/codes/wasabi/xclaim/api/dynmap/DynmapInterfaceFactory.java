@@ -22,7 +22,9 @@ public final class DynmapInterfaceFactory {
                         boolean corePresent = false;
                         try {
                             Field f = org.dynmap.bukkit.DynmapPlugin.class.getDeclaredField("core");
-                            f.trySetAccessible();
+                            try {
+                                f.setAccessible(true);
+                            } catch (Exception ignored) { }
                             corePresent = (f.get(dynmapPlugin) != null);
                         } catch (Exception e) {
                             XClaim.logger.log(Level.WARNING, XClaim.lang.get("dynmap-warn-core"));

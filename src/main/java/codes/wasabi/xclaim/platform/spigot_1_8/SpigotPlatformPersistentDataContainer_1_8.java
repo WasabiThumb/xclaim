@@ -4,6 +4,7 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
+import codes.wasabi.xclaim.util.StreamUtil;
 import org.bukkit.entity.Entity;
 
 import java.io.*;
@@ -11,6 +12,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
+
+import static codes.wasabi.xclaim.util.StreamUtil.readNBytes;
 
 public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersistentDataContainer {
 
@@ -96,15 +99,15 @@ public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersis
             int n = is.read();
             if (n < 0) return false;
             dataType = (byte) n;
-            byte[] idLengthBytes = is.readNBytes(Short.BYTES);
+            byte[] idLengthBytes = readNBytes(is, Short.BYTES);
             short idLength = ByteBuffer.wrap(idLengthBytes).getShort();
-            identifier = new String(is.readNBytes(idLength), StandardCharsets.UTF_8);
+            identifier = new String(readNBytes(is, idLength), StandardCharsets.UTF_8);
             if (dataType == 0) {
                 dataValue = (byte) is.read();
             } else if (dataType == 1 || dataType == 2) {
-                byte[] dataLengthBytes = is.readNBytes(Integer.BYTES);
+                byte[] dataLengthBytes = readNBytes(is, Integer.BYTES);
                 int dataLength = ByteBuffer.wrap(dataLengthBytes).getInt();
-                byte[] data = is.readNBytes(dataLength);
+                byte[] data = readNBytes(is, dataLength);
                 if (dataType == 2) {
                     dataValue = new String(data, StandardCharsets.UTF_8);
                 } else {
@@ -144,7 +147,7 @@ public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersis
             File src = getDataFile();
             byte[] bytes = new byte[0];
             try (FileInputStream fis = new FileInputStream(src)) {
-                bytes = fis.readAllBytes();
+                bytes = StreamUtil.readAllBytes(fis);
             } catch (IOException e) {
                 e.printStackTrace();
             }

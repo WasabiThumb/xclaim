@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
-import java.util.Objects;
 import java.util.Set;
 
 public class ListCommand implements Command {
@@ -68,7 +67,14 @@ public class ListCommand implements Command {
         Component ret = Component.empty();
         int maxChunks = 3;
         if (arguments.length > 1) {
-            maxChunks = Math.max((Integer) Objects.requireNonNullElse(arguments[1], 3), 0);
+            Object ob = arguments[1];
+            int iv;
+            if (ob != null) {
+                iv = (Integer) ob;
+            } else {
+                iv = 3;
+            }
+            maxChunks = Math.max(iv, 0);
         }
         Set<Claim> claims = Claim.getByOwner(op);
         if (claims.size() > 0) {
@@ -100,7 +106,14 @@ public class ListCommand implements Command {
                 i++;
             }
         } else {
-            Component name = (op instanceof Player ? Platform.get().playerDisplayName((Player) op) : Component.text(Objects.requireNonNullElse(op.getName(), XClaim.lang.get("unknown"))));
+            Component name;
+            if (op instanceof Player) {
+                name = Platform.get().playerDisplayName((Player) op);
+            } else {
+                String bare = op.getName();
+                if (bare == null) bare = XClaim.lang.get("unknown");
+                name = Component.text(bare);
+            }
             ret = ret.append(XClaim.lang.getComponent("cmd-list-none", name));
         }
         audience.sendMessage(ret);

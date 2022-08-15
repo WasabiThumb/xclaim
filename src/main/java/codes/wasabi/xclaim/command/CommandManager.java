@@ -231,7 +231,7 @@ public class CommandManager {
                     }
                 }
             }
-        } catch (InaccessibleObjectException | NoSuchFieldException | IllegalAccessException | SecurityException | NullPointerException | ClassCastException | ExceptionInInitializerError e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -258,14 +258,19 @@ public class CommandManager {
             int mod = clazz.getModifiers();
             if (Modifier.isAbstract(mod)) continue;
             if (Modifier.isInterface(mod)) continue;
-            if (clazz.getPackageName().contains("sub")) continue;
+            Package p = clazz.getPackage();
+            if (p != null) {
+                if (p.getName().contains("sub")) continue;
+            }
             Constructor<? extends codes.wasabi.xclaim.command.Command> con;
             try {
                 con = clazz.getConstructor();
             } catch (NoSuchMethodException e) {
                 continue;
             }
-            con.trySetAccessible();
+            try {
+                con.setAccessible(true);
+            } catch (Exception ignored) { }
             codes.wasabi.xclaim.command.Command com;
             try {
                 com = con.newInstance();

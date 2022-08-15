@@ -118,7 +118,7 @@ public class NewClaimPage extends Page {
                 return;
             }
             String name = XClaim.lang.get("new-claim") + " #" + nextIndex();
-            Claim newClaim = new Claim(name, Set.of(chunk), ply);
+            Claim newClaim = new Claim(name, Collections.singleton(chunk), ply);
             newClaim.claim();
             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-success", name));
             ply.playSound(ply.getLocation(), Platform.get().getLevelSound(), 1f, 1f);

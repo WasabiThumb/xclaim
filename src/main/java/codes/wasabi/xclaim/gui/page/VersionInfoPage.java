@@ -10,7 +10,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.UUID;
 
 public class VersionInfoPage extends Page {
@@ -33,9 +31,11 @@ public class VersionInfoPage extends Page {
             PluginDescriptionFile description = XClaim.instance.getDescription();
             Platform p = Platform.get();
             p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-version")).color(NamedTextColor.GOLD));
+            String apiVersion = Platform.get().getApiVersion(description);
+            if (apiVersion == null) apiVersion = XClaim.lang.get("gui-vinf-mc-version-unspecified");
             p.metaLore(meta, Arrays.asList(
                     Component.text(description.getVersion()).color(NamedTextColor.LIGHT_PURPLE),
-                    Component.text(XClaim.lang.get("gui-vinf-mc-version", Objects.requireNonNullElse(Platform.get().getApiVersion(description), XClaim.lang.get("gui-vinf-mc-version-unspecified")))).color(NamedTextColor.LIGHT_PURPLE)
+                    Component.text(XClaim.lang.get("gui-vinf-mc-version", apiVersion)).color(NamedTextColor.LIGHT_PURPLE)
             ));
         }
         ver.setItemMeta(meta);
@@ -52,7 +52,8 @@ public class VersionInfoPage extends Page {
         if (meta != null) {
             Platform p = Platform.get();
             p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(NamedTextColor.GOLD));
-            String name = Objects.requireNonNullElse(author.getName(), "Wasabi_Thumbs");
+            String name = author.getName();
+            if (name == null) name = "Wasabi_Thumbs";
             p.metaLore(meta, Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
             if (meta instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) meta, author);
         }

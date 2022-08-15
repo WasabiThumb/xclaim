@@ -164,7 +164,7 @@ public class XCPlayer {
     }
 
     public @NotNull List<OfflinePlayer> getTrustedPlayers() {
-        return new List<>() {
+        return new List<OfflinePlayer>() {
             @Override
             public int size() {
                 return getCurrentTrustedPlayers().size();

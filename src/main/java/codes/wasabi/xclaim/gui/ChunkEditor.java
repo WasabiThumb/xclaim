@@ -303,7 +303,8 @@ public class ChunkEditor {
                         Claim cl = Claim.getByChunk(toChunk);
                         if (cl != null) {
                             XCPlayer xcp = cl.getOwner();
-                            ownerName = Objects.requireNonNullElse(xcp.getName(), langUnknown);
+                            ownerName = xcp.getName();
+                            if (ownerName == null) ownerName = langUnknown;
                             ownState = (xcp.getUniqueId().equals(ply.getUniqueId()) ? 2 : 3);
                         }
                     }

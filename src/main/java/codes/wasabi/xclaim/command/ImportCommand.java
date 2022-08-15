@@ -68,7 +68,8 @@ public class ImportCommand implements Command {
                 long start = backingMap.keySet().stream().findFirst().get();
                 UUID uuid = backingMap.get(start);
                 List<int[]> clump = pullClump(start);
-                List<List<int[]>> cs = Objects.requireNonNullElseGet(clumps.get(uuid), ArrayList::new);
+                List<List<int[]>> cs = clumps.get(uuid);
+                if (cs == null) cs = new ArrayList<>();
                 cs.add(clump);
                 clumps.put(uuid, cs);
             }

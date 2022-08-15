@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +52,19 @@ public class MainPage extends Page {
     private static final int EXIT_POS = 24;
     private static final ItemStack EXIT_STACK = DisplayItem.create(Material.ARROW, XClaim.lang.getComponent("gui-main-exit"));
 
-    private static final Map<Integer, ItemStack> assoc = Map.of(
-            NEW_POS, NEW_STACK,
-            EDIT_TRUST_POS, EDIT_TRUST_STACK,
-            EDIT_CHUNK_POS, EDIT_CHUNK_STACK,
-            RENAME_CHUNK_POS, RENAME_CHUNK_STACK,
-            EDIT_PERM_POS, EDIT_PERM_STACK,
-            TRANSFER_OWNER_POS, TRANSFER_OWNER_STACK,
-            CLEAR_ALL_POS, CLEAR_ALL_STACK,
-            DELETE_POS, DELETE_STACK,
-            VERSION_POS, VERSION_STACK,
-            EXIT_POS, EXIT_STACK
-    );
+    private static final Map<Integer, ItemStack> assoc = new HashMap<>();
+    static {
+        assoc.put(NEW_POS, NEW_STACK);
+        assoc.put(EDIT_TRUST_POS, EDIT_TRUST_STACK);
+        assoc.put(EDIT_CHUNK_POS, EDIT_CHUNK_STACK);
+        assoc.put(RENAME_CHUNK_POS, RENAME_CHUNK_STACK);
+        assoc.put(EDIT_PERM_POS, EDIT_PERM_STACK);
+        assoc.put(TRANSFER_OWNER_POS, TRANSFER_OWNER_STACK);
+        assoc.put(CLEAR_ALL_POS, CLEAR_ALL_STACK);
+        assoc.put(DELETE_POS, DELETE_STACK);
+        assoc.put(VERSION_POS, VERSION_STACK);
+        assoc.put(EXIT_POS, EXIT_STACK);
+    }
 
     public MainPage(@NotNull GUIHandler parent) {
         super(parent);

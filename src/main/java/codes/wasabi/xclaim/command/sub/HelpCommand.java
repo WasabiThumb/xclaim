@@ -83,11 +83,17 @@ public class HelpCommand implements Command {
         if (arguments.length > 0) {
             Object arg = arguments[0];
             if (arg instanceof Integer){
-                pageNum = Objects.requireNonNullElse((Integer) arg, pageNum);
+                int num;
+                if (arg != null) {
+                    num = (Integer) arg;
+                } else {
+                    num = pageNum;
+                }
+                pageNum = num;
             } else if (arg instanceof String) {
                 String str = (String) arg;
                 Optional<Command> opt = commands.stream().filter((Command c) -> c.getName().equalsIgnoreCase(str)).findFirst();
-                if (opt.isEmpty()) {
+                if (!opt.isPresent()) {
                     audience.sendMessage(XClaim.lang.getComponent("cmd-help-err-404"));
                 } else {
                     Command com = opt.get();

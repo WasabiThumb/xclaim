@@ -9,6 +9,7 @@ import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.StreamUtil;
 import com.google.gson.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -153,7 +154,7 @@ public final class XClaim extends JavaPlugin {
             langToUse = new File(langFolder, "en-US.json");
         }
         try (InputStream is = new FileInputStream(langToUse)) {
-            byte[] bytes = is.readAllBytes();
+            byte[] bytes = StreamUtil.readAllBytes(is);
             String string = new String(bytes, StandardCharsets.UTF_8);
             JsonObject ob = gson.fromJson(string, JsonObject.class);
             lang = new Lang(ob);
