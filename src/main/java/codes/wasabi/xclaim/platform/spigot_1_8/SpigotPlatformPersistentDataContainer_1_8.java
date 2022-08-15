@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.spigot_1_12;
+package codes.wasabi.xclaim.platform.spigot_1_8;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
@@ -12,11 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
-public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersistentDataContainer {
+public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersistentDataContainer {
 
     private final String identifier;
 
-    public SpigotPlatformPersistentDataContainer_1_12(Entity entity) {
+    public SpigotPlatformPersistentDataContainer_1_8(Entity entity) {
         identifier = entity.getUniqueId().toString();
     }
 

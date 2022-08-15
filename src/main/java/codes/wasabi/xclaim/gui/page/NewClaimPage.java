@@ -9,7 +9,6 @@ import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import org.bukkit.Chunk;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -122,7 +121,7 @@ public class NewClaimPage extends Page {
             Claim newClaim = new Claim(name, Set.of(chunk), ply);
             newClaim.claim();
             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-success", name));
-            ply.playSound(ply.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+            ply.playSound(ply.getLocation(), Platform.get().getLevelSound(), 1f, 1f);
             getParent().close();
             if (XClaim.mainConfig.getBoolean("enter-chunk-editor-on-create", true)) {
                 ChunkEditor.startEditing(ply, newClaim);

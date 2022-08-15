@@ -324,7 +324,7 @@ public class ChunkEditor {
                             .append(Component.newline())
                             .append(Component.text(refer).color(tc))
                     );
-                    ply.playSound(ply.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                    ply.playSound(ply.getLocation(), Platform.get().getExpSound(), 1f, 1f);
                     java.awt.Color awtColor = new java.awt.Color(color.asRGB());
                     World w = toChunk.getWorld();
                     double eyeY = to.getY() + ply.getEyeHeight();

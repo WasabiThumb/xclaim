@@ -81,7 +81,7 @@ public class VersionInfoPage extends Page {
         if (slot == 15) {
             switchPage(new MainPage(getParent()));
         } else if (slot == 13) {
-            getTarget().playSound(getTarget().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 1f, 1f);
+            getTarget().playSound(getTarget().getLocation(), Platform.get().getEggSound(), 1f, 1f);
         }
     }
 

@@ -90,7 +90,7 @@ public class ChunksCommand implements Command {
                 "cmd-chunks-success",
                 claim.getName()
         ));
-        ply.playSound(ply.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1f, 1f);
+        ply.playSound(ply.getLocation(), Platform.get().getMagicSound(), 1f, 1f);
         ChunkEditor.startEditing(ply, claim);
     }
 

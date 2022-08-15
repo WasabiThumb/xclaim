@@ -98,7 +98,7 @@ public class TransferPage extends Page {
                 claim.setOwner(matchPlayer);
                 claim.setUserPermission(target, Permission.MANAGE, true);
                 Platform.getAdventure().player(target).sendMessage(XClaim.lang.getComponent("gui-tx-success"));
-                target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+                target.playSound(target.getLocation(), Platform.get().getLevelSound(), 1f, 1f);
                 switchPage(new MainPage(getParent()));
             }
         } else if (slot == 15) {

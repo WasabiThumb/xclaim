@@ -34,7 +34,7 @@ public class MainPage extends Page {
     private static final ItemStack RENAME_CHUNK_STACK = DisplayItem.create(Material.NAME_TAG, XClaim.lang.getComponent("gui-main-rename-chunk"));
 
     private static final int EDIT_PERM_POS = 15;
-    private static final ItemStack EDIT_PERM_STACK = DisplayItem.create(Material.SHIELD, XClaim.lang.getComponent("gui-main-edit-perm"));
+    private static final ItemStack EDIT_PERM_STACK = DisplayItem.create(Platform.get().getShieldMaterial(), XClaim.lang.getComponent("gui-main-edit-perm"));
 
     private static final int TRANSFER_OWNER_POS = 20;
     private static final ItemStack TRANSFER_OWNER_STACK = DisplayItem.create(Platform.get().getChestMinecartMaterial(), XClaim.lang.getComponent("gui-main-transfer-owner"));

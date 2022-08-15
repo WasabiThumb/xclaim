@@ -91,7 +91,7 @@ public class InteractHandler extends PermissionHandler {
         Location loc = ply.getLocation();
         if (event instanceof PlayerInteractEvent) {
             PlayerInteractEvent pie = (PlayerInteractEvent) event;
-            EquipmentSlot slot = pie.getHand();
+            EquipmentSlot slot = Platform.get().getInteractHand(pie);
             if (slot == null) return false;
             is = Platform.get().playerInventoryGetItem(ply.getInventory(), slot);
             Block block = pie.getClickedBlock();
@@ -134,7 +134,7 @@ public class InteractHandler extends PermissionHandler {
                 }
                 return true;
             } else if (mat.equals(Platform.get().getFireworkRocketMaterial())) {
-                if (ply.isGliding()) {
+                if (Platform.get().playerIsGliding(ply)) {
                     Platform p = Platform.get();
                     if (getClaim().contains(loc) && p.supportsArtificalElytraBoost()) {
                         event.setCancelled(true);
