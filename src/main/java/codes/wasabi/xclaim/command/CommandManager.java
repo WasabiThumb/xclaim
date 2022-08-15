@@ -217,7 +217,7 @@ public class CommandManager {
                 Method m = clazz1.getMethod("getKnownCommands");
                 known = (Map<String, Command>) m.invoke(cm);
             } catch (ReflectiveOperationException | NullPointerException | SecurityException | ClassCastException e) {
-                Field f1 = clazz1.getField("knownCommands");
+                Field f1 = clazz1.getDeclaredField("knownCommands");
                 f1.setAccessible(true);
                 known = (Map<String, Command>) f1.get(cm);
             }

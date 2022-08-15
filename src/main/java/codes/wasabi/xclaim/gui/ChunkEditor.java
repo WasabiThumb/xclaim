@@ -4,10 +4,7 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.economy.Economy;
-import codes.wasabi.xclaim.platform.Platform;
-import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
-import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
-import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
+import codes.wasabi.xclaim.platform.*;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
@@ -41,7 +38,11 @@ public class ChunkEditor {
 
     public static class Events implements Listener {
 
-        private Events() { }
+        private Events() {
+            PlatformItemPickupListener listener = Platform.get().getItemPickupListener();
+            listener.on(this::onPickup);
+            listener.register();
+        }
 
         @EventHandler
         public void onDrop(@NotNull PlayerDropItemEvent event) {
@@ -51,13 +52,9 @@ public class ChunkEditor {
             }
         }
 
-        @EventHandler
-        public void onPickup(@NotNull EntityPickupItemEvent event) {
-            Entity ent = event.getEntity();
-            if (ent instanceof Player) {
-                if (getEditing((Player) ent) != null) {
-                    event.setCancelled(true);
-                }
+        public void onPickup(Player ply, Runnable cancel) {
+            if (getEditing(ply) != null) {
+                cancel.run();
             }
         }
 

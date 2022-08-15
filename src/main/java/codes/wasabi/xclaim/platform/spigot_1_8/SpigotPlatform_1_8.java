@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.platform.spigot_1_8;
 
 import codes.wasabi.xclaim.platform.PlatformEntityPlaceListener;
+import codes.wasabi.xclaim.platform.PlatformItemPickupListener;
 import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.spigot.SpigotPlatform;
@@ -233,6 +234,7 @@ public class SpigotPlatform_1_8 extends SpigotPlatform {
         Class<? extends SkullMeta> clazz = sm.getClass();
         try {
             Method method = clazz.getMethod("setOwner", String.class);
+            method.setAccessible(true);
             method.invoke(sm, name);
         } catch (Exception e) {
             e.printStackTrace();
@@ -294,6 +296,11 @@ public class SpigotPlatform_1_8 extends SpigotPlatform {
     @Override
     public boolean playerIsGliding(Player ply) {
         return false;
+    }
+
+    @Override
+    public PlatformItemPickupListener getItemPickupListener() {
+        return new codes.wasabi.xclaim.platform.spigot_1_8.SpigotPlatformItemPickupListener_1_8();
     }
 
 }

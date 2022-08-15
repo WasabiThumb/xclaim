@@ -205,4 +205,6 @@ public abstract class Platform {
 
     public abstract boolean playerIsGliding(Player ply);
 
+    public abstract PlatformItemPickupListener getItemPickupListener();
+
 }

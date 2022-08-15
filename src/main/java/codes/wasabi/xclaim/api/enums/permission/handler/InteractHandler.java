@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformEntityPlaceListener;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,6 +25,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InteractHandler extends PermissionHandler {
 
@@ -147,13 +151,55 @@ public class InteractHandler extends PermissionHandler {
         return false;
     }
 
+    private final String[] legacyContainerClassNames = new String[] {
+            "org.bukkit.block.Beacon",
+            "org.bukkit.block.BrewingStand",
+            "org.bukkit.block.Chest",
+            "org.bukkit.block.Dispenser",
+            "org.bukkit.block.Dropper",
+            "org.bukkit.block.Furnace",
+            "org.bukkit.block.Hopper",
+            "org.bukkit.block.ShulkerBox"
+    };
+    private Class<?>[] legacyContainerClasses = null;
+    private boolean legacyIsContainer(BlockState bs) {
+        if (legacyContainerClasses == null) {
+            List<Class<?>> classList = new ArrayList<>();
+            for (String cn : legacyContainerClassNames) {
+                try {
+                    Class<?> clazz = Class.forName(cn);
+                    classList.add(clazz);
+                } catch (Exception ignored) { }
+            }
+            int size = classList.size();
+            legacyContainerClasses = new Class<?>[size];
+            boolean ret = false;
+            for (int i=0; i < size; i++) {
+                Class<?> c = classList.get(i);
+                if (!ret) ret = c.isInstance(bs);
+                legacyContainerClasses[i] = c;
+            }
+            return ret;
+        }
+        for (Class<?> c : legacyContainerClasses) {
+            if (c.isInstance(bs)) return true;
+        }
+        return false;
+    }
+
     @EventHandler
     public void onInteract(@NotNull PlayerInteractEvent event) {
         if (mode == Mode.CHESTS) {
             Block block = event.getClickedBlock();
             if (block != null) {
                 BlockState bs = block.getState();
-                if (bs instanceof Container) {
+                boolean isContainer;
+                if (PaperLib.isVersion(12, 2)) {
+                    isContainer = (bs instanceof Container);
+                } else {
+                    isContainer = legacyIsContainer(bs);
+                }
+                if (isContainer) {
                     Player ply = event.getPlayer();
                     if (getClaim().hasPermission(ply, Permission.CHEST_OPEN)) return;
                     if (test(event, Platform.get().toCenterLocation(block.getLocation()))) {

@@ -2,16 +2,14 @@ package codes.wasabi.xclaim.util;
 
 import org.jetbrains.annotations.Range;
 
-import java.nio.CharBuffer;
-
 public final class StringUtil {
 
     public static String repeatString(String string, @Range(from=0L, to=Integer.MAX_VALUE) int count) {
-        CharBuffer buffer = CharBuffer.allocate(string.length() * count);
+        StringBuilder sb = new StringBuilder();
         for (int i=0; i < count; i++) {
-            buffer.put(string);
+            sb.append(string);
         }
-        return buffer.toString();
+        return sb.toString();
     }
 
 }
