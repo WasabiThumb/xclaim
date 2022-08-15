@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.command.argument.type;
 
 import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.platform.Platform;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,14 +20,14 @@ public class ItemMaterialType extends MaterialType {
     public @NotNull Collection<String> getSampleValues() {
         List<String> ret = new ArrayList<>();
         for (Material mat : Material.values()) {
-            if (mat.isItem()) ret.add(mat.name());
+            if (Platform.get().materialIsItem(mat)) ret.add(mat.name());
         }
         return ret;
     }
 
     @Override
     protected boolean validate(@NotNull Material value) {
-        return value.isItem();
+        return Platform.get().materialIsItem(value);
     }
 
 }

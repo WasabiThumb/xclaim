@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.spigot_1_12;
+package codes.wasabi.xclaim.platform.spigot_1_8;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
@@ -19,9 +19,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
 
-public class SpigotPlatformEntityPlaceListener_1_12 extends PlatformEntityPlaceListener implements Listener {
-    public SpigotPlatformEntityPlaceListener_1_12() {
+public class SpigotPlatformEntityPlaceListener_1_8 extends PlatformEntityPlaceListener implements Listener {
+    public SpigotPlatformEntityPlaceListener_1_8() {
         Bukkit.getPluginManager().registerEvents(this, XClaim.instance);
+    }
+
+    protected EquipmentSlot getSlot(PlayerInteractEvent event) {
+        if (event.getAction().equals(Action.PHYSICAL)) return null;
+        return EquipmentSlot.HAND;
     }
 
     @EventHandler
@@ -29,7 +34,7 @@ public class SpigotPlatformEntityPlaceListener_1_12 extends PlatformEntityPlaceL
         Player ply = event.getPlayer();
         Action action = event.getAction();
         if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
-            EquipmentSlot es = event.getHand();
+            EquipmentSlot es = getSlot(event);
             if (es == null) es = EquipmentSlot.HAND;
             ItemStack is = Platform.get().playerInventoryGetItem(ply.getInventory(), es);
             if (is == null) return;

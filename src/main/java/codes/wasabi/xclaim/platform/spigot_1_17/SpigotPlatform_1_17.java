@@ -1,5 +1,7 @@
 package codes.wasabi.xclaim.platform.spigot_1_17;
 
+import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
+import codes.wasabi.xclaim.platform.spigot_1_12.SpigotPlatformNamespacedKey_1_12;
 import codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -20,8 +22,8 @@ public class SpigotPlatform_1_17 extends SpigotPlatform_1_16 {
     }
 
     @Override
-    public NamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name) {
-        return NamespacedKey.fromString(name, plugin);
+    public PlatformNamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name) {
+        return new SpigotPlatformNamespacedKey_1_12(NamespacedKey.fromString(name, plugin));
     }
 
     @Override

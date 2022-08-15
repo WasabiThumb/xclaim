@@ -324,7 +324,8 @@ public class Claim {
 
     public void setUserPermission(@NotNull OfflinePlayer player, @NotNull Permission permission, boolean value) {
         UUID uuid = player.getUniqueId();
-        EnumSet<Permission> set = Objects.requireNonNullElseGet(playerPerms.get(uuid), () -> EnumSet.noneOf(Permission.class));
+        EnumSet<Permission> set = playerPerms.get(uuid);
+        if (set == null) set = EnumSet.noneOf(Permission.class);
         if (value) {
             set.add(permission);
             playerPerms.put(uuid, set);
@@ -432,11 +433,12 @@ public class Claim {
         }
         for (EnumSet<Permission> set : playerPerms.values()) inUse.addAll(set);
         //
-        for (Permission key : handlers.keySet().toArray(Permission[]::new)) {
-            if (inUse.contains(key)) {
-                inUse.remove(key);
+        for (Object key : handlers.keySet().toArray()) {
+            Permission perm = (Permission) key;
+            if (inUse.contains(perm)) {
+                inUse.remove(perm);
             } else {
-                handlers.remove(key).unregister();
+                handlers.remove(perm).unregister();
             }
         }
         for (Permission p : inUse) {
@@ -464,7 +466,8 @@ public class Claim {
                 c.unclaim();
                 continue;
             }
-            for (Chunk chunk : c.chunks.toArray(Chunk[]::new)) {
+            for (Object object : c.chunks.toArray()) {
+                Chunk chunk = (Chunk) object;
                 if (chunks.contains(chunk)) c.removeChunk(chunk);
             }
         }

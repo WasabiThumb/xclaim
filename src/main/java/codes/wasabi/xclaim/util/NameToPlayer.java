@@ -28,7 +28,7 @@ public final class NameToPlayer {
         if (ply != null) return ply;
         // Must make a web request to Mojang APIs now
         try {
-            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + URLEncoder.encode(name, StandardCharsets.UTF_8));
+            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + URLEncoder.encode(name, "UTF-8"));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);
@@ -40,7 +40,7 @@ public final class NameToPlayer {
             int code = conn.getResponseCode();
             if (code == 200) {
                 InputStream is = conn.getInputStream();
-                byte[] bytes = is.readAllBytes();
+                byte[] bytes = StreamUtil.readAllBytes(is);
                 String string = new String(bytes, StandardCharsets.UTF_8);
                 JsonObject ob = gson.fromJson(string, JsonObject.class);
                 String id = ob.get("id").getAsString();

@@ -11,6 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import static codes.wasabi.xclaim.util.StreamUtil.readNBytes;
+import static codes.wasabi.xclaim.util.StreamUtil.writeBytes;
 
 public final class InventorySerializer {
 
@@ -22,14 +24,14 @@ public final class InventorySerializer {
 
     public static byte @NotNull [] serialize(@Nullable ItemStack @NotNull [] inventory) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(inventory.length).array());
+        writeBytes(bos, ByteBuffer.allocate(Integer.BYTES).putInt(inventory.length).array());
         for (ItemStack is : inventory) {
             if (is == null) {
-                bos.writeBytes(zeroBytes);
+                writeBytes(bos, zeroBytes);
             } else {
                 byte[] bytes = Platform.get().itemStackSerializeBytes(is);
-                bos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(bytes.length).array());
-                bos.writeBytes(bytes);
+                writeBytes(bos, ByteBuffer.allocate(Integer.BYTES).putInt(bytes.length).array());
+                writeBytes(bos, bytes);
             }
         }
         return bos.toByteArray();
@@ -42,14 +44,14 @@ public final class InventorySerializer {
     public static @Nullable ItemStack @NotNull [] deserialize(byte @NotNull [] bytes) throws IllegalArgumentException {
         try {
             ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            int length = ByteBuffer.wrap(bis.readNBytes(Integer.BYTES)).getInt();
+            int length = ByteBuffer.wrap(readNBytes(bis, Integer.BYTES)).getInt();
             ItemStack[] ret = new ItemStack[length];
             for (int i=0; i < ret.length; i++) {
-                int len = ByteBuffer.wrap(bis.readNBytes(Integer.BYTES)).getInt();
+                int len = ByteBuffer.wrap(readNBytes(bis, Integer.BYTES)).getInt();
                 if (len == 0) {
                     ret[i] = null;
                 } else {
-                    byte[] bs = bis.readNBytes(len);
+                    byte[] bs = readNBytes(bis, len);
                     ret[i] = Platform.get().itemStackDeserializeBytes(bs);
                 }
             }

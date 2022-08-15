@@ -58,6 +58,11 @@ public class ClearCommand implements Command {
         return false;
     }
 
+    private <T> T requireNonNullElse(T value, T replacement) {
+        if (value == null) return replacement;
+        return value;
+    }
+
     @Override
     public void execute(@NotNull CommandSender sender, @Nullable Object @NotNull ... arguments) throws Exception {
         Audience audience = Platform.getAdventure().sender(sender);
@@ -87,7 +92,7 @@ public class ClearCommand implements Command {
         Object protoConfirm = (arguments.length < 2 ? null : arguments[1]);
         if (protoConfirm != null) {
             if (((String) protoConfirm).equalsIgnoreCase(XClaim.lang.get("cmd-clear-arg-confirm-yes"))) {
-                Component name = (target instanceof Player ? Platform.get().playerDisplayName((Player) target) : Component.text(Objects.requireNonNullElse(target.getName(), XClaim.lang.get("cmd-clear-player-unknown"))));
+                Component name = (target instanceof Player ? Platform.get().playerDisplayName((Player) target) : Component.text(requireNonNullElse(target.getName(), XClaim.lang.get("cmd-clear-player-unknown"))));
                 Claim.getByOwner(target).forEach(Claim::unclaim);
                 audience.sendMessage(XClaim.lang.getComponent("cmd-clear-success", name));
                 if ((!permitted) && target instanceof Player) {
@@ -97,7 +102,7 @@ public class ClearCommand implements Command {
                 return;
             }
         }
-        Component name3 = (target instanceof Player ? Platform.get().playerDisplayName((Player) target) : Component.text(Objects.requireNonNullElse(target.getName(), "Unknown")));
+        Component name3 = (target instanceof Player ? Platform.get().playerDisplayName((Player) target) : Component.text(requireNonNullElse(target.getName(), "Unknown")));
         audience.sendMessage(XClaim.lang.getComponent("cmd-clear-prompt", name3));
         if (sender instanceof Player) {
             audience.sendMessage(

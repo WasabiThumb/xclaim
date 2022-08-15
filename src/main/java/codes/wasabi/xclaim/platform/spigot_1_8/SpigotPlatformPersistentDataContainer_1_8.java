@@ -1,9 +1,10 @@
-package codes.wasabi.xclaim.platform.spigot_1_12;
+package codes.wasabi.xclaim.platform.spigot_1_8;
 
 import codes.wasabi.xclaim.XClaim;
+import codes.wasabi.xclaim.platform.PlatformNamespacedKey;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
-import org.bukkit.NamespacedKey;
+import codes.wasabi.xclaim.util.StreamUtil;
 import org.bukkit.entity.Entity;
 
 import java.io.*;
@@ -12,11 +13,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
-public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersistentDataContainer {
+import static codes.wasabi.xclaim.util.StreamUtil.readNBytes;
+
+public class SpigotPlatformPersistentDataContainer_1_8 implements PlatformPersistentDataContainer {
 
     private final String identifier;
 
-    public SpigotPlatformPersistentDataContainer_1_12(Entity entity) {
+    public SpigotPlatformPersistentDataContainer_1_8(Entity entity) {
         identifier = entity.getUniqueId().toString();
     }
 
@@ -96,15 +99,15 @@ public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersi
             int n = is.read();
             if (n < 0) return false;
             dataType = (byte) n;
-            byte[] idLengthBytes = is.readNBytes(Short.BYTES);
+            byte[] idLengthBytes = readNBytes(is, Short.BYTES);
             short idLength = ByteBuffer.wrap(idLengthBytes).getShort();
-            identifier = new String(is.readNBytes(idLength), StandardCharsets.UTF_8);
+            identifier = new String(readNBytes(is, idLength), StandardCharsets.UTF_8);
             if (dataType == 0) {
                 dataValue = (byte) is.read();
             } else if (dataType == 1 || dataType == 2) {
-                byte[] dataLengthBytes = is.readNBytes(Integer.BYTES);
+                byte[] dataLengthBytes = readNBytes(is, Integer.BYTES);
                 int dataLength = ByteBuffer.wrap(dataLengthBytes).getInt();
-                byte[] data = is.readNBytes(dataLength);
+                byte[] data = readNBytes(is, dataLength);
                 if (dataType == 2) {
                     dataValue = new String(data, StandardCharsets.UTF_8);
                 } else {
@@ -136,7 +139,7 @@ public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersi
     }
 
     @Override
-    public void set(NamespacedKey key, PlatformPersistentDataType type, Object value) {
+    public void set(PlatformNamespacedKey key, PlatformPersistentDataType type, Object value) {
         String ks = key.toString();
         byte tc = typeToCode(type);
         lock.lock();
@@ -144,7 +147,7 @@ public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersi
             File src = getDataFile();
             byte[] bytes = new byte[0];
             try (FileInputStream fis = new FileInputStream(src)) {
-                bytes = fis.readAllBytes();
+                bytes = StreamUtil.readAllBytes(fis);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -171,7 +174,7 @@ public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersi
     }
 
     @Override
-    public Object get(NamespacedKey key, PlatformPersistentDataType type) {
+    public Object get(PlatformNamespacedKey key, PlatformPersistentDataType type) {
         String ks = key.toString();
         byte tc = typeToCode(type);
         Object ret = null;
@@ -196,7 +199,7 @@ public class SpigotPlatformPersistentDataContainer_1_12 implements PlatformPersi
     }
 
     @Override
-    public boolean has(NamespacedKey key, PlatformPersistentDataType type) {
+    public boolean has(PlatformNamespacedKey key, PlatformPersistentDataType type) {
         return get(key, type) != null;
     }
 

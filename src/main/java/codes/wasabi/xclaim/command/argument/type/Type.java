@@ -29,7 +29,7 @@ public abstract class Type<T> {
         }
         if (method == null) throw new IllegalArgumentException("Cannot find suitable string parser method for " + clazz.getName());
         final Method finalMethod = method;
-        return new Type<>() {
+        return new Type<T>() {
             @Override
             public @NotNull Class<T> getTypeClass() {
                 return clazz;

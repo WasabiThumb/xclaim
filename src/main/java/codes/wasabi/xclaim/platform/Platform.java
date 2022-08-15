@@ -54,8 +54,16 @@ public abstract class Platform {
             instance = new codes.wasabi.xclaim.platform.spigot_1_13.SpigotPlatform_1_13();
         } else if (PaperLib.isVersion(12, 2)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_12_2.SpigotPlatform_1_12_2();
-        } else {
+        } else if (PaperLib.isVersion(12)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_12.SpigotPlatform_1_12();
+        } else if (PaperLib.isVersion(11)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_11.SpigotPlatform_1_11();
+        } else if (PaperLib.isVersion(10)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_10.SpigotPlatform_1_10();
+        } else if (PaperLib.isVersion(9)) {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_9.SpigotPlatform_1_9();
+        } else {
+            instance = new codes.wasabi.xclaim.platform.spigot_1_8.SpigotPlatform_1_8();
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
@@ -107,7 +115,7 @@ public abstract class Platform {
 
     public abstract int getWorldMinHeight(@NotNull World world);
 
-    public abstract NamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name);
+    public abstract PlatformNamespacedKey createNamespacedKey(@NotNull JavaPlugin plugin, @NotNull String name);
 
     public abstract Material getSpyglassMaterial();
 
@@ -178,5 +186,25 @@ public abstract class Platform {
     public abstract boolean bukkitTaskCancelled(BukkitTask task);
 
     public abstract ItemStack preparePlayerSkull(ItemStack is);
+
+    public abstract boolean materialIsItem(Material material);
+
+    public abstract Sound getMagicSound();
+
+    public abstract EquipmentSlot getInteractHand(PlayerInteractEvent event);
+
+    public abstract Sound getClickSound();
+
+    public abstract Sound getExpSound();
+
+    public abstract Sound getEggSound();
+
+    public abstract Sound getLevelSound();
+
+    public abstract Material getShieldMaterial();
+
+    public abstract boolean playerIsGliding(Player ply);
+
+    public abstract PlatformItemPickupListener getItemPickupListener();
 
 }

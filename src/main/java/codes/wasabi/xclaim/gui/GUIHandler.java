@@ -90,7 +90,7 @@ public class GUIHandler implements InventoryHolder, Listener {
             inventory.clear();
         }
         Player target = getTarget();
-        target.playSound(target.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+        target.playSound(target.getLocation(), Platform.get().getClickSound(), 1f, 1f);
     }
 
     public @NotNull Player getTarget() {

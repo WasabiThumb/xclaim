@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import static codes.wasabi.xclaim.util.StringUtil.repeatString;
+
 public abstract class Page {
 
     private final GUIHandler parent;
@@ -49,7 +51,7 @@ public abstract class Page {
     public void onTick() {
         if (awaiting) {
             Platform.getAdventure().player(getTarget()).sendMessage(
-                    Component.text("\n".repeat(100) + awaitPrompt + "\n")
+                    Component.text(repeatString("\n", 100) + awaitPrompt + "\n")
             );
         }
     }

@@ -217,7 +217,7 @@ public class CommandManager {
                 Method m = clazz1.getMethod("getKnownCommands");
                 known = (Map<String, Command>) m.invoke(cm);
             } catch (ReflectiveOperationException | NullPointerException | SecurityException | ClassCastException e) {
-                Field f1 = clazz1.getField("knownCommands");
+                Field f1 = clazz1.getDeclaredField("knownCommands");
                 f1.setAccessible(true);
                 known = (Map<String, Command>) f1.get(cm);
             }
@@ -231,7 +231,7 @@ public class CommandManager {
                     }
                 }
             }
-        } catch (InaccessibleObjectException | NoSuchFieldException | IllegalAccessException | SecurityException | NullPointerException | ClassCastException | ExceptionInInitializerError e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -258,14 +258,19 @@ public class CommandManager {
             int mod = clazz.getModifiers();
             if (Modifier.isAbstract(mod)) continue;
             if (Modifier.isInterface(mod)) continue;
-            if (clazz.getPackageName().contains("sub")) continue;
+            Package p = clazz.getPackage();
+            if (p != null) {
+                if (p.getName().contains("sub")) continue;
+            }
             Constructor<? extends codes.wasabi.xclaim.command.Command> con;
             try {
                 con = clazz.getConstructor();
             } catch (NoSuchMethodException e) {
                 continue;
             }
-            con.trySetAccessible();
+            try {
+                con.setAccessible(true);
+            } catch (Exception ignored) { }
             codes.wasabi.xclaim.command.Command com;
             try {
                 com = con.newInstance();

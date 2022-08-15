@@ -4,9 +4,7 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.economy.Economy;
-import codes.wasabi.xclaim.platform.Platform;
-import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
-import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
+import codes.wasabi.xclaim.platform.*;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
@@ -40,7 +38,11 @@ public class ChunkEditor {
 
     public static class Events implements Listener {
 
-        private Events() { }
+        private Events() {
+            PlatformItemPickupListener listener = Platform.get().getItemPickupListener();
+            listener.on(this::onPickup);
+            listener.register();
+        }
 
         @EventHandler
         public void onDrop(@NotNull PlayerDropItemEvent event) {
@@ -50,13 +52,9 @@ public class ChunkEditor {
             }
         }
 
-        @EventHandler
-        public void onPickup(@NotNull EntityPickupItemEvent event) {
-            Entity ent = event.getEntity();
-            if (ent instanceof Player) {
-                if (getEditing((Player) ent) != null) {
-                    event.setCancelled(true);
-                }
+        public void onPickup(Player ply, Runnable cancel) {
+            if (getEditing(ply) != null) {
+                cancel.run();
             }
         }
 
@@ -302,7 +300,8 @@ public class ChunkEditor {
                         Claim cl = Claim.getByChunk(toChunk);
                         if (cl != null) {
                             XCPlayer xcp = cl.getOwner();
-                            ownerName = Objects.requireNonNullElse(xcp.getName(), langUnknown);
+                            ownerName = xcp.getName();
+                            if (ownerName == null) ownerName = langUnknown;
                             ownState = (xcp.getUniqueId().equals(ply.getUniqueId()) ? 2 : 3);
                         }
                     }
@@ -324,7 +323,7 @@ public class ChunkEditor {
                             .append(Component.newline())
                             .append(Component.text(refer).color(tc))
                     );
-                    ply.playSound(ply.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                    ply.playSound(ply.getLocation(), Platform.get().getExpSound(), 1f, 1f);
                     java.awt.Color awtColor = new java.awt.Color(color.asRGB());
                     World w = toChunk.getWorld();
                     double eyeY = to.getY() + ply.getEyeHeight();
@@ -354,13 +353,13 @@ public class ChunkEditor {
     private static ItemStack UNCLAIM_STACK;
     private static ItemStack QUIT_STACK;
 
-    private static NamespacedKey KEY_FLAG;
-    private static NamespacedKey KEY_NAME;
-    private static NamespacedKey KEY_INVENTORY;
+    private static PlatformNamespacedKey KEY_FLAG;
+    private static PlatformNamespacedKey KEY_NAME;
+    private static PlatformNamespacedKey KEY_INVENTORY;
     private static Events EVENTS;
     private static boolean initialized = false;
 
-    public static @NotNull NamespacedKey getNameKey() {
+    public static @NotNull PlatformNamespacedKey getNameKey() {
         return KEY_NAME;
     }
 
