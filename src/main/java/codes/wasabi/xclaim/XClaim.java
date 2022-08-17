@@ -14,6 +14,7 @@ import com.google.gson.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -216,6 +217,9 @@ public final class XClaim extends JavaPlugin {
     }
 
     private void startServices() {
+        // bStats
+        Metrics metrics = new Metrics(this, 16129);
+        //
         logger.log(Level.INFO, lang.get("services-chunk-editor"));
         ChunkEditor.initialize();
         logger.log(Level.INFO, lang.get("services-command"));
