@@ -25,3 +25,4 @@ limits:
 dynmap-integration:
   enabled: true
   use-old-outline-style: false
+disable-paper-warning: false

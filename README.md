@@ -68,6 +68,7 @@ See all options in the [config section](#config).
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims-in-world | The maximum number of claims allowed at a time in each world. Values less than 1 signify no limit. | -1 |
 | dynmap-integration.enabled | If true, XClaim will look for dynmap on startup and hook into it. Mild speedup if turned off. | true |
 | dynmap-integration.use-old-outline-style | If true, the dynmap will use the old convex hull outlines on claims. This is mainly for debugging, as the new outline system is experimental. | false |
+| disable-paper-warning | Disables the message posted to console on startup when the server is running Spigot instead of Paper | false |
 
 ## Permissions
 Don't worry, there aren't that many.

@@ -32,7 +32,9 @@ public abstract class Platform {
         if (initialized) return;
         boolean isPaper = PaperLib.isPaper();
         if (!isPaper) {
-            PaperLib.suggestPaper(XClaim.instance);
+            if (!XClaim.mainConfig.getBoolean("disable-paper-warning", false)) {
+                PaperLib.suggestPaper(XClaim.instance);
+            }
         }
         if (PaperLib.isVersion(17)) {
             if (isPaper) {
