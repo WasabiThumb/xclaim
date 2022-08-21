@@ -74,6 +74,12 @@ See all options in the [config section](#config).
 | dynmap-integration.enabled | If true, XClaim will look for dynmap on startup and hook into it. Mild speedup if turned off. | true |
 | dynmap-integration.use-old-outline-style | If true, the dynmap will use the old convex hull outlines on claims. This is mainly for debugging, as the new outline system is experimental. | false |
 | disable-paper-warning | Disables the message posted to console on startup when the server is running Spigot instead of Paper | false |
+| worlds.use-whitelist | If worlds.whitelist should be considered | false |
+| worlds.use-blacklist | If worlds.blacklist should be considered | false |
+| worlds.case-sensitive | Whether capitalization in world names in the white/blacklist matter | true |
+| worlds.whitelist | A list that a world must be in for it to work with XClaim | a sample list |
+| worlds.blacklist | A list that a world must NOT be in for it to work with XClaim | a sample list |
+| worlds.grace-time | If a claim is in a disallowed world, players have this much time in seconds before the claim is automatically removed | 604800 (1 week) |
 
 ## Permissions
 Don't worry, there aren't that many.
