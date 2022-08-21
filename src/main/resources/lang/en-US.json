@@ -20,6 +20,7 @@
   "services-command": "Loading command manager",
   "services-command-register": "Registering default commands",
   "services-movement": "Starting movement routine",
+  "services-grace": "Refreshing grace routine",
   "trust-save": "Saving trusted players",
   "trust-save-new": "Created new trust.yml",
   "trust-save-err": "An error occurred while saving trusted players. See details below.",
@@ -324,5 +325,7 @@
   "arg-choice-or": " or ",
   "move-enter": "<white>Entering <gold>$1</gold>'s <green>$2</green></white>",
   "move-exit": "<white>Leaving <green>$1</green></white>",
+  "grace-alert": "<red><dark_red>WARNING</dark_red>: You have <dark_red>$1</dark_red> claims in blacklisted worlds that will be removed soon</red>",
+  "grace-remove": "<red>Your claim named <dark_red>$1</dark_red> was removed due to being in a blacklisted world</red>",
   "unknown": "Unknown"
 }

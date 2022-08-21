@@ -20,6 +20,7 @@
   "services-command": "Lade Befehlsmanager...",
   "services-command-register": "Registriere Standardbefehle...",
   "services-movement": "Starte Bewegungsüberwachung...",
+  "services-grace": "Erfrischende Gnade Routine...",
   "trust-save": "Speichere vertrauenswürdige Spieler...",
   "trust-save-new": "Neue trust.yml Datei wurde erstellt.",
   "trust-save-err": "Es ist ein Fehler während des Speicherns der vertrauenswürdigen Spieler aufgetreten. Für Details sehen Sie bitte weiter unten.",
@@ -324,5 +325,7 @@
   "arg-choice-or": " oder ",
   "move-enter": "\u003cwhite\u003eSie betreten \u003cgold\u003e$1\u003c/gold\u003e\u0027s \u003cgreen\u003e$2\u003c/green\u003e\u003c/white\u003e",
   "move-exit": "\u003cwhite\u003eSie verlassen \u003cgreen\u003e$1\u003c/green\u003e\u003c/white\u003e",
+  "grace-alert": "<red><dark_red>WARNUNG</dark_red>: Sie haben $1 Ansprüche in schwarzenlisteten Welten, die bald entfernt werden</red>",
+  "grace-remove": "<red>Ihre Behauptung mit dem Namen <dark_red>$1</dark_red> wurde aufgrund der schwarzen Welt entfernt entfernt</red>",
   "unknown": "Unbekannt"
 }
