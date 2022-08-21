@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ConfigUtil;
 import codes.wasabi.xclaim.util.DisplayItem;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -78,6 +79,10 @@ public class NewClaimPage extends Page {
             // do stuff
             Player ply = getTarget();
             Chunk chunk = ply.getLocation().getChunk();
+            if (!ConfigUtil.worldIsAllowed(XClaim.mainConfig, chunk.getWorld())) {
+                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-disallowed"));
+                return;
+            }
             Claim cur = Claim.getByChunk(chunk);
             if (cur != null) {
                 if (!cur.getOwner().getUniqueId().equals(ply.getUniqueId())) {

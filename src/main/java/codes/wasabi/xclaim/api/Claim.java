@@ -144,7 +144,11 @@ public class Claim {
             }
             players.put(uuid, set);
         }
-        return new Claim(name, chunks, XCPlayer.of(owner), global, players);
+        Claim ret = new Claim(name, chunks, XCPlayer.of(owner), global, players);
+        if (section.contains("graceStart")) {
+            ret.graceStart = section.getLong("graceStart", -1);
+        }
+        return ret;
     }
 
     private String name;
@@ -155,6 +159,7 @@ public class Claim {
     private final List<java.util.function.Consumer<Claim>> ownerChangeCallbacks = new ArrayList<>();
     private BoundingBox outerBounds;
     private boolean manageHandlers = false;
+    private long graceStart = -1;
 
     private BoundingBox getChunkBounds(Chunk c) {
         World w = c.getWorld();
@@ -241,6 +246,14 @@ public class Claim {
             return chunks.iterator().next().getWorld();
         }
         return null;
+    }
+
+    public long getGraceStart() {
+        return graceStart;
+    }
+
+    public void setGraceStart(long graceStart) {
+        this.graceStart = graceStart;
     }
 
     public boolean addChunk(@NotNull Chunk chunk) throws IllegalArgumentException {
@@ -416,6 +429,9 @@ public class Claim {
         for (Map.Entry<UUID, EnumSet<Permission>> entry : playerPerms.entrySet()) {
             List<String> list = entry.getValue().stream().flatMap((Permission p) -> Stream.of(p.name())).collect(Collectors.toList());
             sec.set(entry.getKey().toString(), list);
+        }
+        if (graceStart > 0) {
+            section.set("graceStart", graceStart);
         }
     }
 

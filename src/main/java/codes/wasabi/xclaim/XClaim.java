@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim;
 
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.GraceRoutine;
 import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
@@ -229,6 +230,8 @@ public final class XClaim extends JavaPlugin {
         commandManager.registerDefaults();
         logger.log(Level.INFO, lang.get("services-movement"));
         MovementRoutine.initialize();
+        logger.log(Level.INFO, lang.get("services-grace"));
+        GraceRoutine.refresh();
     }
     /* END STARTUP TASKS */
 
@@ -281,6 +284,7 @@ public final class XClaim extends JavaPlugin {
         commandManager.unregisterAll();
         OfflinePlayerType.clearListener();
         MovementRoutine.cleanup();
+        GraceRoutine.stop();
         GUIHandler.closeAll();
         unloadDynmap();
     }
