@@ -8,11 +8,10 @@ import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.StandardTypes;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ConfigUtil;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +83,15 @@ public class ChunksCommand implements Command {
         }
         if (!claim.hasPermission(ply, Permission.MANAGE)) {
             audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-perm"));
+            return;
+        }
+        World w = claim.getWorld();
+        if (w == null) {
+            audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-404"));
+            return;
+        }
+        if (!ConfigUtil.worldIsAllowed(XClaim.mainConfig, w)) {
+            audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-disallowed"));
             return;
         }
         Platform.get().sendActionBar(ply, XClaim.lang.getComponent(

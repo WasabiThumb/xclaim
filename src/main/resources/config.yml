@@ -26,3 +26,16 @@ dynmap-integration:
   enabled: true
   use-old-outline-style: false
 disable-paper-warning: false
+worlds:
+  grace-time: 604800 # if a claim exists in a blacklisted world, the owner has this much time before it is removed (seconds)
+  use-whitelist: false
+  use-blacklist: false
+  case-sensitive: true
+  whitelist:
+    - world
+    - world_nether
+    - world_the_end
+  blacklist:
+    - minigames
+    - pvp
+    - etc
