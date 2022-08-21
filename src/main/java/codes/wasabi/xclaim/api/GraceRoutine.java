@@ -59,10 +59,11 @@ public class GraceRoutine implements Listener {
     }
 
     private final BukkitTask timerTask;
-    private final long graceTime;
+    private final long graceTimeMillis;
     private final BukkitAudiences adv = Platform.getAdventure();
     private GraceRoutine() {
-        graceTime = Math.max(XClaim.mainConfig.getLong("worlds.grace-time", 604800L), 0L);
+        long graceTime = Math.max(XClaim.mainConfig.getLong("worlds.grace-time", 604800L), 0L);
+        graceTimeMillis = graceTime * 1000L;
         // Approximate how often we need to run the routine in order to fall within the requested period
         // By default this will be 3024000 ticks or 1.75 days w/o lag (a quarter of a week) which is excessively long
         long ticks = Math.max((long) Math.floor((graceTime / 4d) * 20d), 1L);
@@ -92,7 +93,7 @@ public class GraceRoutine implements Listener {
                     c.setGraceStart(start);
                 }
                 long elapsed = now - start;
-                if (elapsed >= graceTime) {
+                if (elapsed >= graceTimeMillis) {
                     OfflinePlayer op = c.getOwner().getOfflinePlayer();
                     c.unclaim();
                     Player ply = op.getPlayer();
