@@ -30,6 +30,7 @@ Dieser Prozess sollte ohne Spieler online durchgeführt werden. Der Server sollt
 Seit der Version 1.6.x werden mehrere Sprachen unterstützt. Wenn das Plugin startet, werden die standard Sprach-Packete in ``/plugins/XClaim/lang`` geladen. In der folgenden Liste sind alle standard Sprach-Packte:
 - en-US (Amerikanisches Englisch)
 - de (Deutsch)
+- zh (Vereinfachtes Chinesisch)
 
 Das Plugin benutzt die Sprache, welche in der "language" Option in der [Konfiguration](#Konfiguration) spezifiziert ist.
 \

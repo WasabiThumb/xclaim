@@ -35,7 +35,8 @@ This process should be done without any players online. The server should have C
 ### Languages
 As of version 1.6.x, multiple languages are supported. When the plugin starts, default language packs are loaded into ``/plugins/XClaim/lang``. Below are a list of default language packs:
 - en-US (American English)
-- de (German)
+- de (German) by eingruenesbeb
+- zh (Simplified Chinese) by SnowCutieOwO
 
 The plugin decides what language to use based on the "language" option in the [config](#config).
 \
