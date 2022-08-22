@@ -6,6 +6,12 @@
 </h2>
 
 [![Java CI with Maven](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml)\
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Active%20Servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Aktive Server">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Active%20Players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Aktive Spieler">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Downloads&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843" alt="Downloads">
+<img src="https://shields.io/spiget/stars/102843" alt="Bewertungen">
+
 Ein besseres Chunk-anspruch Plugin für Paper Server.\
 *Verstanden? Es klingt wie exclaim...*\
 \
@@ -29,8 +35,8 @@ Dieser Prozess sollte ohne Spieler online durchgeführt werden. Der Server sollt
 ### Sprachen
 Seit der Version 1.6.x werden mehrere Sprachen unterstützt. Wenn das Plugin startet, werden die standard Sprach-Packete in ``/plugins/XClaim/lang`` geladen. In der folgenden Liste sind alle standard Sprach-Packte:
 - en-US (Amerikanisches Englisch)
-- de (Deutsch)
-- zh (Vereinfachtes Chinesisch)
+- de (Deutsch) von eingruenesbeb
+- zh (Vereinfachtes Chinesisch) von SnowCutieOwO
 
 Das Plugin benutzt die Sprache, welche in der "language" Option in der [Konfiguration](#Konfiguration) spezifiziert ist.
 \
@@ -65,8 +71,16 @@ Für alle Optionen siehe: [Konfiguration Abschnitt](#Konfiguration).
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price | Bestimmt den Preis für einen Chunk, falls Wirtschaft-Features aktiv sind. | 20 |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.unclaim-reward | Bestimmt die Anzahl an Währung, die ein Spieler der Gruppe, beim Chunk freigeben, erstattet bekommt, falls Wirtschaft-Features aktiv sind. | 0 |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.free-chunks | Bestimmt die Anzahl an kostenfreien Chunks, bevor Spieler den Preis, welcher in ``limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price`` spezifiziert ist, zahlen müssen, falls Wirtschaft-Features aktiv sind. | 4 |
+| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims-in-world | Die maximale Anzahl an gleichzeitig beanspruchten Gebieten pro Welt. Werte unter 1 setzen effektiv kein Limit. | -1 |
 | dynmap-integration.enabled | Wenn "true", wird die Dynmap-Integration aktiviert. | true |
 | dynmap-integration.use-old-outline-style | Wenn "true", wird Dynmap die alten Konvex-Hüllen-Umrandungen für Anspruchsgebiete verwenden. Dies ist hauptsächlich zum debuggen, da das neue Umrandungssystem experimentell ist. | false |
+| disable-paper-warning | Deaktiviert die Warnung beim Serverstart, wenn das Plugin auf einem Spigot anstelle eines Paper Servers geladen wird. | false |
+| worlds.use-whitelist | Ob worlds.whitelist beachtet werden soll | false |
+| worlds.use-blacklist | Ob worlds.blacklist beachtet werden soll | false |
+| worlds.case-sensitive | Ob Groß- und Kleinschrift für Welten in der Allow-/Denylist berücksichtigt werden soll | true |
+| worlds.whitelist | Eine Liste, in der alle Welten aufgelistet werden müssen, damit XClaim in ihnen funktioniert. | Eine Beispielliste |
+| worlds.blacklist | Eine Liste, in der alle Welten aufgelistet werden müssen, damit XClaim in ihnen NICHT funktioniert. | Eine Beispielliste |
+| worlds.grace-time | Falls ein beanspruchtes Gebiet sich in einer Welt auf der Denylist befindet, ist dies die Dauer in Sekunden, für welche das Gebiet bestehen bleibt.  | 604800 (1 week) |
 
 ## Berechtigungen
 Keine Sorge, es gibt nicht viele.
