@@ -2,7 +2,10 @@ package codes.wasabi.xclaim.gui;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -12,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-
-import static codes.wasabi.xclaim.util.StringUtil.repeatString;
 
 public abstract class Page {
 
@@ -37,9 +38,11 @@ public abstract class Page {
         }
         awaiting = false;
     }
+
     public void onClick(int slot) {
 
     }
+
     public boolean onMessage(@NotNull String message) {
         if (awaiting) {
             awaitCallback.accept(message);
@@ -48,11 +51,11 @@ public abstract class Page {
         }
         return false;
     }
+
     public void onTick() {
         if (awaiting) {
-            Platform.getAdventure().player(getTarget()).sendMessage(
-                    Component.text(repeatString("\n", 100) + awaitPrompt + "\n")
-            );
+            Audience audience = Platform.getAdventure().player(getTarget());
+            audience.sendActionBar(Component.text(awaitPrompt).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
         }
     }
 
@@ -60,8 +63,11 @@ public abstract class Page {
         boolean ticking = parent.getShouldTick();
         parent.setShouldTick(true);
         suspend();
+        Player target = getTarget();
+        target.playSound(target.getLocation(), Platform.get().getExpSound(), 1f, 1f);
         awaitPrompt = prompt;
         awaitCallback = ((String s) -> {
+            awaiting = false;
             parent.setShouldTick(ticking);
             Bukkit.getScheduler().runTask(XClaim.instance, () -> {
                 unsuspend();
