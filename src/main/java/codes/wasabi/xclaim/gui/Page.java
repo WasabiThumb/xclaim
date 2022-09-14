@@ -4,6 +4,9 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +22,7 @@ public abstract class Page {
 
     private final GUIHandler parent;
     protected boolean suspended = false;
-    private String awaitPrompt;
+    private BossBar awaitBar;
     private Consumer<String> awaitCallback;
     private boolean awaiting = false;
     public Page(@NotNull GUIHandler parent) {
@@ -33,13 +36,17 @@ public abstract class Page {
     public abstract void onEnter();
     public void onExit() {
         if (awaiting) {
+            awaitBar.setVisible(false);
+            awaitBar.removeAll();
             awaitCallback = ((String s) -> {});
         }
         awaiting = false;
     }
+
     public void onClick(int slot) {
 
     }
+
     public boolean onMessage(@NotNull String message) {
         if (awaiting) {
             awaitCallback.accept(message);
@@ -48,22 +55,23 @@ public abstract class Page {
         }
         return false;
     }
+
     public void onTick() {
-        if (awaiting) {
-            Platform.getAdventure().player(getTarget()).sendMessage(
-                    Component.text(repeatString("\n", 100) + awaitPrompt + "\n")
-            );
-        }
     }
 
     protected final void prompt(@NotNull String prompt, @NotNull Consumer<String> callback) {
         boolean ticking = parent.getShouldTick();
         parent.setShouldTick(true);
         suspend();
-        awaitPrompt = prompt;
+        awaitBar = Bukkit.createBossBar(prompt, BarColor.WHITE, BarStyle.SOLID);
+        awaitBar.addPlayer(getTarget());
+        awaitBar.setVisible(true);
+        awaitBar.setProgress(1d);
         awaitCallback = ((String s) -> {
             parent.setShouldTick(ticking);
             Bukkit.getScheduler().runTask(XClaim.instance, () -> {
+                awaitBar.setVisible(false);
+                awaitBar.removeAll();
                 unsuspend();
                 callback.accept(s);
             });
