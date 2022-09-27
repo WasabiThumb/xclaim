@@ -1,6 +1,8 @@
 package codes.wasabi.xclaim.platform.spigot;
 
 import codes.wasabi.xclaim.platform.PlatformChatListener;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -28,7 +30,7 @@ public class SpigotPlatformChatListener implements PlatformChatListener {
     public void onMessage(AsyncPlayerChatEvent event) {
         PlatformChatListenerData data = new PlatformChatListenerData(
                 event.getPlayer(),
-                event.getMessage(),
+                PlainTextComponentSerializer.plainText().serialize(LegacyComponentSerializer.legacySection().deserialize(event.getMessage())),
                 () -> event.setCancelled(true)
         );
         for (Consumer<PlatformChatListenerData> consumer : callbacks) consumer.accept(data);
