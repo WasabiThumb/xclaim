@@ -254,8 +254,10 @@ public final class XClaim extends JavaPlugin {
     private void saveClaims() {
         logger.log(Level.INFO, lang.get("claims-save"));
         Set<String> removeKeys = claimsConfig.getKeys(false);
+        int index = 0;
         for (Claim claim : Claim.getAll()) {
-            String name = claim.getName();
+            String name = index + ": " + claim.getOwner().getUniqueId() + "-" + claim.getName();
+            index ++;
             ConfigurationSection section = claimsConfig.getConfigurationSection(name);
             if (section == null) section = claimsConfig.createSection(name);
             //

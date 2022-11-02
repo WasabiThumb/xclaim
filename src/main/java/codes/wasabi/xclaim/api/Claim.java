@@ -478,7 +478,7 @@ public class Claim {
         // prevent ConcurrentModificationException
         for (Claim c : new HashSet<>(registry)) {
             if (c == this) continue;
-            if (c.name.equals(name)) {
+            if (c.name.equals(name) && c.owner == owner) {
                 c.unclaim();
                 continue;
             }
