@@ -199,6 +199,12 @@
             <systemPath>${project.basedir}/libs/Dynmap-3.3-beta-2-spigot.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.github.BlueMap-Minecraft</groupId>
+            <artifactId>BlueMapAPI</artifactId>
+            <version>v2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
@@ -225,7 +231,7 @@
         <dependency>
             <groupId>xyz.xenondevs</groupId>
             <artifactId>particle</artifactId>
-            <version>1.8.1</version>
+            <version>1.8.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
