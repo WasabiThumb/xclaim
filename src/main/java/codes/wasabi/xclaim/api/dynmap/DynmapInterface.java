@@ -47,10 +47,6 @@ public class DynmapInterface {
         return color;
     }
 
-    private @NotNull String getClaimIdentifier(@NotNull Claim claim) {
-        return new String(Base64.getEncoder().encode(claim.getName().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-    }
-
     private @NotNull MarkerSet getMarkerSet() {
         MarkerAPI api = dynmap.getMarkerAPI();
         MarkerSet ms = api.getMarkerSet("claim_marker_set");
@@ -64,7 +60,7 @@ public class DynmapInterface {
         World w = claim.getWorld();
         if (w == null) return null;
         MarkerSet set = getMarkerSet();
-        String identifier = "claim_marker_" + getClaimIdentifier(claim);
+        String identifier = "claim_marker_" + claim.getUniqueToken();
         AreaMarker marker = set.findAreaMarker(identifier);
         if (marker == null) {
             marker = set.createAreaMarker(identifier, claim.getName(), false, w.getName(), new double[]{ 0, 0 }, new double[]{ 0, 0 }, false);

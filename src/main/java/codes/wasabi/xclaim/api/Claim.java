@@ -524,9 +524,10 @@ public class Claim {
      */
     public boolean claim() {
         // prevent ConcurrentModificationException
+        String myToken = this.getUniqueToken();
         for (Claim c : new HashSet<>(registry)) {
             if (c == this) continue;
-            if (c.name.equals(name)) {
+            if (c.getUniqueToken().equals(myToken)) {
                 c.unclaim();
                 continue;
             }
