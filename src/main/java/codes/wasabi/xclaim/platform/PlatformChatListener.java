@@ -33,7 +33,7 @@ public interface PlatformChatListener extends Listener {
 
         @Override
         public int hashCode() {
-            return Objects.hash(ply, message, cancel);
+            return Objects.hash(ply.getUniqueId(), message, cancel);
         }
 
         @Override

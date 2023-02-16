@@ -255,12 +255,12 @@ public final class XClaim extends JavaPlugin {
         logger.log(Level.INFO, lang.get("claims-save"));
         Set<String> removeKeys = claimsConfig.getKeys(false);
         for (Claim claim : Claim.getAll()) {
-            String name = claim.getName();
-            ConfigurationSection section = claimsConfig.getConfigurationSection(name);
-            if (section == null) section = claimsConfig.createSection(name);
+            String token = claim.getUniqueToken();
+            ConfigurationSection section = claimsConfig.getConfigurationSection(token);
+            if (section == null) section = claimsConfig.createSection(token);
             //
             claim.serialize(section);
-            removeKeys.remove(name);
+            removeKeys.remove(token);
         }
         for (String key : removeKeys) claimsConfig.set(key, null);
         try {

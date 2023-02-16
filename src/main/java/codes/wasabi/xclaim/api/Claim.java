@@ -9,6 +9,7 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
 import codes.wasabi.xclaim.util.BoundingBox;
+import codes.wasabi.xclaim.util.StringUtil;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -16,6 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -199,6 +204,7 @@ public class Claim {
         this.owner = owner;
         this.globalPerms = new HashMap<>(globalPerms);
         this.playerPerms = new HashMap<>(playerPerms);
+        this.nameRepeatCheck();
         generateBounds();
     }
 
@@ -222,6 +228,7 @@ public class Claim {
             }
         }
         this.name = name;
+        this.nameRepeatCheck();
     }
 
     public XCPlayer getOwner() {
@@ -230,7 +237,48 @@ public class Claim {
 
     public void setOwner(@NotNull OfflinePlayer op) {
         this.owner = XCPlayer.of(op);
+        this.nameRepeatCheck();
         ownerChangeCallbacks.forEach((java.util.function.Consumer<Claim> consumer) -> consumer.accept(this));
+    }
+
+    private void nameRepeatCheck() {
+        if (this.owner == null) return;
+        String desiredName = this.name;
+        String targetName = this.name;
+        int i = 0;
+        UUID ownerId = this.owner.getUniqueId();
+        while (true) {
+            boolean ok = true;
+            for (Claim c : registry) {
+                if (c == this) continue;
+                if (c.owner == null || c.owner.getUniqueId() != ownerId) continue;
+                if (c.name.equalsIgnoreCase(targetName)) {
+                    i++;
+                    targetName = desiredName + " (" + i + ")";
+                    ok = false;
+                    break;
+                }
+            }
+            if (ok) break;
+        }
+        this.name = targetName;
+    }
+
+    public @NotNull String getUniqueToken() {
+        byte[] nameBytes = this.name.getBytes(StandardCharsets.UTF_8);
+        UUID uuid = this.owner.getUniqueId();
+        ByteBuffer digestBuffer = ByteBuffer.allocate(nameBytes.length + (Long.BYTES * 2));
+        digestBuffer.put(nameBytes);
+        digestBuffer.putLong(uuid.getMostSignificantBits());
+        digestBuffer.putLong(uuid.getLeastSignificantBits());
+        byte[] digest;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            digest = md.digest(digestBuffer.array());
+        } catch (NoSuchAlgorithmException e) {
+            digest = digestBuffer.array();
+        }
+        return StringUtil.bytesToHex(digest);
     }
 
     public void onOwnerChanged(@NotNull java.util.function.Consumer<Claim> callback) {
