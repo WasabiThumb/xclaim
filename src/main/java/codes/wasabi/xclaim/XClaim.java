@@ -3,12 +3,12 @@ package codes.wasabi.xclaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.GraceRoutine;
 import codes.wasabi.xclaim.api.MovementRoutine;
-import codes.wasabi.xclaim.api.dynmap.DynmapInterfaceFactory;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
+import codes.wasabi.xclaim.map.MapService;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.StreamUtil;
 import com.google.gson.*;
@@ -45,8 +45,6 @@ public final class XClaim extends JavaPlugin {
     public static FileConfiguration mainConfig;
     public static CommandManager commandManager;
     public static File jarFile;
-    public static boolean hasDynmap = false;
-    public static codes.wasabi.xclaim.api.dynmap.DynmapInterface dynmapInterface = null;
     public static File dataFolder;
     public static Lang lang;
 
@@ -169,8 +167,7 @@ public final class XClaim extends JavaPlugin {
     private void loadDynmap() {
         if (mainConfig.getBoolean("dynmap-integration.enabled", true)) {
             logger.log(Level.INFO, lang.get("dynmap-check"));
-            dynmapInterface = DynmapInterfaceFactory.createElseNull();
-            hasDynmap = dynmapInterface != null;
+            MapService.get();
         }
     }
 
@@ -290,11 +287,7 @@ public final class XClaim extends JavaPlugin {
     }
 
     private void unloadDynmap() {
-        if (hasDynmap) {
-            dynmapInterface.cleanup();
-        }
-        hasDynmap = false;
-        dynmapInterface = null;
+        MapService.unload();
     }
     /* END SHUTDOWN TASKS */
 

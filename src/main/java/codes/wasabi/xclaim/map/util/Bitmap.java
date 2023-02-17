@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.api.dynmap.outline;
+package codes.wasabi.xclaim.map.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

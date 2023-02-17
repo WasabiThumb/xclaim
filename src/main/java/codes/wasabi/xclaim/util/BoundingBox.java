@@ -81,4 +81,12 @@ public class BoundingBox {
         this.resize(newMinX, newMinY, newMinZ, newMaxX, newMaxY, newMaxZ);
     }
 
+    public Vector getMins() {
+        return new Vector(this.x1, this.y1, this.z1);
+    }
+
+    public Vector getMaxs() {
+        return new Vector(this.x2, this.y2, this.z2);
+    }
+
 }

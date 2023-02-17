@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.api.dynmap.outline;
+package codes.wasabi.xclaim.map.util;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

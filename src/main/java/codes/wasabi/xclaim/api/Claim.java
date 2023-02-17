@@ -5,6 +5,8 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.TrustLevel;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.gui.ChunkEditor;
+import codes.wasabi.xclaim.map.MapMarker;
+import codes.wasabi.xclaim.map.MapService;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
@@ -172,9 +174,10 @@ public class Claim {
     }
 
     private void validateMarkers() {
-        if (XClaim.hasDynmap) {
-            org.dynmap.markers.AreaMarker marker = XClaim.dynmapInterface.getMarker(this);
-            if (marker != null) XClaim.dynmapInterface.updateMarker(marker, this);
+        if (MapService.isAvailable()) {
+            MapService ms = MapService.getNonNull();
+            MapMarker marker = ms.getMarker(this);
+            if (marker != null) marker.update(this);
         }
     }
 
@@ -554,8 +557,9 @@ public class Claim {
         if (registry.remove(this)) {
             removeHandlers();
             ownerChangeCallbacks.clear();
-            if (XClaim.hasDynmap) {
-                org.dynmap.markers.AreaMarker marker = XClaim.dynmapInterface.getMarker(this);
+            if (MapService.isAvailable()) {
+                MapService ms = MapService.getNonNull();
+                MapMarker marker = ms.getMarker(this);
                 if (marker != null) marker.deleteMarker();
             }
             return true;

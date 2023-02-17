@@ -21,7 +21,7 @@ package codes.wasabi.xclaim.util.hull;
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-import codes.wasabi.xclaim.api.dynmap.outline.Point;
+import codes.wasabi.xclaim.map.util.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;
