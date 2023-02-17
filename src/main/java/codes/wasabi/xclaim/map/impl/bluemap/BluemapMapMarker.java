@@ -39,21 +39,32 @@ public class BluemapMapMarker implements MapMarker {
         return marker;
     }
 
+    private Shape buildShapeFromPoints(List<Point> points) {
+        Shape.Builder shapeBuilder = Shape.builder();
+        for (Point p : points) {
+            shapeBuilder.addPoint(Vector2d.from(p.x(), p.y()));
+        }
+        return shapeBuilder.build();
+    }
+
     @Override
     public void update(@NotNull Claim claim) {
         ChunkBitmap bmp = new ChunkBitmap(claim.getChunks());
-        Shape.Builder shapeBuilder = Shape.builder();
+        List<List<Point>> edges = bmp.traceBlocks(true);
 
-        for (Point p : bmp.traceBlocks()) {
-            shapeBuilder.addPoint(Vector2d.from(p.x(), p.y()));
-        }
+        if (edges.size() < 1) return;
 
-        Shape shape = shapeBuilder.build();
         this.marker.setShape(
-                shape,
+                this.buildShapeFromPoints(edges.get(0)),
                 this.marker.getShapeMinY(),
                 this.marker.getShapeMaxY()
         );
+
+        Collection<Shape> holes = this.marker.getHoles();
+        holes.clear();
+        for (int i=1; i < edges.size(); i++) {
+            holes.add(this.buildShapeFromPoints(edges.get(i)));
+        }
     }
 
     @Override

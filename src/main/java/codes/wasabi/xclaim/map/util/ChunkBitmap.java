@@ -86,9 +86,17 @@ public class ChunkBitmap implements Bitmap {
         return indices.contains(idx);
     }
 
-    public List<Point> traceBlocks() {
-        List<Point> points = Bitmap.super.trace();
+    private List<Point> transformPoints(List<Point> points) {
         return points.stream().map((Point p) -> p.product(16).sum(originX, originZ)).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public List<Point> traceBlocks() {
+        return transformPoints(Bitmap.super.trace());
+    }
+
+    public List<List<Point>> traceBlocks(boolean includeAll) {
+        return Bitmap.super.trace(includeAll)
+                .stream().map(this::transformPoints).collect(Collectors.toList());
     }
 
 }
