@@ -9,10 +9,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 public class BluemapMapService extends MapService {
 
-    private final Object apiInstance;
+    private final CompletableFuture<Object> apiInstanceFuture = new CompletableFuture<>();
 
     public BluemapMapService() throws MapServiceInitException {
         Class<?> apiClass = this.findClass("de.bluecolored.bluemap.api.BlueMapAPI", Object.class);
@@ -30,25 +33,49 @@ public class BluemapMapService extends MapService {
             throw new MapServiceInitException("BlueMap API gave an unexpected value");
         }
         if (optional.isPresent()) {
-            this.apiInstance = optional.get();
-            if (!apiClass.isInstance(this.apiInstance)) {
+            Object apiInstance = optional.get();
+            if (!apiClass.isInstance(apiInstance)) {
                 throw new MapServiceInitException(
                         "BlueMap API gave an instance of class " +
-                        "\"" + this.apiInstance.getClass().getName() + "\"" +
+                        "\"" + apiInstance.getClass().getName() + "\"" +
                         "that is not a subclass of \"" + apiClass.getName() + "\""
                 );
             }
+            this.apiInstanceFuture.complete(apiInstance);
         } else {
-            throw new MapServiceInitException("BlueMap API is not enabled");
+            try {
+                de.bluecolored.bluemap.api.BlueMapAPI.onEnable(this.apiInstanceFuture::complete);
+            } catch (Exception e) {
+                throw new MapServiceInitException("Uncategorized exception while attaching enable listener to BlueMap API");
+            }
         }
     }
 
     @Override
     public @Nullable MapMarker getMarker(@NotNull Claim claim) {
         try {
+            return this.getMarker(claim, this.apiInstanceFuture.get());
+        } catch (ExecutionException | InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public void getMarkerAsync(@NotNull Claim claim, @NotNull Consumer<@Nullable MapMarker> callback) {
+        if (this.apiInstanceFuture.isDone()) {
+            callback.accept(this.getMarker(claim));
+            return;
+        }
+        this.apiInstanceFuture.whenCompleteAsync((Object instance, Throwable t) -> {
+            if (instance != null) callback.accept(this.getMarker(claim, instance));
+        });
+    }
+
+    private @Nullable MapMarker getMarker(@NotNull Claim claim, @NotNull Object instance) {
+        try {
             return (MapMarker) Class.forName("codes.wasabi.xclaim.map.impl.bluemap.BluemapMapMarker")
                     .getDeclaredMethod("getMarker", Object.class, Claim.class)
-                    .invoke(null, this.apiInstance, claim);
+                    .invoke(null, instance, claim);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -56,10 +83,18 @@ public class BluemapMapService extends MapService {
 
     @Override
     public void cleanup() {
+        Object instance;
+        try {
+            instance = this.apiInstanceFuture.getNow(null);
+            if (instance == null) return;
+        } catch (Exception ignored) {
+            return;
+        }
+
         try {
             Class.forName("codes.wasabi.xclaim.map.impl.bluemap.BluemapMapMarker")
                     .getDeclaredMethod("cleanup", Object.class)
-                    .invoke(null, this.apiInstance);
+                    .invoke(null, instance);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

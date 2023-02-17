@@ -176,8 +176,9 @@ public class Claim {
     private void validateMarkers() {
         if (MapService.isAvailable()) {
             MapService ms = MapService.getNonNull();
-            MapMarker marker = ms.getMarker(this);
-            if (marker != null) marker.update(this);
+            ms.getMarkerAsync(this, (MapMarker marker) -> {
+                if (marker != null) marker.update(this);
+            });
         }
     }
 
@@ -559,8 +560,9 @@ public class Claim {
             ownerChangeCallbacks.clear();
             if (MapService.isAvailable()) {
                 MapService ms = MapService.getNonNull();
-                MapMarker marker = ms.getMarker(this);
-                if (marker != null) marker.deleteMarker();
+                ms.getMarkerAsync(this, (MapMarker marker) -> {
+                    if (marker != null) marker.deleteMarker();
+                });
             }
             return true;
         }

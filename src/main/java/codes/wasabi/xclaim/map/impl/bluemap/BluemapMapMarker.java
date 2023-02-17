@@ -138,7 +138,14 @@ public class BluemapMapMarker implements MapMarker {
                 .fillColor(new Color(
                         col.getRed(),
                         col.getGreen(),
-                        col.getBlue()
+                        col.getBlue(),
+                        0.2f
+                ))
+                .lineColor(new Color(
+                        col.getRed(),
+                        col.getGreen(),
+                        col.getBlue(),
+                        0.4f
                 ))
                 .build();
 
