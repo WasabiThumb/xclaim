@@ -30,6 +30,7 @@
   "services-stop": "Beende Dienste...",
   "chunk-editor-taken": "\u003cred\u003e* Dieser Chunk ist bereits besetzt!\u003c/red\u003e",
   "chunk-editor-wrong-world": "\u003cred\u003e* Sie können keine Chunks dieser Welt beanspruchen!\u003c/red\u003e",
+  "chunk-editor-protection-deny": "<red>* Ein Plugin zum Schutz der Region hindert Sie daran, diesen Chunk zu beanspruchen!</red>",
   "chunk-editor-adjacent": "\u003cred\u003e* Chunks in einem beanspruchten Gebiet müssen zusammenhängend sein!\u003c/red\u003e",
   "chunk-editor-max": "\u003cred\u003e* Sie haben das Maximum Ihrer beanspruchbaren Chunks erreicht! Versuchen Sie ein paar Ansprüche zu löschen.\u003c/red\u003e",
   "chunk-editor-add": "\u003cgreen\u003e* Chunk beansprucht bei: \u003c/green\u003e \u003cb\u003e\u003cgold\u003eX\u003c/gold\u003e\u003c/b\u003e\u003cwhite\u003e\u003d$1, \u003c/white\u003e\u003cb\u003e\u003cgold\u003eZ\u003c/gold\u003e\u003c/b\u003e\u003cwhite\u003e\u003d$2\u003c/white\u003e",

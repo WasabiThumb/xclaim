@@ -5,6 +5,8 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.platform.*;
+import codes.wasabi.xclaim.protection.ProtectionRegion;
+import codes.wasabi.xclaim.protection.ProtectionService;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
@@ -131,6 +133,23 @@ public class ChunkEditor {
                         if (w != null) {
                             if (!w.getName().equalsIgnoreCase(chunk.getWorld().getName())) {
                                 Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-wrong-world"));
+                                break;
+                            }
+                        }
+                        if (ProtectionService.isAvailable()) {
+                            ProtectionService service = ProtectionService.getNonNull();
+                            Collection<ProtectionRegion> regions = service.getRegionsAt(chunk);
+                            boolean all = true;
+                            for (ProtectionRegion region : regions) {
+                                EnumSet<ProtectionRegion.Permission> set = region.getPermissions(ply);
+                                boolean access = Arrays.stream(ProtectionRegion.Permission.values()).allMatch(set::contains);
+                                if (!access) {
+                                    all = false;
+                                    break;
+                                }
+                            }
+                            if (!all) {
+                                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-protection-deny"));
                                 break;
                             }
                         }

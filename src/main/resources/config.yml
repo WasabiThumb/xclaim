@@ -29,6 +29,9 @@ dynmap-integration:
   enabled: true
   use-old-outline-style: false
   debug: false
+worldguard-integration:
+  enabled: false
+  debug: false
 disable-paper-warning: false
 worlds:
   grace-time: 604800 # if a claim exists in a blacklisted world, the owner has this much time before it is removed (seconds)

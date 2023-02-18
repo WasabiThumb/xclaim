@@ -3,6 +3,9 @@ package codes.wasabi.xclaim.map;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.map.exception.MapServiceInitException;
+import codes.wasabi.xclaim.map.impl.bluemap.BluemapMapService;
+import codes.wasabi.xclaim.map.impl.dynmap.DynmapMapService;
+import codes.wasabi.xclaim.util.service.ServiceFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +29,11 @@ public abstract class MapService {
             instanceInit = true;
             return null;
         }
-        instance = MapServiceFactory.createElseNull();
+        ServiceFactory<MapService> factory = new ServiceFactory<>(
+                BluemapMapService.class,
+                DynmapMapService.class
+        );
+        instance = factory.createElseNull(XClaim.mainConfig.getBoolean("dynmap-integration.debug", false));
         instanceValid = instance != null;
         instanceInit = true;
         return instance;

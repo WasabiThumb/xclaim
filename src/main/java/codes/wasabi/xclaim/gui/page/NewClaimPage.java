@@ -7,6 +7,8 @@ import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.protection.ProtectionRegion;
+import codes.wasabi.xclaim.protection.ProtectionService;
 import codes.wasabi.xclaim.util.ConfigUtil;
 import codes.wasabi.xclaim.util.DisplayItem;
 import org.bukkit.Chunk;
@@ -82,6 +84,24 @@ public class NewClaimPage extends Page {
             if (!ConfigUtil.worldIsAllowed(XClaim.mainConfig, chunk.getWorld())) {
                 Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-disallowed"));
                 return;
+            }
+            if (ProtectionService.isAvailable()) {
+                ProtectionService service = ProtectionService.getNonNull();
+                Collection<ProtectionRegion> regions = service.getRegionsAt(chunk);
+                boolean all = true;
+                for (ProtectionRegion region : regions) {
+                    EnumSet<ProtectionRegion.Permission> set = region.getPermissions(ply);
+                    boolean access = Arrays.stream(ProtectionRegion.Permission.values()).allMatch(set::contains);
+                    if (!access) {
+                        all = false;
+                        break;
+                    }
+                }
+                if (!all) {
+                    Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-protection-deny"));
+                    getParent().close();
+                    return;
+                }
             }
             Claim cur = Claim.getByChunk(chunk);
             if (cur != null) {
