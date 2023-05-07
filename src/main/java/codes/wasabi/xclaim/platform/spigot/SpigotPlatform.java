@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,9 +89,14 @@ public abstract class SpigotPlatform extends Platform {
         return Bukkit.createInventory(holder, size, LegacyComponentSerializer.legacySection().serializeOrNull(name));
     }
 
+    @Contract(" -> new")
+    protected PlatformChatListener newChatListener() {
+        return new SpigotPlatformChatListener();
+    }
+
     @Override
     public @NotNull PlatformChatListener onChat() {
-        SpigotPlatformChatListener listener = new SpigotPlatformChatListener();
+        PlatformChatListener listener = this.newChatListener();
         Bukkit.getPluginManager().registerEvents(listener, XClaim.instance);
         return listener;
     }

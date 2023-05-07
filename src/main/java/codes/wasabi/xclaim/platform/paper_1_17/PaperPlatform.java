@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.platform.paper_1_17;
 
+import codes.wasabi.xclaim.platform.PlatformChatListener;
 import codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform_1_17;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -10,6 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PaperPlatform extends SpigotPlatform_1_17 {
+
+    @Override
+    protected PlatformChatListener newChatListener() {
+        return new PaperPlatformChatListener();
+    }
 
     @Override
     public @Nullable OfflinePlayer getOfflinePlayerIfCached(@NotNull String name) {
