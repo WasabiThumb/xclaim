@@ -25,11 +25,9 @@ You can download a build from the [releases tab](https://github.com/WasabiThumb/
 ## Features
 The main command is /xclaim (alias /xc). This allows players to create and manage their claims. Claims have several permissions that can be toggled, either by general groups (nobody, trusted players, veteran players, all players) or by individuals. The GUI also allows players to add/remove players from their trusted list.
 
-### Dynmap Integration
-Dynmap integration should work out-of-the-box as long as it is [configured properly](#config). If it does not, please create an Issue on the [Issues page](https://github.com/WasabiThumb/xclaim/issues).\
-View the Dynmap on the [HL21st Minecraft Server](https://www.planetminecraft.com/server/half-life-21st-century-humor-official/) live by clicking [here](http://hl21st.com:8104/).\
-\
-<img src="https://wasabicodes.xyz/cdn/e536fc60213f22701f2e55858f8f87f9/dynmap.png" alt="Dynmap integration working on the HL21st Minecraft Server, captured on 5/13/22" title="HL21st Minecraft Server" style="width: 30em">
+### Map Integration
+- Dynmap integration should work out-of-the-box as long as it is [configured properly](#config). If it does not, please create an Issue on the [Issues page](https://github.com/WasabiThumb/xclaim/issues).
+- BlueMap integration has also been supported since version 1.10.0.
 
 ### Importing from ClaimChunk
 This process should be done without any players online. The server should have ClaimChunk AND XClaim loaded at the same time. It's possible that you need PlaceholderAPI on the server as well while doing this (unverified), but you definitely don't need either ClaimChunk nor PlaceholderAPI for XClaim to work normally. Once all of those conditions are met, run /importclaims. This may take a while or be resource intensive (hasn't been tested at scale) since it will attempt to turn adjacent claimed chunks into one group.
