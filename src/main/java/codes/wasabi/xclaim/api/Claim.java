@@ -24,24 +24,38 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Claim {
 
     private static final Set<Claim> registry = new HashSet<>();
+    private static final ReentrantReadWriteLock registryLock = new ReentrantReadWriteLock();
 
     public static @NotNull @UnmodifiableView Set<Claim> getAll() {
-        return Collections.unmodifiableSet(registry);
+        Set<Claim> ret = new HashSet<>();
+        registryLock.readLock().lock();
+        try {
+            ret.addAll(registry);
+        } finally {
+            registryLock.readLock().unlock();
+        }
+        return Collections.unmodifiableSet(ret);
     }
 
     public static @Nullable Claim getByName(@NotNull String name, boolean ignoreCase) {
-        for (Claim c : registry) {
-            if (ignoreCase ? c.getName().equalsIgnoreCase(name) : c.getName().equals(name)) {
-                return c;
+        registryLock.readLock().lock();
+        try {
+            for (Claim c : registry) {
+                if (ignoreCase ? c.getName().equalsIgnoreCase(name) : c.getName().equals(name)) {
+                    return c;
+                }
             }
+            return null;
+        } finally {
+            registryLock.readLock().unlock();
         }
-        return null;
     }
 
     public static @Nullable Claim getByName(@NotNull String name) {
@@ -49,11 +63,16 @@ public class Claim {
     }
 
     public static @NotNull @UnmodifiableView Set<Claim> getByOwner(@NotNull XCPlayer owner) {
-        Set<Claim> set = new HashSet<>();
-        for (Claim c : registry) {
-            if (c.owner.getUniqueId().equals(owner.getUniqueId())) set.add(c);
+        registryLock.readLock().lock();
+        try {
+            Set<Claim> set = new HashSet<>();
+            for (Claim c : registry) {
+                if (c.owner.getUniqueId().equals(owner.getUniqueId())) set.add(c);
+            }
+            return Collections.unmodifiableSet(set);
+        } finally {
+            registryLock.readLock().unlock();
         }
-        return Collections.unmodifiableSet(set);
     }
 
     public static @NotNull @UnmodifiableView Set<Claim> getByOwner(@NotNull OfflinePlayer owner) {
@@ -61,14 +80,19 @@ public class Claim {
     }
 
     public static @Nullable Claim getByChunk(@NotNull Chunk chunk) {
-        for (Claim c : registry) {
-            for (Chunk chk : c.chunks) {
-                if (chk.getX() != chunk.getX()) continue;
-                if (chk.getZ() != chunk.getZ()) continue;
-                if (chk.getWorld().getName().equals(chunk.getWorld().getName())) return c;
+        registryLock.readLock().lock();
+        try {
+            for (Claim c : registry) {
+                for (Chunk chk : c.chunks) {
+                    if (chk.getX() != chunk.getX()) continue;
+                    if (chk.getZ() != chunk.getZ()) continue;
+                    if (chk.getWorld().getName().equals(chunk.getWorld().getName())) return c;
+                }
             }
+            return null;
+        } finally {
+            registryLock.readLock().unlock();
         }
-        return null;
     }
 
     public static @NotNull Claim deserialize(@NotNull ConfigurationSection section) throws IllegalArgumentException {
@@ -163,7 +187,7 @@ public class Claim {
     private XCPlayer owner;
     private final Map<Permission, TrustLevel> globalPerms;
     private final Map<UUID, EnumSet<Permission>> playerPerms;
-    private final List<java.util.function.Consumer<Claim>> ownerChangeCallbacks = new ArrayList<>();
+    private final List<java.util.function.Consumer<Claim>> ownerChangeCallbacks = Collections.synchronizedList(new ArrayList<>());
     private BoundingBox outerBounds;
     private boolean manageHandlers = false;
     private long graceStart = -1;
@@ -204,10 +228,10 @@ public class Claim {
 
     Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull XCPlayer owner, @NotNull Map<Permission, TrustLevel> globalPerms, @NotNull Map<UUID, EnumSet<Permission>> playerPerms) {
         this.name = name;
-        this.chunks = new HashSet<>(chunks);
+        this.chunks = Collections.synchronizedSet(new HashSet<>(chunks));
         this.owner = owner;
-        this.globalPerms = new HashMap<>(globalPerms);
-        this.playerPerms = new HashMap<>(playerPerms);
+        this.globalPerms = Collections.synchronizedMap(new HashMap<>(globalPerms));
+        this.playerPerms = Collections.synchronizedMap(new HashMap<>(playerPerms));
         this.nameRepeatCheck();
         generateBounds();
     }
@@ -541,7 +565,15 @@ public class Claim {
             }
         }
         manageHandlers = true;
-        if (registry.add(this)) {
+
+        boolean added;
+        registryLock.writeLock().lock();
+        try {
+            added = registry.add(this);
+        } finally {
+            registryLock.writeLock().unlock();
+        }
+        if (added) {
             updateHandlers();
             validateMarkers();
             return true;
@@ -555,7 +587,16 @@ public class Claim {
      */
     public boolean unclaim() {
         manageHandlers = false;
-        if (registry.remove(this)) {
+
+        boolean removed;
+        registryLock.writeLock().lock();
+        try {
+            removed = registry.remove(this);
+        } finally {
+            registryLock.writeLock().unlock();
+        }
+
+        if (removed) {
             removeHandlers();
             ownerChangeCallbacks.clear();
             if (MapService.isAvailable()) {

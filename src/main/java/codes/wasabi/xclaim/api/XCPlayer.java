@@ -9,10 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class XCPlayer {
+
+    private static final ReentrantReadWriteLock trustConfigLock = new ReentrantReadWriteLock();
 
     public static @NotNull XCPlayer of(@NotNull OfflinePlayer ply) {
         if (ply instanceof XCPlayer) return (XCPlayer) ply;
@@ -58,7 +61,13 @@ public class XCPlayer {
 
     public boolean playerTrusted(@NotNull OfflinePlayer player) {
         String query = player.getUniqueId().toString();
-        List<?> entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
+        List<?> entries;
+        trustConfigLock.readLock().lock();
+        try {
+            entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
+        } finally {
+            trustConfigLock.readLock().unlock();
+        }
         for (Object ob : entries) {
             if (ob instanceof String) {
                 if (Objects.equals(ob, query)) return true;
@@ -68,7 +77,13 @@ public class XCPlayer {
     }
 
     private @NotNull List<OfflinePlayer> getCurrentTrustedPlayers() {
-        List<?> entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
+        List<?> entries;
+        trustConfigLock.readLock().lock();
+        try {
+            entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
+        } finally {
+            trustConfigLock.readLock().unlock();
+        }
         List<OfflinePlayer> ret = new ArrayList<>();
         for (Object ob : entries) {
             if (ob instanceof String) {
@@ -83,7 +98,12 @@ public class XCPlayer {
 
     public void setTrustedPlayers(@NotNull List<OfflinePlayer> players) {
         List<String> list = players.stream().flatMap((OfflinePlayer op) -> Stream.of(op.getUniqueId().toString())).collect(Collectors.toList());
-        XClaim.trustConfig.set(uuidString, list);
+        trustConfigLock.writeLock().lock();
+        try {
+            XClaim.trustConfig.set(uuidString, list);
+        } finally {
+            trustConfigLock.writeLock().unlock();
+        }
     }
 
     private double[] getPermGroup() {

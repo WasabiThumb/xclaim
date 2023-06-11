@@ -15,6 +15,7 @@ softdepend:
   - WorldGuard
 description: A fully-featured chunk claiming system for community servers
 website: https://wasabi.codes/
+folia-supported: true
 permissions:
   xclaim.override:
     description: Allows you to overwrite claimed chunks
