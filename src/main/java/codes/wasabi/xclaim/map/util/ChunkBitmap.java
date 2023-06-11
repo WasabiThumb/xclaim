@@ -1,7 +1,9 @@
 package codes.wasabi.xclaim.map.util;
 
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ChunkReference;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -27,15 +29,15 @@ public class ChunkBitmap implements Bitmap {
         world = null;
     }
 
-    public ChunkBitmap(@NotNull Collection<Chunk> chunks) {
+    public ChunkBitmap(@NotNull Collection<ChunkReference> chunks) {
         setChunks(chunks);
     }
 
-    public ChunkBitmap(@NotNull Chunk @NotNull ... chunks) {
+    public ChunkBitmap(@NotNull ChunkReference @NotNull ... chunks) {
         setChunks(Arrays.asList(chunks));
     }
 
-    public void setChunks(@NotNull Collection<Chunk> chunks) {
+    public void setChunks(@NotNull Collection<ChunkReference> chunks) {
         indices.clear();
         if (chunks.size() == 0) {
             originX = 0;
@@ -48,21 +50,21 @@ public class ChunkBitmap implements Bitmap {
             int zMin = Integer.MAX_VALUE;
             int xMax = Integer.MIN_VALUE;
             int zMax = Integer.MIN_VALUE;
-            for (Chunk c : chunks) {
-                world = c.getWorld();
-                xMin = Math.min(xMin, c.getX());
-                xMax = Math.max(xMax, c.getX());
-                zMin = Math.min(zMin, c.getZ());
-                zMax = Math.max(zMax, c.getZ());
+            for (ChunkReference c : chunks) {
+                world = c.world;
+                xMin = Math.min(xMin, c.x);
+                xMax = Math.max(xMax, c.x);
+                zMin = Math.min(zMin, c.z);
+                zMax = Math.max(zMax, c.z);
             }
-            Chunk originChunk = world.getChunkAt(xMin, zMin);
-            Block originBlock = originChunk.getBlock(0, Platform.get().getWorldMinHeight(world), 0);
-            originX = originBlock.getX();
-            originZ = originBlock.getZ();
+            ChunkReference originChunk = new ChunkReference(world, xMin, zMin);
+            Location originBlock = originChunk.getLocation(0, Platform.get().getWorldMinHeight(world), 0);
+            originX = originBlock.getBlockX();
+            originZ = originBlock.getBlockZ();
             width = xMax - xMin + 1;
             height = zMax - zMin + 1;
-            for (Chunk c : chunks) {
-                indices.add(intToLong(c.getX() - xMin, c.getZ() - zMin));
+            for (ChunkReference c : chunks) {
+                indices.add(intToLong(c.x - xMin, c.z - zMin));
             }
         }
     }

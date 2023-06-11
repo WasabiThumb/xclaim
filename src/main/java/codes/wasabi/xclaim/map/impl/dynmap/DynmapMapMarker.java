@@ -7,8 +7,10 @@ import codes.wasabi.xclaim.map.util.ChunkBitmap;
 import codes.wasabi.xclaim.map.util.ClaimUtil;
 import codes.wasabi.xclaim.map.util.Point;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ChunkReference;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
@@ -43,10 +45,10 @@ public class DynmapMapMarker implements MapMarker {
         List<Point> points;
         if (XClaim.mainConfig.getBoolean("dynmap-integration.use-old-outline-style", false)) {
             points = new ArrayList<>();
-            for (Chunk c : claim.getChunks()) {
-                Block cornerBlock = c.getBlock(0, minHeight, 0);
-                int cornerX = cornerBlock.getX();
-                int cornerZ = cornerBlock.getZ();
+            for (ChunkReference c : claim.getChunks()) {
+                Location cornerBlock = c.getLocation(0, minHeight, 0);
+                int cornerX = cornerBlock.getBlockX();
+                int cornerZ = cornerBlock.getBlockZ();
                 points.add(new Point(cornerX, cornerZ));
                 points.add(new Point(cornerX + 16, cornerZ));
                 points.add(new Point(cornerX, cornerZ + 16));

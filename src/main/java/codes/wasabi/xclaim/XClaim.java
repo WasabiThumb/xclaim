@@ -186,16 +186,10 @@ public final class XClaim extends JavaPlugin {
     }
 
     private PlatformSchedulerTask autosaveTask = null;
-    private boolean performedFoliaLateInit = false;
+    private boolean performedAnyLoad = false;
     private void loadClaims() {
         if (this.autosaveTask != null) {
             this.autosaveTask.cancel();
-        }
-        if (Platform.get().hasFoliaScheduler()) {
-            if (!Bukkit.isGlobalTickThread()) {
-                Platform.get().getScheduler().synchronize(this::loadClaims);
-                return;
-            }
         }
         try {
             logger.log(Level.INFO, lang.get("claims-load"));
@@ -233,7 +227,7 @@ public final class XClaim extends JavaPlugin {
                 }
             }
         } finally {
-            this.performedFoliaLateInit = true;
+            this.performedAnyLoad = true;
         }
     }
 
@@ -272,7 +266,7 @@ public final class XClaim extends JavaPlugin {
     }
 
     private void saveClaims() {
-        if (!this.performedFoliaLateInit) return;
+        if (!this.performedAnyLoad) return;
         logger.log(Level.INFO, lang.get("claims-save"));
         Set<String> removeKeys = claimsConfig.getKeys(false);
         for (Claim claim : Claim.getAll()) {

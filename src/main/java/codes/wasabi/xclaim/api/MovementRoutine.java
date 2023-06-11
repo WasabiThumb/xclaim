@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.api;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ChunkReference;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -13,6 +14,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class MovementRoutine implements Listener {
 
@@ -38,10 +41,18 @@ public class MovementRoutine implements Listener {
 
     private MovementRoutine() { }
 
-    private boolean chunkSemanticEquals(Chunk a, Chunk b) {
-        if (a.getX() != b.getX()) return false;
-        if (a.getZ() != b.getZ()) return false;
-        return a.getWorld().getName().equals(b.getWorld().getName());
+    private boolean chunkSemanticEquals(Object a, Object b) {
+        int aType = (a instanceof Chunk ? 0 : (a instanceof ChunkReference ? 1 : 2));
+        int bType = (b instanceof Chunk ? 0 : (b instanceof ChunkReference ? 1 : 2));
+
+        if (aType > 1 || bType > 1) {
+            return aType == bType;
+        }
+
+        ChunkReference ar = (aType == 1) ? (ChunkReference) a : ChunkReference.ofChunk((Chunk) a);
+        ChunkReference br = (bType == 1) ? (ChunkReference) b : ChunkReference.ofChunk((Chunk) b);
+
+        return Objects.equals(ar, br);
     }
 
     @EventHandler
@@ -57,7 +68,7 @@ public class MovementRoutine implements Listener {
         boolean fromSet = false;
         boolean toSet = false;
         for (Claim candidate : Claim.getAll()) {
-            for (Chunk c : candidate.getChunks()) {
+            for (ChunkReference c : candidate.getChunks()) {
                 if (chunkSemanticEquals(c, fromChunk)) {
                     fromClaim = candidate;
                     fromSet = true;

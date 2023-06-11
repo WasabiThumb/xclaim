@@ -7,11 +7,13 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ChunkReference;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -74,7 +76,7 @@ public class ClaimSelectorPage extends Page {
                 slotAssoc.put(idx, claim);
                 List<Component> lore = new ArrayList<>();
                 lore.add(XClaim.lang.getComponent("gui-sel-owned", name));
-                Set<Chunk> chunks = claim.getChunks();
+                Set<ChunkReference> chunks = claim.getChunks();
                 int chunkCount = chunks.size();
                 if (chunkCount == 1) {
                     lore.add(XClaim.lang.getComponent("gui-sel-chunk-count", chunkCount));
@@ -82,9 +84,9 @@ public class ClaimSelectorPage extends Page {
                     lore.add(XClaim.lang.getComponent("gui-sel-chunk-count-plural", chunkCount));
                 }
                 if (chunkCount > 0) {
-                    Chunk c = chunks.iterator().next();
-                    Block b = c.getBlock(8, Platform.get().getWorldMinHeight(c.getWorld()), 8);
-                    lore.add(XClaim.lang.getComponent("gui-sel-first-chunk", b.getX(), b.getZ()));
+                    ChunkReference c = chunks.iterator().next();
+                    Location bl = c.getLocation(8, Platform.get().getWorldMinHeight(c.world), 8);
+                    lore.add(XClaim.lang.getComponent("gui-sel-first-chunk", bl.getBlockX(), bl.getBlockZ()));
                 }
                 if (i == 0 && addedWithin) {
                     lore.add(XClaim.lang.getComponent("gui-sel-within"));

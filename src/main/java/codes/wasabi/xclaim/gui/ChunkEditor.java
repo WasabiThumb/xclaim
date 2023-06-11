@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.platform.*;
 import codes.wasabi.xclaim.protection.ProtectionRegion;
 import codes.wasabi.xclaim.protection.ProtectionService;
+import codes.wasabi.xclaim.util.ChunkReference;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
@@ -159,9 +160,9 @@ public class ChunkEditor {
                             int targetX = chunk.getX();
                             int targetZ = chunk.getZ();
                             // gross
-                            for (Chunk c : claim.getChunks()) {
-                                int thisX = c.getX();
-                                int thisZ = c.getZ();
+                            for (ChunkReference c : claim.getChunks()) {
+                                int thisX = c.x;
+                                int thisZ = c.z;
                                 int leftX = thisX - 1;
                                 int rightX = thisX + 1;
                                 boolean leftMatch = targetX == leftX;

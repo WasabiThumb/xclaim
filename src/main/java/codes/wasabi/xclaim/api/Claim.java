@@ -11,6 +11,7 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
 import codes.wasabi.xclaim.util.BoundingBox;
+import codes.wasabi.xclaim.util.ChunkReference;
 import codes.wasabi.xclaim.util.StringUtil;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -83,10 +84,8 @@ public class Claim {
         registryLock.readLock().lock();
         try {
             for (Claim c : registry) {
-                for (Chunk chk : c.chunks) {
-                    if (chk.getX() != chunk.getX()) continue;
-                    if (chk.getZ() != chunk.getZ()) continue;
-                    if (chk.getWorld().getName().equals(chunk.getWorld().getName())) return c;
+                for (ChunkReference chk : c.chunks) {
+                    if (chk.matches(chunk)) return c;
                 }
             }
             return null;
@@ -111,7 +110,7 @@ public class Claim {
         if (worldName == null) throw new IllegalArgumentException("Missing property \"world\"");
         World world = Bukkit.getWorld(worldName);
         if (world == null) throw new IllegalArgumentException("No world with the name \"" + worldName + "\" could be found");
-        Set<Chunk> chunks = new HashSet<>();
+        Set<ChunkReference> chunks = new HashSet<>();
         ConfigurationSection sec;
         sec = section.getConfigurationSection("chunks");
         if (sec == null) throw new IllegalArgumentException("Missing property \"chunks\"");
@@ -120,8 +119,7 @@ public class Claim {
             if (sc == null) throw new IllegalArgumentException("Chunk with ID " + key + " is malformed!");
             int x = sc.getInt("x");
             int z = sc.getInt("z");
-            Chunk chunk = world.getChunkAt(x, z);
-            chunks.add(chunk);
+            chunks.add(new ChunkReference(world, x, z));
         }
         Map<Permission, TrustLevel> global = new HashMap<>();
         sec = section.getConfigurationSection("permissions");
@@ -175,7 +173,7 @@ public class Claim {
             }
             players.put(uuid, set);
         }
-        Claim ret = new Claim(name, chunks, XCPlayer.of(owner), global, players);
+        Claim ret = new Claim(name, chunks, XCPlayer.of(owner), global, players, -1);
         if (section.contains("graceStart")) {
             ret.graceStart = section.getLong("graceStart", -1);
         }
@@ -183,7 +181,7 @@ public class Claim {
     }
 
     private String name;
-    private final Set<Chunk> chunks;
+    private final Set<ChunkReference> chunks;
     private XCPlayer owner;
     private final Map<Permission, TrustLevel> globalPerms;
     private final Map<UUID, EnumSet<Permission>> playerPerms;
@@ -191,11 +189,6 @@ public class Claim {
     private BoundingBox outerBounds;
     private boolean manageHandlers = false;
     private long graceStart = -1;
-
-    private BoundingBox getChunkBounds(Chunk c) {
-        World w = c.getWorld();
-        return BoundingBox.of(c.getBlock(0, Platform.get().getWorldMinHeight(w), 0), c.getBlock(15, w.getMaxHeight() - 1, 15));
-    }
 
     private void validateMarkers() {
         if (MapService.isAvailable()) {
@@ -209,8 +202,8 @@ public class Claim {
     private void generateBounds() {
         BoundingBox bb = null;
         boolean set = false;
-        for (Chunk c : chunks) {
-            BoundingBox bounds = getChunkBounds(c);
+        for (ChunkReference c : chunks) {
+            BoundingBox bounds = c.getBounds();
             if (!set) {
                 bb = bounds;
                 set = true;
@@ -226,7 +219,7 @@ public class Claim {
         return outerBounds;
     }
 
-    Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull XCPlayer owner, @NotNull Map<Permission, TrustLevel> globalPerms, @NotNull Map<UUID, EnumSet<Permission>> playerPerms) {
+    Claim(@NotNull String name, @NotNull Set<ChunkReference> chunks, @NotNull XCPlayer owner, @NotNull Map<Permission, TrustLevel> globalPerms, @NotNull Map<UUID, EnumSet<Permission>> playerPerms, int dummy) {
         this.name = name;
         this.chunks = Collections.synchronizedSet(new HashSet<>(chunks));
         this.owner = owner;
@@ -236,12 +229,16 @@ public class Claim {
         generateBounds();
     }
 
+    Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull XCPlayer owner, @NotNull Map<Permission, TrustLevel> globalPerms, @NotNull Map<UUID, EnumSet<Permission>> playerPerms) {
+        this(name, chunks.stream().map(ChunkReference::ofChunk).collect(Collectors.toSet()), owner, globalPerms, playerPerms, -1);
+    }
+
     public Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull XCPlayer owner) {
-        this(name, new HashSet<>(chunks), owner, Collections.emptyMap(), Collections.emptyMap());
+        this(name, chunks, owner, Collections.emptyMap(), Collections.emptyMap());
     }
 
     public Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull OfflinePlayer owner) {
-        this(name, new HashSet<>(chunks), XCPlayer.of(owner), Collections.emptyMap(), Collections.emptyMap());
+        this(name, chunks, XCPlayer.of(owner), Collections.emptyMap(), Collections.emptyMap());
     }
 
     public String getName() {
@@ -313,13 +310,13 @@ public class Claim {
         ownerChangeCallbacks.add(callback);
     }
 
-    public @NotNull @UnmodifiableView Set<Chunk> getChunks() {
+    public @NotNull @UnmodifiableView Set<ChunkReference> getChunks() {
         return Collections.unmodifiableSet(chunks);
     }
 
     public @Nullable World getWorld() {
         if (chunks.size() > 0) {
-            return chunks.iterator().next().getWorld();
+            return chunks.iterator().next().world;
         }
         return null;
     }
@@ -335,25 +332,26 @@ public class Claim {
     public boolean addChunk(@NotNull Chunk chunk) throws IllegalArgumentException {
         boolean claim = false;
         if (chunks.size() > 0) {
-            World w = chunks.iterator().next().getWorld();
+            World w = chunks.iterator().next().world;
             if (w != chunk.getWorld()) throw new IllegalArgumentException("New chunks must be in the same world as previous chunks!");
         } else {
             claim = true;
         }
         boolean ret = true;
-        for (Chunk other : chunks) {
-            if (other.getX() != chunk.getX()) continue;
-            if (other.getZ() != chunk.getZ()) continue;
-            if (!other.getWorld().getName().equalsIgnoreCase(chunk.getWorld().getName())) continue;
-            ret = false;
+        for (ChunkReference other : chunks) {
+            if (other.matches(chunk)) {
+                ret = false;
+                break;
+            }
         }
-        if (ret) ret = chunks.add(chunk);
+        ChunkReference ref = ChunkReference.ofChunk(chunk);
+        if (ret) ret = chunks.add(ref);
         if (ret) {
             generateBounds();
             if (manageHandlers) {
                 for (Claim c : registry) {
                     if (c == this) continue;
-                    if (c.chunks.contains(chunk)) c.removeChunk(chunk);
+                    if (c.chunks.contains(ref)) c.removeChunk(chunk);
                 }
             } else if (claim) {
                 claim();
@@ -363,13 +361,12 @@ public class Claim {
     }
 
     public boolean removeChunk(@NotNull Chunk chunk) {
-        boolean ret = chunks.remove(chunk);
+        ChunkReference ref = ChunkReference.ofChunk(chunk);
+        boolean ret = chunks.remove(ref);
         if (!ret) {
-            Set<Chunk> toRemove = new HashSet<>();
-            for (Chunk chk : chunks) {
-                if (chk.getX() != chunk.getX()) continue;
-                if (chk.getZ() != chunk.getZ()) continue;
-                if (chk.getWorld().getName().equals(chunk.getWorld().getName()))  toRemove.add(chk);
+            Set<ChunkReference> toRemove = new HashSet<>();
+            for (ChunkReference chk : chunks) {
+                if (chk.matches(chunk)) toRemove.add(chk);
             }
             ret = chunks.removeAll(toRemove);
         }
@@ -384,12 +381,12 @@ public class Claim {
         org.bukkit.util.Vector vector = location.toVector();
         if (!outerBounds.contains(vector)) return false;
         boolean first = true;
-        for (Chunk c : getChunks()) {
+        for (ChunkReference c : getChunks()) {
             if (first) {
-                if (c.getWorld() != location.getWorld()) return false;
+                if (c.world != location.getWorld()) return false;
             }
             first = false;
-            if (getChunkBounds(c).contains(vector)) return true;
+            if (c.getBounds().contains(vector)) return true;
         }
         return false;
     }
@@ -485,15 +482,15 @@ public class Claim {
         ConfigurationSection sec;
         sec = section.getConfigurationSection("chunks");
         if (sec == null) sec = section.createSection("chunks");
-        Iterator<Chunk> iterator = chunks.iterator();
+        Iterator<ChunkReference> iterator = chunks.iterator();
         for (int i=0; i < chunks.size(); i++) {
-            Chunk chunk = iterator.next();
+            ChunkReference chunk = iterator.next();
             String key = Integer.toString(i);
             ConfigurationSection sc = sec.getConfigurationSection(key);
             if (sc == null) sc = sec.createSection(key);
-            sc.set("x", chunk.getX());
-            sc.set("z", chunk.getZ());
-            if (i == 0) section.set("world", chunk.getWorld().getName());
+            sc.set("x", chunk.x);
+            sc.set("z", chunk.z);
+            if (i == 0) section.set("world", chunk.world.getName());
         }
         sec = section.getConfigurationSection("permissions");
         if (sec == null) sec = section.createSection("permissions");

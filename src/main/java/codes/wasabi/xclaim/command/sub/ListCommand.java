@@ -6,6 +6,7 @@ import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.StandardTypes;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.util.ChunkReference;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Chunk;
@@ -84,12 +85,12 @@ public class ListCommand implements Command {
                     ret = ret.append(Component.newline()).append(Component.newline());
                 }
                 ret = ret.append(XClaim.lang.getComponent("cmd-list-claim-header", Integer.toString(i + 1), c.getName()));
-                Set<Chunk> chunks = c.getChunks();
+                Set<ChunkReference> chunks = c.getChunks();
                 int count = Math.min(maxChunks, chunks.size());
                 int z = 0;
-                for (Chunk chunk : chunks) {
+                for (ChunkReference chunk : chunks) {
                     if (z >= count) break;
-                    Location cornerLoc = chunk.getBlock(0, Platform.get().getWorldMinHeight(chunk.getWorld()), 0).getLocation();
+                    Location cornerLoc = chunk.getLocation(0, Platform.get().getWorldMinHeight(chunk.world), 0);
                     ret = ret.append(Component.newline());
                     ret = ret.append(Component.text("  "));
                     ret = ret.append(XClaim.lang.getComponent("cmd-list-claim-chunk", cornerLoc.getBlockX(), cornerLoc.getBlockZ()));
