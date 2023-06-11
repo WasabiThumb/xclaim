@@ -37,13 +37,13 @@ public class FoliaPlatformScheduler implements PlatformScheduler {
     public @NotNull PlatformSchedulerTask runTaskTimer(@NotNull Plugin plugin, @NotNull Runnable task, long delay, long period) {
         ScheduledTask ref = this.globalRegionScheduler.runAtFixedRate(plugin, (ScheduledTask t) -> {
             task.run();
-        }, delay, period);
+        }, Math.max(delay, 1L), Math.max(period, 1L));
         return new FoliaPlatformSchedulerTask(ref);
     }
 
     @Override
     public @NotNull PlatformSchedulerTask runTaskTimerAsynchronously(@NotNull Plugin plugin, @NotNull Runnable task, long delay, long period) {
-        long delayMillis = Math.max(Math.round((((double) delay) / 20d) * 1000d), 0L);
+        long delayMillis = Math.max(Math.round((((double) delay) / 20d) * 1000d), 1L);
         long periodMillis = Math.max(Math.round((((double) period) / 20d) * 1000d), 1L);
         ScheduledTask ref = this.asyncScheduler.runAtFixedRate(plugin, (ScheduledTask t) -> {
             task.run();
