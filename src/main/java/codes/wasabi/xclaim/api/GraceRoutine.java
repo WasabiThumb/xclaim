@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.api;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import codes.wasabi.xclaim.util.ConfigUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -13,7 +14,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class GraceRoutine implements Listener {
         stop();
     }
 
-    private final BukkitTask timerTask;
+    private final PlatformSchedulerTask timerTask;
     private final long graceTimeMillis;
     private final BukkitAudiences adv = Platform.getAdventure();
     private GraceRoutine() {
@@ -70,7 +70,7 @@ public class GraceRoutine implements Listener {
         // So we provide a lower limit of 200 ticks (about 10 seconds without lag) which any server should be
         // able to handle
         ticks = Math.min(ticks, 200L);
-        timerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(XClaim.instance, this::evaluate, 0L, ticks);
+        timerTask = Platform.get().getScheduler().runTaskTimerAsynchronously(XClaim.instance, this::evaluate, 0L, ticks);
     }
 
     private void evaluate() {

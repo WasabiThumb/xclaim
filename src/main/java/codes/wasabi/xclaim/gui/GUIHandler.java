@@ -4,8 +4,8 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui.page.MainPage;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformChatListener;
+import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -17,7 +17,6 @@ import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +38,7 @@ public class GUIHandler implements InventoryHolder, Listener {
     private final Inventory inventory;
     private Page page = null;
     private boolean open = true;
-    private BukkitTask tick = null;
+    private PlatformSchedulerTask tick = null;
     private boolean shouldTick = false;
     private final PlatformChatListener chatListener;
     public GUIHandler(@NotNull Player target) {
@@ -60,7 +59,7 @@ public class GUIHandler implements InventoryHolder, Listener {
     public void setShouldTick(boolean _tick) {
         if (_tick == shouldTick) return;
         if (_tick) {
-            tick = Bukkit.getScheduler().runTaskTimer(XClaim.instance, () -> {
+            tick = Platform.get().getScheduler().runTaskTimer(XClaim.instance, () -> {
                 if (page != null) {
                     page.onTick();
                 } else {

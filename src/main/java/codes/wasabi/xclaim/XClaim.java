@@ -10,6 +10,7 @@ import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.map.MapService;
 import codes.wasabi.xclaim.platform.Platform;
+import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import codes.wasabi.xclaim.util.StreamUtil;
 import com.google.gson.*;
 import net.kyori.adventure.text.Component;
@@ -22,7 +23,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -185,7 +185,7 @@ public final class XClaim extends JavaPlugin {
         }
     }
 
-    private BukkitTask autosaveTask = null;
+    private PlatformSchedulerTask autosaveTask = null;
     private void loadClaims() {
         if (this.autosaveTask != null) {
             this.autosaveTask.cancel();
@@ -221,7 +221,7 @@ public final class XClaim extends JavaPlugin {
             double interval = mainConfig.getDouble("auto-save.interval", 300d);
             if (interval > 0.0) {
                 long intervalTicks = Math.round(interval * 20d);
-                this.autosaveTask = Bukkit.getScheduler().runTaskTimer(this, this::saveClaims, 0L, intervalTicks);
+                this.autosaveTask = Platform.get().getScheduler().runTaskTimer(this, this::saveClaims, 0L, intervalTicks);
             }
         }
     }

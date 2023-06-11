@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.platform.spigot;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformChatListener;
+import codes.wasabi.xclaim.platform.PlatformScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
@@ -146,6 +147,17 @@ public abstract class SpigotPlatform extends Platform {
     @Override
     public void artificialElytraBoost(Player ply, ItemStack is) {
 
+    }
+
+    private SpigotPlatformScheduler scheduler = null;
+    private boolean schedulerInit = false;
+    @Override
+    public PlatformScheduler getScheduler() {
+        if (!this.schedulerInit) {
+            this.scheduler = new SpigotPlatformScheduler(this, Bukkit.getScheduler());
+            this.schedulerInit = true;
+        }
+        return scheduler;
     }
 
 }

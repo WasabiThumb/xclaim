@@ -1,12 +1,10 @@
 package codes.wasabi.xclaim.gui;
 
-import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -69,7 +67,7 @@ public abstract class Page {
         awaitCallback = ((String s) -> {
             awaiting = false;
             parent.setShouldTick(ticking);
-            Bukkit.getScheduler().runTask(XClaim.instance, () -> {
+            Platform.get().getScheduler().synchronize(() -> {
                 unsuspend();
                 callback.accept(s);
             });

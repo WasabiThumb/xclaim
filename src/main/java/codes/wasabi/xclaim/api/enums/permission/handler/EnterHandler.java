@@ -2,16 +2,14 @@ package codes.wasabi.xclaim.api.enums.permission.handler;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
-import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.platform.Platform;
-import org.bukkit.Bukkit;
+import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -25,11 +23,11 @@ public class EnterHandler extends PermissionHandler {
 
     private final Set<Player> occluding = new HashSet<>();
 
-    private BukkitTask task = null;
+    private PlatformSchedulerTask task = null;
     @Override
     protected void onRegister() {
         occluding.clear();
-        task = Bukkit.getScheduler().runTaskTimer(XClaim.instance, () -> {
+        task = Platform.get().getScheduler().runTaskTimer(XClaim.instance, () -> {
             for (Player ply : occluding) {
                 ply.damage(2);
             }
@@ -39,7 +37,7 @@ public class EnterHandler extends PermissionHandler {
     @Override
     protected void onUnregister() {
         if (task == null) return;
-        if (!Platform.get().bukkitTaskCancelled(task)) task.cancel();
+        if (!task.isCancelled()) task.cancel();
     }
 
     @EventHandler

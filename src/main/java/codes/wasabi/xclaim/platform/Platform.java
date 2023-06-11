@@ -37,7 +37,9 @@ public abstract class Platform {
             }
         }
         if (PaperLib.isVersion(17)) {
-            if (isPaper) {
+            if (isFolio()) {
+                instance = new codes.wasabi.xclaim.platform.folio_1_19.FolioPlatform();
+            } else if (isPaper) {
                 instance = new codes.wasabi.xclaim.platform.paper_1_17.PaperPlatform();
             } else {
                 instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform_1_17();
@@ -69,6 +71,15 @@ public abstract class Platform {
         }
         adventure = BukkitAudiences.create(XClaim.instance);
         initialized = true;
+    }
+
+    private static boolean isFolio() {
+        boolean folio = false;
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler");
+            folio = true;
+        } catch (Throwable ignored) { }
+        return folio;
     }
 
     public static void cleanup() {
@@ -208,5 +219,7 @@ public abstract class Platform {
     public abstract boolean playerIsGliding(Player ply);
 
     public abstract PlatformItemPickupListener getItemPickupListener();
+
+    public abstract PlatformScheduler getScheduler();
 
 }

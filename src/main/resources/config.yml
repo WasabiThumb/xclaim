@@ -30,7 +30,7 @@ dynmap-integration:
   use-old-outline-style: false
   debug: false
 worldguard-integration:
-  enabled: false
+  enabled: true
   debug: false
 disable-paper-warning: false
 worlds:
