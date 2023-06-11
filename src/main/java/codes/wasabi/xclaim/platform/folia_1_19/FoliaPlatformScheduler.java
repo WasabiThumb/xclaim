@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.platform.folio_1_19;
+package codes.wasabi.xclaim.platform.folia_1_19;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.PlatformScheduler;
@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public class FolioPlatformScheduler implements PlatformScheduler {
+public class FoliaPlatformScheduler implements PlatformScheduler {
 
     private final AsyncScheduler asyncScheduler;
     private final GlobalRegionScheduler globalRegionScheduler;
-    public FolioPlatformScheduler(AsyncScheduler asyncScheduler, GlobalRegionScheduler globalRegionScheduler) {
+    public FoliaPlatformScheduler(AsyncScheduler asyncScheduler, GlobalRegionScheduler globalRegionScheduler) {
         this.asyncScheduler = asyncScheduler;
         this.globalRegionScheduler = globalRegionScheduler;
     }
@@ -38,7 +38,7 @@ public class FolioPlatformScheduler implements PlatformScheduler {
         ScheduledTask ref = this.globalRegionScheduler.runAtFixedRate(plugin, (ScheduledTask t) -> {
             task.run();
         }, delay, period);
-        return new FolioPlatformSchedulerTask(ref);
+        return new FoliaPlatformSchedulerTask(ref);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FolioPlatformScheduler implements PlatformScheduler {
         ScheduledTask ref = this.asyncScheduler.runAtFixedRate(plugin, (ScheduledTask t) -> {
             task.run();
         }, delayMillis, periodMillis, TimeUnit.MILLISECONDS);
-        return new FolioPlatformSchedulerTask(ref);
+        return new FoliaPlatformSchedulerTask(ref);
     }
 
 }

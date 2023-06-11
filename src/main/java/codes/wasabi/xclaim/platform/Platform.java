@@ -37,8 +37,8 @@ public abstract class Platform {
             }
         }
         if (PaperLib.isVersion(17)) {
-            if (isFolio()) {
-                instance = new codes.wasabi.xclaim.platform.folio_1_19.FolioPlatform();
+            if (isFolia()) {
+                instance = new codes.wasabi.xclaim.platform.folia_1_19.FoliaPlatform();
             } else if (isPaper) {
                 instance = new codes.wasabi.xclaim.platform.paper_1_17.PaperPlatform();
             } else {
@@ -73,13 +73,13 @@ public abstract class Platform {
         initialized = true;
     }
 
-    private static boolean isFolio() {
-        boolean folio = false;
+    private static boolean isFolia() {
+        boolean folia = false;
         try {
             Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler");
-            folio = true;
+            folia = true;
         } catch (Throwable ignored) { }
-        return folio;
+        return folia;
     }
 
     public static void cleanup() {

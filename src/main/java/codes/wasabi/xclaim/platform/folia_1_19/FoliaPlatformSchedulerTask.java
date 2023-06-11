@@ -1,12 +1,12 @@
-package codes.wasabi.xclaim.platform.folio_1_19;
+package codes.wasabi.xclaim.platform.folia_1_19;
 
 import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 
-public class FolioPlatformSchedulerTask implements PlatformSchedulerTask {
+public class FoliaPlatformSchedulerTask implements PlatformSchedulerTask {
 
     private final ScheduledTask task;
-    public FolioPlatformSchedulerTask(ScheduledTask task) {
+    public FoliaPlatformSchedulerTask(ScheduledTask task) {
         this.task = task;
     }
 
