@@ -16,4 +16,9 @@ public class FoliaPlatform extends PaperPlatform {
         return scheduler;
     }
 
+    @Override
+    public boolean hasFoliaScheduler() {
+        return true;
+    }
+
 }

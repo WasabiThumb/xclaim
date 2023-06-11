@@ -186,43 +186,54 @@ public final class XClaim extends JavaPlugin {
     }
 
     private PlatformSchedulerTask autosaveTask = null;
+    private boolean performedFoliaLateInit = false;
     private void loadClaims() {
         if (this.autosaveTask != null) {
             this.autosaveTask.cancel();
         }
-        logger.log(Level.INFO, lang.get("claims-load"));
-        claimsFile = new File(dataFolder, "claims.yml");
-        claimsConfig = new YamlConfiguration();
+        if (Platform.get().hasFoliaScheduler()) {
+            if (!Bukkit.isGlobalTickThread()) {
+                Platform.get().getScheduler().synchronize(this::loadClaims);
+                return;
+            }
+        }
         try {
-            claimsConfig.load(claimsFile);
-        } catch (FileNotFoundException ignored) {
-        } catch (Exception e) {
-            logger.log(Level.WARNING, lang.get("claims-load-err"));
-            e.printStackTrace();
-        }
-        logger.log(Level.INFO, lang.get("claims-unpack"));
-        for (String key : claimsConfig.getKeys(false)) {
-            ConfigurationSection section = claimsConfig.getConfigurationSection(key);
-            if (section == null) {
-                logger.log(Level.WARNING, lang.get("claims-unpack-err", key, lang.get("claims-unpack-err-section")));
-                continue;
-            }
-            Claim claim;
+            logger.log(Level.INFO, lang.get("claims-load"));
+            claimsFile = new File(dataFolder, "claims.yml");
+            claimsConfig = new YamlConfiguration();
             try {
-                claim = Claim.deserialize(section);
-            } catch (IllegalArgumentException e) {
+                claimsConfig.load(claimsFile);
+            } catch (FileNotFoundException ignored) {
+            } catch (Exception e) {
+                logger.log(Level.WARNING, lang.get("claims-load-err"));
                 e.printStackTrace();
-                logger.log(Level.WARNING, lang.get("claims-unpack-err", key, e.getClass().getSimpleName()));
-                continue;
             }
-            claim.claim();
-        }
-        if (mainConfig.getBoolean("auto-save.enabled", true)) {
-            double interval = mainConfig.getDouble("auto-save.interval", 300d);
-            if (interval > 0.0) {
-                long intervalTicks = Math.round(interval * 20d);
-                this.autosaveTask = Platform.get().getScheduler().runTaskTimer(this, this::saveClaims, 0L, intervalTicks);
+            logger.log(Level.INFO, lang.get("claims-unpack"));
+            for (String key : claimsConfig.getKeys(false)) {
+                ConfigurationSection section = claimsConfig.getConfigurationSection(key);
+                if (section == null) {
+                    logger.log(Level.WARNING, lang.get("claims-unpack-err", key, lang.get("claims-unpack-err-section")));
+                    continue;
+                }
+                Claim claim;
+                try {
+                    claim = Claim.deserialize(section);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                    logger.log(Level.WARNING, lang.get("claims-unpack-err", key, e.getClass().getSimpleName()));
+                    continue;
+                }
+                claim.claim();
             }
+            if (mainConfig.getBoolean("auto-save.enabled", true)) {
+                double interval = mainConfig.getDouble("auto-save.interval", 300d);
+                if (interval > 0.0) {
+                    long intervalTicks = Math.round(interval * 20d);
+                    this.autosaveTask = Platform.get().getScheduler().runTaskTimer(this, this::saveClaims, 0L, intervalTicks);
+                }
+            }
+        } finally {
+            this.performedFoliaLateInit = true;
         }
     }
 
@@ -261,6 +272,7 @@ public final class XClaim extends JavaPlugin {
     }
 
     private void saveClaims() {
+        if (!this.performedFoliaLateInit) return;
         logger.log(Level.INFO, lang.get("claims-save"));
         Set<String> removeKeys = claimsConfig.getKeys(false);
         for (Claim claim : Claim.getAll()) {

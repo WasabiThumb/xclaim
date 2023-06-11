@@ -222,4 +222,6 @@ public abstract class Platform {
 
     public abstract PlatformScheduler getScheduler();
 
+    public abstract boolean hasFoliaScheduler();
+
 }

@@ -160,4 +160,9 @@ public abstract class SpigotPlatform extends Platform {
         return scheduler;
     }
 
+    @Override
+    public boolean hasFoliaScheduler() {
+        return false;
+    }
+
 }
