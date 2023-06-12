@@ -361,12 +361,15 @@ public class Claim {
     }
 
     public boolean removeChunk(@NotNull Chunk chunk) {
-        ChunkReference ref = ChunkReference.ofChunk(chunk);
+         return this.removeChunk(ChunkReference.ofChunk(chunk));
+    }
+
+    public boolean removeChunk(@NotNull ChunkReference ref) {
         boolean ret = chunks.remove(ref);
         if (!ret) {
             Set<ChunkReference> toRemove = new HashSet<>();
             for (ChunkReference chk : chunks) {
-                if (chk.matches(chunk)) toRemove.add(chk);
+                if (chk.equals(ref)) toRemove.add(chk);
             }
             ret = chunks.removeAll(toRemove);
         }
@@ -557,7 +560,7 @@ public class Claim {
                 continue;
             }
             for (Object object : c.chunks.toArray()) {
-                Chunk chunk = (Chunk) object;
+                ChunkReference chunk = (ChunkReference) object;
                 if (chunks.contains(chunk)) c.removeChunk(chunk);
             }
         }

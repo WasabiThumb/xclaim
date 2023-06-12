@@ -134,11 +134,16 @@ public final class XClaim extends JavaPlugin {
                 }
             }
             try {
+                boolean canCopyVerbatim = true;
                 try (InputStream is = Objects.requireNonNull(getResource("lang/" + bundled + ".json"))) {
-                    JsonObject model = gson.fromJson(new InputStreamReader(is), JsonObject.class);
+                    JsonObject model = gson.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), JsonObject.class);
                     for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
                         String key = entry.getKey();
-                        if (!curJson.has(key)) curJson.add(key, entry.getValue());
+                        if (!curJson.has(key)) {
+                            curJson.add(key, entry.getValue());
+                        } else {
+                            canCopyVerbatim = false;
+                        }
                     }
                 }
                 try (OutputStream os = new FileOutputStream(bundledFile, false)) {
