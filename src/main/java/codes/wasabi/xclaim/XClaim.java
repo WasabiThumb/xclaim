@@ -132,28 +132,31 @@ public final class XClaim extends JavaPlugin {
                 } catch (IOException e) {
                     XClaim.logger.log(Level.WARNING, "Failed to create \"" + bundledFile.getPath() + "\", continuing...");
                 }
-            }
-            try {
-                boolean canCopyVerbatim = true;
-                try (InputStream is = Objects.requireNonNull(getResource("lang/" + bundled + ".json"))) {
-                    JsonObject model = gson.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), JsonObject.class);
-                    for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
-                        String key = entry.getKey();
-                        if (!curJson.has(key)) {
-                            curJson.add(key, entry.getValue());
-                        } else {
-                            canCopyVerbatim = false;
+
+                try {
+                    boolean canCopyVerbatim = true;
+                    try (InputStream is = Objects.requireNonNull(getResource("lang/" + bundled + ".json"))) {
+                        JsonObject model = gson.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), JsonObject.class);
+                        for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
+                            String key = entry.getKey();
+                            if (!curJson.has(key)) {
+                                curJson.add(key, entry.getValue());
+                            } else {
+                                canCopyVerbatim = false;
+                            }
                         }
                     }
+                    logger.log(Level.INFO, "brabrabra");
+                    try (OutputStream os = new FileOutputStream(bundledFile, false)) {
+                        String json = gson.toJson(curJson);
+                        os.write(json.getBytes(StandardCharsets.UTF_8));
+                        os.flush();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                try (OutputStream os = new FileOutputStream(bundledFile, false)) {
-                    String json = gson.toJson(curJson);
-                    os.write(json.getBytes(StandardCharsets.UTF_8));
-                    os.flush();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
         }
         File langToUse = new File(langFolder, l + ".json");
         if (!langToUse.exists()) {
