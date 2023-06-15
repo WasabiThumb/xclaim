@@ -119,7 +119,7 @@ public final class XClaim extends JavaPlugin {
             boolean exists = bundledFile.exists();
             if (exists) {
                 try {
-                    curJson = gson.fromJson(new FileReader(bundledFile), JsonObject.class);
+                    curJson = gson.fromJson(new InputStreamReader(new FileInputStream(bundledFile), StandardCharsets.UTF_8), JsonObject.class);
                 } catch (Exception e) {
                     curJson = new JsonObject();
                 }
@@ -135,20 +135,28 @@ public final class XClaim extends JavaPlugin {
             }
             try {
                 boolean canCopyVerbatim = true;
+                byte[] verbatim;
                 try (InputStream is = Objects.requireNonNull(getResource("lang/" + bundled + ".json"))) {
-                    JsonObject model = gson.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), JsonObject.class);
-                    for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
-                        String key = entry.getKey();
-                        if (!curJson.has(key)) {
-                            curJson.add(key, entry.getValue());
-                        } else {
-                            canCopyVerbatim = false;
+                    verbatim = StreamUtil.readAllBytes(is);
+                    if (exists) {
+                        JsonObject model = gson.fromJson(new String(verbatim, StandardCharsets.UTF_8), JsonObject.class);
+                        for (Map.Entry<String, JsonElement> entry : model.entrySet()) {
+                            String key = entry.getKey();
+                            if (!curJson.has(key)) {
+                                curJson.add(key, entry.getValue());
+                            } else {
+                                if (!Objects.equals(curJson.get(key), entry.getValue())) canCopyVerbatim = false;
+                            }
                         }
                     }
                 }
                 try (OutputStream os = new FileOutputStream(bundledFile, false)) {
-                    String json = gson.toJson(curJson);
-                    os.write(json.getBytes(StandardCharsets.UTF_8));
+                    if (canCopyVerbatim) {
+                        os.write(verbatim);
+                    } else {
+                        String json = gson.toJson(curJson);
+                        os.write(json.getBytes(StandardCharsets.UTF_8));
+                    }
                     os.flush();
                 }
             } catch (Exception e) {
