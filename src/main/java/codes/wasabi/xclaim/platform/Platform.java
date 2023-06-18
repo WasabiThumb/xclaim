@@ -76,9 +76,13 @@ public abstract class Platform {
     private static boolean isFolia() {
         boolean folia = false;
         try {
-            Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler");
+            if (PaperLib.isVersion(20)) {
+                Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            } else {
+                Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
+            }
             folia = true;
-        } catch (Throwable ignored) { }
+        } catch (ClassNotFoundException ignored) { }
         return folia;
     }
 
