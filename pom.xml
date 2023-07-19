@@ -137,7 +137,7 @@
             <groupId>dev.folia</groupId>
             <artifactId>folia-api</artifactId>
             <version>1.19.4-R0.1-20230527.192927-40</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.papermc</groupId>
