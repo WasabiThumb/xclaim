@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.Locale;
+import java.util.UUID;
 
 public class SpigotPlatform_1_8 extends SpigotPlatform {
 
@@ -239,6 +240,12 @@ public class SpigotPlatform_1_8 extends SpigotPlatform {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setOwningPlayer(SkullMeta sm, UUID owner, String username) {
+        //noinspection deprecation - Still required for ancient versions
+        sm.setOwner(username);
     }
 
     @Override

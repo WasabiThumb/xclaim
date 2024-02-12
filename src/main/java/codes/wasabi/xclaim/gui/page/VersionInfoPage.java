@@ -22,11 +22,14 @@ import java.util.UUID;
 
 public class VersionInfoPage extends Page {
 
+    private static final UUID OWNER_UUID = UUID.fromString("938c730b-df4e-41eb-98fe-786835347c39");
+    private static final String OWNER_NAME = "Wasabi_Thumbs";
     private static final ItemStack VERSION_STACK;
+    private static final ItemStack AUTHOR_STACK;
 
     static {
-        ItemStack ver = new ItemStack(Material.BOOK, 1);
-        ItemMeta meta = ver.getItemMeta();
+        VERSION_STACK = new ItemStack(Material.BOOK, 1);
+        ItemMeta meta = VERSION_STACK.getItemMeta();
         if (meta != null) {
             PluginDescriptionFile description = XClaim.instance.getDescription();
             Platform p = Platform.get();
@@ -38,27 +41,19 @@ public class VersionInfoPage extends Page {
                     Component.text(XClaim.lang.get("gui-vinf-mc-version", apiVersion)).color(NamedTextColor.LIGHT_PURPLE)
             ));
         }
-        ver.setItemMeta(meta);
-        VERSION_STACK = ver;
-    }
+        VERSION_STACK.setItemMeta(meta);
 
-    private static final ItemStack AUTHOR_STACK;
-
-    static {
-        UUID authorID = new UUID(-7814744758566370837L, -7422362746895434695L);
-        OfflinePlayer author = Bukkit.getOfflinePlayer(authorID);
-        ItemStack skull = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
-        ItemMeta meta = skull.getItemMeta();
+        AUTHOR_STACK = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
+        meta = AUTHOR_STACK.getItemMeta();
         if (meta != null) {
             Platform p = Platform.get();
             p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(NamedTextColor.GOLD));
-            String name = author.getName();
-            if (name == null) name = "Wasabi_Thumbs";
-            p.metaLore(meta, Collections.singletonList(Component.text(name).color(NamedTextColor.LIGHT_PURPLE)));
-            if (meta instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) meta, author);
+            p.metaLore(meta, Collections.singletonList(Component.text(OWNER_NAME).color(NamedTextColor.LIGHT_PURPLE)));
+            if (meta instanceof SkullMeta) {
+                Platform.get().setOwningPlayer((SkullMeta) meta, OWNER_UUID, OWNER_NAME);
+            }
         }
-        skull.setItemMeta(meta);
-        AUTHOR_STACK = skull;
+        AUTHOR_STACK.setItemMeta(meta);
     }
 
     private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.get("gui-vinf-back"), NamedTextColor.RED);
