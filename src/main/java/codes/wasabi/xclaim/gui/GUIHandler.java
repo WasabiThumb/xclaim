@@ -137,8 +137,8 @@ public class GUIHandler implements InventoryHolder, Listener {
     @EventHandler
     public void onClick(@NotNull InventoryClickEvent event) {
         if (!check(event)) return;
-        if (page != null) page.onClick(event.getSlot());
         event.setCancelled(true);
+        if (page != null) page.onClick(event.getSlot());
     }
 
     @EventHandler
