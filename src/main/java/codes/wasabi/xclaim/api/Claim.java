@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 public class Claim {
 
-    private static final Set<Claim> registry = Collections.synchronizedSet(new HashSet<>());
+    private static final Set<Claim> registry = new HashSet<>();
     private static final ReentrantReadWriteLock registryLock = new ReentrantReadWriteLock();
 
     public static @NotNull @UnmodifiableView Set<Claim> getAll() {
