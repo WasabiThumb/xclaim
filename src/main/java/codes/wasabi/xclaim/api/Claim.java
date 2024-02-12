@@ -272,19 +272,24 @@ public class Claim {
         String targetName = this.name;
         int i = 0;
         UUID ownerId = this.owner.getUniqueId();
-        while (true) {
-            boolean ok = true;
-            for (Claim c : registry) {
-                if (c == this) continue;
-                if (c.owner == null || c.owner.getUniqueId() != ownerId) continue;
-                if (c.name.equalsIgnoreCase(targetName)) {
-                    i++;
-                    targetName = desiredName + " (" + i + ")";
-                    ok = false;
-                    break;
+        registryLock.readLock().lock();
+        try {
+            while (true) {
+                boolean ok = true;
+                for (Claim c : registry) {
+                    if (c == this) continue;
+                    if (c.owner == null || c.owner.getUniqueId() != ownerId) continue;
+                    if (c.name.equalsIgnoreCase(targetName)) {
+                        i++;
+                        targetName = desiredName + " (" + i + ")";
+                        ok = false;
+                        break;
+                    }
                 }
+                if (ok) break;
             }
-            if (ok) break;
+        } finally {
+            registryLock.readLock().unlock();
         }
         this.name = targetName;
     }
@@ -349,9 +354,14 @@ public class Claim {
         if (ret) {
             generateBounds();
             if (manageHandlers) {
-                for (Claim c : registry) {
-                    if (c == this) continue;
-                    if (c.chunks.contains(ref)) c.removeChunk(chunk);
+                registryLock.readLock().lock();
+                try {
+                    for (Claim c : registry) {
+                        if (c == this) continue;
+                        if (c.chunks.contains(ref)) c.removeChunk(chunk);
+                    }
+                } finally {
+                    registryLock.readLock().unlock();
                 }
             } else if (claim) {
                 claim();
