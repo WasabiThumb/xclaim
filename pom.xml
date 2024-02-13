@@ -6,7 +6,7 @@
 
     <groupId>codes.wasabi</groupId>
     <artifactId>xclaim</artifactId>
-    <version>1.10.5</version>
+    <version>1.11.0</version>
     <packaging>jar</packaging>
 
     <name>XClaim</name>
