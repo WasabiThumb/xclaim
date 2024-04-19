@@ -4,6 +4,7 @@
   "new-claim": "New Claim",
   "data-folder-created": "Created data folder",
   "locating-jar": "Locating JAR file",
+  "ext-dl": "Fetching required libraries...",
   "dynmap-check": "Checking for Dynmap",
   "dynmap-warn-core": "Failed to validate Dynmap core, proceeding anyways...",
   "dynmap-hooked": "Hooked into Dynmap version $1",

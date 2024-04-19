@@ -9,6 +9,7 @@ import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.map.MapService;
+import codes.wasabi.xclaim.particle.ParticleService;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import codes.wasabi.xclaim.util.StreamUtil;
@@ -63,6 +64,7 @@ public final class XClaim extends JavaPlugin {
         Platform.init();
         dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, lang.get("data-folder-created"));
+        ParticleService.init();
         locateJarFile();
         loadDynmap();
         loadTrustedPlayers();

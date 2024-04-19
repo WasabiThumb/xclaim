@@ -4,6 +4,7 @@
   "new-claim": "Neuer Gebietsanspruch",
   "data-folder-created": "Ordner erstellt",
   "locating-jar": "Suche nach JAR-Datei",
+  "ext-dl": "Notwendige Dateien laden...",
   "dynmap-check": "Suche nach Dynmap",
   "dynmap-warn-core": "Fehler beim validieren von Dynmap core! Setzte dennoch fort...",
   "dynmap-hooked": "Erfolgreich in Dynmap Version $1 eingehakt.",
