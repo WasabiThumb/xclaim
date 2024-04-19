@@ -1,9 +1,7 @@
 package codes.wasabi.xclaim.particle;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.particle.legacy.LegacyParticleService;
 import codes.wasabi.xclaim.particle.legacy.LegacyParticleServiceReflection;
-import codes.wasabi.xclaim.particle.spigot.SpigotParticleService;
 import io.papermc.lib.PaperLib;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Location;
@@ -32,15 +30,15 @@ public abstract class ParticleService {
                     if (PaperLib.isPaper()) {
                         INSTANCE = new codes.wasabi.xclaim.particle.paper.PaperParticleService();
                     } else {
-                        INSTANCE = new SpigotParticleService();
+                        INSTANCE = new codes.wasabi.xclaim.particle.spigot.SpigotParticleService();
                     }
                 } else {
                     LegacyParticleServiceReflection reflect = loadParticleLib();
-                    INSTANCE = new LegacyParticleService(reflect);
+                    INSTANCE = new codes.wasabi.xclaim.particle.legacy.LegacyParticleService(reflect);
                 }
             } catch (Exception e) {
                 XClaim.logger.log(Level.WARNING, "Failed to create preferred particle service", e);
-                INSTANCE = new SpigotParticleService();
+                INSTANCE = new codes.wasabi.xclaim.particle.spigot.SpigotParticleService();
             }
         }
         INIT = true;
