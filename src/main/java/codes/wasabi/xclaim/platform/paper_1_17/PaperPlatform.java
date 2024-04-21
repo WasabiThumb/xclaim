@@ -21,6 +21,11 @@ public class PaperPlatform extends SpigotPlatform_1_17 {
     }
 
     @Override
+    public void setOwningPlayer(SkullMeta sm, OfflinePlayer player) {
+        sm.setPlayerProfile(player.getPlayerProfile());
+    }
+
+    @Override
     protected PlatformChatListener newChatListener() {
         return new PaperPlatformChatListener();
     }
