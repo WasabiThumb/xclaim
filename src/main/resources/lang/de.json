@@ -110,7 +110,7 @@
   "gui-tx-no-line2": "\u003cgray\u003ein Sicherheit!\u003c/gray\u003e",
   "gui-tx-prompt": "\u003cgold\u003eGeben Sie den Namen des Nutzers in den Chat ein, an den der Besitz übertragen werden soll\u003c/gold\u003e",
   "gui-tx-prompt-fail": "\u003cred\u003e* Es konnte kein Spieler mit diesem Namen gefunden werden.\u003c/red\u003e",
-  "gui-tx-success": "\u003cgreen\u003e* Besitztum übertragen!\u003c/green\u003e",
+  "gui-tx-success": "\u003cgreen\u003e* Besitztum wurde übertragen!\u003c/green\u003e",
   "gui-comb-previous": "\u003cgold\u003eVorherige Seite\u003c/gold\u003e",
   "gui-comb-next": "\u003cgold\u003eNächste Seite\u003c/gold\u003e",
   "gui-comb-add": "\u003cgreen\u003eSpieler hinzufügen\u003c/green\u003e",
