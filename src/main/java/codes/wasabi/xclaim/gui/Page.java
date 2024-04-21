@@ -1,5 +1,6 @@
 package codes.wasabi.xclaim.gui;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -63,7 +64,9 @@ public abstract class Page {
         suspend();
         Player target = getTarget();
         target.playSound(target.getLocation(), Platform.get().getExpSound(), 1f, 1f);
-        awaitPrompt = prompt;
+        Audience audience = Platform.getAdventure().player(target);
+        audience.sendMessage(XClaim.lang.getComponent(prompt));
+        awaitPrompt = XClaim.lang.get(prompt);
         awaitCallback = ((String s) -> {
             awaiting = false;
             parent.setShouldTick(ticking);

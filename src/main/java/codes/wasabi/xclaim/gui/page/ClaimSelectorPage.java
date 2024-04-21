@@ -123,7 +123,7 @@ public class ClaimSelectorPage extends Page {
                 pageIndex--;
                 populate();
             } else {
-                prompt(XClaim.lang.get("gui-sel-prompt"), (String term) -> {
+                prompt("gui-sel-prompt", (String term) -> {
                     sorter = Comparator.comparingInt((Claim claim) -> LevenshteinDistance.getDefaultInstance().apply(claim.getName(), term));
                     populate();
                 });

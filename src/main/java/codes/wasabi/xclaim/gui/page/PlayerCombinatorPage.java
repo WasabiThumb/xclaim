@@ -118,13 +118,14 @@ public abstract class PlayerCombinatorPage extends Page {
         } else if (slot == 23) {
             goBack();
         } else if (slot == 21) {
-            prompt(XClaim.lang.get("gui-comb-prompt"), (String name) -> {
+            prompt("gui-comb-prompt", (String name) -> {
                 OfflinePlayer ply = NameToPlayer.getPlayer(name);
                 if (ply == null) {
                     Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-comb-prompt-fail"));
                     return;
                 }
                 add(ply);
+                Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-comb-prompt-success"));
                 populate();
             });
         } else if (slot < 18) {

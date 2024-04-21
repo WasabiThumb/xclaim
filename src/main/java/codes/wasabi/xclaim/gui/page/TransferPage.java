@@ -78,7 +78,7 @@ public class TransferPage extends Page {
     @Override
     public void onEnter() {
         clear();
-        prompt(XClaim.lang.get("gui-tx-prompt"), (String s) -> {
+        prompt("gui-tx-prompt", (String s) -> {
             List<Player> matches = Bukkit.matchPlayer(s);
             if (matches.size() < 1) {
                 Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-tx-prompt-fail"));

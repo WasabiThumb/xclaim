@@ -135,10 +135,11 @@ public class MainPage extends Page {
             case RENAME_CHUNK_POS:
                 switchPage(new ClaimSelectorPage(getParent(), claim -> {
                     switchPage(MainPage.this);
-                    prompt(XClaim.lang.get("gui-rename-chunk-prompt"), (String name) -> {
+                    prompt("gui-rename-chunk-prompt", (String name) -> {
                         if (name.length() > 50) {
                             Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-rename-chunk-fail"));
                         } else {
+                            Platform.getAdventure().player(getTarget()).sendMessage(XClaim.lang.getComponent("gui-rename-chunk-success"));
                             claim.setName(name);
                         }
                         switchPage(new MainPage(getParent()));
