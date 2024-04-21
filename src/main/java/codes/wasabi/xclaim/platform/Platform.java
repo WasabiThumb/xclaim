@@ -42,11 +42,11 @@ public abstract class Platform {
                 instance = new codes.wasabi.xclaim.platform.folia_1_19.FoliaPlatform();
             } else if (isPaper) {
                 instance = new codes.wasabi.xclaim.platform.paper_1_17.PaperPlatform();
+            } else if (PaperLib.isVersion(19)) {
+                instance = new codes.wasabi.xclaim.platform.spigot_1_19.SpigotPlatform_1_19();
             } else {
                 instance = new codes.wasabi.xclaim.platform.spigot_1_17.SpigotPlatform_1_17();
             }
-        } else if (PaperLib.isVersion(19)) {
-            instance = new codes.wasabi.xclaim.platform.spigot_1_19.SpigotPlatform_1_19();
         } else if (PaperLib.isVersion(16)) {
             instance = new codes.wasabi.xclaim.platform.spigot_1_16.SpigotPlatform_1_16();
         } else if (PaperLib.isVersion(15)) {
