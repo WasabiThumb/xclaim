@@ -51,7 +51,7 @@ public final class NameToPlayer {
                         + id.substring(20);
                 UUID uuid = UUID.fromString(uuidString);
                 return Bukkit.getOfflinePlayer(uuid);
-            } else if (code == 204 || code == 400) {
+            } else if (code == 204 || code == 400 || code == 404) {
                 return null;
             } else if (code == 405) {
                 throw new IllegalStateException("GET method is unsupported for this endpoint!");
