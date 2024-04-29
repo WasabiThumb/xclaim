@@ -5,6 +5,8 @@
   "data-folder-created": "已创建插件文件夹",
   "locating-jar": "正在寻找 JAR 文件",
   "ext-dl": "获取所需文件...",
+  "update-available-line1": "<yellow><b><gold>(!)</gold></b> XClaim 已发布更新 (<white>$1</white>)!</yellow>",
+  "update-available-line2": "<yellow><b><gold>(!)</gold></b> 使用 <click:run_command:'/xc update'><white>/xc update</white></click> 自动更新.</yellow>",
   "dynmap-check": "正在检查软前置 Dynmap 插件",
   "dynmap-warn-core": "找不到 Dynmap, 对接失败, 跳过该步骤中...",
   "dynmap-hooked": "成功对接至版本 $1 的 Dynmap",

@@ -1,23 +1,19 @@
 package codes.wasabi.xclaim.util;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.papermc.lib.PaperLib;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -69,17 +65,12 @@ public final class AutoUpdater {
     }
 
     private static final Gson gson = new Gson();
-    private static final Yaml yaml = new Yaml();
     private static boolean updated = false;
 
     public static @Nullable UpdateOption check() throws IOException {
         if (updated) return null;
         PluginDescriptionFile descriptionFile = XClaim.instance.getDescription();
         String pluginVersion = descriptionFile.getVersion();
-        String apiVersion = Platform.get().getApiVersion(descriptionFile);
-        if (apiVersion == null) {
-            apiVersion = "1." + PaperLib.getMinecraftVersion();
-        }
         URL listEndpoint = new URL("https://api.github.com/repos/WasabiThumb/xclaim/releases");
         URLConnection conn = listEndpoint.openConnection();
         conn.addRequestProperty("Accept", "application/json; charset=utf-8");
@@ -99,7 +90,7 @@ public final class AutoUpdater {
                 for (int z=0; z < assets.size(); z++) {
                     JsonObject asset = assets.get(z).getAsJsonObject();
                     String assetType = asset.get("content_type").getAsString();
-                    if (!assetType.equalsIgnoreCase("application/x-java-archive")) continue;
+                    if (!checkMime(assetType)) continue;
                     String name = asset.get("name").getAsString();
                     String assetUrl = asset.get("browser_download_url").getAsString();
                     if (name.toLowerCase(Locale.ROOT).startsWith("original-")) continue;
@@ -108,29 +99,8 @@ public final class AutoUpdater {
                     break;
                 }
                 if (assetLink == null) continue;
-                URL configURL = new URL("https://raw.githubusercontent.com/WasabiThumb/xclaim/" + tagName + "/src/main/resources/plugin.yml");
-                URLConnection cfgConn = configURL.openConnection();
-                cfgConn.addRequestProperty("Accept", "text/plain; charset=utf-8");
-                cfgConn.setDoInput(true);
-                cfgConn.setDoOutput(false);
-                cfgConn.connect();
-                try (InputStream cfgIs = cfgConn.getInputStream()) {
-                    Map<?, ?> map = (Map<?, ?>) yaml.load(cfgIs);
-                    String api = (String) map.get("api-version");
-                    String[] seg = api.split("\\.");
-                    String[] mySeg = apiVersion.split("\\.");
-                    if (seg.length > 0 && mySeg.length > 0) {
-                        if (!seg[0].equals(mySeg[0])) continue;
-                        if (seg.length > 1 && mySeg.length > 1) {
-                            int targetMinor = Integer.parseInt(seg[1]);
-                            int curMinor = Integer.parseInt(mySeg[1]);
-                            if (targetMinor > curMinor) continue;
-                        }
-                    }
-                    if (!api.equalsIgnoreCase(apiVersion)) continue;
-                } catch (Exception ignored) { }
-                String finalLink = assetLink;
-                String finalName = assetName;
+                final String finalLink = assetLink;
+                final String finalName = assetName;
                 return new UpdateOption(tagName, () -> {
                     if (updated) return null;
                     File pluginsFolder = XClaim.jarFile.getParentFile();
@@ -159,6 +129,20 @@ public final class AutoUpdater {
             }
         }
         return null;
+    }
+
+    private static final String MIME_PARTS_A = "application/";
+    private static final String MIME_PARTS_B = "java-archive";
+    private static boolean checkMime(String mime) {
+        final int len = mime.length();
+        if (len < 24) return false;
+        if (!mime.startsWith(MIME_PARTS_A)) return false;
+        int h = 12;
+        if (mime.charAt(h) == 'x') {
+            h++;
+            if (mime.charAt(h++) != '-') return false;
+        }
+        return mime.regionMatches(h, MIME_PARTS_B, 0, 12);
     }
 
 }

@@ -1,4 +1,4 @@
-# <img src="https://wasabicodes.xyz/cdn/15852266ddef4696b804677658f11651/xc_logo.png" alt="XClaim" title="XClaim" style="width: 12em">
+# <img src="doc/banner.png" alt="XClaim" title="XClaim" style="height: 4em">
 <h2>
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.md" title="Amerikanisches Englisch">🇬🇧</a>
 &nbsp;
@@ -7,12 +7,12 @@
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.zh.md" title="Vereinfachtes Chinesisch">🇨🇳</a>
 </h2>
 
-[![Java CI with Maven](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml)\
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Active%20Servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Aktive Server">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Active%20Players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Aktive Spieler">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Downloads&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843" alt="Downloads">
-<img src="https://shields.io/spiget/stars/102843" alt="Bewertungen">
+<img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/WasabiThumb/xclaim/maven.yml">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Active Servers">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Active Players">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Dstars&label=stars&cacheSeconds=3600" alt="Stars">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Ddownloads&label=downloads&cacheSeconds=3600" alt="Downloads">
 
 Ein besseres Chunk-anspruch Plugin für Paper Server.\
 *Verstanden? Es klingt wie exclaim...*\
@@ -112,16 +112,15 @@ Keine Sorge, es gibt nicht viele.
 | importclaims | Importiert beanspruchte Gebiete von ClaimChunk. |
 
 ## Unterstützte Versionen
-|         | 1.8 - 1.11 | 1.12 - 1.13 | 1.14 - 1.16 | 1.17 | 1.18 | 1.19 | 1.19.3 | Paper | Spigot |
-| --:     | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:   | :-:    |
-| < 1.3.1 | ❌   | ❌   | ❌   | ❔    | ✔    | ❌   | ❔    | ✔     | ❌     |
-| 1.3.1   | ❌   | ❌   | ❌   | ❔    | ✔    | ✔    | ❔    | ✔     | ❌     |
-| 1.4.0   | ❌   | ❌   | ❌   | ✔    | ✔    | ✔    | ❔    | ✔     | ❌     |
-| 1.5.0   | ❌   | ❌   | ❌   | ✔    | ✔    | ✔    | ❔    | ✔     | ✔      |
-| 1.8.0   | ❌   | ❌   | ✔    | ✔    | ✔    | ✔    | ❔    | ✔     | ✔      |
-| 1.9.0   | ❌   | ✔   | ✔    | ✔    | ✔    | ✔    | ❔    | ✔     | ✔      |
-| 1.9.1  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ❔    | ✔     | ✔      |
-| 1.10.0  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔    | ✔     | ✔      |
+|         | 1.8 - 1.11 | 1.12 - 1.13 | 1.14 - 1.16 | 1.17 - 1.19 | 1.20 | Folia | Paper & Spigot |
+| --:     | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  |
+| 1.5.0   | ❌   | ❌   | ❌   | ✔    | ❌    | ❌   | ✔     | 
+| 1.8.0   | ❌   | ❌   | ✔    | ✔    | ❌    | ❌    | ✔     | 
+| 1.9.0   | ❌   | ✔   | ✔    | ✔    |❌    | ❌    | ✔     |
+| 1.9.1  | ✔   | ✔   | ✔    | ✔    | ❌    | ❌    | ✔     | 
+| 1.10.0  | ✔   | ✔   | ✔    | ✔    | ✔    | ❌    | ✔     | 
+| 1.10.2  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔     |
+| 1.12.0  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔     | 
 
 Versionen vor 1.5.0 werden nicht länger unterstützt!
 

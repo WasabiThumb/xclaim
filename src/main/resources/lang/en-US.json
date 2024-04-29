@@ -5,6 +5,8 @@
   "data-folder-created": "Created data folder",
   "locating-jar": "Locating JAR file",
   "ext-dl": "Fetching required libraries...",
+  "update-available-line1": "<yellow><b><gold>(!)</gold></b> An update for XClaim is available (<white>$1</white>)!</yellow>",
+  "update-available-line2": "<yellow><b><gold>(!)</gold></b> Use <click:run_command:'/xc update'><white>/xc update</white></click> to update automatically.</yellow>",
   "dynmap-check": "Checking for Dynmap",
   "dynmap-warn-core": "Failed to validate Dynmap core, proceeding anyways...",
   "dynmap-hooked": "Hooked into Dynmap version $1",

@@ -1,4 +1,14 @@
-# <img src="https://wasabicodes.xyz/cdn/15852266ddef4696b804677658f11651/xc_logo.png" alt="XClaim" title="XClaim" style="width: 12em">
+# <img src="doc/banner.png" alt="XClaim" title="XClaim" style="height: 8em">
+
+<div align="center">
+<img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/WasabiThumb/xclaim/maven.yml">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Active Servers">
+<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Active Players">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Dstars&label=stars&cacheSeconds=3600" alt="Stars">
+<img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Ddownloads&label=downloads&cacheSeconds=3600" alt="Downloads">
+</div>
+<div align="center">
 <h2>
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.md" title="American English">🇬🇧</a>
 &nbsp;
@@ -6,18 +16,32 @@
 &nbsp;
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.zh.md" title="Chinese (Simplified)">🇨🇳</a>
 </h2>
-
-[![Java CI with Maven](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/WasabiThumb/xclaim/actions/workflows/maven.yml)
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Active%20Servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Active Servers">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Active%20Players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Active Players">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=Downloads&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843" alt="Downloads">
-<img src="https://shields.io/spiget/stars/102843" alt="Rating">
-
-A better chunk claim system for Paper servers\
-*Get it? It sounds like exclaim...*\
-\
-| [Installation](#installation) | [Features](#features) | [Config](#config) | [Permissions](#permissions) | [Commands](#commands) | [Support](#support) | [Roadmap](#roadmap) |
+</div>
+<div align="center">
+  <table>
+    <td>
+      <a href="#installation">Installation</a>
+    </td>
+    <td>
+      <a href="#features">Features</a>
+    </td>
+    <td>
+      <a href="#config">Config</a>
+    </td>
+    <td>
+      <a href="#permissions">Permissions</a>
+    </td>
+    <td>
+      <a href="#commands">Commands</a>
+    </td>
+    <td>
+      <a href="#support">Support</a>
+    </td>
+    <td>
+      <a href="#roadmap">Roadmap</a>
+    </td>
+  </table>
+</div>
 
 ## Installation
 You can download a build from the [releases tab](https://github.com/WasabiThumb/xclaim/releases) on the right, or [build the plugin yourself](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#build-the-project) if you want. Then, place the JAR into your plugins folder. Don't use the JAR labelled "original" unless you know what you are doing.
@@ -26,11 +50,11 @@ You can download a build from the [releases tab](https://github.com/WasabiThumb/
 The main command is /xclaim (alias /xc). This allows players to create and manage their claims. Claims have several permissions that can be toggled, either by general groups (nobody, trusted players, veteran players, all players) or by individuals. The GUI also allows players to add/remove players from their trusted list.
 
 ### Map Integration
-- Dynmap integration should work out-of-the-box as long as it is [configured properly](#config). If it does not, please create an Issue on the [Issues page](https://github.com/WasabiThumb/xclaim/issues).
+- Map integration should work out-of-the-box as long as it is [configured properly](#config). If it does not, please create an Issue on the [Issues page](https://github.com/WasabiThumb/xclaim/issues).
 - BlueMap integration has also been supported since version 1.10.0.
 
 ### Importing from ClaimChunk
-This process should be done without any players online. The server should have ClaimChunk AND XClaim loaded at the same time. It's possible that you need PlaceholderAPI on the server as well while doing this (unverified), but you definitely don't need either ClaimChunk nor PlaceholderAPI for XClaim to work normally. Once all of those conditions are met, run /importclaims. This may take a while or be resource intensive (hasn't been tested at scale) since it will attempt to turn adjacent claimed chunks into one group.
+This process should be done without any players online. The server should have ClaimChunk AND XClaim loaded at the same time. It's possible that you need PlaceholderAPI on the server as well while doing this, but you definitely don't need either ClaimChunk nor PlaceholderAPI for XClaim to work normally. Once all of those conditions are met, run /importclaims. This may take a while or be resource intensive since it will attempt to turn adjacent claimed chunks into one group.
 
 ### Languages
 As of version 1.6.x, multiple languages are supported. When the plugin starts, default language packs are loaded into ``/plugins/XClaim/lang``. Below are a list of default language packs:
@@ -110,17 +134,15 @@ Don't worry, there aren't that many.
 | importclaims | Import claims from ClaimChunk |
 
 ## Support
-|         | 1.8 - 1.11 | 1.12 - 1.13 | 1.14 - 1.16 | 1.17 | 1.18 | 1.19 | 1.19.4 | Folia | Paper | Spigot |
-| --:     | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:   | :-:   | :-:    |
-| < 1.3.1 | ❌   | ❌   | ❌   | ❔    | ✔    | ❌   | ❔    | ❔    | ✔     | ❌     |
-| 1.3.1   | ❌   | ❌   | ❌   | ❔    | ✔    | ✔    | ❔    | ❔    | ✔     | ❌     |
-| 1.4.0   | ❌   | ❌   | ❌   | ✔    | ✔    | ✔    | ❔    | ❔    | ✔     | ❌     |
-| 1.5.0   | ❌   | ❌   | ❌   | ✔    | ✔    | ✔    | ❔    | ❔    | ✔     | ✔      |
-| 1.8.0   | ❌   | ❌   | ✔    | ✔    | ✔    | ✔    | ❔    | ❔    | ✔     | ✔      |
-| 1.9.0   | ❌   | ✔   | ✔    | ✔    | ✔    | ✔    | ❔    | ❔    | ✔     | ✔      |
-| 1.9.1  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ❔    | ❔    | ✔     | ✔      |
-| 1.10.0  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔    | ❔    | ✔     | ✔      |
-| 1.10.2  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔    | ✔    | ✔     | ✔      |
+|         | 1.8 - 1.11 | 1.12 - 1.13 | 1.14 - 1.16 | 1.17 - 1.19 | 1.20 | Folia | Paper & Spigot |
+| --:     | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  |
+| 1.5.0   | ❌   | ❌   | ❌   | ✔    | ❌    | ❌   | ✔     | 
+| 1.8.0   | ❌   | ❌   | ✔    | ✔    | ❌    | ❌    | ✔     | 
+| 1.9.0   | ❌   | ✔   | ✔    | ✔    |❌    | ❌    | ✔     |
+| 1.9.1  | ✔   | ✔   | ✔    | ✔    | ❌    | ❌    | ✔     | 
+| 1.10.0  | ✔   | ✔   | ✔    | ✔    | ✔    | ❌    | ✔     | 
+| 1.10.2  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔     |
+| 1.12.0  | ✔   | ✔   | ✔    | ✔    | ✔    | ✔    | ✔     | 
 
 Versions before 1.5.0 are no longer supported
 
