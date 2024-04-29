@@ -18,9 +18,27 @@ import org.jetbrains.annotations.Range;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 
 public class UpdateCommand implements Command {
+
+    private static final Map<UUID, AutoUpdater.UpdateOption> map = new ConcurrentHashMap<>();
+    public static String initialCheck() {
+        AutoUpdater.UpdateOption opt;
+        try {
+            opt = AutoUpdater.check();
+        } catch (Exception ignored) {
+            return null;
+        }
+        if (opt == null) return null;
+        map.put(new UUID(0L, 0L), opt);
+        return opt.updateOption();
+    }
+
+    public UpdateCommand() {
+        map.clear();
+    }
 
     @Override
     public @NotNull String getName() {
@@ -57,7 +75,6 @@ public class UpdateCommand implements Command {
         return false;
     }
 
-    private final Map<UUID, AutoUpdater.UpdateOption> map = new HashMap<>();
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull Object @NotNull ... arguments) {
         Audience audience = Platform.getAdventure().sender(sender);

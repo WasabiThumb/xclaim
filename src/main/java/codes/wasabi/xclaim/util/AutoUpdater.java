@@ -1,23 +1,19 @@
 package codes.wasabi.xclaim.util;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.papermc.lib.PaperLib;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -69,7 +65,6 @@ public final class AutoUpdater {
     }
 
     private static final Gson gson = new Gson();
-    private static final Yaml yaml = new Yaml();
     private static boolean updated = false;
 
     public static @Nullable UpdateOption check() throws IOException {

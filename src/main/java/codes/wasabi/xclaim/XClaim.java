@@ -5,6 +5,7 @@ import codes.wasabi.xclaim.api.GraceRoutine;
 import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
+import codes.wasabi.xclaim.command.sub.UpdateCommand;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
@@ -14,6 +15,8 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import codes.wasabi.xclaim.util.StreamUtil;
 import com.google.gson.*;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
@@ -71,6 +74,7 @@ public final class XClaim extends JavaPlugin {
         loadClaims();
         startServices();
         logger.log(Level.INFO, lang.get("startup-done"));
+        checkForUpdates();
     }
 
     @Override
@@ -261,6 +265,22 @@ public final class XClaim extends JavaPlugin {
         MovementRoutine.initialize();
         logger.log(Level.INFO, lang.get("services-grace"));
         GraceRoutine.refresh();
+    }
+
+    private void checkForUpdates() {
+        Platform.get().getScheduler().runTaskAsynchronously(this, () -> {
+            String option = UpdateCommand.initialCheck();
+            if (option == null) return;
+            BukkitAudiences adventure = Platform.getAdventure();
+            Audience au = adventure.console();
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.isOp()) {
+                    au = Audience.audience(au, adventure.player(p));
+                }
+            }
+            au.sendMessage(lang.getComponent("update-available-line1", option));
+            au.sendMessage(lang.getComponent("update-available-line2"));
+        });
     }
     /* END STARTUP TASKS */
 

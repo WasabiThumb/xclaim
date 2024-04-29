@@ -51,4 +51,12 @@ public class FoliaPlatformScheduler implements PlatformScheduler {
         return new FoliaPlatformSchedulerTask(ref);
     }
 
+    @Override
+    public @NotNull PlatformSchedulerTask runTaskAsynchronously(@NotNull Plugin plugin, @NotNull Runnable task) {
+        ScheduledTask ref = this.asyncScheduler.runNow(plugin, (ScheduledTask t) -> {
+            task.run();
+        });
+        return new FoliaPlatformSchedulerTask(ref);
+    }
+
 }

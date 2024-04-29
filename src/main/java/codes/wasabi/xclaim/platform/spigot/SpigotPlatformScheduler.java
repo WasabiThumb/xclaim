@@ -40,4 +40,8 @@ public class SpigotPlatformScheduler implements PlatformScheduler {
         return new SpigotPlatformSchedulerTask(this.platform, this.scheduler.runTaskTimerAsynchronously(plugin, task, delay, period));
     }
 
+    @Override
+    public @NotNull PlatformSchedulerTask runTaskAsynchronously(@NotNull Plugin plugin, @NotNull Runnable task) {
+        return new SpigotPlatformSchedulerTask(this.platform, this.scheduler.runTaskAsynchronously(plugin, task));
+    }
 }

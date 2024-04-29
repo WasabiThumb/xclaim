@@ -11,4 +11,6 @@ public interface PlatformScheduler {
 
     @NotNull PlatformSchedulerTask runTaskTimerAsynchronously(@NotNull Plugin plugin, @NotNull Runnable task, long delay, long period);
 
+    @NotNull PlatformSchedulerTask runTaskAsynchronously(@NotNull Plugin plugin, @NotNull Runnable task);
+
 }
