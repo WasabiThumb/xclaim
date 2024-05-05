@@ -1,8 +1,8 @@
-<h1 style="display:flex;justify-content:center">
-<img src="doc/banner.png" alt="XClaim" title="XClaim" style="width: 70%; width: 100svh">
+<h1 align="center">
+<img src="doc/banner.png" alt="XClaim" title="XClaim" style="height: 6em">
 </h1>
 
-<div style="display:flex;justify-content:center;flex-wrap: wrap;">
+<div align="center">
 <img style="margin:0.3em" alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/WasabiThumb/xclaim/maven.yml">
 <img style="margin:0.3em" src="https://img.shields.io/badge/dynamic/json?color=informational&label=version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
 <img style="margin:0.3em" src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Active Servers">
@@ -11,7 +11,7 @@
 <img style="margin:0.3em" src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Ddownloads&label=downloads&cacheSeconds=3600" alt="Downloads">
 </div>
 
-<div style="display:flex;justify-content:center;flex-wrap: wrap;">
+<div align="center">
 <h2>
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.md" title="Amerikanisches Englisch">🇬🇧</a>
 &nbsp;
@@ -21,15 +21,15 @@
 </h2>
 </div>
 
-<div style="display:flex;justify-content:center;flex-wrap: wrap;">
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#Installation">Installation</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#Features">Features</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#Konfiguration">Konfiguration</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#Berechtigungen">Berechtigungen</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#Befehle">Befehle</a>
+<div align="center">
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#installation">Installation</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#features">Features</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#konfiguration">Konfiguration</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#berechtigungen">Berechtigungen</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#befehle">Befehle</a>
   <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#unterstützte-versionen">Unterstützte Versionen</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#Entwicklungsplan">Entwicklungsplan</a>
-</div>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#entwicklungsplan">Entwicklungsplan</a>
+</div><br>
 
 Ein besseres Chunk-Claiming Plugin für Paper Server.\
 *Verstanden? Es klingt wie exclaim...*
