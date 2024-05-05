@@ -1,14 +1,17 @@
-# <img src="doc/banner.png" alt="XClaim" title="XClaim" style="height: 8em">
+<h1 style="display:flex;justify-content:center">
+<img src="doc/banner.png" alt="XClaim" title="XClaim" style="width: 70%; width: 100svh">
+</h1>
 
-<div align="center">
-<img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/WasabiThumb/xclaim/maven.yml">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Active Servers">
-<img src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Active Players">
-<img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Dstars&label=stars&cacheSeconds=3600" alt="Stars">
-<img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Ddownloads&label=downloads&cacheSeconds=3600" alt="Downloads">
+<div style="display:flex;justify-content:center;flex-wrap: wrap;">
+<img style="margin:0.3em" alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/WasabiThumb/xclaim/maven.yml">
+<img style="margin:0.3em" src="https://img.shields.io/badge/dynamic/json?color=informational&label=version&query=%24.title&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F102843%2Fupdates%2Flatest" alt="Version">
+<img style="margin:0.3em" src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20servers&query=%24%5B0%5D%5B1%5D&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fservers%2Fdata%2F%3FmaxElements%3D1" alt="Active Servers">
+<img style="margin:0.3em" src="https://img.shields.io/badge/dynamic/json?color=informational&label=active%20players&query=%24[0][1]&url=https%3A%2F%2Fbstats.org%2Fapi%2Fv1%2Fplugins%2F16129%2Fcharts%2Fplayers%2Fdata%2F%3FmaxElements%3D1" alt="Active Players">
+<img style="margin:0.3em" src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Dstars&label=stars&cacheSeconds=3600" alt="Stars">
+<img style="margin:0.3em" src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Ddownloads&label=downloads&cacheSeconds=3600" alt="Downloads">
 </div>
-<div align="center">
+
+<div style="display:flex;justify-content:center;flex-wrap: wrap;">
 <h2>
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.md" title="American English">🇬🇧</a>
 &nbsp;
@@ -17,30 +20,15 @@
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.zh.md" title="Chinese (Simplified)">🇨🇳</a>
 </h2>
 </div>
-<div align="center">
-  <table>
-    <td>
-      <a href="#installation">Installation</a>
-    </td>
-    <td>
-      <a href="#features">Features</a>
-    </td>
-    <td>
-      <a href="#config">Config</a>
-    </td>
-    <td>
-      <a href="#permissions">Permissions</a>
-    </td>
-    <td>
-      <a href="#commands">Commands</a>
-    </td>
-    <td>
-      <a href="#support">Support</a>
-    </td>
-    <td>
-      <a href="#roadmap">Roadmap</a>
-    </td>
-  </table>
+
+<div style="display:flex;justify-content:center;flex-wrap: wrap;">
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#installation">Installation</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#features">Features</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#config">Config</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#permissions">Permissions</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#commands">Commands</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#support">Support</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#roadmap">Roadmap</a>
 </div>
 
 ## Installation
