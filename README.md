@@ -1,4 +1,6 @@
-# <img src="doc/banner.png" alt="XClaim" title="XClaim" style="height: 8em">
+<h1 align="center">
+<img src="doc/banner.png" alt="XClaim" title="XClaim" style="height: 6em">
+</h1>
 
 <div align="center">
 <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/WasabiThumb/xclaim/maven.yml">
@@ -8,6 +10,7 @@
 <img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Dstars&label=stars&cacheSeconds=3600" alt="Stars">
 <img src="https://img.shields.io/endpoint?url=https%3A%2F%2F8f2bde531f0d7a.lhr.life%2F%3Fmetric%3Ddownloads&label=downloads&cacheSeconds=3600" alt="Downloads">
 </div>
+
 <div align="center">
 <h2>
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.md" title="American English">🇬🇧</a>
@@ -17,30 +20,15 @@
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.zh.md" title="Chinese (Simplified)">🇨🇳</a>
 </h2>
 </div>
+
 <div align="center">
-  <table>
-    <td>
-      <a href="#installation">Installation</a>
-    </td>
-    <td>
-      <a href="#features">Features</a>
-    </td>
-    <td>
-      <a href="#config">Config</a>
-    </td>
-    <td>
-      <a href="#permissions">Permissions</a>
-    </td>
-    <td>
-      <a href="#commands">Commands</a>
-    </td>
-    <td>
-      <a href="#support">Support</a>
-    </td>
-    <td>
-      <a href="#roadmap">Roadmap</a>
-    </td>
-  </table>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#installation">Installation</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#features">Features</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#config">Config</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#permissions">Permissions</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#commands">Commands</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#support">Support</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#roadmap">Roadmap</a>
 </div>
 
 ## Installation
