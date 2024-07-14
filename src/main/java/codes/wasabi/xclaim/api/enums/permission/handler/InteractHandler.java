@@ -20,10 +20,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -143,6 +140,25 @@ public class InteractHandler extends PermissionHandler {
                     if (getClaim().contains(loc) && p.supportsArtificalElytraBoost()) {
                         event.setCancelled(true);
                         p.artificialElytraBoost(ply, is);
+
+                        PlayerInventory inv = ply.getInventory();
+                        ItemStack sample;
+                        int i = 0;
+                        final int size = inv.getSize();
+                        for (; i < size; i++) {
+                            sample = inv.getItem(i);
+                            if (sample == null) continue;
+                            if (sample.getType().equals(Platform.get().getFireworkRocketMaterial())) {
+                                if (sample.getAmount() > 1) {
+                                    sample.setAmount(sample.getAmount() - 1);
+                                    inv.setItem(i, sample);
+                                } else {
+                                    inv.setItem(i, null);
+                                }
+                                break;
+                            }
+                        }
+                        if (i == size) inv.remove(Platform.get().getFireworkRocketMaterial());
                     }
                     return true;
                 }
@@ -164,22 +180,23 @@ public class InteractHandler extends PermissionHandler {
     private Class<?>[] legacyContainerClasses = null;
     private boolean legacyIsContainer(BlockState bs) {
         if (legacyContainerClasses == null) {
-            List<Class<?>> classList = new ArrayList<>();
+            Class<?>[] classes = new Class<?>[legacyContainerClassNames.length];
+            int classCount = 0;
             for (String cn : legacyContainerClassNames) {
+                Class<?> clazz;
                 try {
-                    Class<?> clazz = Class.forName(cn);
-                    classList.add(clazz);
-                } catch (Exception ignored) { }
+                    clazz = Class.forName(cn);
+                } catch (Exception ignored) {
+                    continue;
+                }
+                classes[classCount++] = clazz;
             }
-            int size = classList.size();
-            legacyContainerClasses = new Class<?>[size];
-            boolean ret = false;
-            for (int i=0; i < size; i++) {
-                Class<?> c = classList.get(i);
-                if (!ret) ret = c.isInstance(bs);
-                legacyContainerClasses[i] = c;
+            if (classCount < classes.length) {
+                Class<?>[] cpy = new Class[classCount];
+                System.arraycopy(classes, 0, cpy, 0, classCount);
+                classes = cpy;
             }
-            return ret;
+            legacyContainerClasses = classes;
         }
         for (Class<?> c : legacyContainerClasses) {
             if (c.isInstance(bs)) return true;

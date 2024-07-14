@@ -34,6 +34,7 @@
   "chunk-editor-taken": "<red>* 该区块已被认领!</red>",
   "chunk-editor-wrong-world": "<red>* 你不能在此世界内在这个领地内添加更多领取的区块了!</red>",
   "chunk-editor-protection-deny": "<red>* 一个区域保护插件阻止你声明这个区块！</red>",
+  "chunk-editor-min-distance-deny": "<red>* 无法对您无权访问的另一个接近的索赔进行索赔！</red>",
   "chunk-editor-adjacent": "<red>* 认领区块必须相邻!</red>",
   "chunk-editor-max": "<red>* 你已经领取的区块到达了你能拥有的数量上限. 尝试删掉一些.</red>",
   "chunk-editor-add": "<green>* 领取了区块</green> <b><gold>X</gold></b><white>=$1, </white><b><gold>Z</gold></b><white>=$2</white>",

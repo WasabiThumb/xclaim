@@ -34,6 +34,7 @@
   "chunk-editor-taken": "<red>* This chunk is already taken!</red>",
   "chunk-editor-wrong-world": "<red>* You can't add chunks from this world to this claim!</red>",
   "chunk-editor-protection-deny": "<red>* A region protection plugin is blocking you from claiming this chunk!</red>",
+  "chunk-editor-min-distance-deny": "<red>* Cannot claim this close to another claim you do not have access to!</red>",
   "chunk-editor-adjacent": "<red>* Chunks in your claim must be next to each other!</red>",
   "chunk-editor-max": "<red>* You've reached your maximum number of chunks. Try deleting some.</red>",
   "chunk-editor-add": "<green>* Claimed chunk at</green> <b><gold>X</gold></b><white>=$1, </white><b><gold>Z</gold></b><white>=$2</white>",
