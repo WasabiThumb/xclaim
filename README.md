@@ -121,6 +121,18 @@ Don't worry, there aren't that many.
 | xclaim list | Lists all claims a player owns |
 | importclaims | Import claims from ClaimChunk |
 
+## Placeholders
+PlaceholderAPI integration was added in plugin version 1.13
+| Name | Description |
+| --: | :-- |
+| xclaim_claim_count | Number of claims a player owns |
+| xclaim_claim_count_in_*world* | Number of claims a player owns in *world* |
+| xclaim_claim_max | Maximum number of claims a player could own |
+| xclaim_chunk_count | Aggregate number of chunks a player owns |
+| xclaim_chunk_count_in_*world* | Aggregate number of chunks a player owns in *world* |
+| xclaim_chunk_max | Maximum number of chunks a player can have in **one claim** |
+| xclaim_chunk_max_abs | Maximum number of chunks a player could own, if the player had as many claims as they possibly could and each claim had as many chunks as they possibly could |
+
 ## Support
 |         | 1.8 - 1.11 | 1.12 - 1.13 | 1.14 - 1.16 | 1.17 - 1.19 | 1.20 | Folia | Paper & Spigot |
 | --:     | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  | :-:  |

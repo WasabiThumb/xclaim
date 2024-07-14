@@ -47,7 +47,7 @@ public class WorldGuardProtectionService extends ProtectionService {
         for (int x=0; x < 16; x++) {
             for (int z=0; z < 16; z++) {
                 Block b = chunk.getBlock(x, 0, z);
-                vectors.add(com.sk89q.worldedit.math.BlockVector2.at(
+                vectors.add(createWorldEditBlockVector2(
                         b.getX(),
                         b.getZ()
                 ));
@@ -64,6 +64,17 @@ public class WorldGuardProtectionService extends ProtectionService {
         }
 
         return Collections.unmodifiableList(ret);
+    }
+
+    private static com.sk89q.worldedit.math.BlockVector2 createWorldEditBlockVector2(int x, int z) {
+        try {
+            Class<?> clazz = Class.forName("com.sk89q.worldedit.math.BlockVector2");
+            Method m = clazz.getDeclaredMethod("at", Integer.TYPE, Integer.TYPE);
+            Object o = m.invoke(null, x, z);
+            return (com.sk89q.worldedit.math.BlockVector2) o;
+        } catch (ReflectiveOperationException | SecurityException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 }
