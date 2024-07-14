@@ -5,6 +5,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -25,6 +26,10 @@ public class ChunkReference {
 
     public Chunk toChunk() {
         return this.world.getChunkAt(this.x, this.z);
+    }
+
+    public @NotNull ChunkReference getRelative(int mx, int mz) {
+        return new ChunkReference(this.world, this.x + mx, this.z + mz);
     }
 
     public Location getLocation(double x, double y, double z) {
@@ -57,6 +62,12 @@ public class ChunkReference {
         return Objects.equals(this.world.getUID(), chunk.getWorld().getUID());
     }
 
+    public boolean matches(ChunkReference other) {
+        return Objects.equals(this.world.getUID(), other.world.getUID())
+                && this.x == other.x
+                && this.z == other.z;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(this.world.getUID(), this.x, this.z);
@@ -66,12 +77,7 @@ public class ChunkReference {
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (obj instanceof ChunkReference) {
-            ChunkReference other = (ChunkReference) obj;
-            if (
-                    Objects.equals(this.world.getUID(), other.world.getUID())
-                    && this.x == other.x
-                    && this.z == other.z
-            ) return true;
+            if (this.matches((ChunkReference) obj)) return true;
         }
         return super.equals(obj);
     }

@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.gui;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
+import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.particle.ParticleBuilder;
 import codes.wasabi.xclaim.particle.ParticleEffect;
@@ -15,7 +16,6 @@ import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -152,6 +152,10 @@ public class ChunkEditor {
                                 Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-protection-deny"));
                                 break;
                             }
+                        }
+                        if (violatesDistanceCheck(ply, chunk)) {
+                            Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-min-distance-deny"));
+                            break;
                         }
                         if (XClaim.mainConfig.getBoolean("enforce-adjacent-claim-chunks", true)) {
                             boolean diagonals = XClaim.mainConfig.getBoolean("allow-diagonal-claim-chunks", true);
@@ -445,6 +449,41 @@ public class ChunkEditor {
         }
         editingMap.remove(uuid);
         return true;
+    }
+
+    public static boolean violatesDistanceCheck(Player owner, Chunk chunk) {
+        double minDistance = XClaim.mainConfig.getDouble("claim-min-distance", 0d);
+        if (minDistance < 1d) return false;
+        if (minDistance > 16d) {
+            // TODO: Maybe generate a warning here? Checking over 256 chunks just to honor a (probably mistakenly) bad config seems dicey.
+            minDistance = 16d;
+        }
+
+        final int range = (int) Math.ceil(minDistance);
+        final double minDistanceSqr = minDistance * minDistance;
+        final ChunkReference start = ChunkReference.ofChunk(chunk);
+        double distSqr;
+
+        boolean xZero;
+        for (int mX=(-range); mX <= range; mX++) {
+            xZero = (mX == 0);
+            for (int mZ=(-range); mZ <= range; mZ++) {
+                if (xZero && mZ == 0) {
+                    continue;
+                }
+                distSqr = (mX * mX) + (mZ * mZ);
+                if (distSqr > minDistanceSqr) continue;
+
+                Claim c = Claim.getByChunk(start.getRelative(mX, mZ));
+                if (c == null) continue;
+                if (c.getOwner().getUniqueId().equals(owner.getUniqueId())) continue;
+                if (c.hasPermission(owner, Permission.MANAGE)) continue;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

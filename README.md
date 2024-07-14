@@ -75,6 +75,7 @@ See all options in the [config section](#config).
 | exempt-claim-owner-from-permission-rules | If claim owners should have access to all permissions on the claim implicitly. You shouldn't change this, it's mainly for debugging | true |
 | enforce-adjacent-claim-chunks | Whether chunks in a claim must be next to each other | true |
 | allow-diagonal-claim-chunks | If enforce-adjacent-claim-chunks is true, this sets if chunks diagonal from each other are considered as "next to" each other. Otherwise, does nothing. | true |
+| claim-min-distance | If greater than 0, determines the minimum distance between chunks claimed by different players | 0 |
 | enter-chunk-editor-on-create | If true, then players will enter the chunk editor when they make a new claim | true |
 | use-economy | Whether to use economy features | false |
 | limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-chunks | Sets the max chunks for a group. See Permissions for more info. | |

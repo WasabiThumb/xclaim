@@ -9,6 +9,7 @@ exempt-claim-owner-from-permission-rules: true
 enforce-adjacent-claim-chunks: true
 allow-diagonal-claim-chunks: true
 enter-chunk-editor-on-create: true
+claim-min-distance: 0 # minimum distance (in chunks) between claimed chunks owned by different players
 use-economy: false
 limits:
   default:
