@@ -50,13 +50,18 @@ public class XClaimPlaceholderExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-        int argStart = params.lastIndexOf('_');
-        if (argStart != -1) {
-            String key = params.substring(0, argStart).toLowerCase(Locale.ROOT);
-            Placeholder withArg = this.withArgMap.get(key);
-            if (withArg != null) return withArg.computeFor(player, params.substring(argStart + 1));
+        final int len = params.length();
+        final String lower = params.toLowerCase(Locale.ROOT);
+        char c;
+        for (int i=(len - 1); i >= 0; i--) {
+            c = lower.charAt(i);
+            if (c == '_') {
+                Placeholder withArg = this.withArgMap.get(lower.substring(0, i));
+                if (withArg != null) return withArg.computeFor(player, params.substring(i + 1));
+            }
         }
-        Placeholder withoutArg = this.withoutArgMap.get(params.toLowerCase(Locale.ROOT));
+
+        Placeholder withoutArg = this.withoutArgMap.get(lower);
         if (withoutArg != null) return withoutArg.computeFor(player, null);
         return null;
     }
