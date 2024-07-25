@@ -5,6 +5,7 @@ stop-editing-on-leave: true
 auto-save:
   enabled: true
   interval: 300 # measured in seconds
+  silent: false # set to true to disable auto-save messages
 exempt-claim-owner-from-permission-rules: true
 enforce-adjacent-claim-chunks: true
 allow-diagonal-claim-chunks: true

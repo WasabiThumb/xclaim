@@ -82,7 +82,7 @@ public final class XClaim extends JavaPlugin {
     @Override
     public void onDisable() {
         saveTrustedPlayers();
-        saveClaims();
+        saveClaims(false);
         stopServices();
         Platform.cleanup();
         logger.log(Level.INFO, lang.get("disable-done"));
@@ -244,7 +244,7 @@ public final class XClaim extends JavaPlugin {
                 double interval = mainConfig.getDouble("auto-save.interval", 300d);
                 if (interval > 0.0) {
                     long intervalTicks = Math.round(interval * 20d);
-                    this.autosaveTask = Platform.get().getScheduler().runTaskTimer(this, this::saveClaims, 0L, intervalTicks);
+                    this.autosaveTask = Platform.get().getScheduler().runTaskTimer(this, this::autoSaveClaims, 0L, intervalTicks);
                 }
             }
         } finally {
@@ -314,9 +314,13 @@ public final class XClaim extends JavaPlugin {
         }
     }
 
-    private void saveClaims() {
+    private void autoSaveClaims() {
+        this.saveClaims(getConfig().getBoolean("auto-save.silent", false));
+    }
+
+    private void saveClaims(boolean silent) {
         if (!this.performedAnyLoad) return;
-        logger.log(Level.INFO, lang.get("claims-save"));
+        if (!silent) logger.log(Level.INFO, lang.get("claims-save"));
         Set<String> removeKeys = claimsConfig.getKeys(false);
         for (Claim claim : Claim.getAll()) {
             String token = claim.getUniqueToken();
@@ -330,13 +334,12 @@ public final class XClaim extends JavaPlugin {
         try {
             if (!claimsFile.exists()) {
                 if (claimsFile.createNewFile()) {
-                    logger.log(Level.INFO, lang.get("claims-save-new"));
+                    if (!silent) logger.log(Level.INFO, lang.get("claims-save-new"));
                 }
             }
             claimsConfig.save(claimsFile);
         } catch (Exception e) {
-            logger.log(Level.WARNING, lang.get("claims-save-err"));
-            e.printStackTrace();
+            if (!silent) logger.log(Level.WARNING, lang.get("claims-save-err"), e);
         }
     }
 
