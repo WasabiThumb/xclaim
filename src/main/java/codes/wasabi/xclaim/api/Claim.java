@@ -81,11 +81,15 @@ public class Claim {
     }
 
     public static @Nullable Claim getByChunk(@NotNull Chunk chunk) {
+        return getByChunk(ChunkReference.ofChunk(chunk));
+    }
+
+    public static @Nullable Claim getByChunk(@NotNull ChunkReference cr) {
         registryLock.readLock().lock();
         try {
             for (Claim c : registry) {
                 for (ChunkReference chk : c.chunks) {
-                    if (chk.matches(chunk)) return c;
+                    if (chk.matches(cr)) return c;
                 }
             }
             return null;

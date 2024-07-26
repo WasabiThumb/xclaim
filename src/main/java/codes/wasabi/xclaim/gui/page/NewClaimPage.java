@@ -142,6 +142,11 @@ public class NewClaimPage extends Page {
                 getParent().close();
                 return;
             }
+            if (ChunkEditor.violatesDistanceCheck(ply, chunk)) {
+                Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-min-distance-deny"));
+                getParent().close();
+                return;
+            }
             String name = XClaim.lang.get("new-claim") + " #" + nextIndex();
             Claim newClaim = new Claim(name, Collections.singleton(chunk), ply);
             newClaim.claim();

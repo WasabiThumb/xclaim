@@ -30,6 +30,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -253,6 +255,18 @@ public final class XClaim extends JavaPlugin {
     private void startServices() {
         // bStats
         Metrics metrics = new Metrics(this, 16129);
+        // Placeholders
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            try {
+                Class<?> clazz = Class.forName("codes.wasabi.xclaim.placeholder.XClaimPlaceholderExpansion");
+                Constructor<?> con = clazz.getConstructor(XClaim.class);
+                Object expansion = con.newInstance(this);
+                Method registerMethod = clazz.getMethod("register");
+                registerMethod.invoke(expansion);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Failed to bind placeholders", e);
+            }
+        }
         //
         logger.log(Level.INFO, lang.get("services-chunk-editor"));
         ChunkEditor.initialize();
