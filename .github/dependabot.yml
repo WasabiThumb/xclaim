@@ -1,0 +1,12 @@
+# Dependabot version check
+
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/" # Location of pom.xml
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "dev.folia:folia-api"
+      - dependency-name: "com.cjburkey:claimchunk"
+      - dependency-name: "org:dynmap"
