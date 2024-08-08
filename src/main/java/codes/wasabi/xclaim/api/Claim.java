@@ -5,8 +5,8 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.TrustLevel;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.gui.ChunkEditor;
-import codes.wasabi.xclaim.map.MapMarker;
 import codes.wasabi.xclaim.map.MapService;
+import codes.wasabi.xclaim.map.MapServiceOp;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataContainer;
 import codes.wasabi.xclaim.platform.PlatformPersistentDataType;
@@ -197,9 +197,7 @@ public class Claim {
     private void validateMarkers() {
         if (MapService.isAvailable()) {
             MapService ms = MapService.getNonNull();
-            ms.getMarkerAsync(this, (MapMarker marker) -> {
-                if (marker != null) marker.update(this);
-            });
+            ms.queueOperation(MapServiceOp.update(this));
         }
     }
 
@@ -615,9 +613,7 @@ public class Claim {
             ownerChangeCallbacks.clear();
             if (MapService.isAvailable()) {
                 MapService ms = MapService.getNonNull();
-                ms.getMarkerAsync(this, (MapMarker marker) -> {
-                    if (marker != null) marker.deleteMarker();
-                });
+                ms.queueOperation(MapServiceOp.delete(this));
             }
             return true;
         }

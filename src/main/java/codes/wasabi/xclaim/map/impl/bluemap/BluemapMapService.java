@@ -3,72 +3,57 @@ package codes.wasabi.xclaim.map.impl.bluemap;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.map.MapMarker;
 import codes.wasabi.xclaim.map.MapService;
+import codes.wasabi.xclaim.map.MapServiceOp;
 import codes.wasabi.xclaim.map.exception.MapServiceInitException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class BluemapMapService extends MapService {
 
-    private final CompletableFuture<Object> apiInstanceFuture = new CompletableFuture<>();
+    private final Object tracker;
+    private final Method trackerGet;
+    private final Method trackerWith;
 
     public BluemapMapService() throws MapServiceInitException {
-        Class<?> apiClass = this.findClass("de.bluecolored.bluemap.api.BlueMapAPI", Object.class);
-        Object optionalObject;
+        Class<?> trackerClass = this.findClass("codes.wasabi.xclaim.map.impl.bluemap.BluemapAPITracker", Object.class);
+
+        Object tracker;
+        Method trackerGet;
+        Method trackerWith;
         try {
-            Method m = apiClass.getDeclaredMethod("getInstance");
-            optionalObject = m.invoke(null);
+            Constructor<?> con = trackerClass.getConstructor();
+            tracker = con.newInstance();
+            trackerGet = trackerClass.getMethod("get");
+            trackerWith = trackerClass.getMethod("with", Consumer.class);
         } catch (ReflectiveOperationException | SecurityException e) {
             throw new MapServiceInitException("Failed to get instance of BlueMap API");
         }
-        Optional<?> optional;
+
+        this.tracker = tracker;
+        this.trackerGet = trackerGet;
+        this.trackerWith = trackerWith;
+    }
+
+    private Object getInstanceNow() {
+        Object instance;
         try {
-            optional = (Optional<?>) optionalObject;
-        } catch (ClassCastException e) {
-            throw new MapServiceInitException("BlueMap API gave an unexpected value");
+            instance = this.trackerGet.invoke(this.tracker);
+        } catch (ReflectiveOperationException | SecurityException e) {
+            throw new IllegalStateException(e);
         }
-        if (optional.isPresent()) {
-            Object apiInstance = optional.get();
-            if (!apiClass.isInstance(apiInstance)) {
-                throw new MapServiceInitException(
-                        "BlueMap API gave an instance of class " +
-                        "\"" + apiInstance.getClass().getName() + "\"" +
-                        "that is not a subclass of \"" + apiClass.getName() + "\""
-                );
-            }
-            this.apiInstanceFuture.complete(apiInstance);
-        } else {
-            try {
-                de.bluecolored.bluemap.api.BlueMapAPI.onEnable(this.apiInstanceFuture::complete);
-            } catch (Exception e) {
-                throw new MapServiceInitException("Uncategorized exception while attaching enable listener to BlueMap API");
-            }
-        }
+        return instance;
     }
 
     @Override
     public @Nullable MapMarker getMarker(@NotNull Claim claim) {
-        try {
-            return this.getMarker(claim, this.apiInstanceFuture.get());
-        } catch (ExecutionException | InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+        Object instance = this.getInstanceNow();
+        if (instance == null) return null;
 
-    @Override
-    public void getMarkerAsync(@NotNull Claim claim, @NotNull Consumer<@Nullable MapMarker> callback) {
-        if (this.apiInstanceFuture.isDone()) {
-            callback.accept(this.getMarker(claim));
-            return;
-        }
-        this.apiInstanceFuture.whenCompleteAsync((Object instance, Throwable t) -> {
-            if (instance != null) callback.accept(this.getMarker(claim, instance));
-        });
+        return this.getMarker(claim, instance);
     }
 
     private @Nullable MapMarker getMarker(@NotNull Claim claim, @NotNull Object instance) {
@@ -82,14 +67,23 @@ public class BluemapMapService extends MapService {
     }
 
     @Override
-    public void cleanup() {
-        Object instance;
+    public void queueOperation(@NotNull MapServiceOp op) {
+        Consumer<Object> action = o -> {
+            MapMarker marker = BluemapMapService.this.getMarker(op.getClaim(), o);
+            if (marker == null) return;
+            op.apply(marker);
+        };
         try {
-            instance = this.apiInstanceFuture.getNow(null);
-            if (instance == null) return;
-        } catch (Exception ignored) {
-            return;
+            this.trackerWith.invoke(this.tracker, action);
+        } catch (ReflectiveOperationException | SecurityException e) {
+            throw new IllegalStateException(e);
         }
+    }
+
+    @Override
+    public void cleanup() {
+        Object instance = this.getInstanceNow();
+        if (instance == null) return;
 
         try {
             Class.forName("codes.wasabi.xclaim.map.impl.bluemap.BluemapMapMarker")
