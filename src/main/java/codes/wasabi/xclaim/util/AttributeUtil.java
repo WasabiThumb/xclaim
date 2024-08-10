@@ -23,10 +23,10 @@ public final class AttributeUtil {
             @Nullable ItemStack chestplate,
             @Nullable ItemStack helmet
     ) {
-        damage = scaleDamage(damage, boots, EquipmentSlot.FEET);
-        damage = scaleDamage(damage, leggings, EquipmentSlot.LEGS);
-        damage = scaleDamage(damage, chestplate, EquipmentSlot.CHEST);
-        damage = scaleDamage(damage, helmet, EquipmentSlot.HEAD);
+        damage = scaleDamage(damage, boots, EquipmentSlot.FEET, 3);
+        damage = scaleDamage(damage, leggings, EquipmentSlot.LEGS, 2);
+        damage = scaleDamage(damage, chestplate, EquipmentSlot.CHEST, 1);
+        damage = scaleDamage(damage, helmet, EquipmentSlot.HEAD, 0);
         return damage;
     }
 
@@ -38,24 +38,11 @@ public final class AttributeUtil {
             new double[] { 3d, 8d, 6d, 3d }, // DIAMOND & NETHERITE
     };
 
-    private static double scaleDamage(double damage, @Nullable ItemStack item, @NotNull EquipmentSlot slot) {
+    private static double scaleDamage(double damage, @Nullable ItemStack item, @NotNull EquipmentSlot slot, int slotCode) {
         if (item == null) return damage;
         if (item.getAmount() < 1) return damage;
         Material type = item.getType();
         if (!type.isItem()) return damage;
-
-        int slotCode = 0;
-        switch (slot) {
-            case FEET:
-                slotCode = 3;
-                break;
-            case LEGS:
-                slotCode = 2;
-                break;
-            case CHEST:
-                slotCode = 1;
-                break;
-        }
 
         String armorType = type.name().toUpperCase(Locale.ROOT);
         int temp = armorType.indexOf('_');
