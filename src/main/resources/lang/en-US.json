@@ -334,5 +334,17 @@
   "move-exit": "<white>Leaving <green>$1</green></white>",
   "grace-alert": "<red><dark_red>WARNING</dark_red>: You have <dark_red>$1</dark_red> claims in blacklisted worlds that will be removed soon</red>",
   "grace-remove": "<red>Your claim named <dark_red>$1</dark_red> was removed due to being in a blacklisted world</red>",
+  "event-fail-create-claim": "<red>* You cannot create a claim at this time.</red>",
+  "event-fail-create-claim-single": "<red>* Cannot create this claim ($1)</red>",
+  "event-fail-delete-claim": "<red>* You cannot delete a claim at this time.</red>",
+  "event-fail-delete-claim-single": "<red>* Cannot delete this claim ($1)</red>",
+  "event-fail-add-chunks": "<red>* You cannot add chunks to a claim at this time.</red>",
+  "event-fail-add-chunks-single": "<red>* Cannot add chunks to this claim ($1)</red>",
+  "event-fail-add-chunk": "<red>* You cannot add a chunk to a claim at this time.</red>",
+  "event-fail-add-chunk-single": "<red>* Cannot add a chunk to this claim ($1)</red>",
+  "event-fail-remove-chunks": "<red>* You cannot remove chunks from a claim at this time.</red>",
+  "event-fail-remove-chunks-single": "<red>* Cannot remove chunks from this claim ($1)</red>",
+  "event-fail-remove-chunk": "<red>* You cannot remove a chunk from a claim at this time.</red>",
+  "event-fail-remove-chunk-single": "<red>* Cannot remove a chunk from this claim ($1)</red>",
   "unknown": "Unknown"
 }
