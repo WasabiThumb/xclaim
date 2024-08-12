@@ -5,6 +5,10 @@ import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.TrustLevel;
+import codes.wasabi.xclaim.api.event.XClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimGrantUserPermissionEvent;
+import codes.wasabi.xclaim.api.event.XClaimRevokeUserPermissionEvent;
+import codes.wasabi.xclaim.api.event.XClaimSetPermissionEvent;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
@@ -294,6 +298,13 @@ public class PermissionPage extends Page {
                     default:
                         return;
                 }
+                if (!XClaimEvent.dispatch(new XClaimSetPermissionEvent(
+                        this.getTarget(),
+                        claim,
+                        modifyingPermission,
+                        claim.getPermission(modifyingPermission),
+                        set
+                ))) break;
                 claim.setPermission(modifyingPermission, set);
                 subPage = 1;
                 populate();
@@ -314,15 +325,31 @@ public class PermissionPage extends Page {
                 }
                 break;
             case 5:
+                boolean value;
                 if (slot == 11) {
-                    claim.setUserPermission(managingPlayer, modifyingPermission, true);
-                    subPage = 4;
-                    populate();
+                    value = true;
                 } else if (slot == 15) {
-                    claim.setUserPermission(managingPlayer, modifyingPermission, false);
-                    subPage = 4;
-                    populate();
+                    value = false;
+                } else {
+                    break;
                 }
+                if (!XClaimEvent.dispatch(value ?
+                        new XClaimGrantUserPermissionEvent(
+                                this.getTarget(),
+                                claim,
+                                modifyingPermission,
+                                XCPlayer.of(managingPlayer)
+                        ) :
+                        new XClaimRevokeUserPermissionEvent(
+                                this.getTarget(),
+                                claim,
+                                modifyingPermission,
+                                XCPlayer.of(managingPlayer)
+                        )
+                )) return;
+                claim.setUserPermission(managingPlayer, modifyingPermission, value);
+                subPage = 4;
+                populate();
                 break;
         }
     }

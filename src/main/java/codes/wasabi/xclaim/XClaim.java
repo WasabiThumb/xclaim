@@ -387,6 +387,10 @@ public final class XClaim extends JavaPlugin {
             return map.get(key);
         }
 
+        public boolean has(String key) {
+            return map.containsKey(key);
+        }
+
         public String get(String key) {
             return get(key, new String[0]);
         }

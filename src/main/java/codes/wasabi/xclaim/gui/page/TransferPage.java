@@ -2,7 +2,10 @@ package codes.wasabi.xclaim.gui.page;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
+import codes.wasabi.xclaim.api.event.XClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimTransferOwnerEvent;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
@@ -95,6 +98,15 @@ public class TransferPage extends Page {
         if (slot == 11) {
             if (matchPlayer != null) {
                 Player target = getTarget();
+                if (!XClaimEvent.dispatch(new XClaimTransferOwnerEvent(
+                        target,
+                        claim,
+                        claim.getOwner(),
+                        XCPlayer.of(matchPlayer)
+                ))) {
+                    getParent().close();
+                    return;
+                }
                 claim.setOwner(matchPlayer);
                 claim.setUserPermission(target, Permission.MANAGE, true);
                 Platform.getAdventure().player(target).sendMessage(XClaim.lang.getComponent("gui-tx-success"));

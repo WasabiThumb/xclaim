@@ -4,6 +4,9 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
+import codes.wasabi.xclaim.api.event.XClaimAddChunkToClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimRemoveChunkFromClaimEvent;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.particle.ParticleBuilder;
 import codes.wasabi.xclaim.particle.ParticleEffect;
@@ -227,6 +230,7 @@ public class ChunkEditor {
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-max"));
                             break;
                         }
+                        if (!XClaimEvent.dispatch(new XClaimAddChunkToClaimEvent(ply, claim, chunk))) return;
                         if (claim.addChunk(chunk)) {
                             if (Economy.isAvailable()) {
                                 if (numChunks >= xcp.getFreeChunks()) {
@@ -255,6 +259,7 @@ public class ChunkEditor {
                         break;
                     case 4:
                         Chunk chunk1 = ply.getLocation().getChunk();
+                        if (!XClaimEvent.dispatch(new XClaimRemoveChunkFromClaimEvent(ply, claim, chunk1))) return;
                         if (claim.removeChunk(chunk1)) {
                             if (Economy.isAvailable()) {
                                 Economy eco = Economy.getAssert();
