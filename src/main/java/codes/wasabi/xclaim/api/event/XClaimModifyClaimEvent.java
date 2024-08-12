@@ -13,6 +13,10 @@ public abstract class XClaimModifyClaimEvent extends XClaimEvent {
         this.claim = claim;
     }
 
+    /**
+     * Gets the player responsible for the modification; e.g. the player that clicked a GUI item or
+     * ran a command that caused this event to be called.
+     */
     @Override
     public final @NotNull Player getPlayer() {
         return this.player;

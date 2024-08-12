@@ -346,5 +346,13 @@
   "event-fail-remove-chunks-single": "<red>* Cannot remove chunks from this claim ($1)</red>",
   "event-fail-remove-chunk": "<red>* You cannot remove a chunk from a claim at this time.</red>",
   "event-fail-remove-chunk-single": "<red>* Cannot remove a chunk from this claim ($1)</red>",
+  "event-fail-transfer-owner": "<red>* You cannot transfer the claim owner at this time.</red>",
+  "event-fail-transfer-owner-single": "<red>* Cannot transfer this claim's owner ($1)</red>",
+  "event-fail-set-permission": "<red>* You cannot set this permission on the claim at this time.</red>",
+  "event-fail-set-permission-single": "<red>* Cannot set permission on this claim ($1)</red>",
+  "event-fail-grant-user-permission": "<red>* You cannot grant a user permission at this time.</red>",
+  "event-fail-grant-user-permission-single": "<red>* Cannot grant user permission on this claim ($1)</red>",
+  "event-fail-revoke-user-permission": "<red>* You cannot revoke a user permission at this time.</red>",
+  "event-fail-revoke-user-permission-single": "<red>* Cannot revoke user permission on this claim ($1)</red>",
   "unknown": "Unknown"
 }

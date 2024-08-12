@@ -25,6 +25,9 @@ import java.util.List;
  * @see XClaimAddChunkToClaimEvent
  * @see XClaimRemoveChunksFromClaimEvent
  * @see XClaimRemoveChunkFromClaimEvent
+ * @see XClaimTransferOwnerEvent
+ * @see XClaimGrantUserPermissionEvent
+ * @see XClaimRevokeUserPermissionEvent
  */
 public abstract class XClaimEvent extends Event implements Cancellable {
 
