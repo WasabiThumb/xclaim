@@ -19,12 +19,14 @@ import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -310,6 +312,30 @@ public class ChunkEditor {
         }
 
         @EventHandler
+        public void onDamage(@NotNull EntityDamageEvent event) {
+            Entity ent = event.getEntity();
+            if (!(ent instanceof Player)) return;
+            Player ply = (Player) ent;
+            if (getEditing(ply) == null) return;
+
+            final ItemStack[] inventory = getRetainedInventory(ply);
+            double damage = event.getDamage();
+            try {
+                damage = codes.wasabi.xclaim.util.AttributeUtil.scaleDamage(
+                        damage,
+                        (inventory.length > 100) ? inventory[100] : null,
+                        (inventory.length > 101) ? inventory[101] : null,
+                        (inventory.length > 102) ? inventory[102] : null,
+                        (inventory.length > 103) ? inventory[103] : null
+                );
+            } catch (Throwable ignored) {
+                // Attribute APIs may be too modern for the current server environment
+                damage *= 0.5d;
+            }
+            event.setDamage(damage);
+        }
+
+        @EventHandler
         public void onMove(@NotNull PlayerMoveEvent event) {
             Player ply = event.getPlayer();
             Claim editing;
@@ -448,12 +474,18 @@ public class ChunkEditor {
         PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
         pdc.set(KEY_FLAG, PlatformPersistentDataType.BYTE, (byte) 0);
         try {
-            InventorySerializer.deserialize(pdc.getOrDefaultAssert(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, byte[].class, new byte[0]), ply.getInventory());
+            ply.getInventory().setContents(getRetainedInventory(ply));
         } catch (IllegalArgumentException e) {
             ply.getInventory().clear();
         }
         editingMap.remove(uuid);
         return true;
+    }
+
+    static ItemStack @NotNull [] getRetainedInventory(@NotNull Player ply) throws IllegalArgumentException {
+        PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
+        byte[] inventoryData = pdc.getOrDefaultAssert(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, byte[].class, new byte[0]);
+        return InventorySerializer.deserialize(inventoryData);
     }
 
     public static boolean violatesDistanceCheck(Player owner, Chunk chunk) {
