@@ -323,10 +323,10 @@ public class ChunkEditor {
             try {
                 damage = codes.wasabi.xclaim.util.AttributeUtil.scaleDamage(
                         damage,
-                        (inventory.length > 100) ? inventory[100] : null,
-                        (inventory.length > 101) ? inventory[101] : null,
-                        (inventory.length > 102) ? inventory[102] : null,
-                        (inventory.length > 103) ? inventory[103] : null
+                        (inventory.length > 36) ? inventory[36] : null,
+                        (inventory.length > 37) ? inventory[37] : null,
+                        (inventory.length > 38) ? inventory[38] : null,
+                        (inventory.length > 39) ? inventory[39] : null
                 );
             } catch (Throwable ignored) {
                 // Attribute APIs may be too modern for the current server environment
