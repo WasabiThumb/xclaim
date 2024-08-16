@@ -3,8 +3,6 @@ package codes.wasabi.xclaim.map.util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class Point implements Comparable<Point> {
 
     private final int x;
@@ -45,7 +43,7 @@ public class Point implements Comparable<Point> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return 31 * (31 + this.x) + this.y;
     }
 
     @Override

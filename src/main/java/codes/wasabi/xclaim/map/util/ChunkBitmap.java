@@ -2,10 +2,11 @@ package codes.wasabi.xclaim.map.util;
 
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.ChunkReference;
-import org.bukkit.Chunk;
+import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.longs.LongSets;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -20,13 +21,9 @@ public class ChunkBitmap implements Bitmap {
     private int width;
     private int height;
     private World world;
-    private final Set<Long> indices = new HashSet<>();
+    private LongSet indices;
     public ChunkBitmap() {
-        originX = 0;
-        originZ = 0;
-        width = 0;
-        height = 0;
-        world = null;
+        clear();
     }
 
     public ChunkBitmap(@NotNull Collection<ChunkReference> chunks) {
@@ -37,15 +34,22 @@ public class ChunkBitmap implements Bitmap {
         setChunks(Arrays.asList(chunks));
     }
 
+    public void clear() {
+        originX = 0;
+        originZ = 0;
+        width = 0;
+        height = 0;
+        world = null;
+        indices = LongSets.emptySet();
+    }
+
     public void setChunks(@NotNull Collection<ChunkReference> chunks) {
-        indices.clear();
-        if (chunks.size() == 0) {
-            originX = 0;
-            originZ = 0;
-            width = 0;
-            height = 0;
-            world = null;
+        final int size = chunks.size();
+        if (size == 0) {
+            clear();
         } else {
+            indices = new LongLinkedOpenHashSet(size);
+
             int xMin = Integer.MAX_VALUE;
             int zMin = Integer.MAX_VALUE;
             int xMax = Integer.MIN_VALUE;
@@ -57,12 +61,14 @@ public class ChunkBitmap implements Bitmap {
                 zMin = Math.min(zMin, c.z);
                 zMax = Math.max(zMax, c.z);
             }
+
             ChunkReference originChunk = new ChunkReference(world, xMin, zMin);
             Location originBlock = originChunk.getLocation(0, Platform.get().getWorldMinHeight(world), 0);
             originX = originBlock.getBlockX();
             originZ = originBlock.getBlockZ();
             width = xMax - xMin + 1;
             height = zMax - zMin + 1;
+
             for (ChunkReference c : chunks) {
                 indices.add(intToLong(c.x - xMin, c.z - zMin));
             }
@@ -89,7 +95,10 @@ public class ChunkBitmap implements Bitmap {
     }
 
     private List<Point> transformPoints(List<Point> points) {
-        return points.stream().map((Point p) -> p.product(16).sum(originX, originZ)).collect(Collectors.toCollection(ArrayList::new));
+        final int size = points.size();
+        Point[] transformed = new Point[size];
+        for (int i=0; i < size; i++) transformed[i] = points.get(i).product(16).sum(originX, originZ);
+        return Arrays.asList(transformed);
     }
 
     public List<Point> traceBlocks() {
