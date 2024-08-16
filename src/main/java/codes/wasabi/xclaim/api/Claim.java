@@ -356,15 +356,19 @@ public class Claim {
         if (ret) {
             generateBounds();
             if (manageHandlers) {
+                List<Claim> collides = new ArrayList<>(1);
                 registryLock.readLock().lock();
                 try {
                     for (Claim c : registry) {
                         if (c == this) continue;
-                        if (c.chunks.contains(ref)) c.removeChunk(chunk);
+                        if (c.chunks.contains(ref)) {
+                            collides.add(c);
+                        }
                     }
                 } finally {
                     registryLock.readLock().unlock();
                 }
+                for (Claim collided : collides) collided.removeChunk(ref);
             } else if (claim) {
                 claim();
             }
