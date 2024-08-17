@@ -1,9 +1,6 @@
 package codes.wasabi.xclaim.map.util;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,7 +86,7 @@ public class BitmapTracer {
             identity[identityCount++] = new Line(x + 1, y + 1, x, y + 1, Line.Direction.DOWN);
         }
 
-        if (identityCount > 0) {
+        if (identityCount != 0) {
             lines.addAll(Arrays.asList(identity).subList(0, identityCount));
         }
     }
@@ -129,6 +126,9 @@ public class BitmapTracer {
         private final boolean[] traversed;
         private final Int2ObjectMap<IntList> starts;
         LineGroup(List<Line> lines, int width) {
+            // This fixes ID collision, don't @ me
+            width <<= 2;
+
             this.lines = lines;
             this.width = width;
             this.traversed = new boolean[lines.size()];
@@ -173,15 +173,16 @@ public class BitmapTracer {
 
             Line.Direction lastDirection = Line.Direction.RESERVED;
             Line cur = this.lines.get(startIndex);
-            List<Line> ret = new ArrayList<>(this.lines.size() - startIndex);
+            List<Line> ret = new ArrayList<>(this.traversed.length - startIndex);
 
             int nextIndex;
             Line next;
             while (true) {
                 IntList starting = this.getStartingAt(cur.b().x(), cur.b().y());
-                if (starting == null || starting.size() < 1) break;
+                if (starting.size() == 0) break;
 
                 nextIndex = starting.getInt(0);
+                if (nextIndex == startIndex) break;
                 next = this.lines.get(nextIndex);
                 this.traversed[nextIndex] = true;
 
@@ -196,9 +197,22 @@ public class BitmapTracer {
             return ret;
         }
 
-        private @Nullable IntList getStartingAt(int x, int y) {
+        private @NotNull IntList getStartingAt(int x, int y) {
             final int index = (y * this.width) + x;
-            return this.starts.get(index);
+            final IntList allStarts = this.starts.get(index);
+            if (allStarts == null) return IntLists.emptyList();
+
+            final int count = allStarts.size();
+            final IntList nonTraversedStarts = new IntArrayList(count);
+
+            int start;
+            for (int i=0; i < count; i++) {
+                start = allStarts.getInt(i);
+                if (this.traversed[start]) continue;
+                nonTraversedStarts.add(start);
+            }
+
+            return nonTraversedStarts;
         }
 
     }
