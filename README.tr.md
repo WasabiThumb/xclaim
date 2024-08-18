@@ -24,16 +24,16 @@
 </div>
 
 <div align="center">
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#installation">Kurulum</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#features">Özellikler</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#kurulum">Kurulum</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#özellikler">Özellikler</a>
   <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#config">Config</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#permissions">Yetkiler</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#commands">Komutlar</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#support">Desteklenen Sürümler</a>
-  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#roadmap">Planlar</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#yetkiler">Yetkiler</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#komutlar">Komutlar</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#desteklenen-sürümler">Desteklenen Sürümler</a>
+  <a style="margin:0.3rem;padding:0.5em;background-color:#303030;border-radius:0.5em" href="#planlar">Planlar</a>
 </div>
 
-## Kurulum Aşaması
+## Kurulum
 [Sağdaki sürümler sekmesinden](https://github.com/WasabiThumb/xclaim/releases) hazır halini indirebilirsiniz ya da isterseniz [plugini kendiniz de oluşturabilirsiniz](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#build-the-project). Ardından JAR dosyasını plugin klasörüne atın. Ne yaptığınızı bilmiyorsanız "orijinal" etiketli JAR'ı kullanmayın. 
 
 ## Özellikler
@@ -151,5 +151,5 @@ PlaceholderAPI entegrasyonu pluginin 1.13 sürümünde eklendi
 
 Sürüm 1.5.0'dan öncesi artık desteklenmemekte
 
-## Yol haritası
+## Planlar
 * Daha fazla yönetim komutu eklemek
