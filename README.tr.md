@@ -69,10 +69,6 @@ Oyuncular daha sonra oyuncunun bulunduğu izin grubuna bağlı olarak ödeme yap
 Örneğin, bir talebin varsayılan fiyatını 2,25 olarak ayarlamak isterseniz ``limits.default.claim-price`` değerini ``2,25`` olarak ayarlarsınız.\
 [config kısmında](#config) tüm seçeneklere bakabilirsiniz.
 
-Oyuncular daha sonra oyuncunun bulunduğu izin grubuna bağlı olarak ödeme yapacaklardır (bkz. [buraya](#permissions)).\
-Örneğin, bir alanın varsayılan fiyatını 2,25 olarak ayarlamak isterseniz ``limits.default.claim-price`` ayarını ``2,25`` olarak düzenlersiniz.\
-[Config bölümündeki](#config) tüm seçeneklere bakın.
-
 ## Config
 | İsim | Açıklaması | Varsayılan Değer |
 | --: | :-: | :-- |
