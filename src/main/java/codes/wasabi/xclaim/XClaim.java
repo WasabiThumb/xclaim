@@ -100,7 +100,7 @@ public final class XClaim extends JavaPlugin {
     }
 
     private static final String[] bundledLangs = new String[] {
-            "en-US", "de", "zh"
+            "en-US", "de", "zh", "tr"
     };
     private void setupLang() {
         String l = mainConfig.getString("language", "en-US");
