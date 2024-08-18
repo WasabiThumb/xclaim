@@ -18,6 +18,8 @@
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.de.md" title="German">🇩🇪</a>
 &nbsp;
 <a href="https://github.com/WasabiThumb/xclaim/blob/master/README.zh.md" title="Chinese (Simplified)">🇨🇳</a>
+&nbsp;
+<a href="https://github.com/WasabiThumb/xclaim/blob/master/README.tr.md" title="Turkish">🇹🇷</a>
 </h2>
 </div>
 
