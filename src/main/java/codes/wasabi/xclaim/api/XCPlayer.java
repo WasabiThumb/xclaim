@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,28 +19,44 @@ public class XCPlayer {
     private static final ReentrantReadWriteLock trustConfigLock = new ReentrantReadWriteLock();
 
     public static @NotNull XCPlayer of(@NotNull OfflinePlayer ply) {
-        if (ply instanceof XCPlayer) return (XCPlayer) ply;
         return new XCPlayer(ply);
     }
 
-    private final String uuidString;
-    private final OfflinePlayer op;
+    public static @NotNull XCPlayer of(@NotNull UUID uuid) {
+        return new XCPlayer(uuid);
+    }
+
+    private final UUID uuid;
+    private final StampedLock valuesLock = new StampedLock();
+    private int valuesFlag = 0;
+    private OfflinePlayer op;
+    private String uuidString;
 
     protected XCPlayer(@NotNull UUID uuid) {
-        uuidString = uuid.toString();
-        op = Bukkit.getOfflinePlayer(uuid);
+        this.uuid = uuid;
     }
 
     protected XCPlayer(@NotNull OfflinePlayer ply) {
         this(ply.getUniqueId());
+        this.valuesFlag = 1;
+        this.op = ply;
     }
 
     public @NotNull OfflinePlayer getOfflinePlayer() {
-        return op;
+        long stamp = this.valuesLock.readLock();
+        try {
+            if ((this.valuesFlag & 1) == 1) return this.op;
+            stamp = this.valuesLock.tryConvertToWriteLock(stamp);
+            this.op = Bukkit.getOfflinePlayer(this.uuid);
+            this.valuesFlag |= 1;
+            return this.op;
+        } finally {
+            this.valuesLock.unlock(stamp);
+        }
     }
 
     public @Nullable Player getPlayer() {
-        return op.getPlayer();
+        return this.getOfflinePlayer().getPlayer();
     }
 
     public boolean trustPlayer(@NotNull OfflinePlayer player) {
@@ -64,7 +81,7 @@ public class XCPlayer {
         List<?> entries;
         trustConfigLock.readLock().lock();
         try {
-            entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
+            entries = XClaim.trustConfig.getList(this.getUUIDString(), new ArrayList<String>());
         } finally {
             trustConfigLock.readLock().unlock();
         }
@@ -76,11 +93,22 @@ public class XCPlayer {
         return false;
     }
 
+    public int getNumTrustedPlayers() {
+        List<?> entries;
+        trustConfigLock.readLock().lock();
+        try {
+            entries = XClaim.trustConfig.getList(this.getUUIDString(), new ArrayList<String>());
+        } finally {
+            trustConfigLock.readLock().unlock();
+        }
+        return entries.size();
+    }
+
     private @NotNull List<OfflinePlayer> getCurrentTrustedPlayers() {
         List<?> entries;
         trustConfigLock.readLock().lock();
         try {
-            entries = XClaim.trustConfig.getList(uuidString, new ArrayList<String>());
+            entries = XClaim.trustConfig.getList(this.getUUIDString(), new ArrayList<String>());
         } finally {
             trustConfigLock.readLock().unlock();
         }
@@ -100,7 +128,7 @@ public class XCPlayer {
         List<String> list = players.stream().flatMap((OfflinePlayer op) -> Stream.of(op.getUniqueId().toString())).collect(Collectors.toList());
         trustConfigLock.writeLock().lock();
         try {
-            XClaim.trustConfig.set(uuidString, list);
+            XClaim.trustConfig.set(this.getUUIDString(), list);
         } finally {
             trustConfigLock.writeLock().unlock();
         }
@@ -119,6 +147,7 @@ public class XCPlayer {
             boolean inGroup = true;
             if (!groupName.equalsIgnoreCase("default")) {
                 inGroup = false;
+                final OfflinePlayer op = this.getOfflinePlayer();
                 Player ply = op.getPlayer();
                 if (ply != null) {
                     inGroup = ply.hasPermission("xclaim.group." + groupName);
@@ -184,192 +213,98 @@ public class XCPlayer {
     }
 
     public @NotNull List<OfflinePlayer> getTrustedPlayers() {
-        return new List<OfflinePlayer>() {
+        return new AbstractList<OfflinePlayer>() {
             @Override
-            public int size() {
-                return getCurrentTrustedPlayers().size();
+            public OfflinePlayer get(int i) {
+                return XCPlayer.this.getCurrentTrustedPlayers().get(i);
             }
 
             @Override
-            public boolean isEmpty() {
-                return size() > 0;
+            public int size() {
+                return XCPlayer.this.getNumTrustedPlayers();
             }
 
             @Override
             public boolean contains(Object o) {
-                return getCurrentTrustedPlayers().contains(o);
-            }
-
-            @NotNull
-            @Override
-            public Iterator<OfflinePlayer> iterator() {
-                return getCurrentTrustedPlayers().iterator();
-            }
-
-            @NotNull
-            @Override
-            public Object[] toArray() {
-                return getCurrentTrustedPlayers().toArray();
-            }
-
-            @NotNull
-            @Override
-            public <T> T[] toArray(@NotNull T[] a) {
-                return getCurrentTrustedPlayers().toArray(a);
+                return XCPlayer.this.getCurrentTrustedPlayers().contains(o);
             }
 
             @Override
             public boolean add(OfflinePlayer offlinePlayer) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
+                List<OfflinePlayer> cur = XCPlayer.this.getCurrentTrustedPlayers();
                 cur.add(offlinePlayer);
-                setTrustedPlayers(cur);
+                XCPlayer.this.setTrustedPlayers(cur);
                 return true;
             }
 
             @Override
-            public boolean remove(Object o) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
-                if (cur.remove(o)) {
-                    setTrustedPlayers(cur);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(@NotNull Collection<?> c) {
-                return new HashSet<>(getCurrentTrustedPlayers()).containsAll(c);
-            }
-
-            @Override
-            public boolean addAll(@NotNull Collection<? extends OfflinePlayer> c) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
-                if (cur.addAll(c)) {
-                    setTrustedPlayers(cur);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, @NotNull Collection<? extends OfflinePlayer> c) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
-                if (cur.addAll(index, c)) {
-                    setTrustedPlayers(cur);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(@NotNull Collection<?> c) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
-                if (cur.removeAll(c)) {
-                    setTrustedPlayers(cur);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(@NotNull Collection<?> c) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
-                if (cur.retainAll(c)) {
-                    setTrustedPlayers(cur);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void clear() {
-                setTrustedPlayers(Collections.emptyList());
-            }
-
-            @Override
-            public OfflinePlayer get(int index) {
-                return getCurrentTrustedPlayers().get(index);
+            public void add(int index, OfflinePlayer element) {
+                List<OfflinePlayer> cur = XCPlayer.this.getCurrentTrustedPlayers();
+                cur.add(index, element);
+                XCPlayer.this.setTrustedPlayers(cur);
             }
 
             @Override
             public OfflinePlayer set(int index, OfflinePlayer element) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
+                List<OfflinePlayer> cur = XCPlayer.this.getCurrentTrustedPlayers();
                 OfflinePlayer ret = cur.set(index, element);
-                setTrustedPlayers(cur);
+                XCPlayer.this.setTrustedPlayers(cur);
                 return ret;
-            }
-
-            @Override
-            public void add(int index, OfflinePlayer element) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
-                cur.add(index, element);
-                setTrustedPlayers(cur);
             }
 
             @Override
             public OfflinePlayer remove(int index) {
-                List<OfflinePlayer> cur = getCurrentTrustedPlayers();
+                List<OfflinePlayer> cur = XCPlayer.this.getCurrentTrustedPlayers();
                 OfflinePlayer ret = cur.remove(index);
-                setTrustedPlayers(cur);
+                XCPlayer.this.setTrustedPlayers(cur);
                 return ret;
             }
 
             @Override
-            public int indexOf(Object o) {
-                return getCurrentTrustedPlayers().indexOf(o);
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return getCurrentTrustedPlayers().lastIndexOf(o);
-            }
-
-            @NotNull
-            @Override
-            public ListIterator<OfflinePlayer> listIterator() {
-                return getCurrentTrustedPlayers().listIterator();
-            }
-
-            @NotNull
-            @Override
-            public ListIterator<OfflinePlayer> listIterator(int index) {
-                return getCurrentTrustedPlayers().listIterator(index);
-            }
-
-            @NotNull
-            @Override
-            public List<OfflinePlayer> subList(int fromIndex, int toIndex) {
-                return getCurrentTrustedPlayers().subList(fromIndex, toIndex);
+            public @NotNull Iterator<OfflinePlayer> iterator() {
+                return XCPlayer.this.getCurrentTrustedPlayers().iterator();
             }
         };
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(op);
+        return Objects.hashCode(this.uuid);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
         if (obj == null) return false;
         if (obj instanceof XCPlayer) {
-            return ((XCPlayer) obj).op.equals(op);
+            return ((XCPlayer) obj).uuid.equals(this.uuid);
         }
         return super.equals(obj);
     }
 
     @Override
     public String toString() {
-        return "XCPlayer[uuid=" + op.getUniqueId() + "]";
+        return "XCPlayer[uuid=" + this.uuid + "]";
     }
 
     public @NotNull UUID getUniqueId() {
-        return op.getUniqueId();
+        return this.uuid;
+    }
+
+    public @NotNull String getUUIDString() {
+        long stamp = this.valuesLock.readLock();
+        try {
+            if ((this.valuesFlag & 2) == 2) return this.uuidString;
+            stamp = this.valuesLock.tryConvertToWriteLock(stamp);
+            this.uuidString = this.uuid.toString();
+            this.valuesFlag |= 2;
+            return this.uuidString;
+        } finally {
+            this.valuesLock.unlock(stamp);
+        }
     }
 
     public @Nullable String getName() {
-        return op.getName();
+        return this.getOfflinePlayer().getName();
     }
 
 }

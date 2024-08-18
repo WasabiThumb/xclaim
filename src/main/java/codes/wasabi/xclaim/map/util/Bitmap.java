@@ -48,53 +48,28 @@ public interface Bitmap {
      * @return The list of edges
      */
     default List<List<Point>> trace(boolean includeAll) {
-        List<Line> lines = new CopyOnWriteArrayList<>();
-        for (int x = 0; x < getWidth(); x++) {
-            for (int y = 0; y < getHeight(); y++) {
-                boolean value = getPixel(x, y);
-                if (value) {
-                    if (!getPixel(x - 1, y)) lines.add(Line.of( x, y, x, y + 1 ));
-                    if (!getPixel(x, y - 1)) lines.add(Line.of( x, y, x + 1, y ));
-                    if (!getPixel(x + 1, y)) lines.add(Line.of( x + 1, y, x + 1, y + 1 ));
-                    if (!getPixel(x, y + 1)) lines.add(Line.of( x, y + 1, x + 1, y + 1 ));
+        BitmapTracer tracer = new BitmapTracer(this);
+        List<List<Point>> ret = tracer.poll();
+        if (ret == null) return Collections.emptyList();
+
+        if (includeAll) {
+            ret.sort(Comparator.comparingInt((List<Point> l) -> l.size()).reversed());
+
+            return ret;
+        } else {
+            List<Point> longest = null;
+            int longestSize = 0;
+
+            int candidateSize;
+            for (List<Point> candidate : ret) {
+                if ((candidateSize = candidate.size()) > longestSize) {
+                    longest = candidate;
+                    longestSize = candidateSize;
                 }
             }
+
+            return (longest == null) ? Collections.emptyList() : Collections.singletonList(longest);
         }
-        List<List<Point>> ret = new ArrayList<>();
-        while (lines.size() > 0) {
-            Line root = lines.remove(0);
-            List<Point> path = new ArrayList<>();
-            Point head = root.a();
-            Point tail = root.b();
-            path.add(head);
-            path.add(tail);
-            while (true) {
-                boolean anyAction = false;
-                for (Line l : lines) {
-                    Point lhead = l.a();
-                    Point ltail = l.b();
-                    if (lhead.equals(tail)) {
-                        path.add(ltail);
-                        tail = ltail;
-                        lines.remove(l);
-                        anyAction = true;
-                    } else if (ltail.equals(tail)) {
-                        path.add(lhead);
-                        tail = lhead;
-                        lines.remove(l);
-                        anyAction = true;
-                    }
-                }
-                if (!anyAction) break;
-            }
-            if (includeAll || ret.size() < 1) {
-                ret.add(path);
-            } else if (ret.get(0).size() <= path.size()) {
-                ret.set(0, path);
-            }
-        }
-        if (includeAll) ret.sort(Comparator.comparingInt((List<Point> l) -> l.size()).reversed());
-        return ret;
     }
 
 }
