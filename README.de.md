@@ -53,6 +53,7 @@ Seit der Version 1.6.x werden mehrere Sprachen unterstützt. Wenn das Plugin sta
 - en-US (Amerikanisches Englisch)
 - de (Deutsch) von eingruenesbeb
 - zh (Vereinfachtes Chinesisch) von SnowCutieOwO
+- tr (Türkisch) von Krayir5
 
 Das Plugin benutzt die Sprache, welche in der "language" Option in der [Konfiguration](#Konfiguration) spezifiziert ist.
 \

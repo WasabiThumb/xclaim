@@ -49,6 +49,7 @@ As of version 1.6.x, multiple languages are supported. When the plugin starts, d
 - en-US (American English)
 - de (German) by eingruenesbeb
 - zh (Simplified Chinese) by SnowCutieOwO
+- tr (Turkish) by Krayir5
 
 The plugin decides what language to use based on the "language" option in the [config](#config).
 \
