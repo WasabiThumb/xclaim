@@ -100,7 +100,7 @@ public final class XClaim extends JavaPlugin {
     }
 
     private static final String[] bundledLangs = new String[] {
-            "en-US", "de", "zh"
+            "en-US", "de", "zh", "tr"
     };
     private void setupLang() {
         String l = mainConfig.getString("language", "en-US");
@@ -385,6 +385,10 @@ public final class XClaim extends JavaPlugin {
 
         private @Nullable String rawGet(String key) {
             return map.get(key);
+        }
+
+        public boolean has(String key) {
+            return map.containsKey(key);
         }
 
         public String get(String key) {

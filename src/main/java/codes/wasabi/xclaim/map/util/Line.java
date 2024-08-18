@@ -43,7 +43,7 @@ public class Line {
 
     @Override
     public String toString() {
-        return "Line[a=" + a + ",b=" + b + "]";
+        return "{" + this.a + " -> " + this.b + "}";
     }
 
 }

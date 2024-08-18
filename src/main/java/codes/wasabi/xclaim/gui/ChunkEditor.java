@@ -4,6 +4,9 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
+import codes.wasabi.xclaim.api.event.XClaimAddChunkToClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimRemoveChunkFromClaimEvent;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.particle.ParticleBuilder;
 import codes.wasabi.xclaim.particle.ParticleEffect;
@@ -16,12 +19,14 @@ import codes.wasabi.xclaim.util.InventorySerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -227,6 +232,7 @@ public class ChunkEditor {
                             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("chunk-editor-max"));
                             break;
                         }
+                        if (!XClaimEvent.dispatch(new XClaimAddChunkToClaimEvent(ply, claim, chunk))) return;
                         if (claim.addChunk(chunk)) {
                             if (Economy.isAvailable()) {
                                 if (numChunks >= xcp.getFreeChunks()) {
@@ -255,6 +261,7 @@ public class ChunkEditor {
                         break;
                     case 4:
                         Chunk chunk1 = ply.getLocation().getChunk();
+                        if (!XClaimEvent.dispatch(new XClaimRemoveChunkFromClaimEvent(ply, claim, chunk1))) return;
                         if (claim.removeChunk(chunk1)) {
                             if (Economy.isAvailable()) {
                                 Economy eco = Economy.getAssert();
@@ -302,6 +309,30 @@ public class ChunkEditor {
                     drops.addAll(Arrays.asList(ply.getInventory().getContents()));
                 }
             }
+        }
+
+        @EventHandler
+        public void onDamage(@NotNull EntityDamageEvent event) {
+            Entity ent = event.getEntity();
+            if (!(ent instanceof Player)) return;
+            Player ply = (Player) ent;
+            if (getEditing(ply) == null) return;
+
+            final ItemStack[] inventory = getRetainedInventory(ply);
+            double damage = event.getDamage();
+            try {
+                damage = codes.wasabi.xclaim.util.AttributeUtil.scaleDamage(
+                        damage,
+                        (inventory.length > 36) ? inventory[36] : null,
+                        (inventory.length > 37) ? inventory[37] : null,
+                        (inventory.length > 38) ? inventory[38] : null,
+                        (inventory.length > 39) ? inventory[39] : null
+                );
+            } catch (Throwable ignored) {
+                // Attribute APIs may be too modern for the current server environment
+                damage *= 0.5d;
+            }
+            event.setDamage(damage);
         }
 
         @EventHandler
@@ -443,12 +474,18 @@ public class ChunkEditor {
         PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
         pdc.set(KEY_FLAG, PlatformPersistentDataType.BYTE, (byte) 0);
         try {
-            InventorySerializer.deserialize(pdc.getOrDefaultAssert(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, byte[].class, new byte[0]), ply.getInventory());
+            ply.getInventory().setContents(getRetainedInventory(ply));
         } catch (IllegalArgumentException e) {
             ply.getInventory().clear();
         }
         editingMap.remove(uuid);
         return true;
+    }
+
+    static ItemStack @NotNull [] getRetainedInventory(@NotNull Player ply) throws IllegalArgumentException {
+        PlatformPersistentDataContainer pdc = Platform.get().getPersistentDataContainer(ply);
+        byte[] inventoryData = pdc.getOrDefaultAssert(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY, byte[].class, new byte[0]);
+        return InventorySerializer.deserialize(inventoryData);
     }
 
     public static boolean violatesDistanceCheck(Player owner, Chunk chunk) {

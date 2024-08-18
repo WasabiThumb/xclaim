@@ -3,6 +3,8 @@ package codes.wasabi.xclaim.gui.page;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
+import codes.wasabi.xclaim.api.event.XClaimCreateClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimEvent;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
@@ -149,6 +151,7 @@ public class NewClaimPage extends Page {
             }
             String name = XClaim.lang.get("new-claim") + " #" + nextIndex();
             Claim newClaim = new Claim(name, Collections.singleton(chunk), ply);
+            if (!XClaimEvent.dispatch(new XClaimCreateClaimEvent(ply, newClaim))) return;
             newClaim.claim();
             Platform.getAdventure().player(ply).sendMessage(XClaim.lang.getComponent("gui-new-success", name));
             ply.playSound(ply.getLocation(), Platform.get().getLevelSound(), 1f, 1f);

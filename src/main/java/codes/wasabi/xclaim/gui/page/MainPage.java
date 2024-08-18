@@ -4,6 +4,9 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.XCPlayer;
 import codes.wasabi.xclaim.api.enums.Permission;
+import codes.wasabi.xclaim.api.event.XClaimCreateClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimDeleteClaimEvent;
+import codes.wasabi.xclaim.api.event.XClaimEvent;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
@@ -155,7 +158,14 @@ public class MainPage extends Page {
                 switchPage(new ClearAllPage(getParent()));
                 break;
             case DELETE_POS:
-                switchPage(new ClaimSelectorPage(getParent(), Claim::unclaim) {
+                switchPage(new ClaimSelectorPage(getParent(), (Claim c) -> {
+                    final Player ply = getTarget();
+                    if (!XClaimEvent.dispatch(new XClaimDeleteClaimEvent(ply, c))) {
+                        this.getParent().close();
+                        return;
+                    }
+                    c.unclaim();
+                }) {
                     @Override
                     protected boolean showClaim(@NotNull Claim claim, @NotNull OfflinePlayer ply) {
                         return claim.hasPermission(ply, Permission.DELETE);

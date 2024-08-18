@@ -54,6 +54,7 @@
 - en-US (美式英语)
 - de (德语) by eingruenesbeb
 - zh (简体中文) by SnowCutieOwO
+- tr (土耳其) by Krayir5
 
 [配置文本](#config) 中的 "language" 选项可决定插件使用哪种语言.
 \

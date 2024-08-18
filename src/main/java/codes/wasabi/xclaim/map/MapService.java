@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public abstract class MapService {
 
@@ -63,8 +62,9 @@ public abstract class MapService {
 
     public abstract @Nullable MapMarker getMarker(@NotNull Claim claim);
 
-    public void getMarkerAsync(@NotNull Claim claim, @NotNull Consumer<@Nullable MapMarker> callback) {
-        callback.accept(this.getMarker(claim));
+    public void queueOperation(@NotNull MapServiceOp op) {
+        MapMarker marker = this.getMarker(op.getClaim());
+        if (marker != null) op.apply(marker);
     }
 
     public abstract void cleanup();

@@ -52,7 +52,7 @@ public class BluemapMapMarker implements MapMarker {
         ChunkBitmap bmp = new ChunkBitmap(claim.getChunks());
         List<List<Point>> edges = bmp.traceBlocks(true);
 
-        if (edges.size() < 1) return;
+        if (edges.isEmpty()) return;
 
         this.marker.setShape(
                 this.buildShapeFromPoints(edges.get(0)),
