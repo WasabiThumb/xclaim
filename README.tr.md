@@ -65,10 +65,9 @@ Ekonomi kullanımı etkinleştirilirse XClaim, eğer varsa aşağıdaki ekonomi 
 - Vault
 - EssentialsX
 
-Players will then pay depending on the permission group the player is in (see [here](#permissions)).\
-For instance, if you wanted to set the default price for a claim to 2.25, then you would set ``limits.default.claim-price`` to ``2.25``.\
-See all options in the [config section](#config).
-
+Oyuncular daha sonra oyuncunun bulunduğu izin grubuna bağlı olarak ödeme yapacaklardır (bkz. [buraya](#permissions)).\
+Örneğin, bir talebin varsayılan fiyatını 2,25 olarak ayarlamak isterseniz ``limits.default.claim-price`` değerini ``2,25`` olarak ayarlarsınız.\
+[config kısmında](#config) tüm seçeneklere bakabilirsiniz.
 
 Oyuncular daha sonra oyuncunun bulunduğu izin grubuna bağlı olarak ödeme yapacaklardır (bkz. [buraya](#permissions)).\
 Örneğin, bir alanın varsayılan fiyatını 2,25 olarak ayarlamak isterseniz ``limits.default.claim-price`` ayarını ``2,25`` olarak düzenlersiniz.\
