@@ -349,7 +349,7 @@ public class XCPlayer {
         return new AbstractSet<OfflinePlayer>() {
             @Override
             public @NotNull Iterator<OfflinePlayer> iterator() {
-                return current.stream().map(Bukkit::getOfflinePlayer).iterator();
+                return Collections.unmodifiableSet(current).stream().map(Bukkit::getOfflinePlayer).iterator();
             }
 
             @Override
