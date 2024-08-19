@@ -328,7 +328,9 @@ public class XCPlayer {
             @Override
             public OfflinePlayer remove(int index) {
                 UUID id = this.get0(index);
-                current.remove(id);
+                if (current.remove(id)) {
+                    XCPlayer.this.setTrustedPlayers0(new ArrayList<>(current));
+                }
                 return Bukkit.getOfflinePlayer(id);
             }
 
