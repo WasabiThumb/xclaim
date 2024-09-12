@@ -338,6 +338,7 @@ public class InteractHandler extends PermissionHandler {
     // START Paper Item Frames
     protected void onPaperItemFrameChange(Listener ignored, Event e1) {
         Player ply = ((PlayerEvent) e1).getPlayer();
+        if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
         Location loc;
 
         Class<?> cls = e1.getClass();
