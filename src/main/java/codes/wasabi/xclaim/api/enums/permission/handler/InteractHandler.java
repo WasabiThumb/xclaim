@@ -1,20 +1,22 @@
 package codes.wasabi.xclaim.api.enums.permission.handler;
 
+import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.api.enums.permission.PermissionHandler;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformEntityPlaceListener;
 import io.papermc.lib.PaperLib;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.*;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -23,8 +25,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Method;
 
 public class InteractHandler extends PermissionHandler {
 
@@ -79,6 +80,23 @@ public class InteractHandler extends PermissionHandler {
                 entityPlaceListener.on(this::onPlaceEntity);
             }
         }
+        // START Paper Item Frames
+        if (!mode.equals(Mode.ALL)) return;
+        Class<? extends Event> itemFrameEventClass;
+        try {
+            itemFrameEventClass = Class.forName("io.papermc.paper.event.player.PlayerItemFrameChangeEvent")
+                    .asSubclass(Event.class);
+        } catch (ClassNotFoundException | ClassCastException ignored) {
+            return;
+        }
+        Bukkit.getPluginManager().registerEvent(
+                itemFrameEventClass,
+                this,
+                EventPriority.NORMAL,
+                this::onPaperItemFrameChange,
+                XClaim.instance
+        );
+        // END Paper Item Frames
     }
 
     @Override
@@ -316,6 +334,25 @@ public class InteractHandler extends PermissionHandler {
             stdError(ply);
         }
     }
+
+    // START Paper Item Frames
+    protected void onPaperItemFrameChange(Listener ignored, Event e1) {
+        Player ply = ((PlayerEvent) e1).getPlayer();
+        if (getClaim().hasPermission(ply, Permission.INTERACT)) return;
+        Location loc;
+
+        Class<?> cls = e1.getClass();
+        try {
+            Method getItemFrameMethod = cls.getMethod("getItemFrame");
+            Entity itemFrame = (Entity) getItemFrameMethod.invoke(e1);
+            loc = itemFrame.getLocation();
+        } catch (ReflectiveOperationException | SecurityException ignored2) {
+            loc = ply.getLocation();
+        }
+
+        if (test((Cancellable) e1, loc)) stdError(ply);
+    }
+    // END Paper Item Frames
 
     private boolean test(@NotNull Cancellable cancellable, @NotNull Location location) {
         if (getClaim().contains(location)) {
