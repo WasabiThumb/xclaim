@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.CharBuffer;
 import java.util.*;
 
 import static codes.wasabi.xclaim.util.IntLongConverter.*;
@@ -130,12 +133,17 @@ public class ImportCommand implements Command {
             for (World w : Bukkit.getWorlds()) {
                 audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-world", w.getName()));
                 UUIDPlane plane = new UUIDPlane();
+                com.cjburkey.claimchunk.chunk.ChunkPos pos;
+                int x;
+                int z;
                 for (com.cjburkey.claimchunk.chunk.DataChunk chk : dataHandler.getClaimedChunks()) {
-                    com.cjburkey.claimchunk.chunk.ChunkPos pos = chk.chunk;
-                    if (pos.getWorld().equalsIgnoreCase(w.getName())) {
-                        audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-chunk", pos.getX(), pos.getZ()));
+                    pos = chk.chunk;
+                    if (chunkPosGetWorld(pos).equalsIgnoreCase(w.getName())) {
+                        x = chunkPosGetX(pos);
+                        z = chunkPosGetZ(pos);
+                        audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-chunk", x, z));
                         UUID ownerUUID = chk.player;
-                        plane.set(pos.getX(), pos.getZ(), ownerUUID);
+                        plane.set(x, z, ownerUUID);
                     }
                 }
                 audience.sendMessage(XClaim.lang.getComponent("cmd-import-status-fill"));
@@ -171,6 +179,80 @@ public class ImportCommand implements Command {
         } else {
             audience.sendMessage(XClaim.lang.getComponent("cmd-import-err-installed"));
         }
+    }
+
+    // ClaimChunk broke API at some point by converting ChunkPos to a Record, now we need to check for both
+    // "x" and "getX" methods
+
+    private static Object[] CHUNK_POS_GET_WORLD;
+    private static Object[] CHUNK_POS_GET_X;
+    private static Object[] CHUNK_POS_GET_Z;
+    static {
+        Class<?> clazz = null;
+        boolean found = false;
+        try {
+            clazz = Class.forName("com.cjburkey.claimchunk.chunk.ChunkPos");
+            found = true;
+        } catch (ClassNotFoundException e) {
+            CHUNK_POS_GET_WORLD = CHUNK_POS_GET_X = CHUNK_POS_GET_Z = new Object[] { null, new AssertionError(e) };
+        }
+
+        if (found) {
+            CHUNK_POS_GET_WORLD = new Object[] { null, null };
+            findRecordMethod(clazz, "world", CHUNK_POS_GET_WORLD);
+
+            CHUNK_POS_GET_X = new Object[] { null, null };
+            findRecordMethod(clazz, "x", CHUNK_POS_GET_X);
+
+            CHUNK_POS_GET_Z = new Object[] { null, null };
+            findRecordMethod(clazz, "z", CHUNK_POS_GET_Z);
+        }
+    }
+
+    private static void findRecordMethod(Class<?> clazz, String name, Object[] data) {
+        Method m;
+        try {
+            m = clazz.getMethod(name);
+        } catch (NoSuchMethodException e1) {
+            final char[] chars = new char[name.length() + 3];
+            CharBuffer.wrap(chars)
+                    .put("get")
+                    .put((char) (name.charAt(0) - 32))
+                    .put(name, 1, name.length());
+            try {
+                m = clazz.getMethod(new String(chars));
+            } catch (NoSuchMethodException e2) {
+                e2.addSuppressed(e1);
+                data[1] = new AssertionError(e2);
+                return;
+            }
+        }
+        data[0] = m;
+    }
+
+
+    private static Object unwrapRecordMethod(com.cjburkey.claimchunk.chunk.ChunkPos pos, Object[] data) {
+        if (data[0] == null) throw ((AssertionError) data[1]);
+        Method m = (Method) data[0];
+        Object ret;
+        try {
+            ret = m.invoke(pos);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
+        return ret;
+    }
+
+    private static String chunkPosGetWorld(com.cjburkey.claimchunk.chunk.ChunkPos pos) {
+        return (String) unwrapRecordMethod(pos, CHUNK_POS_GET_WORLD);
+    }
+
+    private static int chunkPosGetX(com.cjburkey.claimchunk.chunk.ChunkPos pos) {
+        return (Integer) unwrapRecordMethod(pos, CHUNK_POS_GET_X);
+    }
+
+    private static int chunkPosGetZ(com.cjburkey.claimchunk.chunk.ChunkPos pos) {
+        return (Integer) unwrapRecordMethod(pos, CHUNK_POS_GET_Z);
     }
 
 }

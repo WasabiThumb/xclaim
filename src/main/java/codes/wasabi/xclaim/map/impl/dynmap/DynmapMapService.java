@@ -38,9 +38,10 @@ public class DynmapMapService extends MapService {
     @Override
     public @Nullable MapMarker getMarker(@NotNull Claim claim) {
         try {
+            Class<?> apiClass = Class.forName("org.dynmap.DynmapAPI");
             return (MapMarker) Class.forName("codes.wasabi.xclaim.map.impl.dynmap.DynmapMapMarker")
-                    .getDeclaredMethod("getMarker", Plugin.class, Claim.class)
-                    .invoke(null, this.plugin, claim);
+                    .getDeclaredMethod("getMarker", apiClass, Claim.class)
+                    .invoke(null, apiClass.cast(this.plugin), claim);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -49,9 +50,10 @@ public class DynmapMapService extends MapService {
     @Override
     public void cleanup() {
         try {
+            Class<?> apiClass = Class.forName("org.dynmap.DynmapAPI");
             Class.forName("codes.wasabi.xclaim.map.impl.dynmap.DynmapMapMarker")
-                    .getDeclaredMethod("cleanMarkerSet", Plugin.class)
-                    .invoke(null, this.plugin);
+                    .getDeclaredMethod("cleanMarkerSet", apiClass)
+                    .invoke(null, apiClass.cast(this.plugin));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

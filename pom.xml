@@ -59,12 +59,6 @@
                                     <pattern>net.kyori.adventure</pattern>
                                     <shadedPattern>codes.wasabi.xclaim.adventure</shadedPattern>
                                 </relocation>
-                                <!--
-                                <relocation>
-                                    <pattern>xyz.xenondevs.particle</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.particle</shadedPattern>
-                                </relocation>
-                                -->
                                 <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>codes.wasabi.xclaim.bstats</shadedPattern>
@@ -120,29 +114,17 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>mike-repo</id>
+            <url>https://repo.mikeprimm.com/</url>
+        </repository>
     </repositories>
 
     <dependencies>
-        <!--
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
-        <!--
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.20.4-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>dev.folia</groupId>
-            <artifactId>folia-api</artifactId>
-            <version>1.19.4-R0.1-20230527.192927-40</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -200,11 +182,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.cjburkey</groupId>
+            <groupId>com.cjburkey.claimchunk</groupId>
             <artifactId>claimchunk</artifactId>
-            <version>0.0.23-RC7</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/claimchunk-0.0.23-RC7-plugin.jar</systemPath>
+            <version>0.0.25</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -213,11 +194,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org</groupId>
-            <artifactId>dynmap</artifactId>
-            <version>3.3-beta-2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/Dynmap-3.3-beta-2-spigot.jar</systemPath>
+            <groupId>us.dynmap</groupId>
+            <artifactId>DynmapCoreAPI</artifactId>
+            <version>3.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>us.dynmap</groupId>
+            <artifactId>dynmap-api</artifactId>
+            <version>3.6</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.BlueMap-Minecraft</groupId>
@@ -255,14 +241,6 @@
             <version>2.13.2</version>
             <scope>provided</scope>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>xyz.xenondevs</groupId>
-            <artifactId>particle</artifactId>
-            <version>1.8.4</version>
-            <scope>provided</scope>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>

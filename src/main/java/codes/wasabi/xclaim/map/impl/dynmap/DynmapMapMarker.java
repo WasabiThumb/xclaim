@@ -9,12 +9,9 @@ import codes.wasabi.xclaim.map.util.Point;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.ChunkReference;
 import codes.wasabi.xclaim.util.hull.ConvexHull;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.plugin.Plugin;
-import org.dynmap.bukkit.DynmapPlugin;
+import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
@@ -74,7 +71,7 @@ public class DynmapMapMarker implements MapMarker {
         this.marker.deleteMarker();
     }
 
-    private static @NotNull MarkerSet getMarkerSet(@NotNull DynmapPlugin dynmap) {
+    private static @NotNull MarkerSet getMarkerSet(@NotNull DynmapAPI dynmap) {
         MarkerAPI api = dynmap.getMarkerAPI();
         MarkerSet ms = api.getMarkerSet("xclaim_marker_set");
         if (ms == null) {
@@ -84,8 +81,7 @@ public class DynmapMapMarker implements MapMarker {
     }
 
     // Package Private
-    static @Nullable DynmapMapMarker getMarker(@NotNull Plugin plugin, @NotNull Claim claim) {
-        DynmapPlugin dynmap = (DynmapPlugin) plugin;
+    static @Nullable DynmapMapMarker getMarker(@NotNull DynmapAPI dynmap, @NotNull Claim claim) {
         World w = claim.getWorld();
         if (w == null) return null;
         MarkerSet set = getMarkerSet(dynmap);
@@ -108,8 +104,7 @@ public class DynmapMapMarker implements MapMarker {
         return new DynmapMapMarker(marker);
     }
 
-    static void cleanMarkerSet(@NotNull Plugin plugin) {
-        DynmapPlugin dynmap = (DynmapPlugin) plugin;
+    static void cleanMarkerSet(@NotNull DynmapAPI dynmap) {
         MarkerSet ms = getMarkerSet(dynmap);
         ms.deleteMarkerSet();
     }
