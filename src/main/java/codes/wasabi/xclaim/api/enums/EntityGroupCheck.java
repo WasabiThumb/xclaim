@@ -143,7 +143,7 @@ abstract class EntityGroupCheck implements Predicate<EntityType> {
 
         @Override
         protected boolean testClass(@NotNull Class<? extends Entity> clazz) {
-            return Vehicle.class.isAssignableFrom(clazz);
+            return org.bukkit.entity.Vehicle.class.isAssignableFrom(clazz);
         }
 
     }

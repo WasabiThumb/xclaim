@@ -3,32 +3,43 @@ package codes.wasabi.xclaim.command;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.sub.*;
+import codes.wasabi.xclaim.debug.Debug;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class XClaimCommand implements Command {
 
     private final Collection<Command> subCommands;
     private final Command guiCommmand;
     public XClaimCommand() {
-        guiCommmand = new GUICommand();
+        this.guiCommmand = new GUICommand();
         HelpCommand helpCommand = new HelpCommand();
-        subCommands = Arrays.asList(
-                helpCommand,
+        this.subCommands = allocateSubCommands(helpCommand, this.guiCommmand);
+        helpCommand.setCommands(this.subCommands);
+    }
+
+    private static @NotNull List<Command> allocateSubCommands(HelpCommand help, Command gui) {
+        Command[] sub = new Command[] {
+                help, gui,
+                // START Subcommands
                 new InfoCommand(),
                 new CurrentCommand(),
                 new UpdateCommand(),
                 new RestartCommand(),
-                guiCommmand,
                 new ChunksCommand(),
                 new ClearCommand(),
-                new ListCommand()
-        );
-        helpCommand.setCommands(subCommands);
+                new ListCommand(),
+                // END Subcommands
+                new DebugCommand()
+        };
+        List<Command> ret = Arrays.asList(sub);
+        if (!Debug.isEnabled()) ret = ret.subList(0, ret.size() - 1);
+        return ret;
     }
 
     @Override

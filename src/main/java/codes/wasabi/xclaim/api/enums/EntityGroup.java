@@ -1,6 +1,10 @@
 package codes.wasabi.xclaim.api.enums;
 
 import static codes.wasabi.xclaim.api.enums.EntityGroupCheck.*;
+
+import codes.wasabi.xclaim.debug.goal.DebugGoal;
+import codes.wasabi.xclaim.debug.writer.DebugWriter;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -20,7 +24,7 @@ public enum EntityGroup {
     MISC(misc(true));
 
     private final Predicate<EntityType> predicate;
-    private EnumSet<EntityType> list = null;
+    private EnumSet<EntityType> set = null;
     EntityGroup(boolean or, EntityGroupCheck a, EntityGroupCheck... b) {
         Predicate<EntityType> predicate = a;
         if (b.length != 0) {
@@ -37,23 +41,29 @@ public enum EntityGroup {
         this(false, a, b);
     }
 
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval
-    @Contract(" -> new")
-    public @NotNull EnumSet<EntityType> getList() {
+    private @NotNull EnumSet<EntityType> getSet0() {
         synchronized (this) {
-            if (this.list != null) return this.list;
+            if (this.set != null) return this.set;
             EnumSet<EntityType> set = EnumSet.noneOf(EntityType.class);
             for (EntityType type : EntityType.values()) {
                 if (this.predicate.test(type)) set.add(type);
             }
-            return this.list = set;
+            return this.set = set;
         }
     }
 
-    @Deprecated
     public @NotNull @UnmodifiableView Set<EntityType> getSet() {
-        return Collections.unmodifiableSet(this.getList());
+        return Collections.unmodifiableSet(this.getSet0());
+    }
+
+    /**
+     * @deprecated Use {@link #getSet()}
+     */
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval
+    @Contract(" -> new")
+    public @NotNull EnumSet<EntityType> getList() {
+        return this.getSet0();
     }
 
     public boolean contains(@NotNull EntityType type) {
@@ -63,5 +73,24 @@ public enum EntityGroup {
     public boolean contains(@NotNull Entity entity) {
         return this.predicate.test(entity.getType());
     }
+
+    // START Debug
+
+    @ApiStatus.Internal
+    @DebugGoal(async = true)
+    public static void debug(@NotNull DebugWriter out) {
+        for (EntityGroup eg : values()) {
+            out.color(NamedTextColor.GOLD);
+            out.println("= " + eg.name() + " =");
+
+            out.color(NamedTextColor.WHITE);
+            for (EntityType et : eg.getSet()) {
+                out.println("- " + et.name());
+            }
+            out.println();
+        }
+    }
+
+    // END Debug
 
 }
