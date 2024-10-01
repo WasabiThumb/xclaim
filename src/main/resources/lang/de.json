@@ -14,6 +14,8 @@
   "eco-fail": "Kein passendes Wirtschaftsplugin gefunden.",
   "trust-load": "Lade vertrauenswürdige Spieler...",
   "trust-load-err": "Es ist ein Fehler während des Ladens der vertrauenswürdigen Spieler aufgetreten. Für Details sehen Sie bitte weiter unten.",
+  "config-migration-line1": "<yellow><b><gold>(!)</gold></b> XClaim verwendet jetzt <white>config.toml</white>! Eine Datei wurde generiert, wird aber nicht verwendet, sofern <white>config.yml</white> nicht entfernt wird.</yellow>",
+  "config-migration-line2": "<yellow><b><gold>(!)</gold></b> Die Unterstützung für YAML-Konfigurationen wird möglicherweise in Zukunft eingestellt.</yellow>",
   "claims-load": "Lade Ansprüche...",
   "claims-load-err": "Es ist ein Fehler während des Ladens der Ansprüche aufgetreten. Für Details sehen Sie bitte weiter unten.",
   "claims-unpack": "Entpacke Daten zu den Ansprüchen...",

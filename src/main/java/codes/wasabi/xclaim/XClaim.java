@@ -6,6 +6,17 @@ import codes.wasabi.xclaim.api.MovementRoutine;
 import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
 import codes.wasabi.xclaim.command.sub.UpdateCommand;
+import codes.wasabi.xclaim.config.impl.defaulting.DefaultingRootConfig;
+import codes.wasabi.xclaim.config.impl.toml.TomlRootConfig;
+import codes.wasabi.xclaim.config.impl.yaml.YamlRootConfig;
+import codes.wasabi.xclaim.config.struct.RootConfig;
+import codes.wasabi.xclaim.config.struct.helpers.ToggleableConfig;
+import codes.wasabi.xclaim.config.struct.sub.*;
+import codes.wasabi.xclaim.config.struct.sub.integrations.EconomyConfig;
+import codes.wasabi.xclaim.config.struct.sub.integrations.MapConfig;
+import codes.wasabi.xclaim.debug.Debuggable;
+import codes.wasabi.xclaim.debug.goal.DebugGoal;
+import codes.wasabi.xclaim.debug.writer.DebugWriter;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
@@ -15,32 +26,33 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import codes.wasabi.xclaim.util.StreamUtil;
 import com.google.gson.*;
+import com.moandjiezana.toml.Toml;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+@Debuggable
 public final class XClaim extends JavaPlugin {
 
     public static XClaim instance;
@@ -49,7 +61,7 @@ public final class XClaim extends JavaPlugin {
     public static YamlConfiguration trustConfig;
     public static File claimsFile;
     public static YamlConfiguration claimsConfig;
-    public static FileConfiguration mainConfig;
+    public static RootConfig mainConfig;
     public static CommandManager commandManager;
     public static File jarFile;
     public static File dataFolder;
@@ -59,14 +71,15 @@ public final class XClaim extends JavaPlugin {
     public void onEnable() {
         instance = this;
         logger = getLogger();
-        loadGeneralConfig();
+        loadMainConfig();
         setupLang();
+        Platform.init();
+        if (mainConfig.isLegacy()) warnConfigMigration();
         if (!Economy.isAvailable()) {
-            if (mainConfig.getBoolean("use-economy", false)) {
+            if (mainConfig.integrations().economy().enabled()) {
                 logger.log(Level.WARNING, lang.get("eco-fail"));
             }
         }
-        Platform.init();
         dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, lang.get("data-folder-created"));
         ParticleService.init();
@@ -94,16 +107,67 @@ public final class XClaim extends JavaPlugin {
         jarFile = new File(XClaim.class.getProtectionDomain().getCodeSource().getLocation().getPath());
     }
 
-    private void loadGeneralConfig() {
-        saveDefaultConfig();
-        mainConfig = getConfig();
+    private void loadMainConfig() {
+        final File dataDir = this.getDataFolder();
+        final boolean dataDirExists = dataDir.isDirectory();
+        final File config = new File(dataDir, "config.toml");
+        final File legacyConfig = new File(dataDir, "config.yml");
+
+        mainConfig = new DefaultingRootConfig(
+                loadMainConfigInternal(dataDir, dataDirExists, config, legacyConfig)
+        );
+    }
+
+    private @NotNull RootConfig loadMainConfigInternal(File dataDir, boolean dataDirExists, File config, File legacyConfig) {
+        if (!dataDirExists && (!dataDir.mkdirs()))
+            throw new AssertionError("Data directory does not exist and could not be created");
+
+        // Copy bundled config.toml to disk if it doesn't already exist
+        if (!dataDirExists || !config.isFile()) {
+            try (
+                    InputStream is = Objects.requireNonNull(this.getResource("config.toml"));
+                    OutputStream os = new FileOutputStream(config, false)
+            ) {
+                IOUtils.copyLarge(is, os);
+            } catch (IOException e) {
+                throw new AssertionError("Failed to write config.toml to disk", e);
+            }
+        }
+
+        // Check for & load legacy config
+        Throwable suppressed = null;
+        if (dataDirExists && legacyConfig.isFile()) {
+            try {
+                YamlConfiguration handle = new YamlConfiguration();
+                handle.load(legacyConfig);
+                return new YamlRootConfig(handle);
+            } catch (Exception e) {
+                suppressed = new AssertionError(
+                        "Failed to load config file \"" + legacyConfig.getName() + "\"",
+                        e
+                );
+            }
+        }
+
+        // Load non-legacy config
+        Toml toml = new Toml();
+        try (InputStream is = new FileInputStream(config);
+             InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)
+        ) {
+            toml.read(reader);
+        } catch (Exception e) {
+            AssertionError ex = new AssertionError("Failed to read config.toml", e);
+            if (suppressed != null) ex.addSuppressed(suppressed);
+            throw ex;
+        }
+        return new TomlRootConfig(toml);
     }
 
     private static final String[] bundledLangs = new String[] {
             "en-US", "de", "zh", "tr"
     };
     private void setupLang() {
-        String l = mainConfig.getString("language", "en-US");
+        String l = mainConfig.language();
         File f = getDataFolder();
         File langFolder = new File(f, "lang");
         if (!langFolder.exists()) {
@@ -187,7 +251,7 @@ public final class XClaim extends JavaPlugin {
     }
 
     private void loadDynmap() {
-        if (mainConfig.getBoolean("dynmap-integration.enabled", true)) {
+        if (mainConfig.integrations().map().enabled()) {
             logger.log(Level.INFO, lang.get("dynmap-check"));
             MapService.get();
         }
@@ -240,8 +304,8 @@ public final class XClaim extends JavaPlugin {
                 }
                 claim.claim();
             }
-            if (mainConfig.getBoolean("auto-save.enabled", true)) {
-                double interval = mainConfig.getDouble("auto-save.interval", 300d);
+            if (mainConfig.autoSave().enabled()) {
+                double interval = mainConfig.autoSave().interval();
                 if (interval > 0.0) {
                     long intervalTicks = Math.round(interval * 20d);
                     this.autosaveTask = Platform.get().getScheduler().runTaskTimer(this, this::autoSaveClaims, 0L, intervalTicks);
@@ -285,6 +349,22 @@ public final class XClaim extends JavaPlugin {
         Platform.get().getScheduler().runTaskAsynchronously(this, () -> {
             String option = UpdateCommand.initialCheck();
             if (option == null) return;
+            this.broadcastConsoleOps(
+                    lang.getComponent("update-available-line1", option),
+                    lang.getComponent("update-available-line2")
+            );
+        });
+    }
+
+    private void warnConfigMigration() {
+        this.broadcastConsoleOps(
+                lang.getComponent("config-migration-line1"),
+                lang.getComponent("config-migration-line2")
+        );
+    }
+
+    private void broadcastConsoleOps(final @NotNull Component @NotNull ... messages) {
+        Platform.get().getScheduler().synchronize(() -> {
             BukkitAudiences adventure = Platform.getAdventure();
             Audience au = adventure.console();
             for (Player p : Bukkit.getOnlinePlayers()) {
@@ -292,8 +372,7 @@ public final class XClaim extends JavaPlugin {
                     au = Audience.audience(au, adventure.player(p));
                 }
             }
-            au.sendMessage(lang.getComponent("update-available-line1", option));
-            au.sendMessage(lang.getComponent("update-available-line2"));
+            for (Component message : messages) au.sendMessage(message);
         });
     }
     /* END STARTUP TASKS */
@@ -345,7 +424,7 @@ public final class XClaim extends JavaPlugin {
 
     private void stopServices() {
         logger.log(Level.INFO, lang.get("services-stop"));
-        if (mainConfig.getBoolean("stop-editing-on-shutdown", false)) {
+        if (mainConfig.editor().stopOnShutdown()) {
             for (Player ply : Bukkit.getOnlinePlayers()) ChunkEditor.stopEditing(ply);
         }
         commandManager.unregisterAll();
@@ -486,5 +565,129 @@ public final class XClaim extends JavaPlugin {
         }
 
     }
+
+    /* START Debug */
+
+    @DebugGoal(async = true)
+    @SuppressWarnings("unused")
+    static void config(@NotNull DebugWriter writer) {
+        writer.color(NamedTextColor.GOLD);
+        writer.println("Impl: " + mainConfig.getClass().getName());
+        writer.println("----------------");
+        writer.println();
+
+        config0(writer, mainConfig);
+        writer.println();
+
+        config1(writer, mainConfig.autoSave());
+        writer.println();
+
+        config2(writer, mainConfig.editor());
+        writer.println();
+
+        config3(writer, mainConfig.integrations());
+        writer.println();
+
+        config4(writer, mainConfig.rules());
+        writer.println();
+
+        config5(writer, mainConfig.worlds());
+        writer.println();
+    }
+
+    private static void config0(@NotNull DebugWriter writer, @NotNull RootConfig cfg) {
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[root]");
+        writer.color(NamedTextColor.WHITE);
+
+        writer.println("language = " + cfg.language());
+        writer.println("veteran-time = " + cfg.veteranTime());
+        writer.println("no-paper-nag = " + cfg.noPaperNag());
+    }
+
+    private static void config1(@NotNull DebugWriter writer, @NotNull AutoSaveConfig cfg) {
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[auto-save]");
+        writer.color(NamedTextColor.WHITE);
+
+        writer.println("enabled = " + cfg.enabled());
+        writer.println("debug = " + cfg.debug());
+        writer.println("interval = " + cfg.interval());
+        writer.println("silent = " + cfg.silent());
+    }
+
+    private static void config2(@NotNull DebugWriter writer, @NotNull EditorConfig cfg) {
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[editor]");
+        writer.color(NamedTextColor.WHITE);
+
+        writer.println("start-on-create = " + cfg.startOnCreate());
+        writer.println("stop-on-shutdown = " + cfg.stopOnShutdown());
+        writer.println("stop-on-leave = " + cfg.stopOnLeave());
+    }
+
+    private static void config3(@NotNull DebugWriter writer, @NotNull IntegrationsConfig cfg) {
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[integrations.economy]");
+        writer.color(NamedTextColor.WHITE);
+        config30(writer, cfg.economy());
+        writer.println();
+
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[integrations.map]");
+        writer.color(NamedTextColor.WHITE);
+        config31(writer, cfg.map());
+        writer.println();
+
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[integrations.protection]");
+        writer.color(NamedTextColor.WHITE);
+        config300(writer, cfg.protection());
+    }
+
+    private static void config300(@NotNull DebugWriter writer, @NotNull ToggleableConfig cfg) {
+        writer.println("enabled = " + cfg.enabled());
+        writer.println("debug = " + cfg.debug());
+    }
+
+    private static void config30(@NotNull DebugWriter writer, @NotNull EconomyConfig cfg) {
+        config300(writer, cfg);
+        writer.println("claim-price.default = " + cfg.claimPrice(null));
+        writer.println("unclaim-reward.default = " + cfg.unclaimReward(null));
+        writer.println("free-chunks.default = " + cfg.freeChunks(null));
+    }
+
+    private static void config31(@NotNull DebugWriter writer, @NotNull MapConfig cfg) {
+        config300(writer, cfg);
+        writer.println("old-outline-style = " + cfg.oldOutlineStyle());
+    }
+
+    private static void config4(@NotNull DebugWriter writer, @NotNull RulesConfig cfg) {
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[rules]");
+        writer.color(NamedTextColor.WHITE);
+
+        writer.println("placement = " + cfg.placementRaw() + " (" + cfg.placement().name() + ")");
+        writer.println("min-distance = " + cfg.minDistance());
+        writer.println("exempt-owner = " + cfg.exemptOwner());
+        writer.println("max-chunks.default = " + cfg.maxChunks(null));
+        writer.println("max-claims.default = " + cfg.maxClaims(null));
+        writer.println("max-claims-in-world.default = " + cfg.maxClaimsInWorld(null));
+    }
+
+    private static void config5(@NotNull DebugWriter writer, @NotNull WorldsConfig cfg) {
+        writer.color(NamedTextColor.AQUA);
+        writer.println("[worlds]");
+        writer.color(NamedTextColor.WHITE);
+
+        writer.println("grace-time = " + cfg.graceTime());
+        writer.println("use-whitelist = " + cfg.useWhitelist());
+        writer.println("whitelist = " + Arrays.toString(cfg.whitelist().toArray()));
+        writer.println("use-blacklist = " + cfg.useBlacklist());
+        writer.println("whitelist = " + Arrays.toString(cfg.blacklist().toArray()));
+        writer.println("case-sensitive = " + cfg.caseSensitive());
+    }
+
+    /* END Debug */
 
 }

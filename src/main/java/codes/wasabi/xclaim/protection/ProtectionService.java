@@ -23,7 +23,7 @@ public abstract class ProtectionService {
             ServiceFactory<ProtectionService> factory = new ServiceFactory<>(
                     WorldGuardProtectionService.class
             );
-            service = factory.createElseNull(XClaim.mainConfig.getBoolean("worldguard-integration.debug", false));
+            service = factory.createElseNull(XClaim.mainConfig.integrations().protection().debug());
             available = service != null;
         } finally {
             initialized = true;

@@ -56,6 +56,10 @@ public class DebugGoalInstance {
             annotation = tmp.getAnnotation(DebugGoal.class);
             if (annotation == null) continue;
 
+            try {
+                tmp.setAccessible(true);
+            } catch (Exception ignored) { }
+
             label = labelBase + "." + tmp.getName();
 
             params = tmp.getParameterTypes();

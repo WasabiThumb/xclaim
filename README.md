@@ -69,34 +69,10 @@ For instance, if you wanted to set the default price for a claim to 2.25, then y
 See all options in the [config section](#config).
 
 ## Config
-| Name | Description | Default Value |
-| --: | :-: | :-- |
-| language | The language to use, must be a valid language pack from ``/plugins/XClaim/lang`` otherwise falls back to en-US | en-US |
-| veteran-time | The time in seconds it takes for a player to be on the server in order for Veteran status to take effect | 604800 (1 week) |
-| stop-editing-on-shutdown | Whether players should be booted out of the chunk editor on shutdown | false |
-| stop-editing-on-leave | Whether players should be booted out of the chunk editor when they leave voluntarily | true |
-| exempt-claim-owner-from-permission-rules | If claim owners should have access to all permissions on the claim implicitly. You shouldn't change this, it's mainly for debugging | true |
-| enforce-adjacent-claim-chunks | Whether chunks in a claim must be next to each other | true |
-| allow-diagonal-claim-chunks | If enforce-adjacent-claim-chunks is true, this sets if chunks diagonal from each other are considered as "next to" each other. Otherwise, does nothing. | true |
-| claim-min-distance | If greater than 0, determines the minimum distance between chunks claimed by different players | 0 |
-| enter-chunk-editor-on-create | If true, then players will enter the chunk editor when they make a new claim | true |
-| use-economy | Whether to use economy features | false |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-chunks | Sets the max chunks for a group. See Permissions for more info. | |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims | Sets the max claims for a group. See Permissions for more info. | |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.give-after | The time in seconds it takes for a player to play until they are automatically entered into this group. Values less than 0 signify "never". | -1 |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price | If economy is enabled, sets the price for claiming a chunk. | 20 |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.unclaim-reward | If economy is enabled, sets the refund amount for unclaiming a chunk. | 0 |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.free-chunks | If economy is enabled, sets the amount of chunks a player can claim for free before the next chunk requires a payment of ``limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.claim-price``. | 4 |
-| limits.𝘨𝘳𝘰𝘶𝘱-𝘯𝘢𝘮𝘦.max-claims-in-world | The maximum number of claims allowed at a time in each world. Values less than 1 signify no limit. | -1 |
-| dynmap-integration.enabled | If true, XClaim will look for dynmap on startup and hook into it. Mild speedup if turned off. | true |
-| dynmap-integration.use-old-outline-style | If true, the dynmap will use the old convex hull outlines on claims. This is mainly for debugging, as the new outline system is experimental. | false |
-| disable-paper-warning | Disables the message posted to console on startup when the server is running Spigot instead of Paper | false |
-| worlds.use-whitelist | If worlds.whitelist should be considered | false |
-| worlds.use-blacklist | If worlds.blacklist should be considered | false |
-| worlds.case-sensitive | Whether capitalization in world names in the white/blacklist matter | true |
-| worlds.whitelist | A list that a world must be in for it to work with XClaim | a sample list |
-| worlds.blacklist | A list that a world must NOT be in for it to work with XClaim | a sample list |
-| worlds.grace-time | If a claim is in a disallowed world, players have this much time in seconds before the claim is automatically removed | 604800 (1 week) |
+Configuration is now handled by [``config.toml``](https://github.com/WasabiThumb/xclaim/blob/master/src/main/resources/config.toml), which is fairly self-explanatory.
+Support for the [legacy YAML config](https://github.com/WasabiThumb/xclaim/blob/00823def93261519b8ca836a1a774a5a1f81ce65/README.md#config) may be removed in the future.
+
+**If both formats are present, [``config.yml``](https://github.com/WasabiThumb/xclaim/blob/00823def93261519b8ca836a1a774a5a1f81ce65/src/main/resources/config.yml) will be used.**
 
 ## Permissions
 Don't worry, there aren't that many.

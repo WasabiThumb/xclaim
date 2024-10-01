@@ -11,7 +11,6 @@ import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.gui.Page;
 import codes.wasabi.xclaim.platform.Platform;
-import codes.wasabi.xclaim.util.ConfigUtil;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Material;
@@ -119,7 +118,7 @@ public class MainPage extends Page {
                     Player ply = getTarget();
                     World w = ply.getWorld();
                     Audience audience = Platform.getAdventure().player(ply);
-                    if (!ConfigUtil.worldIsAllowed(XClaim.mainConfig, w)) {
+                    if (!XClaim.mainConfig.worlds().checkLists(w)) {
                         audience.sendMessage(XClaim.lang.getComponent("gui-edit-chunk-disallowed"));
                         return;
                     }

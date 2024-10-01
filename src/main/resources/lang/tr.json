@@ -14,6 +14,8 @@
   "eco-fail": "Uygun ekonomi plugini bulunamadı",
   "trust-load": "Güvenilir oyuncular yükleniyor",
   "trust-load-err": "Güvenilir oyuncuları yüklerken bir hata belirdi. Detaylarına aşağıdan bakabilirsiniz.",
+  "config-migration-line1": "<yellow><b><gold>(!)</gold></b> XClaim artık <white>config.toml</white> kullanıyor! Bir dosya oluşturuldu, ancak <white>config.yml</white> kaldırılmadığı sürece kullanılmayacak.</yellow>",
+  "config-migration-line2": "<yellow><b><gold>(!)</gold></b> Gelecekte YAML yapılandırmalarına yönelik destek sonlandırılabilir.</yellow>",
   "claims-load": "Alanlar yükleniyor",
   "claims-load-err": "Alanlar yüklenirken bir hata belirdi. Detaylarını aşağıdan bakabilirsiniz.",
   "claims-unpack": "Claimler açılıyor",

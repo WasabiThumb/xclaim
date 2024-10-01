@@ -35,7 +35,7 @@ public abstract class Economy {
         if (checked) return instance;
         checked = true;
         instance = null;
-        if (XClaim.mainConfig.getBoolean("use-economy", false)) {
+        if (XClaim.mainConfig.integrations().economy().enabled()) {
             internalGet();
         }
         has = (instance != null);

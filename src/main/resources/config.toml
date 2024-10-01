@@ -1,0 +1,136 @@
+# ╭─────────────────────────────────────╮ #
+# │         _____ _       _             │ #
+# │        / ____| |     (_)            │ #
+# │  __  _| |    | | __ _ _ _ __ ___    │ #
+# │  \ \/ / |    | |/ _` | | '_ ` _ \   │ #
+# │   >  <| |____| | (_| | | | | | | |  │ #
+# │  /_/\_\\_____|_|\__,_|_|_| |_| |_|  │ #
+# │                                     │ #
+# ╰─────────────────────────────────────╯ #
+
+# GitHub Page: https://github.com/WasabiThumb/xclaim
+# Hangar Page: https://hangar.papermc.io/WasabiThumbs/XClaim
+# Spigot Page: https://www.spigotmc.org/resources/1-8-1-21-xclaim-better-chunk-claiming-for-smps.102843/
+# This config file conforms to a subset of the TOML spec. Read it here: https://toml.io/en/v1.0.0
+# IF YOU HAVE config.yml, THIS FILE WILL NOT BE USED!
+
+# The language pack to use. Must match a language in "lang/".
+# English (en-US)
+# German (de) by eingruenesbeb & derjungeinhd
+# Chinese (zh) by SnowCutieOwO
+# Turkish (tr) by Krayir5
+language = "en-US"
+
+# The time (in seconds) until a player is considered a Veteran.
+veteran-time = 604800
+
+# Disables the warning that prints to console when using Spigot where Paper is available.
+no-paper-nag = false
+
+
+[auto-save]
+# Enables auto-saves.
+enabled = true
+
+# The time (in seconds) between each auto-save.
+interval = 300
+
+# Makes auto-saves complete silently.
+silent = false
+
+
+[editor]
+# Opens the editor when a new claim is created.
+start-on-create = true
+
+# Kicks players out of the editor when the server shuts down.
+stop-on-shutdown = false
+
+# Kicks players out of the editor when the player leaves.
+stop-on-leave = true
+
+
+[rules]
+# Enforces how chunks within the same claim can be placed in relation to eachother.
+# 0 : No rule.
+# 1 : Claims must be adjacent
+# 2 : Claims must be adjacent or diagonal
+placement = 2
+
+# The minimum distance (in chunks) between claimed chunks owned by different players.
+min-distance = 0
+
+# Exempts claim owners from rules set inside their own claims. Probably shouldn't touch this.
+exempt-owner = true
+
+# Maximum chunks (in total) that a player can claim. Set to -1 for no limit.
+max-chunks = 20
+# Example using permissions (xclaim.group.test):
+# max-chunks = { default = 20, test = 40 }
+
+# Maximum claims (in total) that a player can have. Set to -1 for no limit.
+max-claims = 5
+# Example using permissions (xclaim.group.test):
+# max-claims = { default = 5, test = 10 }
+
+# Maximum claims (per world) that a player can have. Set to -1 for no limit.
+max-claims-in-world = -1
+# Example using permissions (xclaim.group.test):
+# max-claims-in-world = { default = 2, test = -1 }
+
+
+[worlds]
+# If a claim exists in a blacklisted world, the owner has this much time before it is removed (seconds)
+grace-time = 604800
+
+# If the whitelist (below) should be used.
+use-whitelist = false
+whitelist = [ "world", "world_nether", "world_the_end" ]
+
+# If the blacklist (below) should be used.
+use-blacklist = false
+blacklist = [ "minigames", "pvp", "etc" ]
+
+# Controls whether the whitelist & blacklist is case-sensitive.
+case-sensitive = true
+
+
+[integrations.economy]
+# Enables economy. If false, all other options in this section do not apply.
+enabled = false
+
+# The price to claim a chunk.
+claim-price = 20
+# Example using permissions (xclaim.group.test):
+# claim-price = { default = 20, test = 10 }
+
+# The amount of currency rewarded when unclaiming a chunk.
+unclaim-reward = 0
+# Example using permissions (xclaim.group.test):
+# unclaim-reward = { default = 0, test = 5 }
+
+# The number of chunks that can be claimed before claim-price takes effect.
+free-chunks = 4
+# Example using permissions (xclaim.group.test):
+# free-chunks = { default = 4, test = 8 }
+
+
+[integrations.map]
+# Enables map integration (Bluemap, Dynmap). If false, all other options in this section do not apply.
+enabled = true
+
+# Uses convex hull outlines. Try only if outlines seem bugged.
+old-outline-style = false
+
+# Reserved.
+debug = false
+
+
+[integrations.protection]
+# Enables protection integration (Worldguard). If false, all other options in this section do not apply.
+enabled = true
+
+# Reserved.
+debug = false
+
+

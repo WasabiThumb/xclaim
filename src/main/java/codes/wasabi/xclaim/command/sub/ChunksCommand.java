@@ -8,7 +8,6 @@ import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.command.argument.type.StandardTypes;
 import codes.wasabi.xclaim.gui.ChunkEditor;
 import codes.wasabi.xclaim.platform.Platform;
-import codes.wasabi.xclaim.util.ConfigUtil;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -90,7 +89,7 @@ public class ChunksCommand implements Command {
             audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-404"));
             return;
         }
-        if (!ConfigUtil.worldIsAllowed(XClaim.mainConfig, w)) {
+        if (!XClaim.mainConfig.worlds().checkLists(w)) {
             audience.sendMessage(XClaim.lang.getComponent("cmd-chunks-err-disallowed"));
             return;
         }

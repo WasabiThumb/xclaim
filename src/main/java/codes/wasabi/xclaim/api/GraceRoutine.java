@@ -3,7 +3,6 @@ package codes.wasabi.xclaim.api;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
-import codes.wasabi.xclaim.util.ConfigUtil;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -47,7 +46,7 @@ public class GraceRoutine implements Listener {
             if (world == null) continue;
             Boolean allowed = allowedMap.get(world);
             if (allowed == null) {
-                allowed = ConfigUtil.worldIsAllowed(XClaim.mainConfig, world);
+                allowed = XClaim.mainConfig.worlds().checkLists(world);
                 allowedMap.put(world, allowed);
             }
             if (!allowed) {
@@ -62,7 +61,7 @@ public class GraceRoutine implements Listener {
     private final long graceTimeMillis;
     private final BukkitAudiences adv = Platform.getAdventure();
     private GraceRoutine() {
-        long graceTime = Math.max(XClaim.mainConfig.getLong("worlds.grace-time", 604800L), 0L);
+        long graceTime = Math.max(XClaim.mainConfig.worlds().graceTime(), 0L);
         graceTimeMillis = graceTime * 1000L;
         // Approximate how often we need to run the routine in order to fall within the requested period
         // By default this will be 3024000 ticks or 1.75 days w/o lag (a quarter of a week) which is excessively long
@@ -82,7 +81,7 @@ public class GraceRoutine implements Listener {
             if (world == null) continue;
             Boolean allowed = allowedMap.get(world);
             if (allowed == null) {
-                allowed = ConfigUtil.worldIsAllowed(XClaim.mainConfig, world);
+                allowed = XClaim.mainConfig.worlds().checkLists(world);
                 allowedMap.put(world, allowed);
             }
             if (!allowed) {
@@ -114,7 +113,7 @@ public class GraceRoutine implements Listener {
         for (Claim c : Claim.getByOwner(ply)) {
             World world = c.getWorld();
             if (world == null) continue;
-            if (!ConfigUtil.worldIsAllowed(XClaim.mainConfig, world)) {
+            if (!XClaim.mainConfig.worlds().checkLists(world)) {
                 count++;
             }
         }

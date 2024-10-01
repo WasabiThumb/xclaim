@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.api.enums;
 
 import static codes.wasabi.xclaim.api.enums.EntityGroupCheck.*;
 
+import codes.wasabi.xclaim.debug.Debuggable;
 import codes.wasabi.xclaim.debug.goal.DebugGoal;
 import codes.wasabi.xclaim.debug.writer.DebugWriter;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,6 +17,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
+@Debuggable
 public enum EntityGroup {
     FRIENDLY(alive(true), armorStand(false), hostile(false)),
     HOSTILE(alive(true), armorStand(false), hostile(true)),

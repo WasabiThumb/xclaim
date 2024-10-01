@@ -40,7 +40,7 @@ public class DynmapMapMarker implements MapMarker {
         World w = claim.getWorld();
         if (w != null) minHeight = Platform.get().getWorldMinHeight(w);
         List<Point> points;
-        if (XClaim.mainConfig.getBoolean("dynmap-integration.use-old-outline-style", false)) {
+        if (XClaim.mainConfig.integrations().map().oldOutlineStyle()) {
             points = new ArrayList<>();
             for (ChunkReference c : claim.getChunks()) {
                 Location cornerBlock = c.getLocation(0, minHeight, 0);

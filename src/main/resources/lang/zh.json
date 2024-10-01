@@ -14,6 +14,8 @@
   "eco-fail": "没有找到合适的经济插件。",
   "trust-load": "正在载入 信任玩家列表",
   "trust-load-err": "载入信任玩家列表时出现错误. 错误报告已显示在下方.",
+  "config-migration-line1": "<yellow><b><gold>(!)</gold></b> XClaim 现在使用 <white>config.toml</white>！文件已生成，但除非删除 <white>config.yml</white>，否则不会使用。</yellow>",
+  "config-migration-line2": "<yellow><b><gold>(!)</gold></b> 将来可能会放弃对 YAML 配置的支持。</yellow>",
   "claims-load": "载入领地中",
   "claims-load-err": "载入领地时出现错误. 错误报告已显示在下方.",
   "claims-unpack": "解压领地",

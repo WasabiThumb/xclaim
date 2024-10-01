@@ -1,30 +1,30 @@
 package codes.wasabi.xclaim.debug;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.api.enums.EntityGroup;
 import codes.wasabi.xclaim.debug.goal.DebugGoalInstance;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 @ApiStatus.Internal
 public final class Debug {
 
-    // Maybe un-hardcode this if the debug system sees more use
-    private static final Class<?>[] DEBUGGABLE = new Class<?>[] {
-            EntityGroup.class
-    };
+    private static final String PACKAGE_PREFIX_SLASH = "codes/wasabi/xclaim";
+    private static final String PACKAGE_PREFIX_DOT = "codes.wasabi.xclaim";
+    private static final int PACKAGE_PREFIX_LENGTH = 19;
 
     private static final File CODE_SOURCE;
     private static final boolean ENABLED;
@@ -67,7 +67,7 @@ public final class Debug {
             if (GOALS != null) return GOALS;
             List<DebugGoalInstance> ret = new ArrayList<>();
             try {
-                getGoals0(ret);
+                getGoals0(getPackageList(), ret);
             } catch (IOException | ReflectiveOperationException e) {
                 XClaim.logger.log(Level.WARNING, "Failed to perform reflection for debug goals", e);
             }
@@ -75,10 +75,58 @@ public final class Debug {
         }
     }
 
-    private static void getGoals0(@NotNull List<DebugGoalInstance> list) throws IOException, ReflectiveOperationException {
-        for (Class<?> cls : DEBUGGABLE) {
+    private static void getGoals0(@NotNull String[] packageList, @NotNull List<DebugGoalInstance> list) throws IOException, ReflectiveOperationException {
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .forPackages(packageList)
+                .setScanners(Scanners.TypesAnnotated)
+        );
+
+        for (Class<?> cls : reflections.getTypesAnnotatedWith(Debuggable.class)) {
             list.addAll(DebugGoalInstance.findInClass(cls));
         }
+    }
+
+    private static String[] getPackageList() throws IOException {
+        Set<String> packages = new LinkedHashSet<>();
+        //
+
+        try (FileInputStream fis = new FileInputStream(CODE_SOURCE);
+             ZipInputStream zis = new ZipInputStream(fis)
+        ) {
+            ZipEntry ze;
+            String name;
+            StringBuilder sb = new StringBuilder(PACKAGE_PREFIX_DOT);
+
+            while ((ze = zis.getNextEntry()) != null) {
+                if (!ze.isDirectory()) continue;
+                name = ze.getName();
+                if (!name.startsWith(PACKAGE_PREFIX_SLASH)) continue;
+
+                char c;
+                boolean queueDot = false;
+                for (int i=PACKAGE_PREFIX_LENGTH; i < name.length(); i++) {
+                    c = name.charAt(i);
+                    if (c == '/') {
+                        queueDot = true;
+                    } else {
+                        if (queueDot) {
+                            sb.append('.');
+                            queueDot = false;
+                        }
+                        sb.append(c);
+                    }
+                }
+                packages.add(sb.toString());
+                sb.setLength(PACKAGE_PREFIX_LENGTH);
+            }
+        }
+
+        //
+        final int count = packages.size();
+        String[] ret = new String[count];
+        int head = 0;
+        for (String pkg : packages) ret[head++] = pkg;
+        return ret;
     }
 
     public static @Nullable DebugGoalInstance getGoalByLabel(@NotNull String label) {
