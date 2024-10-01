@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.command.CommandManager;
 import codes.wasabi.xclaim.command.argument.type.OfflinePlayerType;
 import codes.wasabi.xclaim.command.sub.UpdateCommand;
 import codes.wasabi.xclaim.config.impl.defaulting.DefaultingRootConfig;
+import codes.wasabi.xclaim.config.impl.toml.TomlRootConfig;
 import codes.wasabi.xclaim.config.impl.yaml.YamlRootConfig;
 import codes.wasabi.xclaim.config.struct.RootConfig;
 import codes.wasabi.xclaim.config.struct.helpers.ToggleableConfig;
@@ -25,12 +26,14 @@ import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.platform.PlatformSchedulerTask;
 import codes.wasabi.xclaim.util.StreamUtil;
 import com.google.gson.*;
+import com.moandjiezana.toml.Toml;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -68,14 +71,15 @@ public final class XClaim extends JavaPlugin {
     public void onEnable() {
         instance = this;
         logger = getLogger();
-        loadGeneralConfig();
+        loadMainConfig();
         setupLang();
+        Platform.init();
+        if (mainConfig.isLegacy()) warnConfigMigration();
         if (!Economy.isAvailable()) {
             if (mainConfig.integrations().economy().enabled()) {
                 logger.log(Level.WARNING, lang.get("eco-fail"));
             }
         }
-        Platform.init();
         dataFolder = getDataFolder();
         if (dataFolder.mkdirs()) logger.log(Level.INFO, lang.get("data-folder-created"));
         ParticleService.init();
@@ -103,9 +107,60 @@ public final class XClaim extends JavaPlugin {
         jarFile = new File(XClaim.class.getProtectionDomain().getCodeSource().getLocation().getPath());
     }
 
-    private void loadGeneralConfig() {
-        saveDefaultConfig();
-        mainConfig = new DefaultingRootConfig(new YamlRootConfig(this.getConfig()));
+    private void loadMainConfig() {
+        final File dataDir = this.getDataFolder();
+        final boolean dataDirExists = dataDir.isDirectory();
+        final File config = new File(dataDir, "config.toml");
+        final File legacyConfig = new File(dataDir, "config.yml");
+
+        mainConfig = new DefaultingRootConfig(
+                loadMainConfigInternal(dataDir, dataDirExists, config, legacyConfig)
+        );
+    }
+
+    private @NotNull RootConfig loadMainConfigInternal(File dataDir, boolean dataDirExists, File config, File legacyConfig) {
+        if (!dataDirExists && (!dataDir.mkdirs()))
+            throw new AssertionError("Data directory does not exist and could not be created");
+
+        // Copy bundled config.toml to disk if it doesn't already exist
+        if (!dataDirExists || !config.isFile()) {
+            try (
+                    InputStream is = Objects.requireNonNull(this.getResource("config.toml"));
+                    OutputStream os = new FileOutputStream(config, false)
+            ) {
+                IOUtils.copyLarge(is, os);
+            } catch (IOException e) {
+                throw new AssertionError("Failed to write config.toml to disk", e);
+            }
+        }
+
+        // Check for & load legacy config
+        Throwable suppressed = null;
+        if (dataDirExists && legacyConfig.isFile()) {
+            try {
+                YamlConfiguration handle = new YamlConfiguration();
+                handle.load(legacyConfig);
+                return new YamlRootConfig(handle);
+            } catch (Exception e) {
+                suppressed = new AssertionError(
+                        "Failed to load config file \"" + legacyConfig.getName() + "\"",
+                        e
+                );
+            }
+        }
+
+        // Load non-legacy config
+        Toml toml = new Toml();
+        try (InputStream is = new FileInputStream(config);
+             InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)
+        ) {
+            toml.read(reader);
+        } catch (Exception e) {
+            AssertionError ex = new AssertionError("Failed to read config.toml", e);
+            if (suppressed != null) ex.addSuppressed(suppressed);
+            throw ex;
+        }
+        return new TomlRootConfig(toml);
     }
 
     private static final String[] bundledLangs = new String[] {
@@ -294,6 +349,22 @@ public final class XClaim extends JavaPlugin {
         Platform.get().getScheduler().runTaskAsynchronously(this, () -> {
             String option = UpdateCommand.initialCheck();
             if (option == null) return;
+            this.broadcastConsoleOps(
+                    lang.getComponent("update-available-line1", option),
+                    lang.getComponent("update-available-line2")
+            );
+        });
+    }
+
+    private void warnConfigMigration() {
+        this.broadcastConsoleOps(
+                lang.getComponent("config-migration-line1"),
+                lang.getComponent("config-migration-line2")
+        );
+    }
+
+    private void broadcastConsoleOps(final @NotNull Component @NotNull ... messages) {
+        Platform.get().getScheduler().synchronize(() -> {
             BukkitAudiences adventure = Platform.getAdventure();
             Audience au = adventure.console();
             for (Player p : Bukkit.getOnlinePlayers()) {
@@ -301,8 +372,7 @@ public final class XClaim extends JavaPlugin {
                     au = Audience.audience(au, adventure.player(p));
                 }
             }
-            au.sendMessage(lang.getComponent("update-available-line1", option));
-            au.sendMessage(lang.getComponent("update-available-line2"));
+            for (Component message : messages) au.sendMessage(message);
         });
     }
     /* END STARTUP TASKS */

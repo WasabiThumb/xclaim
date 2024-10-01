@@ -66,29 +66,27 @@
                                     <exclude>com.cjburkey:claimchunk</exclude>
                                     <exclude>me.clip:placeholderapi</exclude>
                                     <exclude>org:dynmap</exclude>
-                                    <exclude>com.google.code:gson</exclude>
+                                    <exclude>com.google.code.gson:gson</exclude>
+                                    <exclude>org.slf4j:slf4j-api</exclude>
+                                    <exclude>org.jetbrains:annotations</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>io.papermc.lib</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.paperlib</shadedPattern>
+                                    <shadedPattern>codes.wasabi.xclaim.shadow.paperlib</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>net.kyori.adventure</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.adventure</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>net.kyori.option</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.option</shadedPattern>
+                                    <pattern>net.kyori</pattern>
+                                    <shadedPattern>codes.wasabi.xclaim.shadow.kyori</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.bstats</shadedPattern>
+                                    <shadedPattern>codes.wasabi.xclaim.shadow.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.moandjiezana.toml</pattern>
-                                    <shadedPattern>codes.wasabi.xclaim.toml</shadedPattern>
+                                    <shadedPattern>codes.wasabi.xclaim.shadow.toml</shadedPattern>
                                 </relocation>
                             </relocations>
                             <transformers>

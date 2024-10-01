@@ -1,17 +1,18 @@
-# ╭─────────────────────────────────────╮
-# │         _____ _       _             │
-# │        / ____| |     (_)            │
-# │  __  _| |    | | __ _ _ _ __ ___    │
-# │  \ \/ / |    | |/ _` | | '_ ` _ \   │
-# │   >  <| |____| | (_| | | | | | | |  │
-# │  /_/\_\\_____|_|\__,_|_|_| |_| |_|  │
-# │                                     │
-# ╰─────────────────────────────────────╯
+# ╭─────────────────────────────────────╮ #
+# │         _____ _       _             │ #
+# │        / ____| |     (_)            │ #
+# │  __  _| |    | | __ _ _ _ __ ___    │ #
+# │  \ \/ / |    | |/ _` | | '_ ` _ \   │ #
+# │   >  <| |____| | (_| | | | | | | |  │ #
+# │  /_/\_\\_____|_|\__,_|_|_| |_| |_|  │ #
+# │                                     │ #
+# ╰─────────────────────────────────────╯ #
 
 # GitHub Page: https://github.com/WasabiThumb/xclaim
 # Hangar Page: https://hangar.papermc.io/WasabiThumbs/XClaim
 # Spigot Page: https://www.spigotmc.org/resources/1-8-1-21-xclaim-better-chunk-claiming-for-smps.102843/
 # This config file conforms to a subset of the TOML spec. Read it here: https://toml.io/en/v1.0.0
+# IF YOU HAVE config.yml, THIS FILE WILL NOT BE USED!
 
 # The language pack to use. Must match a language in "lang/".
 # English (en-US)

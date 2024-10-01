@@ -28,4 +28,8 @@ public interface RootConfig extends Config {
     @Contract(pure = true)
     @NotNull IntegrationsConfig integrations();
 
+    default boolean isLegacy() {
+        return false;
+    }
+
 }

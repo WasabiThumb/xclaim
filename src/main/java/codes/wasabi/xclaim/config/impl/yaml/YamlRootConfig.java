@@ -65,4 +65,9 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
         return this.integrations;
     }
 
+    @Override
+    public boolean isLegacy() {
+        return true;
+    }
+
 }

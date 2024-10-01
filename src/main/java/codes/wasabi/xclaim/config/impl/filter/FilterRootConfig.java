@@ -14,4 +14,9 @@ public abstract class FilterRootConfig extends FilterConfig implements RootConfi
         return (RootConfig) super.backing();
     }
 
+    @Override
+    public boolean isLegacy() {
+        return this.backing().isLegacy();
+    }
+
 }
