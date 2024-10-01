@@ -216,7 +216,7 @@
         <dependency>
             <groupId>com.cjburkey.claimchunk</groupId>
             <artifactId>claimchunk</artifactId>
-            <version>0.0.25</version>
+            <version>0.0.25-FIX3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
