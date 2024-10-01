@@ -66,6 +66,7 @@
                                     <exclude>com.cjburkey:claimchunk</exclude>
                                     <exclude>me.clip:placeholderapi</exclude>
                                     <exclude>org:dynmap</exclude>
+                                    <exclude>com.google.code:gson</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>
@@ -84,6 +85,10 @@
                                 <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>codes.wasabi.xclaim.bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.moandjiezana.toml</pattern>
+                                    <shadedPattern>codes.wasabi.xclaim.toml</shadedPattern>
                                 </relocation>
                             </relocations>
                             <transformers>
@@ -274,6 +279,12 @@
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.moandjiezana.toml</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

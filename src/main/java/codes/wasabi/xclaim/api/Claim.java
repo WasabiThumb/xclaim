@@ -466,7 +466,7 @@ public class Claim {
     }
 
     public boolean hasPermission(@NotNull OfflinePlayer player, @NotNull Permission permission) {
-        if (XClaim.mainConfig.getBoolean("exempt-claim-owner-from-permission-rules", true)) {
+        if (XClaim.mainConfig.rules().exemptOwner()) {
             if (player.getUniqueId().equals(owner.getUniqueId())) return true;
         }
         if (player.isOp()) return true;
@@ -484,7 +484,7 @@ public class Claim {
                 long firstLogin = player.getFirstPlayed();
                 if (firstLogin == 0L) return false;
                 long duration = (long) Math.floor((System.currentTimeMillis() - firstLogin) / 1000d);
-                long required = XClaim.mainConfig.getLong("veteran-time", 604800L);
+                long required = XClaim.mainConfig.veteranTime();
                 return (duration >= required);
             case TRUSTED:
                 return owner.playerTrusted(player);

@@ -6,6 +6,7 @@ import codes.wasabi.xclaim.util.ProxyList;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -130,82 +131,28 @@ public class XCPlayer {
         }
     }
 
-    private double[] getPermGroup() {
-        ConfigurationSection section = XClaim.mainConfig.getConfigurationSection("limits");
-        if (section == null) return new double[]{ 0, 0, 0, 0, 0, -1 };
-        int maxChunks = 0;
-        int maxClaims = 0;
-        double claimPrice = -1;
-        double unclaimReward = 0;
-        int freeChunks = 0;
-        int maxInWorld = -1;
-        for (String groupName : section.getKeys(false)) {
-            boolean inGroup = true;
-            if (!groupName.equalsIgnoreCase("default")) {
-                inGroup = false;
-                final OfflinePlayer op = this.getOfflinePlayer();
-                Player ply = op.getPlayer();
-                if (ply != null) {
-                    inGroup = ply.hasPermission("xclaim.group." + groupName);
-                    if (!inGroup) {
-                        int giveAfter = section.getInt(groupName + ".give-after", -1);
-                        if (giveAfter == 0) {
-                            ply.addAttachment(XClaim.instance, "xclaim.group." + groupName, true);
-                            inGroup = true;
-                        } else if (giveAfter > 0) {
-                            long elapsed = Platform.get().getLastSeen(op) - op.getFirstPlayed();
-                            int seconds = (int) Math.round(Math.min((elapsed / 1000d), Integer.MAX_VALUE));
-                            if (seconds >= giveAfter) {
-                                ply.addAttachment(XClaim.instance, "xclaim.group." + groupName, true);
-                                inGroup = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (inGroup) {
-                maxChunks = Math.max(maxChunks, section.getInt(groupName + ".max-chunks", 0));
-                maxClaims = Math.max(maxClaims, section.getInt(groupName + ".max-claims", 0));
-                double proposed = section.getDouble(groupName + ".claim-price", -1);
-                if (claimPrice < 0) {
-                    claimPrice = proposed;
-                } else if (proposed > 0) {
-                    claimPrice = Math.min(claimPrice, proposed);
-                }
-                unclaimReward = Math.max(unclaimReward, section.getDouble(groupName + ".unclaim-reward", 0));
-                freeChunks = Math.max(freeChunks, section.getInt(groupName + ".free-chunks", 0));
-                int candidate = section.getInt(groupName + ".max-claims-in-world", -1);
-                if (candidate > 0) maxInWorld = Math.max(maxInWorld, candidate);
-            }
-        }
-        if (claimPrice < 0) claimPrice = 0;
-        return new double[]{ maxChunks, maxClaims, claimPrice, unclaimReward, freeChunks, maxInWorld };
-    }
-
     public int getMaxChunks() {
-        return (int) getPermGroup()[0];
+        return XClaim.mainConfig.rules().maxChunks(this.getPlayer());
     }
 
     public int getMaxClaims() {
-        return (int) getPermGroup()[1];
+        return XClaim.mainConfig.rules().maxClaims(this.getPlayer());
     }
 
     public double getClaimPrice() {
-        return getPermGroup()[2];
+        return XClaim.mainConfig.integrations().economy().claimPrice(this.getPlayer());
     }
 
     public double getUnclaimReward() {
-        return getPermGroup()[3];
+        return XClaim.mainConfig.integrations().economy().unclaimReward(this.getPlayer());
     }
 
     public int getFreeChunks() {
-        return (int) getPermGroup()[4];
+        return XClaim.mainConfig.integrations().economy().freeChunks(this.getPlayer());
     }
 
     public int getMaxClaimsInWorld() {
-        int ret = (int) getPermGroup()[5];
-        if (ret < 1) return Integer.MAX_VALUE;
-        return ret;
+        return XClaim.mainConfig.rules().maxClaimsInWorld(this.getPlayer());
     }
 
     /**

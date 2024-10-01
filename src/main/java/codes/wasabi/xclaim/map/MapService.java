@@ -23,7 +23,7 @@ public abstract class MapService {
         if (instanceInit) {
             return instance;
         }
-        if (!XClaim.mainConfig.getBoolean("dynmap-integration.enabled", true)) {
+        if (!XClaim.mainConfig.integrations().map().enabled()) {
             instanceValid = false;
             instanceInit = true;
             return null;
@@ -32,7 +32,7 @@ public abstract class MapService {
                 BluemapMapService.class,
                 DynmapMapService.class
         );
-        instance = factory.createElseNull(XClaim.mainConfig.getBoolean("dynmap-integration.debug", false));
+        instance = factory.createElseNull(XClaim.mainConfig.integrations().map().debug());
         instanceValid = instance != null;
         instanceInit = true;
         return instance;
