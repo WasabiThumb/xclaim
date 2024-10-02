@@ -2,12 +2,24 @@ package codes.wasabi.xclaim.platform;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public interface PlatformChatListener extends Listener {
 
+    void onChat(Consumer<Data> cb);
+
+    void unregister();
+
+    //
+
+    /**
+     * @deprecated Use {@link Data}
+     */
+    @ApiStatus.NonExtendable
+    @Deprecated
     class PlatformChatListenerData {
         private final Player ply;
         private final String message;
@@ -52,12 +64,15 @@ public interface PlatformChatListener extends Listener {
 
         @Override
         public String toString() {
-            return "PlatformChatListenerData[ply=" + ply + ",message=" + message + ",cancel=" + cancel + "]";
+            return "PlatformChatListener.Data[ply=" + ply + ",message=" + message + ",cancel=" + cancel + "]";
         }
     }
 
-    void onChat(Consumer<PlatformChatListenerData> cb);
-
-    void unregister();
+    @ApiStatus.NonExtendable
+    class Data extends PlatformChatListenerData {
+        public Data(Player ply, String message, Runnable cancel) {
+            super(ply, message, cancel);
+        }
+    }
 
 }

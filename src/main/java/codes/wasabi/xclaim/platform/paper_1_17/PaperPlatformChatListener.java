@@ -14,10 +14,10 @@ import java.util.function.Consumer;
 
 public class PaperPlatformChatListener implements PlatformChatListener {
 
-    private final List<Consumer<PlatformChatListenerData>> callbacks = new ArrayList<>();
+    private final List<Consumer<Data>> callbacks = new ArrayList<>();
 
     @Override
-    public void onChat(Consumer<PlatformChatListenerData> cb) {
+    public void onChat(Consumer<Data> cb) {
         callbacks.add(cb);
     }
 
@@ -42,12 +42,12 @@ public class PaperPlatformChatListener implements PlatformChatListener {
         String serialized = nativeComponentToPlainText(nativeComponent);
         if (serialized == null) serialized = "";
 
-        PlatformChatListenerData data = new PlatformChatListenerData(
+        Data data = new Data(
                 event.getPlayer(),
                 serialized,
                 () -> event.setCancelled(true)
         );
-        for (Consumer<PlatformChatListenerData> consumer : callbacks) consumer.accept(data);
+        for (Consumer<Data> consumer : callbacks) consumer.accept(data);
     }
 
     private static final String nativePackage = new String(new char[]{ 'n', 'e', 't', '.', 'k', 'y', 'o', 'r', 'i', '.', 'a', 'd', 'v', 'e', 'n', 't', 'u', 'r', 'e' });

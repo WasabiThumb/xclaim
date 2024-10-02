@@ -155,7 +155,7 @@ public class GUIHandler implements InventoryHolder, Listener {
         }
     }
 
-    public void onMessage(@NotNull PlatformChatListener.PlatformChatListenerData data) {
+    public void onMessage(@NotNull PlatformChatListener.Data data) {
         if (!open) return;
         Player ply = data.ply();
         if (ply.getUniqueId().equals(target.getUniqueId())) {

@@ -50,6 +50,19 @@ stop-on-shutdown = false
 stop-on-leave = true
 
 
+[gui]
+# The GUI version to use. Version 1 may be removed in the future.
+version = 2
+
+
+[gui.v2]
+# (v2) The height of the GUI. Must be between 3 and 6.
+height = 3
+
+# (v2) The alignment of items when filling a row. Must be one of LEFT, CENTER, EVEN, RIGHT.
+basis = "LEFT"
+
+
 [rules]
 # Enforces how chunks within the same claim can be placed in relation to eachother.
 # 0 : No rule.

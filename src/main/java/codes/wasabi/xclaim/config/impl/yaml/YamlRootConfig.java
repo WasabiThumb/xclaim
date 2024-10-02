@@ -14,15 +14,17 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     private final YamlRulesConfig rules;
     private final YamlWorldsConfig worlds;
     private final YamlIntegrationsConfig integrations;
+    private final YamlGuiConfig gui;
     public YamlRootConfig(@NotNull ConfigurationSection section) {
         super(section);
         final YamlLimits limits = YamlLimits.of(this.getSection("limits"));
 
-        this.autoSave = new YamlAutoSaveConfig(this.getSection("auto-save"));
-        this.editor = new YamlEditorConfig(section);
-        this.rules = new YamlRulesConfig(section, limits);
-        this.worlds = new YamlWorldsConfig(this.getSection("worlds"));
-        this.integrations = new YamlIntegrationsConfig(section, limits);
+        this.autoSave     = new YamlAutoSaveConfig(    this.getSection("auto-save")       );
+        this.editor       = new YamlEditorConfig(      section                                 );
+        this.rules        = new YamlRulesConfig(       section,                          limits);
+        this.worlds       = new YamlWorldsConfig(      this.getSection("worlds")          );
+        this.integrations = new YamlIntegrationsConfig(section,                          limits);
+        this.gui          = new YamlGuiConfig(); // Stub
     }
 
     @Override
@@ -63,6 +65,11 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     @Override
     public @NotNull YamlIntegrationsConfig integrations() {
         return this.integrations;
+    }
+
+    @Override
+    public @NotNull YamlGuiConfig gui() {
+        return this.gui;
     }
 
     @Override
