@@ -1,0 +1,6 @@
+<layout>
+    <row x="0" y="1" basis="EVEN">
+        <slot id="0"/> <!-- Y -->
+        <slot id="1"/> <!-- N -->
+    </row>
+</layout>

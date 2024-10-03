@@ -1,0 +1,16 @@
+<layout>
+    <row x="0" y="1" w="~" basis="CENTER">
+        <slot id="0"/> <!-- NEW            -->
+        <slot id="1"/> <!-- EDIT TRUST     -->
+        <slot id="2"/> <!-- EDIT CHUNK     -->
+        <slot id="3"/> <!-- RENAME CHUNK   -->
+        <slot id="4"/> <!-- EDIT PERM      -->
+    </row>
+    <row x="0" y="2" w="~" basis="CENTER">
+        <slot id="5"/> <!-- TRANSFER OWNER -->
+        <slot id="6"/> <!-- CLEAR ALL      -->
+        <slot id="7"/> <!-- DELETE         -->
+        <slot id="8"/> <!-- VERSION        -->
+        <slot id="9"/> <!-- EXIT           -->
+    </row>
+</layout>

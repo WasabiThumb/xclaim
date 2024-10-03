@@ -2,6 +2,7 @@ package codes.wasabi.xclaim.config.impl.defaulting.sub;
 
 import codes.wasabi.xclaim.config.impl.filter.sub.FilterGuiConfig;
 import codes.wasabi.xclaim.config.struct.sub.GuiConfig;
+import codes.wasabi.xclaim.gui2.layout.GuiBasis;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -32,8 +33,8 @@ public final class DefaultingGuiConfig extends FilterGuiConfig {
     }
 
     @Override
-    public @UnknownNullability Basis basis() {
-        return this.nullFallback(this.backing().basis(), Basis.LEFT);
+    public @UnknownNullability GuiBasis basis() {
+        return this.nullFallback(this.backing().basis(), GuiBasis.LEFT);
     }
 
 }

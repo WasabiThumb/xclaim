@@ -1,0 +1,7 @@
+<layout>
+    <row x="0" y="1" basis="EVEN">
+        <slot id="0"/> <!-- GENERAL -->
+        <slot id="1"/> <!-- PLAYER  -->
+        <slot id="2"/> <!-- BACK    -->
+    </row>
+</layout>

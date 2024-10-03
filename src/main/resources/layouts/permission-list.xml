@@ -1,0 +1,4 @@
+<layout>
+    <area id="0" x="0" y="0" w="~" h="~1"/>
+    <slot id="1" x="4" y="~"/> <!-- EXIT -->
+</layout>

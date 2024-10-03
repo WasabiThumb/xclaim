@@ -132,11 +132,11 @@ public class XCPlayer {
     }
 
     public int getMaxChunks() {
-        return XClaim.mainConfig.rules().maxChunks(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.rules().maxChunks(this.getPlayer()));
     }
 
     public int getMaxClaims() {
-        return XClaim.mainConfig.rules().maxClaims(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.rules().maxClaims(this.getPlayer()));
     }
 
     public double getClaimPrice() {
@@ -148,11 +148,16 @@ public class XCPlayer {
     }
 
     public int getFreeChunks() {
-        return XClaim.mainConfig.integrations().economy().freeChunks(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.integrations().economy().freeChunks(this.getPlayer()));
     }
 
     public int getMaxClaimsInWorld() {
-        return XClaim.mainConfig.rules().maxClaimsInWorld(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.rules().maxClaimsInWorld(this.getPlayer()));
+    }
+
+    private int negativeAsInf(int value) {
+        if (value < 0) return Integer.MAX_VALUE;
+        return value;
     }
 
     /**

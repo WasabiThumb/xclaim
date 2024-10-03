@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.config.struct.sub;
 
 import codes.wasabi.xclaim.config.struct.Config;
+import codes.wasabi.xclaim.gui2.layout.GuiBasis;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Locale;
@@ -19,13 +20,13 @@ public interface GuiConfig extends Config {
 
     @UnknownNullability String basisRaw();
 
-    default @UnknownNullability Basis basis() {
+    default @UnknownNullability GuiBasis basis() {
         String raw = this.basisRaw();
         if (raw == null) return null;
         try {
-             return Basis.valueOf(raw.toUpperCase(Locale.ROOT));
+             return GuiBasis.valueOf(raw.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ignored) {
-            return Basis.LEFT;
+            return GuiBasis.LEFT;
         }
     }
 
@@ -34,13 +35,6 @@ public interface GuiConfig extends Config {
     enum Version {
         V1,
         V2
-    }
-
-    enum Basis {
-        LEFT,
-        CENTER,
-        EVEN,
-        RIGHT
     }
 
 }
