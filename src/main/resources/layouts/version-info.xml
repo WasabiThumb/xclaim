@@ -1,7 +1,7 @@
-<page>
+<layout>
     <row x="0" y="1" w="~" basis="EVEN">
         <slot id="0"/> <!-- VERSION -->
         <slot id="1"/> <!-- AUTHOR  -->
         <slot id="2"/> <!-- BACK    -->
     </row>
-</page>
+</layout>

@@ -31,4 +31,8 @@ public interface GuiSlot {
         return Math.floorDiv(count - 1, this.capacity()) + 1;
     }
 
+    default int calculateLocalIndex(int x, int y) {
+        return ((y - this.y()) * this.width()) + x - this.x();
+    }
+
 }

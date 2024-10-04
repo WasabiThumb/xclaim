@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,18 +28,8 @@ public class XmlGuiLayout extends MemoryGuiLayout {
         super(height);
     }
 
-    public GuiBasis getDefaultBasis() {
-        return this.defaultBasis;
-    }
-
     public void setDefaultBasis(@NotNull GuiBasis defaultBasis) {
         this.defaultBasis = defaultBasis;
-    }
-
-    public void read(@NotNull String xml) throws IOException {
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
-            this.read(bis);
-        }
     }
 
     public void read(@NotNull InputStream in) throws IOException {

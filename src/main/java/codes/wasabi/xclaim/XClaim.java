@@ -19,7 +19,7 @@ import codes.wasabi.xclaim.debug.goal.DebugGoal;
 import codes.wasabi.xclaim.debug.writer.DebugWriter;
 import codes.wasabi.xclaim.economy.Economy;
 import codes.wasabi.xclaim.gui.ChunkEditor;
-import codes.wasabi.xclaim.gui.GUIHandler;
+import codes.wasabi.xclaim.gui2.GuiService;
 import codes.wasabi.xclaim.map.MapService;
 import codes.wasabi.xclaim.particle.ParticleService;
 import codes.wasabi.xclaim.platform.Platform;
@@ -66,6 +66,7 @@ public final class XClaim extends JavaPlugin {
     public static File jarFile;
     public static File dataFolder;
     public static Lang lang;
+    public static GuiService gui;
 
     @Override
     public void onEnable() {
@@ -332,6 +333,9 @@ public final class XClaim extends JavaPlugin {
             }
         }
         //
+        // TODO: Add "starting GUI service" debug message
+        gui = GuiService.create(mainConfig.gui().version());
+        gui.start();
         logger.log(Level.INFO, lang.get("services-chunk-editor"));
         ChunkEditor.initialize();
         logger.log(Level.INFO, lang.get("services-command"));
@@ -431,7 +435,7 @@ public final class XClaim extends JavaPlugin {
         OfflinePlayerType.clearListener();
         MovementRoutine.cleanup();
         GraceRoutine.stop();
-        GUIHandler.closeAll();
+        gui.stop();
         MapService.unload();
         if (this.autosaveTask != null) {
             this.autosaveTask.cancel();

@@ -54,12 +54,14 @@ public class XmlReader extends FilterReader {
         final List<XmlNode> children = new LinkedList<>();
         Symbol symbol;
 
+        outer:
         while ((symbol = this.readSymbol()) != null) {
-            if (symbol.type() == Symbol.Type.TAG_CLOSING) break;
             switch (symbol.type()) {
                 case TAG_OPENING:
                     children.add(this.readNode0(symbol.tag()));
                     break;
+                case TAG_CLOSING:
+                    break outer;
                 case ATTRIBUTE:
                     AttributeSymbol attr = (AttributeSymbol) symbol;
                     if (attrs.containsKey(attr.key))

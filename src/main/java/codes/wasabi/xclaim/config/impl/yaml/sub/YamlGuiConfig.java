@@ -25,4 +25,9 @@ public final class YamlGuiConfig extends YamlConfig implements GuiConfig {
         return null;
     }
 
+    @Override
+    public @UnknownNullability String dialogRaw() {
+        return null;
+    }
+
 }

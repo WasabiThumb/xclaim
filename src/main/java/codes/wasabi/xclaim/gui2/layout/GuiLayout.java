@@ -3,6 +3,7 @@ package codes.wasabi.xclaim.gui2.layout;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.util.Iterator;
 import java.util.List;
@@ -18,9 +19,9 @@ public interface GuiLayout extends Iterable<GuiSlot> {
 
     @NotNull List<GuiSlot> getSlots();
 
-    @Nullable GuiSlot getSlot(int index);
+    @Nullable GuiSlot getSlot(@Range(from=0L, to=255L) int index);
 
-    int getMaxSlot();
+    @Range(from=0L, to=255L) int getMaxSlot();
 
     default void addSlot(@NotNull GuiSlot slot) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();

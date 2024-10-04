@@ -27,4 +27,9 @@ public final class TomlGuiConfig extends TomlConfig implements GuiConfig {
         return this.versionRaw() == 2 ? this.getString("v2.basis") : null;
     }
 
+    @Override
+    public @UnknownNullability String dialogRaw() {
+        return this.versionRaw() == 2 ? this.getString("v2.dialog") : null;
+    }
+
 }

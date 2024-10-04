@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@Deprecated
 public class GUIHandler implements InventoryHolder, Listener {
 
     private static final Set<GUIHandler> openHandlers = new CopyOnWriteArraySet<>();

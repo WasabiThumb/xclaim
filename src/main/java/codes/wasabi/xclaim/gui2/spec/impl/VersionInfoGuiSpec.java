@@ -1,8 +1,11 @@
-package codes.wasabi.xclaim.gui.page;
+package codes.wasabi.xclaim.gui2.spec.impl;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.gui.GUIHandler;
-import codes.wasabi.xclaim.gui.Page;
+import codes.wasabi.xclaim.gui2.GuiInstance;
+import codes.wasabi.xclaim.gui2.action.GuiAction;
+import codes.wasabi.xclaim.gui2.layout.GuiSlot;
+import codes.wasabi.xclaim.gui2.spec.GuiSpec;
+import codes.wasabi.xclaim.gui2.spec.GuiSpecs;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
@@ -18,13 +21,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
-public class VersionInfoPage extends Page {
+public class VersionInfoGuiSpec implements GuiSpec {
 
     private static final UUID OWNER_UUID = UUID.fromString("938c730b-df4e-41eb-98fe-786835347c39");
     private static final String OWNER_NAME = "Wasabi_Thumbs";
     private static final ItemStack VERSION_STACK;
     private static final ItemStack AUTHOR_STACK;
-
     static {
         VERSION_STACK = new ItemStack(Material.BOOK, 1);
         ItemMeta meta = VERSION_STACK.getItemMeta();
@@ -53,30 +55,26 @@ public class VersionInfoPage extends Page {
         }
         AUTHOR_STACK.setItemMeta(meta);
     }
-
     private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.get("gui-vinf-back"), NamedTextColor.RED);
 
-    public VersionInfoPage(@NotNull GUIHandler parent) {
-        super(parent);
+    //
+
+    @Override
+    public @NotNull String layout() {
+        return "version-info";
     }
 
     @Override
-    public void onEnter() {
-        // 012345678
-        //   a b c
-        clear();
-        setItem(11, VERSION_STACK);
-        setItem(13, AUTHOR_STACK);
-        setItem(15, BACK_STACK);
+    public void populate(@NotNull GuiInstance instance) {
+        instance.set(0, VERSION_STACK);
+        instance.set(1, AUTHOR_STACK);
+        instance.set(2, BACK_STACK);
     }
 
     @Override
-    public void onClick(int slot) {
-        if (slot == 15) {
-            switchPage(new MainPage(getParent()));
-        } else if (slot == 13) {
-            getTarget().playSound(getTarget().getLocation(), Platform.get().getEggSound(), 1f, 1f);
-        }
+    public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
+        if (slot.index() == 2) return GuiAction.transfer(GuiSpecs.MAIN);
+        return GuiAction.nothing();
     }
 
 }

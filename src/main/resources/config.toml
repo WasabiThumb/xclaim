@@ -58,10 +58,13 @@ version = 2
 
 [gui.v2]
 # (v2) The height of the GUI. Must be between 3 and 6.
-height = 3
+height = 4
 
 # (v2) The default alignment of items when filling a row. Must be one of LEFT, CENTER, EVEN, RIGHT.
 basis = "LEFT"
+
+# (v2) The default dialog method. Must be one of ACTION_BAR, BOSS_BAR, CHAT.
+dialog = "ACTION_BAR"
 
 
 [rules]

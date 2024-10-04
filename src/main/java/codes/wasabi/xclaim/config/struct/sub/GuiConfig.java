@@ -1,6 +1,7 @@
 package codes.wasabi.xclaim.config.struct.sub;
 
 import codes.wasabi.xclaim.config.struct.Config;
+import codes.wasabi.xclaim.gui2.dialog.GuiDialogType;
 import codes.wasabi.xclaim.gui2.layout.GuiBasis;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -27,6 +28,18 @@ public interface GuiConfig extends Config {
              return GuiBasis.valueOf(raw.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ignored) {
             return GuiBasis.LEFT;
+        }
+    }
+
+    @UnknownNullability String dialogRaw();
+
+    default @UnknownNullability GuiDialogType dialog() {
+        String raw = this.dialogRaw();
+        if (raw == null) return null;
+        try {
+            return GuiDialogType.valueOf(raw.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+            return GuiDialogType.ACTION_BAR;
         }
     }
 

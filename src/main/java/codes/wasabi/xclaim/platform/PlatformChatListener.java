@@ -70,9 +70,15 @@ public interface PlatformChatListener extends Listener {
 
     @ApiStatus.NonExtendable
     class Data extends PlatformChatListenerData {
+
         public Data(Player ply, String message, Runnable cancel) {
             super(ply, message, cancel);
         }
+
+        public void doCancel() {
+            this.cancel().run();
+        }
+
     }
 
 }
