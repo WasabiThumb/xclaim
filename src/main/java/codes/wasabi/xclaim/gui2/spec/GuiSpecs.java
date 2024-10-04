@@ -8,4 +8,6 @@ public final class GuiSpecs {
 
     public static final GuiSpec VERSION_INFO = new VersionInfoGuiSpec();
 
+    public static final GuiSpec NEW_CLAIM = new NewClaimGuiSpec();
+
 }

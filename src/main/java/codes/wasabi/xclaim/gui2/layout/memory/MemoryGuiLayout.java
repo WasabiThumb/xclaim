@@ -5,7 +5,6 @@ import codes.wasabi.xclaim.gui2.layout.GuiSlot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +59,7 @@ public class MemoryGuiLayout implements GuiLayout {
     @Override
     public void addSlot(@NotNull GuiSlot slot) {
         final int index = slot.index();
-        if (index < 0 || index > 255) throw new IllegalArgumentException("Illegal slot index: " + index);
+        if (index < 0 || index > 254) throw new IllegalArgumentException("Illegal slot index: " + index);
         if (index > this.maxSlot) {
             this.maxSlot = index;
             if (index >= this.capacity) {

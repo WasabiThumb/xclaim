@@ -88,10 +88,9 @@ public class MainGuiSpec implements GuiSpec {
     @Override
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         switch (slot.index()) {
-            // TODO
-            /*
             case 0:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.NEW_CLAIM);
+            /*
             case 1:
                 return GuiAction.transfer();
             case 2:

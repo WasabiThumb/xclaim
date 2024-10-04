@@ -19,9 +19,9 @@ public interface GuiLayout extends Iterable<GuiSlot> {
 
     @NotNull List<GuiSlot> getSlots();
 
-    @Nullable GuiSlot getSlot(@Range(from=0L, to=255L) int index);
+    @Nullable GuiSlot getSlot(@Range(from=0L, to=254L) int index);
 
-    @Range(from=0L, to=255L) int getMaxSlot();
+    @Range(from=-1L, to=254L) int getMaxSlot();
 
     default void addSlot(@NotNull GuiSlot slot) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
