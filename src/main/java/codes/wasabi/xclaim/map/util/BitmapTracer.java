@@ -42,12 +42,17 @@ public class BitmapTracer {
         Point coord = this.pollUnprocessed();
         if (coord == null) return null;
 
+        Queue<Point> points = new LinkedList<>();
+        points.add(coord);
+
         List<Line> ret = new ArrayList<>(4);
-        this.pullLines(coord.x(), coord.y(), ret);
+        while ((coord = points.poll()) != null) {
+            this.pullLines(coord.x(), coord.y(), ret, points);
+        }
         return ret;
     }
 
-    private void pullLines(int x, int y, List<Line> lines) {
+    private void pullLines(int x, int y, List<Line> lines, Queue<Point> queue) {
         if (this.traversed.getPixel(x, y)) return;
         this.traversed.setPixel(x, y);
 
@@ -59,14 +64,14 @@ public class BitmapTracer {
 
         nx = x - 1;
         if (this.bitmap.getPixel(nx, ny)) {
-            this.pullLines(nx, ny, lines);
+            queue.add(new Point(nx, ny));
         } else {
             identity[identityCount++] = new Line(x, y + 1, x, y, Line.Direction.LEFT);
         }
 
         nx = x + 1;
         if (this.bitmap.getPixel(nx, ny)) {
-            this.pullLines(nx, ny, lines);
+            queue.add(new Point(nx, ny));
         } else {
             identity[identityCount++] = new Line(x + 1, y, x + 1, y + 1, Line.Direction.RIGHT);
         }
@@ -74,14 +79,14 @@ public class BitmapTracer {
         nx = x;
         ny = y - 1;
         if (this.bitmap.getPixel(nx, ny)) {
-            this.pullLines(nx, ny, lines);
+            queue.add(new Point(nx, ny));
         } else {
             identity[identityCount++] = new Line(x, y, x + 1, y, Line.Direction.UP);
         }
 
         ny = y + 1;
         if (this.bitmap.getPixel(nx, ny)) {
-            this.pullLines(nx, ny, lines);
+            queue.add(new Point(nx, ny));
         } else {
             identity[identityCount++] = new Line(x + 1, y + 1, x, y + 1, Line.Direction.DOWN);
         }
