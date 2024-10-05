@@ -1,12 +1,9 @@
 package codes.wasabi.xclaim.api;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.ProxyList;
 import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

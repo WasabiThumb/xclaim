@@ -10,4 +10,6 @@ public final class GuiSpecs {
 
     public static final GuiSpec NEW_CLAIM = new NewClaimGuiSpec();
 
+    public static final GuiSpec EDIT_TRUST = new EditTrustGuiSpec();
+
 }

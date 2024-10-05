@@ -90,9 +90,9 @@ public class MainGuiSpec implements GuiSpec {
         switch (slot.index()) {
             case 0:
                 return GuiAction.transfer(GuiSpecs.NEW_CLAIM);
-            /*
             case 1:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.EDIT_TRUST);
+            /*
             case 2:
                 return GuiAction.transfer();
             case 3:

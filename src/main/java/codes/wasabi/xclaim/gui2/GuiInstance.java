@@ -19,11 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 public class GuiInstance implements InventoryHolder {
 
     public static @NotNull GuiInstance open(@NotNull GuiManager manager, @NotNull Player player, @NotNull GuiSpec spec) {
@@ -101,63 +96,27 @@ public class GuiInstance implements InventoryHolder {
         return this.layout.getSlot(index);
     }
 
-    public void set(@Nullable GuiSlot slot, int startIndex, @NotNull Collection<ItemStack> items) {
+    public void set(@Nullable GuiSlot slot, int index, @Nullable ItemStack item) {
         if (slot == null) return;
-        if (items.isEmpty()) return;
 
         final int lw = this.layout.getWidth();
         final int sw = slot.width();
-        final int sh = slot.height();
-        if (sw == 1 && sh == 1 && startIndex == 0) {
-            final int dest = (lw * slot.y()) + slot.x();
-            if (items instanceof List) {
-                this.inventory.setItem(dest, ((List<ItemStack>) items).get(0));
-            } else {
-                this.inventory.setItem(dest, items.iterator().next());
-            }
-        }
+        int y = Math.floorDiv(index, sw);
+        int x = index - (y * sw);
 
-        int z = 0;
-        final Iterator<ItemStack> iter = items.iterator();
-        outer:
-        for (int y=0; y < sh; y++) {
-            for (int x=0; x < sw; x++) {
-                if ((z++) < startIndex) continue;
-                if (!iter.hasNext()) break outer;
-                this.inventory.setItem(
-                        lw * (slot.y() + y) + slot.x() + x,
-                        iter.next()
-                );
-            }
-        }
+        this.inventory.setItem(((y + slot.y()) * lw) + x + slot.x(), item);
     }
 
-    public void set(int slotIndex, int startIndex, @NotNull Collection<ItemStack> items) {
-        this.set(this.getSlot(slotIndex), startIndex, items);
+    public void set(int slotIndex, int index, @Nullable ItemStack item) {
+        this.set(this.getSlot(slotIndex), index, item);
     }
 
-    public void set(@Nullable GuiSlot slot, @NotNull Collection<ItemStack> items) {
-        this.set(slot, 0, items);
+    public void set(@Nullable GuiSlot slot, @Nullable ItemStack item) {
+        this.set(slot, 0, item);
     }
 
-    public void set(int slotIndex, @NotNull Collection<ItemStack> items) {
-        this.set(this.getSlot(slotIndex), 0, items);
-    }
-
-    public void set(@Nullable GuiSlot slot, int index, @NotNull ItemStack item) {
-        this.set(slot, index, Collections.singletonList(item));
-    }
-
-    public void set(int slotIndex, int index, @NotNull ItemStack item) {
-        this.set(this.getSlot(slotIndex), index, Collections.singletonList(item));
-    }
-
-    public void set(@Nullable GuiSlot slot, @NotNull ItemStack item) {
-        this.set(slot, 0, Collections.singletonList(item));
-    }
-
-    public void set(int slotIndex, @NotNull ItemStack item) {
-        this.set(this.getSlot(slotIndex), 0, Collections.singletonList(item));
+    public void set(int slotIndex, @Nullable ItemStack item) {
+        this.set(this.getSlot(slotIndex), 0, item);
     }
 
     // Actions

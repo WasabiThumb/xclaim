@@ -28,21 +28,42 @@ public enum GuiBasis {
 
     //
 
+    /**
+     * Remaps an index (0 <= index < innerSize) given the number of indices inside the container (innerSize), and the
+     * width of the container (outerSize), via the pattern indicated by this basis.
+     */
     public int organize(int index, int innerSize, int outerSize) {
         if (index < 0) throw new IndexOutOfBoundsException("Index cannot be negative");
         if (index >= innerSize) throw new IndexOutOfBoundsException("Index cannot meet or exceed inner size");
         if (innerSize >= outerSize) return Math.min(index, outerSize - 1);
-        if (this == EVEN) {
-            if (outerSize == 2) return 0;
-            if (outerSize > 9) throw new IllegalArgumentException("Outer size cannot be more than 9");
-            return organizeEven(index, innerSize, outerSize);
-        } else {
-            switch (this) {
-                case RIGHT:
-                    return outerSize - 1 - index;
-                case CENTER:
-                    return Math.floorDiv(outerSize - innerSize, 2) + index;
-            }
+        switch (this) {
+            case EVEN:
+                if (outerSize == 2) return 0;
+                if (outerSize > 9) throw new IllegalArgumentException("Outer size cannot be more than 9");
+                return organizeEven(index, innerSize, outerSize);
+            case RIGHT:
+                return outerSize - 1 - index;
+            case CENTER:
+                return Math.floorDiv(outerSize - innerSize, 2) + index;
+        }
+        return index;
+    }
+
+    /**
+     * Reverses the mapping specified by {@link #organize(int, int, int)}
+     */
+    public int unorganize(int index, int innerSize, int outerSize) {
+        switch (this) {
+            case EVEN:
+                if (outerSize == 2) return 0;
+                for (int z=0; z < innerSize; z++) {
+                    if (organizeEven(z, innerSize, outerSize) == index) return z;
+                }
+                break;
+            case RIGHT:
+                return outerSize - 1 - index;
+            case CENTER:
+                return Math.floorDiv(outerSize - innerSize, 2) + innerSize - 1 - index;
         }
         return index;
     }
@@ -57,8 +78,9 @@ public enum GuiBasis {
                 return 'o';
             case EVEN:
                 return '-';
+            default:
+                return '?';
         }
-        return '?';
     }
 
 }
