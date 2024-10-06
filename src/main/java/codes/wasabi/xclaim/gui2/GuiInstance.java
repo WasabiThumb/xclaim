@@ -128,7 +128,7 @@ public class GuiInstance implements InventoryHolder {
     }
 
     public void prompt(@NotNull Component message) {
-        this.manager.addChatTicket(this.player);
+        this.manager.addChatTicket(this.player, this);
         this.inventory.close();
         this.dialog = GuiDialog.show(this.player, message);
     }

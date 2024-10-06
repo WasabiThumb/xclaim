@@ -60,10 +60,10 @@ public class NewClaimGuiSpec implements GuiSpec {
 
     @Override
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
-        if (index == 0) {
+        if (slot.index() == 0) {
             this.confirm(instance.player());
             return GuiAction.exit();
-        } else if (index == 1) {
+        } else if (slot.index() == 1) {
             return GuiAction.transfer(GuiSpecs.MAIN);
         }
         return GuiAction.nothing();

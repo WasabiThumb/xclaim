@@ -17,21 +17,18 @@ import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
 public class GuiManager implements GuiService, Listener {
 
     private final GuiLayouts layouts;
     private final Set<GuiInstance> instances = Collections.synchronizedSet(new HashSet<>());
-    private final Set<UUID> chatTickets = Collections.synchronizedSet(new HashSet<>());
+    private final Map<UUID, WeakReference<GuiInstance>> chatTickets = Collections.synchronizedMap(new HashMap<>());
     private PlatformChatListener chatListener;
     public GuiManager() {
         this.layouts = new GuiLayouts();
@@ -86,8 +83,8 @@ public class GuiManager implements GuiService, Listener {
         this.instances.remove(instance);
     }
 
-    void addChatTicket(@NotNull Player player) {
-        this.chatTickets.add(player.getUniqueId());
+    void addChatTicket(@NotNull Player player, @NotNull GuiInstance instance) {
+        this.chatTickets.put(player.getUniqueId(), new WeakReference<>(instance));
     }
 
     // Listener Helpers
@@ -121,7 +118,7 @@ public class GuiManager implements GuiService, Listener {
     public void onClose(@NotNull InventoryCloseEvent event) {
         GuiInstance instance = this.getInstance(event);
         if (instance == null) return;
-        if (this.chatTickets.contains(instance.player().getUniqueId())) return;
+        if (this.chatTickets.containsKey(instance.player().getUniqueId())) return;
         this.untrack(instance);
     }
 
@@ -135,12 +132,14 @@ public class GuiManager implements GuiService, Listener {
     public void onChat(@NotNull PlatformChatListener.Data data) {
         final Player ply = data.ply();
         final UUID uuid = ply.getUniqueId();
-        if (!this.chatTickets.remove(uuid)) return;
-        InventoryView view = ply.getOpenInventory();
-        GuiInstance instance = this.getInstance(view.getTopInventory());
+
+        final WeakReference<GuiInstance> instanceRef = this.chatTickets.remove(uuid);
+        if (instanceRef == null) return;
+        final GuiInstance instance = instanceRef.get();
         if (instance == null) return;
+
         data.doCancel();
-        instance.respond(data.message());
+        Platform.get().getScheduler().synchronize(() -> instance.respond(data.message()));
     }
 
 }
