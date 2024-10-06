@@ -431,6 +431,31 @@ public class Claim {
         return false;
     }
 
+    public boolean containsChunk(@NotNull ChunkReference cr) {
+        return this.chunks.contains(cr);
+    }
+
+    public long minSquareDistance(@NotNull ChunkReference cr) {
+        if (this.chunks.contains(cr)) return 0L;
+        long ret = Long.MAX_VALUE;
+        long dist;
+        long tmp;
+        synchronized (this.chunks) {
+            for (ChunkReference mcr : this.chunks) {
+                if (!mcr.world.getUID().equals(cr.world.getUID())) continue;
+                tmp = mcr.x - cr.x;
+                dist = (tmp * tmp);
+                tmp = mcr.z - cr.z;
+                dist += (tmp * tmp);
+                if (dist < ret) {
+                    ret = dist;
+                    if (dist == 0L) break;
+                }
+            }
+        }
+        return ret;
+    }
+
     public void setPermission(@NotNull Permission permission, @NotNull TrustLevel trustLevel) {
         globalPerms.put(permission, trustLevel);
         updateHandlers();
@@ -645,6 +670,15 @@ public class Claim {
             return true;
         }
         return false;
+    }
+
+    public boolean isCanonical() {
+        registryLock.readLock().lock();
+        try {
+            return registry.contains(RegistryEntry.of(this));
+        } finally {
+            registryLock.readLock().unlock();
+        }
     }
 
     // 1.15 : Efficient registry membership test by name

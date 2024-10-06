@@ -64,7 +64,7 @@ public class NewClaimGuiSpec implements GuiSpec {
             this.confirm(instance.player());
             return GuiAction.exit();
         } else if (slot.index() == 1) {
-            return GuiAction.transfer(GuiSpecs.MAIN);
+            return GuiAction.transfer(GuiSpecs.main());
         }
         return GuiAction.nothing();
     }

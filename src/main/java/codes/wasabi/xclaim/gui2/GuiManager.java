@@ -58,7 +58,7 @@ public class GuiManager implements GuiService, Listener {
 
     @Override
     public void openGui(@NotNull Player target) {
-        final GuiInstance instance = GuiInstance.open(this, target, GuiSpecs.MAIN);
+        final GuiInstance instance = GuiInstance.open(this, target, GuiSpecs.main());
         this.instances.add(instance);
     }
 

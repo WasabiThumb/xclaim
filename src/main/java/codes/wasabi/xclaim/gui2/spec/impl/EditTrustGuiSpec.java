@@ -12,7 +12,7 @@ import java.util.Collection;
 public class EditTrustGuiSpec extends PlayerListGuiSpec {
 
     @Override
-    protected @NotNull Collection<OfflinePlayer> getList(@NotNull GuiInstance instance) {
+    protected @NotNull Collection<OfflinePlayer> getEntries(@NotNull GuiInstance instance) {
         return XCPlayer.of(instance.player()).getTrustedPlayersSet();
     }
 
@@ -22,7 +22,7 @@ public class EditTrustGuiSpec extends PlayerListGuiSpec {
     }
 
     @Override
-    protected @NotNull GuiAction onClickPlayer(@NotNull GuiInstance instance, @NotNull OfflinePlayer player) {
+    protected @NotNull GuiAction onClickEntry(@NotNull GuiInstance instance, @NotNull OfflinePlayer player) {
         return XCPlayer.of(instance.player()).untrustPlayer(player) ? GuiAction.repopulate() : GuiAction.nothing();
     }
 

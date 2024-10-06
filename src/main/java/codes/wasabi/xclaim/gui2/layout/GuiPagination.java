@@ -28,6 +28,10 @@ public class GuiPagination<T> {
 
     // Pagination
 
+    public synchronized void resetPage() {
+        this.page = 0;
+    }
+
     public synchronized void previousPage() {
         this.page--;
     }
@@ -95,6 +99,7 @@ public class GuiPagination<T> {
         if (move) {
             this.entriesSource.set(entries);
             this.entries = new ArrayList<>(entries);
+            this.flags &= (~F_ENTRIES_SORTED);
         }
         return this;
     }

@@ -11,8 +11,16 @@ import java.util.Objects;
 
 public class ChunkReference {
 
-    public static ChunkReference ofChunk(Chunk chunk) {
+    public static @NotNull ChunkReference ofChunk(@NotNull Chunk chunk) {
         return new ChunkReference(chunk.getWorld(), chunk.getX(), chunk.getZ());
+    }
+
+    public static @NotNull ChunkReference of(@NotNull Location location) {
+        return new ChunkReference(
+                location.getWorld(),
+                location.getBlockX() >> 4,
+                location.getBlockZ() >> 4
+        );
     }
 
     public final World world;
@@ -66,6 +74,14 @@ public class ChunkReference {
         return Objects.equals(this.world.getUID(), other.world.getUID())
                 && this.x == other.x
                 && this.z == other.z;
+    }
+
+    public int getCenterBlockX() {
+        return (this.x << 4) | 8;
+    }
+
+    public int getCenterBlockZ() {
+        return (this.z << 4) | 8;
     }
 
     @Override

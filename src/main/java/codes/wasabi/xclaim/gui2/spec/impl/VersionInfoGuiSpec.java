@@ -73,7 +73,7 @@ public class VersionInfoGuiSpec implements GuiSpec {
 
     @Override
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
-        if (slot.index() == 2) return GuiAction.transfer(GuiSpecs.MAIN);
+        if (slot.index() == 2) return GuiAction.transfer(GuiSpecs.main());
         return GuiAction.nothing();
     }
 

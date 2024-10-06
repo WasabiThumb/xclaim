@@ -89,14 +89,14 @@ public class MainGuiSpec implements GuiSpec {
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         switch (slot.index()) {
             case 0:
-                return GuiAction.transfer(GuiSpecs.NEW_CLAIM);
+                return GuiAction.transfer(GuiSpecs.newClaim());
             case 1:
-                return GuiAction.transfer(GuiSpecs.EDIT_TRUST);
-            /*
+                return GuiAction.transfer(GuiSpecs.editTrust());
             case 2:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.editChunks());
             case 3:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.renameClaim());
+            /*
             case 4:
                 return GuiAction.transfer();
             case 5:
@@ -107,7 +107,7 @@ public class MainGuiSpec implements GuiSpec {
                 return GuiAction.transfer();
              */
             case 8:
-                return GuiAction.transfer(GuiSpecs.VERSION_INFO);
+                return GuiAction.transfer(GuiSpecs.versionInfo());
             case 9:
                 return GuiAction.exit();
         }

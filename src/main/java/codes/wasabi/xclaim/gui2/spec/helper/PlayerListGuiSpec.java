@@ -3,10 +3,7 @@ package codes.wasabi.xclaim.gui2.spec.helper;
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui2.GuiInstance;
 import codes.wasabi.xclaim.gui2.action.GuiAction;
-import codes.wasabi.xclaim.gui2.layout.GuiPagination;
 import codes.wasabi.xclaim.gui2.layout.GuiSlot;
-import codes.wasabi.xclaim.gui2.spec.GuiSpec;
-import codes.wasabi.xclaim.gui2.spec.GuiSpecs;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.NameToPlayer;
@@ -22,35 +19,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 
-public abstract class PlayerListGuiSpec implements GuiSpec {
-
-    private static final ItemStack PREVIOUS_STACK = DisplayItem.create(
-            Material.ARROW,
-            XClaim.lang.getComponent("gui-comb-previous")
-    );
-
-    private static final ItemStack NEXT_STACK = DisplayItem.create(
-            Material.ARROW,
-            XClaim.lang.getComponent("gui-comb-next")
-    );
+public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<OfflinePlayer> {
 
     private static final ItemStack ADD_STACK = DisplayItem.create(
             Material.EMERALD,
             XClaim.lang.getComponent("gui-comb-add")
     );
-
-    private static final ItemStack BACK_STACK = DisplayItem.create(
-            Material.BARRIER,
-            XClaim.lang.getComponent("gui-comb-back")
-    );
-
-    //
-
-    protected final GuiPagination<OfflinePlayer> pagination = new GuiPagination<>();
 
     //
 
@@ -61,65 +37,12 @@ public abstract class PlayerListGuiSpec implements GuiSpec {
 
     @Override
     public void populate(@NotNull GuiInstance instance) {
-        final GuiPagination.State state = this.pagination.setSlot(0)
-                .setEntries(this.getList(instance), this.shouldForceUpdate())
-                .setSort(this.getSort())
-                .populate(instance, this::populatePlayer);
-
+        super.populate(instance);
         instance.set(1, ADD_STACK);
-        instance.set(2, BACK_STACK);
-
-        if (state.hasPrevious()) instance.set(3, PREVIOUS_STACK);
-        if (state.hasNext()) instance.set(4, NEXT_STACK);
     }
 
     @Override
-    public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
-        switch (slot.index()) {
-            case 0:
-                OfflinePlayer ply = this.pagination.click(instance, slot, index);
-                if (ply == null) return GuiAction.nothing();
-                return this.onClickPlayer(instance, ply);
-            case 1:
-                return GuiAction.prompt(XClaim.lang.getComponent("gui-comb-prompt"));
-            case 2:
-                return GuiAction.transfer(GuiSpecs.MAIN);
-            case 3:
-                this.pagination.previousPage();
-                return GuiAction.repopulate();
-            case 4:
-                this.pagination.nextPage();
-                return GuiAction.repopulate();
-        }
-        return GuiAction.nothing();
-    }
-
-    @Override
-    public @NotNull GuiAction onResponse(@NotNull GuiInstance instance, @NotNull String response) {
-        OfflinePlayer ply = NameToPlayer.getPlayer(response);
-        if (ply == null) {
-            Platform.getAdventure().player(instance.player())
-                    .sendMessage(XClaim.lang.getComponent("gui-comb-prompt-fail"));
-            return GuiAction.exit();
-        }
-        return this.addPlayer(instance, ply) ? GuiAction.repopulate() : GuiAction.nothing();
-    }
-
-    //
-
-    protected abstract @NotNull Collection<OfflinePlayer> getList(@NotNull GuiInstance instance);
-
-    protected abstract boolean addPlayer(@NotNull GuiInstance instance, @NotNull OfflinePlayer player);
-
-    protected @Nullable Comparator<OfflinePlayer> getSort() {
-        return null;
-    }
-
-    protected boolean shouldForceUpdate() {
-        return false;
-    }
-
-    protected @Nullable ItemStack populatePlayer(@NotNull OfflinePlayer player) {
+    protected @Nullable ItemStack populateEntry(@NotNull GuiInstance instance, @NotNull OfflinePlayer player) {
         ItemStack is = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
         ItemMeta meta = is.getItemMeta();
         if (meta != null) {
@@ -140,6 +63,47 @@ public abstract class PlayerListGuiSpec implements GuiSpec {
         return is;
     }
 
-    protected abstract @NotNull GuiAction onClickPlayer(@NotNull GuiInstance instance, @NotNull OfflinePlayer player);
+    @Override
+    protected @NotNull GuiAction onClickExtra(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
+        if (slot.index() == 1) {
+            return GuiAction.prompt(XClaim.lang.getComponent("gui-comb-prompt"));
+        }
+        return GuiAction.nothing();
+    }
+
+    @Override
+    public @NotNull GuiAction onResponse(@NotNull GuiInstance instance, @NotNull String response) {
+        OfflinePlayer ply = NameToPlayer.getPlayer(response);
+        if (ply == null) {
+            Platform.getAdventure().player(instance.player())
+                    .sendMessage(XClaim.lang.getComponent("gui-comb-prompt-fail"));
+            return GuiAction.exit();
+        }
+        return this.addPlayer(instance, ply) ? GuiAction.repopulate() : GuiAction.nothing();
+    }
+
+    @Override
+    protected int getContentSlot() {
+        return 0;
+    }
+
+    @Override
+    protected int getPreviousSlot() {
+        return 3;
+    }
+
+    @Override
+    protected int getNextSlot() {
+        return 4;
+    }
+
+    @Override
+    protected int getBackSlot() {
+        return 2;
+    }
+
+    //
+
+    protected abstract boolean addPlayer(@NotNull GuiInstance instance, @NotNull OfflinePlayer player);
 
 }

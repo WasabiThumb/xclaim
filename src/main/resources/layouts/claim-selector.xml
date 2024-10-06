@@ -1,6 +1,6 @@
 <layout>
     <area id="0" x="0" y="0" w="~1" h="~"/>
-    <slot id="1" x="~1" y="0"/> <!-- PREV or SEARCH -->
-    <slot id="2" x="~1" y="1"/> <!-- EXIT           -->
-    <slot id="3" x="~1" y="2"/> <!-- NEXT           -->
+    <slot id="1" x="~" y="0"/> <!-- PREV or SEARCH -->
+    <slot id="2" x="~" y="1"/> <!-- EXIT           -->
+    <slot id="3" x="~" y="~"/> <!-- NEXT           -->
 </layout>
