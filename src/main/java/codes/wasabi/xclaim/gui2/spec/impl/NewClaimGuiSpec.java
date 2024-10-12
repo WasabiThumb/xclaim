@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class NewClaimGuiSpec implements GuiSpec {
+public final class NewClaimGuiSpec implements GuiSpec {
 
     private static final ItemStack YES_STACK = DisplayItem.create(
             Platform.get().getGreenConcreteMaterial(),

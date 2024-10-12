@@ -1,9 +1,10 @@
-package codes.wasabi.xclaim.gui2.spec.helper;
+package codes.wasabi.xclaim.gui2.spec.impl;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.gui2.GuiInstance;
 import codes.wasabi.xclaim.gui2.action.GuiAction;
 import codes.wasabi.xclaim.gui2.layout.GuiSlot;
+import codes.wasabi.xclaim.gui2.spec.helper.PaginatedGuiSpec;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.DisplayItem;
 import codes.wasabi.xclaim.util.NameToPlayer;

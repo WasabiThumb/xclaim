@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
-public class VersionInfoGuiSpec implements GuiSpec {
+public final class VersionInfoGuiSpec implements GuiSpec {
 
     private static final UUID OWNER_UUID = UUID.fromString("938c730b-df4e-41eb-98fe-786835347c39");
     private static final String OWNER_NAME = "Wasabi_Thumbs";

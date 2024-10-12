@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class MainGuiSpec implements GuiSpec {
+public final class MainGuiSpec implements GuiSpec {
 
     private static final ItemStack NEW_STACK = DisplayItem.create(
             Material.NETHER_STAR,
@@ -96,9 +96,9 @@ public class MainGuiSpec implements GuiSpec {
                 return GuiAction.transfer(GuiSpecs.editChunks());
             case 3:
                 return GuiAction.transfer(GuiSpecs.renameClaim());
-            /*
             case 4:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.editPerms());
+            /*
             case 5:
                 return GuiAction.transfer();
             case 6:

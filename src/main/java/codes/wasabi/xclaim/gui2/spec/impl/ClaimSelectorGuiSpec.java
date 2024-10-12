@@ -1,4 +1,4 @@
-package codes.wasabi.xclaim.gui2.spec.helper;
+package codes.wasabi.xclaim.gui2.spec.impl;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
@@ -7,6 +7,7 @@ import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui2.GuiInstance;
 import codes.wasabi.xclaim.gui2.action.GuiAction;
 import codes.wasabi.xclaim.gui2.layout.GuiSlot;
+import codes.wasabi.xclaim.gui2.spec.helper.PaginatedGuiSpec;
 import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.ChunkReference;
 import codes.wasabi.xclaim.util.DisplayItem;
@@ -51,11 +52,15 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         final int sizeEstimate = Math.max(Math.floorDiv(all.size(), Bukkit.getOnlinePlayers().size() + 1), 8);
         final List<Claim> entries = new ArrayList<>(sizeEstimate);
         for (Claim c : all) {
-            if (!c.hasPermission(player, Permission.MANAGE)) continue;
+            if (!c.hasPermission(player, this.requiredPermission())) continue;
             entries.add(c);
         }
 
         return this.entries = entries;
+    }
+
+    protected @NotNull Permission requiredPermission() {
+        return Permission.MANAGE;
     }
 
     @Override

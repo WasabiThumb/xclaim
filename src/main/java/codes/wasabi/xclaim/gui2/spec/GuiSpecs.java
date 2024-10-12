@@ -1,6 +1,10 @@
 package codes.wasabi.xclaim.gui2.spec;
 
+import codes.wasabi.xclaim.api.Claim;
+import codes.wasabi.xclaim.api.enums.Permission;
 import codes.wasabi.xclaim.gui2.spec.impl.*;
+import codes.wasabi.xclaim.gui2.spec.impl.derived.*;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 public final class GuiSpecs {
@@ -36,6 +40,30 @@ public final class GuiSpecs {
 
     public static @NotNull GuiSpec renameClaim() {
         return new RenameClaimGuiSpec();
+    }
+
+    public static @NotNull GuiSpec editPerms() {
+        return new EditPermsGuiSpec();
+    }
+
+    public static @NotNull GuiSpec permissionOverview(@NotNull Claim claim) {
+        return new PermissionOverviewGuiSpec(claim);
+    }
+
+    public static @NotNull GuiSpec globalPermissionList(@NotNull Claim claim) {
+        return new GlobalPermissionListGuiSpec(claim);
+    }
+
+    public static @NotNull GuiSpec permissionLevels(@NotNull Claim claim, @NotNull Permission permission) {
+        return new PermissionLevelsGuiSpec(claim, permission);
+    }
+
+    public static @NotNull GuiSpec individualPermissionList(@NotNull Claim claim, @NotNull OfflinePlayer subject) {
+        return new IndividualPermissionListGuiSpec(claim, subject);
+    }
+
+    public static @NotNull GuiSpec permissiblePlayerList(@NotNull Claim claim) {
+        return new PermissiblePlayerListGuiSpec(claim);
     }
 
 }

@@ -1,15 +1,14 @@
-package codes.wasabi.xclaim.gui2.spec.impl;
+package codes.wasabi.xclaim.gui2.spec.impl.derived;
 
 import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.api.Claim;
 import codes.wasabi.xclaim.gui2.GuiInstance;
 import codes.wasabi.xclaim.gui2.action.GuiAction;
-import codes.wasabi.xclaim.gui2.spec.GuiSpecs;
-import codes.wasabi.xclaim.gui2.spec.helper.ClaimSelectorGuiSpec;
+import codes.wasabi.xclaim.gui2.spec.impl.ClaimSelectorGuiSpec;
 import codes.wasabi.xclaim.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 
-public class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
+public final class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
 
     private Claim target = null;
 
