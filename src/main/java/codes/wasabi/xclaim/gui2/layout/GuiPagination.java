@@ -72,6 +72,7 @@ public class GuiPagination<T> {
         if (data.slot.index() != slot.index()) return null;
 
         final int count = data.values.size();
+        if (index >= count) return null;
         final int width = data.slot.width();
         final int startSparse = Math.floorDiv(count, width) * width;
 

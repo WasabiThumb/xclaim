@@ -47,7 +47,7 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
 
         final Player player = instance.player();
         final Set<Claim> all = Claim.getAll();
-        if (player.isOp()) return this.entries = all;
+        if (player.isOp()) return this.entries = new HashSet<>(all);
 
         final int sizeEstimate = Math.max(Math.floorDiv(all.size(), Bukkit.getOnlinePlayers().size() + 1), 8);
         final List<Claim> entries = new ArrayList<>(sizeEstimate);
