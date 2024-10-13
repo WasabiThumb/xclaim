@@ -98,14 +98,12 @@ public final class MainGuiSpec implements GuiSpec {
                 return GuiAction.transfer(GuiSpecs.renameClaim());
             case 4:
                 return GuiAction.transfer(GuiSpecs.editPerms());
-            /*
             case 5:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.transferableClaimSelector());
             case 6:
-                return GuiAction.transfer();
+                return GuiAction.transfer(GuiSpecs.clearAll());
             case 7:
-                return GuiAction.transfer();
-             */
+                return GuiAction.transfer(GuiSpecs.deletingClaimSelector());
             case 8:
                 return GuiAction.transfer(GuiSpecs.versionInfo());
             case 9:

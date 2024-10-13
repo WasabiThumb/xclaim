@@ -37,15 +37,18 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
 
     protected final GuiPagination<T> pagination = new GuiPagination<>();
     protected GuiPagination.State paginationState = GuiPagination.State.ONLY_PAGE;
+    protected boolean queuedForce = false;
 
     //
 
     @Override
     public void populate(@NotNull GuiInstance instance) {
         final GuiPagination.State state = this.pagination.setSlot(this.getContentSlot())
-                .setEntries(this.getEntries(instance))
+                .setEntries(this.getEntries(instance), this.queuedForce)
                 .setSort(this.getSort(instance))
                 .populate(instance, (T entry) -> this.populateEntry(instance, entry));
+
+        this.queuedForce = false;
 
         instance.set(this.getBackSlot(), BACK_STACK);
         instance.set(
@@ -56,6 +59,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
                 this.getNextSlot(),
                 state.hasNext() ? NEXT_STACK : this.getNextExtra()
         );
+
         this.paginationState = state;
     }
 
@@ -128,6 +132,10 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     /** Specifies the spec to switch to when using the BACK item. */
     protected @NotNull GuiSpec getReturn() {
         return GuiSpecs.main();
+    }
+
+    protected final void markForceUpdate() {
+        this.queuedForce = true;
     }
 
 }

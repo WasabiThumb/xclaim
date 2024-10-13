@@ -11,7 +11,9 @@ import codes.wasabi.xclaim.gui2.layout.GuiSlot;
 import codes.wasabi.xclaim.gui2.layout.map.GuiSlotMap;
 import codes.wasabi.xclaim.gui2.spec.GuiSpec;
 import codes.wasabi.xclaim.platform.Platform;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -90,6 +92,14 @@ public class GuiInstance implements InventoryHolder {
 
     public @NotNull Player player() {
         return this.player;
+    }
+
+    public @NotNull Audience audience() {
+        return Platform.getAdventure().player(this.player);
+    }
+
+    public void playSound(@NotNull Sound sound, float volume, float pitch) {
+        this.player.playSound(this.player.getLocation(), sound, volume, pitch);
     }
 
     public synchronized @Nullable GuiSlot getSlot(int index) {

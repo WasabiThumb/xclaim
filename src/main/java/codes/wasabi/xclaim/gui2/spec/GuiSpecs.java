@@ -66,4 +66,20 @@ public final class GuiSpecs {
         return new PermissiblePlayerListGuiSpec(claim);
     }
 
+    public static @NotNull GuiSpec transferableClaimSelector() {
+        return new TransferableClaimSelectorGuiSpec();
+    }
+
+    public static @NotNull GuiSpec transferOwner(@NotNull Claim claim, @NotNull OfflinePlayer target) {
+        return new TransferOwnerGuiSpec(claim, target);
+    }
+
+    public static @NotNull GuiSpec clearAll() {
+        return new ClearAllGuiSpec();
+    }
+
+    public static @NotNull GuiSpec deletingClaimSelector() {
+        return new DeletingClaimSelectorGuiSpec();
+    }
+
 }

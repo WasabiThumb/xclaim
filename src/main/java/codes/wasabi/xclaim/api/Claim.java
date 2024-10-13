@@ -681,6 +681,20 @@ public class Claim {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return RegistryEntry.of(this).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof Claim) {
+            return RegistryEntry.of(this).equals(RegistryEntry.of((Claim) obj));
+        }
+        return super.equals(obj);
+    }
+
     // 1.15 : Efficient registry membership test by name
 
     private interface RegistryEntry {

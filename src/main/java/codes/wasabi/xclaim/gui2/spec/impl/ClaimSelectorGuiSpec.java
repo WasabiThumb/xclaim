@@ -31,7 +31,7 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
 
     //
 
-    private Collection<Claim> entries = null;
+    protected Collection<Claim> entries = null;
     private Comparator<Claim> sort = null;
 
     //
@@ -52,13 +52,18 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         final int sizeEstimate = Math.max(Math.floorDiv(all.size(), Bukkit.getOnlinePlayers().size() + 1), 8);
         final List<Claim> entries = new ArrayList<>(sizeEstimate);
         for (Claim c : all) {
-            if (!c.hasPermission(player, this.requiredPermission())) continue;
+            if (!this.canDisplay(c, player)) continue;
             entries.add(c);
         }
 
         return this.entries = entries;
     }
 
+    protected boolean canDisplay(@NotNull Claim claim, @NotNull Player player)  {
+        return claim.hasPermission(player, this.requiredPermission());
+    }
+
+    /** Not used if canDisplay is overriden */
     protected @NotNull Permission requiredPermission() {
         return Permission.MANAGE;
     }
