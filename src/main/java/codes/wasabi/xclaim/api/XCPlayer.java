@@ -1,12 +1,9 @@
 package codes.wasabi.xclaim.api;
 
 import codes.wasabi.xclaim.XClaim;
-import codes.wasabi.xclaim.platform.Platform;
 import codes.wasabi.xclaim.util.ProxyList;
 import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,11 +129,11 @@ public class XCPlayer {
     }
 
     public int getMaxChunks() {
-        return XClaim.mainConfig.rules().maxChunks(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.rules().maxChunks(this.getPlayer()));
     }
 
     public int getMaxClaims() {
-        return XClaim.mainConfig.rules().maxClaims(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.rules().maxClaims(this.getPlayer()));
     }
 
     public double getClaimPrice() {
@@ -148,11 +145,16 @@ public class XCPlayer {
     }
 
     public int getFreeChunks() {
-        return XClaim.mainConfig.integrations().economy().freeChunks(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.integrations().economy().freeChunks(this.getPlayer()));
     }
 
     public int getMaxClaimsInWorld() {
-        return XClaim.mainConfig.rules().maxClaimsInWorld(this.getPlayer());
+        return this.negativeAsInf(XClaim.mainConfig.rules().maxClaimsInWorld(this.getPlayer()));
+    }
+
+    private int negativeAsInf(int value) {
+        if (value < 0) return Integer.MAX_VALUE;
+        return value;
     }
 
     /**

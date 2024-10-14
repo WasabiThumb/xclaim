@@ -16,6 +16,7 @@ import codes.wasabi.xclaim.util.StringUtil;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -31,26 +32,41 @@ import java.util.stream.Stream;
 
 public class Claim {
 
-    private static final Set<Claim> registry = new HashSet<>();
+    private static final Set<RegistryEntry> registry = new HashSet<>();
     private static final ReentrantReadWriteLock registryLock = new ReentrantReadWriteLock();
 
     public static @NotNull @UnmodifiableView Set<Claim> getAll() {
-        Set<Claim> ret = new HashSet<>();
+        Set<Claim> ret;
         registryLock.readLock().lock();
         try {
-            ret.addAll(registry);
+            ret = new HashSet<>(registry.size());
+            for (RegistryEntry entry : registry) ret.add(entry.claim());
         } finally {
             registryLock.readLock().unlock();
         }
         return Collections.unmodifiableSet(ret);
     }
 
+    /**
+     * Returns true if a claim with the specified name exists in the registry in a manner more efficient than
+     * {@link #getByName(String)}.
+     */
+    public static boolean exists(@NotNull CharSequence name) {
+        registryLock.readLock().lock();
+        try {
+            return registry.contains(RegistryEntry.fake(name));
+        } finally {
+            registryLock.readLock().unlock();
+        }
+    }
+
     public static @Nullable Claim getByName(@NotNull String name, boolean ignoreCase) {
         registryLock.readLock().lock();
         try {
-            for (Claim c : registry) {
-                if (ignoreCase ? c.getName().equalsIgnoreCase(name) : c.getName().equals(name)) {
-                    return c;
+            if (!registry.contains(RegistryEntry.fake(name))) return null;
+            for (RegistryEntry re : registry) {
+                if (re.claimNameEquals(name, ignoreCase)) {
+                    return re.claim();
                 }
             }
             return null;
@@ -67,8 +83,8 @@ public class Claim {
         registryLock.readLock().lock();
         try {
             Set<Claim> set = new HashSet<>();
-            for (Claim c : registry) {
-                if (c.owner.getUniqueId().equals(owner.getUniqueId())) set.add(c);
+            for (RegistryEntry re : registry) {
+                if (re.claim().owner.getUniqueId().equals(owner.getUniqueId())) set.add(re.claim());
             }
             return Collections.unmodifiableSet(set);
         } finally {
@@ -87,9 +103,9 @@ public class Claim {
     public static @Nullable Claim getByChunk(@NotNull ChunkReference cr) {
         registryLock.readLock().lock();
         try {
-            for (Claim c : registry) {
-                for (ChunkReference chk : c.chunks) {
-                    if (chk.matches(cr)) return c;
+            for (RegistryEntry re : registry) {
+                for (ChunkReference chk : re.claim().chunks) {
+                    if (chk.matches(cr)) return re.claim();
                 }
             }
             return null;
@@ -277,8 +293,11 @@ public class Claim {
         registryLock.readLock().lock();
         try {
             while (true) {
+                if (!registry.contains(RegistryEntry.fake(targetName))) break;
                 boolean ok = true;
-                for (Claim c : registry) {
+                Claim c;
+                for (RegistryEntry re : registry) {
+                    c = re.claim();
                     if (c == this) continue;
                     if (c.owner == null || c.owner.getUniqueId() != ownerId) continue;
                     if (c.name.equalsIgnoreCase(targetName)) {
@@ -359,7 +378,9 @@ public class Claim {
                 List<Claim> collides = new ArrayList<>(1);
                 registryLock.readLock().lock();
                 try {
-                    for (Claim c : registry) {
+                    Claim c;
+                    for (RegistryEntry re : registry) {
+                        c = re.claim();
                         if (c == this) continue;
                         if (c.chunks.contains(ref)) {
                             collides.add(c);
@@ -408,6 +429,31 @@ public class Claim {
             if (c.getBounds().contains(vector)) return true;
         }
         return false;
+    }
+
+    public boolean containsChunk(@NotNull ChunkReference cr) {
+        return this.chunks.contains(cr);
+    }
+
+    public long minSquareDistance(@NotNull ChunkReference cr) {
+        if (this.chunks.contains(cr)) return 0L;
+        long ret = Long.MAX_VALUE;
+        long dist;
+        long tmp;
+        synchronized (this.chunks) {
+            for (ChunkReference mcr : this.chunks) {
+                if (!mcr.world.getUID().equals(cr.world.getUID())) continue;
+                tmp = mcr.x - cr.x;
+                dist = (tmp * tmp);
+                tmp = mcr.z - cr.z;
+                dist += (tmp * tmp);
+                if (dist < ret) {
+                    ret = dist;
+                    if (dist == 0L) break;
+                }
+            }
+        }
+        return ret;
     }
 
     public void setPermission(@NotNull Permission permission, @NotNull TrustLevel trustLevel) {
@@ -569,7 +615,9 @@ public class Claim {
     public boolean claim() {
         // prevent ConcurrentModificationException
         String myToken = this.getUniqueToken();
-        for (Claim c : new HashSet<>(registry)) {
+        Claim c;
+        for (RegistryEntry re : new HashSet<>(registry)) {
+            c = re.claim();
             if (c == this) continue;
             if (c.getUniqueToken().equals(myToken)) {
                 c.unclaim();
@@ -585,7 +633,7 @@ public class Claim {
         boolean added;
         registryLock.writeLock().lock();
         try {
-            added = registry.add(this);
+            added = registry.add(RegistryEntry.of(this));
         } finally {
             registryLock.writeLock().unlock();
         }
@@ -607,7 +655,7 @@ public class Claim {
         boolean removed;
         registryLock.writeLock().lock();
         try {
-            removed = registry.remove(this);
+            removed = registry.remove(RegistryEntry.of(this));
         } finally {
             registryLock.writeLock().unlock();
         }
@@ -622,6 +670,141 @@ public class Claim {
             return true;
         }
         return false;
+    }
+
+    public boolean isCanonical() {
+        registryLock.readLock().lock();
+        try {
+            return registry.contains(RegistryEntry.of(this));
+        } finally {
+            registryLock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return RegistryEntry.of(this).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof Claim) {
+            return RegistryEntry.of(this).equals(RegistryEntry.of((Claim) obj));
+        }
+        return super.equals(obj);
+    }
+
+    // 1.15 : Efficient registry membership test by name
+
+    private interface RegistryEntry {
+
+        static @NotNull RegistryEntry of(@NotNull Claim claim) {
+            return new RegistryEntry.Real(claim);
+        }
+
+        static @NotNull RegistryEntry fake(@NotNull CharSequence string) {
+            return new RegistryEntry.Fake(string);
+        }
+
+        //
+
+        @NotNull CharSequence claimName();
+
+        boolean claimNameEquals(@NotNull CharSequence other, boolean ignoreCase);
+
+        default boolean claimNameEquals(@NotNull CharSequence other) {
+            return this.claimNameEquals(other, true);
+        }
+
+        @NotNull Claim claim() throws UnsupportedOperationException;
+
+        //
+
+        abstract class Abstract implements RegistryEntry {
+
+            @Override
+            public boolean claimNameEquals(final @NotNull CharSequence b, boolean ignoreCase) {
+                final CharSequence a = this.claimName();
+                final int al = a.length();
+                if (al == 0) return false;
+                final int bl = b.length();
+                if (al != bl) return false;
+
+                char ca;
+                char cb;
+                for (int i=0; i < al; i++) {
+                    ca = a.charAt(i);
+                    if (ignoreCase) ca = Character.toLowerCase(ca);
+                    cb = b.charAt(i);
+                    if (ignoreCase) cb = Character.toLowerCase(cb);
+
+                    if (ca != cb) return false;
+                }
+                return true;
+            }
+
+            @Override
+            public int hashCode() {
+                final PrimitiveIterator.OfInt name = this.claimName().codePoints().iterator();
+                int hash = 7;
+                while (name.hasNext()) {
+                    hash = 31 * hash + Character.toLowerCase(name.nextInt());
+                }
+                return hash;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (obj == null) return false;
+                if (obj instanceof RegistryEntry) {
+                    if (this.claimNameEquals(((RegistryEntry) obj).claimName()))
+                        return true;
+                }
+                return super.equals(obj);
+            }
+
+        }
+
+        final class Real extends Abstract {
+
+            private final Claim value;
+            Real(@NotNull Claim value) {
+                this.value = value;
+            }
+
+            @Override
+            public @NotNull String claimName() {
+                return this.value.name;
+            }
+
+            @Override
+            public @NotNull Claim claim() {
+                return this.value;
+            }
+
+        }
+
+        final class Fake extends Abstract {
+
+            private final CharSequence name;
+            Fake(@NotNull CharSequence name) {
+                this.name = name;
+            }
+
+            @Override
+            public @NotNull CharSequence claimName() {
+                return this.name;
+            }
+
+            @Contract(" -> fail")
+            @Override
+            public @NotNull Claim claim() {
+                throw new UnsupportedOperationException();
+            }
+
+        }
+
     }
 
 }

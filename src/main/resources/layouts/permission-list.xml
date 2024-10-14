@@ -1,0 +1,26 @@
+<layout>
+    <!-- Using <row> instead of <area> to allow removing certain permissions from the list. -->
+    <!-- Make sure that each <row> contains no more than 9 slots.                           -->
+    <row y="0" w="~">
+        <slot id="1"/>  <!-- BUILD                  -->
+        <slot id="2"/>  <!-- BREAK                  -->
+        <slot id="3"/>  <!-- ENTER                  -->
+        <slot id="4"/>  <!-- INTERACT               -->
+        <slot id="5"/>  <!-- CHEST_OPEN             -->
+        <slot id="6"/>  <!-- ENT_PLACE              -->
+        <slot id="7"/>  <!-- VEHICLE_PLACE          -->
+        <slot id="8"/>  <!-- FIRE_USE               -->
+        <slot id="9"/>  <!-- ENTITY_DAMAGE_FRIENDLY -->
+    </row>
+    <row y="1" w="~">
+        <slot id="10"/> <!-- ENTITY_DAMAGE_HOSTILE  -->
+        <slot id="11"/> <!-- ENTITY_DAMAGE_VEHICLE  -->
+        <slot id="12"/> <!-- ENTITY_DAMAGE_NL       -->
+        <slot id="13"/> <!-- ENTITY_DAMAGE_MISC     -->
+        <slot id="14"/> <!-- EXPLODE                -->
+        <slot id="15"/> <!-- ITEM_DROP              -->
+        <slot id="16"/> <!-- MANAGE                 -->
+        <slot id="17"/> <!-- DELETE                 -->
+    </row>
+    <slot id="0" x="4" y="~"/> <!-- EXIT -->
+</layout>

@@ -74,6 +74,43 @@ Support for the [legacy YAML config](https://github.com/WasabiThumb/xclaim/blob/
 
 **If both formats are present, [``config.yml``](https://github.com/WasabiThumb/xclaim/blob/00823def93261519b8ca836a1a774a5a1f81ce65/src/main/resources/config.yml) will be used.**
 
+### Config (GUI Layouts)
+**This only applies for ``config.toml`` with ``gui.version`` set to 2.**
+
+After running once, the ``layouts`` directory will appear in the XClaim configuration root. This will give access to GUI
+layout files (e.g. ``layouts/main.xml``). A typical application for editing the layouts would be to remove a button from the GUI. For instance, if you wanted to remove the ability to modify the ``ENTER`` permission, then change ``layouts/permission-list.xml``:
+
+```diff
+    <slot id="2"/>  <!-- BREAK -->
+-   <slot id="3"/>  <!-- ENTER -->
++   <!-- <slot id="3"/> --> <!-- ENTER -->
+    <slot id="4"/>  <!-- INTERACT -->
+```
+
+The format is not very friendly, but an attempt will be made to document it here:
+
+|          Tag |              Allowed Properties               | Description                                                                                                                                                                                                  |
+|-------------:|:---------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ``<layout>`` |                   - none -                    | The document root. No other tags should be placed at top-level, including metadata.                                                                                                                          |
+|    ``<row>`` |    ``id``, ``x``, ``y``, ``w``, ``basis``     | Automatically adjusts the X position of each child element according to either the ``basis`` set in the config or the ``basis`` set on the tag. If an ``id`` is specified, it should have no child elements. |
+|   ``<slot>`` |             ``id``, ``x``, ``y``              | Marks a location where XClaim can insert an item. Must have an ``id`` and must have no child elements.                                                                                                       |
+|   ``<area>`` | ``id``, ``x``, ``y``, ``w``, ``h``, ``basis`` | Marks a location where XClaim can insert multiple (in excess of 9) items. Must have an ``id`` and must have no child elements. Mainly used for paginated content.                                            |
+
+
+|  Property | Description                                                                                                                                                                                                                                                                              |
+|----------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    ``id`` | Binds the element to a slot in the code. If the spec wishes to place an item at ID ``0``, it will end up located at the ``x`` and ``y`` position of the element with ``id="0"``.                                                                                                         |
+|     ``x`` | Sets the ``x`` position of the element. Must be between ``0`` and ``CONTAINER_WIDTH - 1`` (denoted as ``~``[†](#tilda-syntax)). If not specified, the element inherits the ``x`` position of its container.                                                                              |
+|     ``y`` | Sets the ``y`` position of the element. Must be between ``0`` and ``CONTAINER_HEIGHT - 1`` (denoted as ``~``[†](#tilda-syntax)). If not specified, the element inherits the ``y`` position of its container.                                                                             |
+|     ``w`` | Sets the width of the element. Must be between ``1`` and ``CONTAINER_WIDTH`` (denoted as ``~``[†](#tilda-syntax)). If not specified, the width is the default width for that element. For instance, ``<row>`` is width ``~`` by default, and ``<slot>`` is width ``1`` by default.       |
+|     ``h`` | Sets the width of the element. Must be between ``1`` and ``CONTAINER_HEIGHT`` (denoted as ``~``[†](#tilda-syntax)). If not specified, the height is the default height for that element. For instance, ``<area>`` is height ``~`` by default, and ``<slot>`` is height ``1`` by default. |
+| ``basis`` | The default horizontal alignment of slots within this element. Must be one of ``LEFT``, ``RIGHT``, ``CENTER`` or ``EVEN``.                                                                                                                                                               |
+
+#### Tilda Syntax
+The symbol ``~`` when applied to a numeric value indicates the maximum value that is within bounds. A number placed
+after the symbol subtracts from the maximum, for instance ``~1`` is one less than the maximum and ``~2`` is two less than the maximum.
+
+
 ## Permissions
 Don't worry, there aren't that many.
 | Name | Description |

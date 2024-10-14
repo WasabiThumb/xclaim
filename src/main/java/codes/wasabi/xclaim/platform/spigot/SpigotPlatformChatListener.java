@@ -13,10 +13,10 @@ import java.util.function.Consumer;
 
 public class SpigotPlatformChatListener implements PlatformChatListener {
 
-    private final List<Consumer<PlatformChatListenerData>> callbacks = new ArrayList<>();
+    private final List<Consumer<Data>> callbacks = new ArrayList<>();
 
     @Override
-    public void onChat(Consumer<PlatformChatListenerData> cb) {
+    public void onChat(Consumer<Data> cb) {
         callbacks.add(cb);
     }
 
@@ -28,12 +28,12 @@ public class SpigotPlatformChatListener implements PlatformChatListener {
 
     @EventHandler
     public void onMessage(AsyncPlayerChatEvent event) {
-        PlatformChatListenerData data = new PlatformChatListenerData(
+        Data data = new Data(
                 event.getPlayer(),
                 PlainTextComponentSerializer.plainText().serialize(LegacyComponentSerializer.legacySection().deserialize(event.getMessage())),
                 () -> event.setCancelled(true)
         );
-        for (Consumer<PlatformChatListenerData> consumer : callbacks) consumer.accept(data);
+        for (Consumer<Data> consumer : callbacks) consumer.accept(data);
     }
 
 }

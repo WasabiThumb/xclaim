@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@Deprecated
 public class GUIHandler implements InventoryHolder, Listener {
 
     private static final Set<GUIHandler> openHandlers = new CopyOnWriteArraySet<>();
@@ -155,7 +156,7 @@ public class GUIHandler implements InventoryHolder, Listener {
         }
     }
 
-    public void onMessage(@NotNull PlatformChatListener.PlatformChatListenerData data) {
+    public void onMessage(@NotNull PlatformChatListener.Data data) {
         if (!open) return;
         Player ply = data.ply();
         if (ply.getUniqueId().equals(target.getUniqueId())) {

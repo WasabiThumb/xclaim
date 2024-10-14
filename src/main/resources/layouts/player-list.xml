@@ -1,0 +1,7 @@
+<layout>
+    <area id="0" x="0" y="0" w="~" h="~1"/>
+    <slot id="1" x="3" y="~"/>   <!-- ADD PLAYER -->
+    <slot id="2" x="5" y="~"/>   <!-- BACK       -->
+    <slot id="3" x="0" y="~"/>   <!-- PREVIOUS   -->
+    <slot id="4" x="~" y="~"/>   <!-- NEXT       -->
+</layout>

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,13 +45,7 @@ public final class NameToPlayer {
                 String string = new String(bytes, StandardCharsets.UTF_8);
                 JsonObject ob = gson.fromJson(string, JsonObject.class);
                 String id = ob.get("id").getAsString();
-                String uuidString = id.substring(0, 8) + "-"
-                        + id.substring(8, 12) + "-"
-                        + id.substring(12, 16) + "-"
-                        + id.substring(16, 20) + "-"
-                        + id.substring(20);
-                UUID uuid = UUID.fromString(uuidString);
-                return Bukkit.getOfflinePlayer(uuid);
+                return Bukkit.getOfflinePlayer(parseMojangUUID(id));
             } else if (code == 204 || code == 400 || code == 404) {
                 return null;
             } else if (code == 405) {
@@ -60,6 +55,47 @@ public final class NameToPlayer {
             }
         } catch (IOException ignored) { }
         return null;
+    }
+
+    private static @NotNull UUID parseMojangUUID(@NotNull String str) throws IllegalArgumentException {
+        if (str.length() != 32) throwInvalidUUID(str, "length != 32");
+        long[] blocks = new long[4];
+
+        for (int i=0; i < 4; i++) {
+            if ((blocks[i] = parseMojangUUIDBlock(str, i * 8)) == -1L)
+                throwInvalidUUID(str, "malformed block " + i);
+        }
+
+        return new UUID(
+                ((blocks[0] << 32) | blocks[1]),
+                ((blocks[2] << 32) | blocks[3])
+        );
+    }
+
+    private static long parseMojangUUIDBlock(@NotNull String str, int offset) {
+        long ret = 0;
+        char c;
+        for (int i=0; i < 8; i++) {
+            ret <<= 4;
+            c = str.charAt(offset | i);
+
+            if ('0' <= c && c <= '9') {
+                ret |= (((long) c) - 48L);
+            } else if ('a' <= c && c <= 'f') {
+                ret |= (((long) c) - 87L);
+            } else if ('A' <= c && c <= 'F') {
+                ret |= (((long) c) - 55L);
+            } else {
+                return -1L;
+            }
+        }
+        return ret;
+    }
+
+    @Contract("_, _ -> fail")
+    private static void throwInvalidUUID(@NotNull String str, @NotNull String detail) throws IllegalArgumentException {
+        String msg = "Invalid UUID string \"" + str + "\" (" + detail + ")";
+        throw new IllegalStateException(msg);
     }
 
 }

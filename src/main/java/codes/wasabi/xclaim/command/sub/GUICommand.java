@@ -4,7 +4,6 @@ import codes.wasabi.xclaim.XClaim;
 import codes.wasabi.xclaim.command.Command;
 import codes.wasabi.xclaim.command.argument.Argument;
 import codes.wasabi.xclaim.gui.ChunkEditor;
-import codes.wasabi.xclaim.gui.GUIHandler;
 import codes.wasabi.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
@@ -47,7 +46,7 @@ public class GUICommand implements Command {
             audience.sendMessage(XClaim.lang.getComponent("cmd-gui-err-restricted"));
             return;
         }
-        new GUIHandler((Player) sender);
+        XClaim.gui.openGui(ply);
     }
 
 }

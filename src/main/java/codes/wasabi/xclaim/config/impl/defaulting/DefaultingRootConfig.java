@@ -12,13 +12,15 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     private final DefaultingRulesConfig rules;
     private final DefaultingWorldsConfig worlds;
     private final DefaultingIntegrationsConfig integrations;
+    private final DefaultingGuiConfig gui;
     public DefaultingRootConfig(@NotNull RootConfig backing) {
         super(backing);
-        this.autoSave = new DefaultingAutoSaveConfig(backing.autoSave());
-        this.editor = new DefaultingEditorConfig(backing.editor());
-        this.rules = new DefaultingRulesConfig(backing.rules());
-        this.worlds = new DefaultingWorldsConfig(backing.worlds());
-        this.integrations = new DefaultingIntegrationsConfig(backing.integrations());
+        this.autoSave     = new DefaultingAutoSaveConfig(     backing.autoSave()     );
+        this.editor       = new DefaultingEditorConfig(       backing.editor()       );
+        this.rules        = new DefaultingRulesConfig(        backing.rules()        );
+        this.worlds       = new DefaultingWorldsConfig(       backing.worlds()       );
+        this.integrations = new DefaultingIntegrationsConfig( backing.integrations() );
+        this.gui          = new DefaultingGuiConfig(          backing.gui()          );
     }
 
     @Override
@@ -59,6 +61,11 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     @Override
     public @NotNull DefaultingIntegrationsConfig integrations() {
         return this.integrations;
+    }
+
+    @Override
+    public @NotNull DefaultingGuiConfig gui() {
+        return this.gui;
     }
 
 }

@@ -13,13 +13,15 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     private final TomlRulesConfig rules;
     private final TomlWorldsConfig worlds;
     private final TomlIntegrationsConfig integrations;
+    private final TomlGuiConfig gui;
     public TomlRootConfig(@NotNull Toml table) {
         super(table);
-        this.autoSave = new TomlAutoSaveConfig(this.getTable("auto-save"));
-        this.editor = new TomlEditorConfig(this.getTable("editor"));
-        this.rules = new TomlRulesConfig(this.getTable("rules"));
-        this.worlds = new TomlWorldsConfig(this.getTable("worlds"));
+        this.autoSave     = new TomlAutoSaveConfig(    this.getTable("auto-save"));
+        this.editor       = new TomlEditorConfig(      this.getTable("editor"));
+        this.rules        = new TomlRulesConfig(       this.getTable("rules"));
+        this.worlds       = new TomlWorldsConfig(      this.getTable("worlds"));
         this.integrations = new TomlIntegrationsConfig(this.getTable("integrations"));
+        this.gui          = new TomlGuiConfig(         this.getTable("gui"));
     }
 
     @Override
@@ -55,6 +57,11 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     @Override
     public @NotNull TomlWorldsConfig worlds() {
         return this.worlds;
+    }
+
+    @Override
+    public @NotNull TomlGuiConfig gui() {
+        return this.gui;
     }
 
     @Override
