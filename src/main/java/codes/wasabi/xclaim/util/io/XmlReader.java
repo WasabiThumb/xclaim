@@ -21,6 +21,7 @@ public class XmlReader extends FilterReader {
     private final StringBuilder buf = new StringBuilder();
     private int counter = 0;
     private int peeked = -1;
+    private int commentDashes = 0;
 
     public XmlReader(@NotNull Reader in) {
         super(in);
@@ -96,7 +97,22 @@ public class XmlReader extends FilterReader {
     }
 
     protected @Nullable Symbol readSymbolInternal(char c) throws IOException {
-        // The left angle bracket is a globally special char, let's check it first
+        if (this.state == State.READ_COMMENT) {
+            if (this.commentDashes >= 2) {
+                if (c == '>') {
+                    this.state = State.READ_TXT;
+                } else if (c != '-') {
+                    this.commentDashes = 0;
+                }
+            } else {
+                if (c == '-') {
+                    this.commentDashes++;
+                } else {
+                    this.commentDashes = 0;
+                }
+            }
+            return null;
+        }
         if (c == '<') {
             if (this.state == State.READ_TXT) {
                 final Symbol ret = (this.buf.length() == 0) ? null : Symbol.text(this.buf.toString());
@@ -113,9 +129,6 @@ public class XmlReader extends FilterReader {
                 return this.readSymbolForTag(c);
             case READ_ATTRS:
                 return this.readSymbolForAttrs(c);
-            case READ_COMMENT:
-                if (c == '>') this.state = State.READ_TXT;
-                break;
         }
         return null;
     }
@@ -137,6 +150,7 @@ public class XmlReader extends FilterReader {
         final boolean initEmpty = this.buf.length() == 0;
         if (initEmpty && c == '!') {
             // comment
+            this.commentDashes = 0;
             this.state = State.READ_COMMENT;
             return null;
         }
