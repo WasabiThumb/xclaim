@@ -1,0 +1,39 @@
+package io.github.wasabithumb.xclaim.api.event;
+
+import io.github.wasabithumb.xclaim.api.Claim;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+public class XClaimAddChunksToClaimEvent extends XClaimModifyClaimChunksEvent {
+
+    private static final HandlerList HANDLERS = new HandlerList();
+
+    public static @NotNull HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+    //
+
+    public XClaimAddChunksToClaimEvent(@NotNull Player player, @NotNull Claim claim, @NotNull Chunk... chunks) {
+        super(player, claim, chunks);
+    }
+
+    public XClaimAddChunksToClaimEvent(@NotNull Player player, @NotNull Claim claim, @NotNull List<Chunk> chunks) {
+        super(player, claim, chunks);
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    @Override
+    protected @NotNull String getTranslatableFailMessage() {
+        return "event-fail-add-chunks";
+    }
+
+}

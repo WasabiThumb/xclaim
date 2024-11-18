@@ -1,0 +1,44 @@
+package io.github.wasabithumb.xclaim.platform.entity;
+
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public interface PlatformPlayer extends PlatformEntity, PlatformUser {
+
+    @NotNull PlatformInventory<?> getInventory();
+
+    @Nullable PlatformItem getItemInUse();
+
+    void sendActionBar(@NotNull String text);
+
+    void playSound(@NotNull PlatformSound sound);
+
+    boolean isGliding();
+
+    void artificialElytraBoost(@Nullable PlatformItem item);
+
+    void artificialBookOpen(@Nullable PlatformItem item);
+
+    // START PlatformEntity
+
+    @Override
+    default @NotNull PlatformEntityType type() {
+        return NamedPlatformEntityType.PLAYER;
+    }
+
+    // END PlatformEntity
+
+    // START PlatformUser
+
+    @Override
+    default boolean isOffline() {
+        return false;
+    }
+
+    // END PlatformUser
+
+}
