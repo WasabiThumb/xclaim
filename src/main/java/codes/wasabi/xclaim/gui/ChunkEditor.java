@@ -23,9 +23,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -50,6 +48,24 @@ public class ChunkEditor {
             PlatformItemPickupListener listener = Platform.get().getItemPickupListener();
             listener.on(this::onPickup);
             listener.register();
+        }
+
+        void tryRegisterPaperEvents() {
+            // PAPER ONLY: Item frame change event
+            Class<? extends PlayerEvent> itemFrameEventClass;
+            try {
+                itemFrameEventClass = Class.forName("io.papermc.paper.event.player.PlayerItemFrameChangeEvent")
+                        .asSubclass(PlayerEvent.class);
+            } catch (ClassNotFoundException | ClassCastException ignored) {
+                return;
+            }
+            Bukkit.getPluginManager().registerEvent(
+                    itemFrameEventClass,
+                    this,
+                    EventPriority.NORMAL,
+                    (Listener ignored, Event event) -> this.onItemFrameChange((PlayerEvent) event),
+                    XClaim.instance
+            );
         }
 
         @EventHandler
@@ -403,6 +419,14 @@ public class ChunkEditor {
             }
         }
 
+        // PAPER ONLY
+        public void onItemFrameChange(@NotNull PlayerEvent event) {
+            Player ply = event.getPlayer();
+            if (getEditing(ply) != null && event instanceof Cancellable) {
+                ((Cancellable) event).setCancelled(true);
+            }
+        }
+
     }
 
     private static ItemStack CLAIM_STACK;
@@ -430,6 +454,7 @@ public class ChunkEditor {
         KEY_INVENTORY = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_inventory"));
         EVENTS = new Events();
         Bukkit.getPluginManager().registerEvents(EVENTS, XClaim.instance);
+        EVENTS.tryRegisterPaperEvents();
     }
 
     private static final Map<UUID, Claim> editingMap = new HashMap<>();
