@@ -3,7 +3,7 @@ package io.github.wasabithumb.xclaim.gui;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -53,7 +53,7 @@ public abstract class Page {
     public void onTick() {
         if (awaiting) {
             Audience audience = Platform.getAdventure().player(getTarget());
-            audience.sendActionBar(Component.text(awaitPrompt).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+            audience.sendActionBar(Component.text(awaitPrompt).color(ColorTag.WHITE).decoration(TextDecoration.ITALIC, false));
         }
     }
 

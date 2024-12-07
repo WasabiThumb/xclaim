@@ -4,7 +4,6 @@ import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.api.Claim;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

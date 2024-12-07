@@ -10,7 +10,7 @@ import io.github.wasabithumb.xclaim.gui.GUIHandler;
 import io.github.wasabithumb.xclaim.gui.Page;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -69,7 +69,7 @@ public class TransferPage extends Page {
                     DisplayItem.create(
                             Platform.get().getPlayerHeadMaterial(),
                             XClaim.lang.get("unknown"),
-                            NamedTextColor.RED
+                            ColorTag.RED
                     )
             );
         }

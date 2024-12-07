@@ -17,12 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
 import java.util.*;
 
-import static io.github.wasabithumb.xclaim.util.IntLongConverter.*;
+import static io.github.wasabithumb.xclaim.util.BitManipulation.*;
 
 public class ImportCommand implements Command {
 
@@ -31,11 +30,11 @@ public class ImportCommand implements Command {
         private final Map<Long, UUID> backingMap = new HashMap<>();
 
         public void set(int x, int z, UUID uuid) {
-            backingMap.put(intToLong(x, z), uuid);
+            backingMap.put(i32i64(x, z), uuid);
         }
 
         public UUID get(int x, int z) {
-            return backingMap.get(intToLong(x, z));
+            return backingMap.get(i32i64(x, z));
         }
 
         public List<int[]> pullClump(long curKey) {
@@ -46,16 +45,16 @@ public class ImportCommand implements Command {
             queue.add(curKey);
             while (queue.size() > 0) {
                 long l = queue.remove(0);
-                int[] coords = longToInt(l);
+                int[] coords = i64i32(l);
                 int _x = coords[0];
                 int _z = coords[1];
                 if (Objects.equals(get(_x, _z), uuid)) {
                     backingMap.remove(l);
                     ret.add(new int[]{ _x, _z });
-                    long leftKey = intToLong(_x - 1, _z);
-                    long rightKey = intToLong(_x + 1, _z);
-                    long upKey = intToLong(_x, _z - 1);
-                    long downKey = intToLong(_x, _z + 1);
+                    long leftKey = i32i64(_x - 1, _z);
+                    long rightKey = i32i64(_x + 1, _z);
+                    long upKey = i32i64(_x, _z - 1);
+                    long downKey = i32i64(_x, _z + 1);
                     if (!queue.contains(leftKey)) queue.add(leftKey);
                     if (!queue.contains(rightKey)) queue.add(rightKey);
                     if (!queue.contains(upKey)) queue.add(upKey);

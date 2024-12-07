@@ -8,7 +8,6 @@ import io.github.wasabithumb.xclaim.command.argument.Argument;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;

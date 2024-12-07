@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContaine
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -21,5 +22,11 @@ public interface PlatformEntity extends PlatformObject {
     @NotNull PlatformLocation location();
 
     void teleport(@NotNull PlatformLocation location);
+
+    boolean isProjectile();
+
+    boolean isExplosive();
+
+    @Nullable PlatformPlayer sourcePlayer();
 
 }

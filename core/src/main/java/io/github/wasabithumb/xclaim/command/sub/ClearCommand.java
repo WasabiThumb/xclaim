@@ -10,15 +10,13 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import java.util.Objects;
 
 public class ClearCommand implements Command {
 
@@ -96,7 +94,7 @@ public class ClearCommand implements Command {
                 Claim.getByOwner(target).forEach(Claim::unclaim);
                 audience.sendMessage(XClaim.lang.getComponent("cmd-clear-success", name));
                 if ((!permitted) && target instanceof Player) {
-                    Component name2 = (sender instanceof Player ? Platform.get().playerDisplayName((Player) sender) : Component.text(XClaim.lang.get("cmd-clear-player-console")).color(NamedTextColor.DARK_GRAY));
+                    Component name2 = (sender instanceof Player ? Platform.get().playerDisplayName((Player) sender) : Component.text(XClaim.lang.get("cmd-clear-player-console")).color(ColorTag.DARK_GRAY));
                     Platform.getAdventure().player((Player) target).sendMessage(XClaim.lang.getComponent("cmd-clear-notify", name2));
                 }
                 return;

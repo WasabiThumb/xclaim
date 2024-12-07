@@ -10,7 +10,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -113,16 +113,16 @@ public class HelpCommand implements Command {
                             argDefs = argDefs.append(Component.newline()).append(Component.newline());
                         }
                         argDefs = argDefs
-                                .append(Component.text(_a.name().toLowerCase(Locale.ROOT) + " ").color(NamedTextColor.LIGHT_PURPLE))
-                                .append(Component.text("(" + _a.type().getTypeName().toLowerCase(Locale.ROOT) + ")").color(NamedTextColor.DARK_PURPLE))
+                                .append(Component.text(_a.name().toLowerCase(Locale.ROOT) + " ").color(ColorTag.LIGHT_PURPLE))
+                                .append(Component.text("(" + _a.type().getTypeName().toLowerCase(Locale.ROOT) + ")").color(ColorTag.DARK_PURPLE))
                                 .append(Component.newline())
-                                .append(Component.text(_a.description()).color(NamedTextColor.DARK_AQUA));
+                                .append(Component.text(_a.description()).color(ColorTag.DARK_AQUA));
                     }
                     String exec = "/xclaim " + com.getName() + argNames;
                     Component component = Component.empty()
-                            .append(Component.text(exec).color(NamedTextColor.GOLD).decorate(TextDecoration.UNDERLINED).clickEvent(ClickEvent.suggestCommand(exec)))
+                            .append(Component.text(exec).color(ColorTag.GOLD).decorate(TextDecoration.UNDERLINED).clickEvent(ClickEvent.suggestCommand(exec)))
                             .append(Component.newline())
-                            .append(Component.text(com.getDescription()).color(NamedTextColor.YELLOW))
+                            .append(Component.text(com.getDescription()).color(ColorTag.YELLOW))
                             .append(Component.newline());
                     if (args.length > 0) {
                         component = component.append(Component.newline()).append(argDefs);
@@ -138,19 +138,19 @@ public class HelpCommand implements Command {
         pageNum = Math.max(Math.min(pageNum, maxPage), 1);
         Component ret = Component.empty();
         Component head = Component.empty();
-        head = head.append(Component.text("= ").color(NamedTextColor.GOLD));
+        head = head.append(Component.text("= ").color(ColorTag.GOLD));
         if (pageNum > 1) {
-            head = head.append(Component.text("< ").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum - 1))));
+            head = head.append(Component.text("< ").color(ColorTag.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum - 1))));
         } else {
             head = head.append(Component.text("  "));
         }
         head = head.append(XClaim.lang.getComponent("cmd-help-page", pageNum));
         if (pageNum < maxPage) {
-            head = head.append(Component.text(" >").color(NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum + 1))));
+            head = head.append(Component.text(" >").color(ColorTag.YELLOW).clickEvent(ClickEvent.runCommand("/xclaim help " + (pageNum + 1))));
         } else {
             head = head.append(Component.text("  "));
         }
-        head = head.append(Component.text(" =").color(NamedTextColor.GOLD));
+        head = head.append(Component.text(" =").color(ColorTag.GOLD));
         ret = ret.append(head);
         ret = ret.append(Component.newline());
         int fromIndex = (pageNum - 1) * commandsPerPage;
@@ -160,9 +160,9 @@ public class HelpCommand implements Command {
             i++;
             if (i < fromIndex) continue;
             if (i >= toIndex) break;
-            ret = ret.append(Component.text(cmd.getName()).color(NamedTextColor.DARK_PURPLE));
-            ret = ret.append(Component.text(" : ").color(NamedTextColor.DARK_AQUA));
-            ret = ret.append(Component.text(cmd.getDescription())).color(NamedTextColor.LIGHT_PURPLE);
+            ret = ret.append(Component.text(cmd.getName()).color(ColorTag.DARK_PURPLE));
+            ret = ret.append(Component.text(" : ").color(ColorTag.DARK_AQUA));
+            ret = ret.append(Component.text(cmd.getDescription())).color(ColorTag.LIGHT_PURPLE);
             ret = ret.append(Component.newline());
         }
         ret = ret.append(head);

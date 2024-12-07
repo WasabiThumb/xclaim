@@ -5,7 +5,7 @@ import static io.github.wasabithumb.xclaim.api.enums.EntityGroupCheck.*;
 import io.github.wasabithumb.xclaim.debug.Debuggable;
 import io.github.wasabithumb.xclaim.debug.goal.DebugGoal;
 import io.github.wasabithumb.xclaim.debug.writer.DebugWriter;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -82,10 +82,10 @@ public enum EntityGroup {
     @DebugGoal(async = true)
     public static void debug(@NotNull DebugWriter out) {
         for (EntityGroup eg : values()) {
-            out.color(NamedTextColor.GOLD);
+            out.color(ColorTag.GOLD);
             out.println("= " + eg.name() + " =");
 
-            out.color(NamedTextColor.WHITE);
+            out.color(ColorTag.WHITE);
             for (EntityType et : eg.getSet()) {
                 out.println("- " + et.name());
             }

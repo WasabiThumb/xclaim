@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.github.wasabithumb.xclaim.util.IntLongConverter.intToLong;
+import static io.github.wasabithumb.xclaim.util.BitManipulation.i32i64;
 
 public class ChunkBitmap implements Bitmap {
 
@@ -70,7 +70,7 @@ public class ChunkBitmap implements Bitmap {
             height = zMax - zMin + 1;
 
             for (ChunkReference c : chunks) {
-                indices.add(intToLong(c.x - xMin, c.z - zMin));
+                indices.add(i32i64(c.x - xMin, c.z - zMin));
             }
         }
     }
@@ -90,7 +90,7 @@ public class ChunkBitmap implements Bitmap {
         if (x < 0 || y < 0) return false;
         if (x >= width) return false;
         if (y >= height) return false;
-        long idx = intToLong(x, y);
+        long idx = i32i64(x, y);
         return indices.contains(idx);
     }
 

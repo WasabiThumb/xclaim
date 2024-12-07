@@ -20,12 +20,17 @@ fun Project.setGlobalProperty(key: String, value: String?) {
 // START Helpers
 
 object KnownGlobalProperties {
+    const val DEBUG_MODE: String = "debugMode"
     const val JAVA_VERSION: String = "javaVersion"
     const val ANNOTATIONS_VERSION: String = "annotationsVersion"
     const val MC_VERSION: String = "mcVersion"
     const val SERVER_VERSION: String = "serverVersion"
     const val STATS_VERSION: String = "bStatsVersion"
 }
+
+var Project.debugMode: Boolean
+    get() = this.getGlobalProperty(KnownGlobalProperties.DEBUG_MODE).toBoolean()
+    set(value) = this.setGlobalProperty(KnownGlobalProperties.DEBUG_MODE, value.toString())
 
 var Project.javaVersion: Int
     get() = this.getGlobalPropertyAssert(KnownGlobalProperties.JAVA_VERSION).toInt()

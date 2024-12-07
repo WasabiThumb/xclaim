@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim.platform.user;
 
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -27,6 +28,7 @@ public interface PlatformConsoleUser extends PlatformUser {
         return false;
     }
 
+    @Contract("-> fail")
     @Override
     default @NotNull PlatformPlayer asPlayer() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("CONSOLE is not a player!");

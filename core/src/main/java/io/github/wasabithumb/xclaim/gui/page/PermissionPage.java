@@ -15,7 +15,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import io.github.wasabithumb.xclaim.util.WordWrap;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
@@ -84,26 +84,26 @@ public class PermissionPage extends Page {
                     switch (tl) {
                         case NONE:
                             mat = Platform.get().getRedToken();
-                            col = NamedTextColor.RED;
+                            col = ColorTag.RED;
                             break;
                         case TRUSTED:
                             mat = Platform.get().getOrangeToken();
-                            col = NamedTextColor.GOLD;
+                            col = ColorTag.GOLD;
                             break;
                         case VETERANS:
                             mat = Platform.get().getYellowToken();
-                            col = NamedTextColor.YELLOW;
+                            col = ColorTag.YELLOW;
                             break;
                         case ALL:
                             mat = Platform.get().getLimeToken();
-                            col = NamedTextColor.GREEN;
+                            col = ColorTag.GREEN;
                             break;
                         default:
                             return;
                     }
                     List<Component> lore = new ArrayList<>();
                     for (String s : WordWrap.wrap(p.getDescription(), 25).split(System.lineSeparator())) {
-                        lore.add(Component.text(s).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+                        lore.add(Component.text(s).color(ColorTag.GRAY).decoration(TextDecoration.ITALIC, false));
                     }
                     setItem(i, DisplayItem.create(mat, Component.text(p.getPrintName()).color(col), lore));
                     i++;
@@ -217,9 +217,9 @@ public class PermissionPage extends Page {
                         Permission perm = it.next();
                         boolean value = set.contains(perm);
                         Component text = XClaim.lang.getComponent(value ? "gui-perm-enabled" : "gui-perm-disabled");
-                        TextColor tc = (value ? NamedTextColor.GREEN : NamedTextColor.RED);
+                        TextColor tc = (value ? ColorTag.GREEN : ColorTag.RED);
                         Material mat = (value ? Platform.get().getLimeToken() : Platform.get().getRedToken());
-                        setItem(i1, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(text.color(NamedTextColor.GRAY))));
+                        setItem(i1, DisplayItem.create(mat, Component.text(perm.getPrintName()).color(tc), Collections.singletonList(text.color(ColorTag.GRAY))));
                         pickKeys.put(i1, perm);
                     } else {
                         break;

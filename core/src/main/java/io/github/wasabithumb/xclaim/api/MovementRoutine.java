@@ -4,7 +4,6 @@ import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -49,8 +48,8 @@ public class MovementRoutine implements Listener {
             return aType == bType;
         }
 
-        ChunkReference ar = (aType == 1) ? (ChunkReference) a : ChunkReference.ofChunk((Chunk) a);
-        ChunkReference br = (bType == 1) ? (ChunkReference) b : ChunkReference.ofChunk((Chunk) b);
+        ChunkReference ar = (aType == 1) ? (ChunkReference) a : ChunkReference.of((Chunk) a);
+        ChunkReference br = (bType == 1) ? (ChunkReference) b : ChunkReference.of((Chunk) b);
 
         return Objects.equals(ar, br);
     }

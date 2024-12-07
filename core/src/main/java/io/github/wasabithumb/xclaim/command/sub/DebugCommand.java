@@ -11,7 +11,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.ProxyList;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -61,7 +61,7 @@ public class DebugCommand implements Command {
         Audience audience = Platform.getAdventure().sender(sender);
 
         if (goal == null) {
-            audience.sendMessage(Component.text("* Invalid goal").color(NamedTextColor.RED));
+            audience.sendMessage(Component.text("* Invalid goal").color(ColorTag.RED));
             return;
         }
 

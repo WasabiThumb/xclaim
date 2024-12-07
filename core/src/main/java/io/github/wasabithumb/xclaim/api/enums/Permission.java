@@ -28,37 +28,7 @@ public enum Permission {
     MANAGE("perm-manage-name", "perm-manage-description", TrustLevel.NONE),
     DELETE("perm-delete-name", "perm-delete-description", TrustLevel.NONE);
 
-    /**
-     * Wraps #valueOf with legacy support
-     * @param name Name of the permission
-     * @return The permission, or null if that permission is no longer supported.
-     * @throws IllegalArgumentException No permission has existed with that name
-     */
-    public static @Nullable Permission fromName(@NotNull String name) throws IllegalArgumentException {
-        Permission p;
-        try {
-            p = valueOf(name);
-        } catch (IllegalArgumentException e) {
-            // check for legacy names
-            switch (name) {
-                case "ENTITY_DAMAGE":
-                    p = Permission.ENTITY_DAMAGE_NL;
-                    break;
-                case "MOB_DAMAGE":
-                    p = Permission.ENTITY_DAMAGE_HOSTILE;
-                    break;
-                case "FRIENDLY_MOB_DAMAGE":
-                    p = Permission.ENTITY_DAMAGE_FRIENDLY;
-                    break;
-                case "LIVING_ENTITY_DAMAGE":
-                    p = null;
-                    break;
-                default:
-                    throw e;
-            };
-        }
-        return p;
-    }
+    public static final String ADMIN_OVERRIDE = "xclaim.admin";
 
     private final String printName;
     private final String description;

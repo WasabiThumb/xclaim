@@ -1,35 +1,39 @@
 package io.github.wasabithumb.xclaim.platform;
 
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
+import io.github.wasabithumb.xclaim.platform.entity.*;
 import io.github.wasabithumb.xclaim.platform.data.sound.BukkitPlatformSound;
 import io.github.wasabithumb.xclaim.platform.data.sound.NamedPlatformSound;
-import io.github.wasabithumb.xclaim.platform.entity.PlatformEntity;
-import io.github.wasabithumb.xclaim.platform.entity.PlatformEntityType;
-import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
-import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
-import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.inventory.*;
+import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformConsoleUser;
+import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformOfflineUser;
+import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformUser;
+import io.github.wasabithumb.xclaim.platform.world.*;
 import io.github.wasabithumb.xclaim.platform.data.material.BukkitPlatformMaterial;
-import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.BukkitPlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
 import io.github.wasabithumb.xclaim.platform.user.PlatformConsoleUser;
 import io.github.wasabithumb.xclaim.platform.user.PlatformOfflineUser;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
-import io.github.wasabithumb.xclaim.platform.world.PlatformChunk;
-import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
-import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
 
-    protected final Plugin plugin;
-    BukkitPlatformTypeAdapter(@NotNull Plugin plugin) {
-        this.plugin = plugin;
+    protected final BukkitPlatform platform;
+    BukkitPlatformTypeAdapter(@NotNull BukkitPlatform platform) {
+        this.platform = platform;
     }
 
     //
@@ -37,120 +41,142 @@ public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
     @Override
     public BukkitPlatformPersistentDataContainer pdc(Object handle) throws IllegalArgumentException {
         if (handle == null) return null;
-        if (!(handle instanceof PersistentDataContainer pdc))
-            throw new IllegalArgumentException("Object (" + handle + ") is not a PersistentDataContainer");
-        return new BukkitPlatformPersistentDataContainer(this.plugin, pdc);
+        return new BukkitPlatformPersistentDataContainer(
+                this.platform,
+                this.handleCast(handle, PersistentDataContainer.class)
+        );
     }
 
     @Override
-    public PlatformEntity entity(Object handle) throws IllegalArgumentException {
-        return null;
+    public BukkitPlatformEntity entity(Object handle) throws IllegalArgumentException {
+        if (handle == null) return null;
+        if (handle instanceof Player) return this.player(handle);
+        return new BukkitPlatformEntity(this.platform, this.handleCast(handle, Entity.class));
     }
 
     @Override
     public PlatformEntityType entityType(Object handle) throws IllegalArgumentException {
-        return null;
+        if (handle == null) return null;
+        return BukkitPlatformEntityType.of(this.handleCast(handle, EntityType.class));
     }
 
     @Override
-    public PlatformPlayer player(Object handle) throws IllegalArgumentException {
-        return null;
+    public abstract BukkitPlatformPlayer player(Object handle) throws IllegalArgumentException;
+
+    @Override
+    public abstract BukkitPlatformInventory inventory(Object handle) throws IllegalArgumentException;
+
+    @Override
+    public PlatformEquipmentSlot equipmentSlot(Object handle) throws IllegalArgumentException {
+        if (handle == null) return null;
+        return PlatformEquipmentSlot.valueOf(this.handleCast(handle, EquipmentSlot.class).name());
     }
 
     @Override
-    public PlatformInventory<?> inventory(Object handle) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public PlatformItem item(Object handle) throws IllegalArgumentException {
-        return null;
-    }
+    public abstract BukkitPlatformItem item(Object handle) throws IllegalArgumentException;
 
     @Override
     public PlatformMaterial material(Object handle) throws IllegalArgumentException {
         if (handle == null) return null;
-        if (!(handle instanceof Material m))
-            throw new IllegalArgumentException("Object (" + handle + ") is not a Material");
-        return BukkitPlatformMaterial.of(m);
+        return BukkitPlatformMaterial.of(this.handleCast(handle, Material.class));
     }
 
     @Override
     public PlatformSound sound(Object handle) throws IllegalArgumentException {
         if (handle == null) return null;
-        if (!(handle instanceof Sound s))
-            throw new IllegalArgumentException("Object (" + handle + ") is not a Sound");
-        return BukkitPlatformSound.of(s);
+        return BukkitPlatformSound.of(this.handleCast(handle, Sound.class));
     }
 
     @Override
-    public PlatformUser user(Object handle) throws IllegalArgumentException {
-        return null;
+    public abstract BukkitPlatformUser user(Object handle) throws IllegalArgumentException;
+
+    @Override
+    public abstract BukkitPlatformConsoleUser consoleUser(Object handle) throws IllegalArgumentException;
+
+    @Override
+    public BukkitPlatformOfflineUser offlineUser(Object handle) throws IllegalArgumentException {
+        if (handle == null) return null;
+        return new BukkitPlatformOfflineUser(this.handleCast(handle, OfflinePlayer.class));
     }
 
     @Override
-    public PlatformConsoleUser consoleUser(Object handle) throws IllegalArgumentException {
-        return null;
+    public BukkitPlatformWorld world(Object handle) throws IllegalArgumentException {
+        if (handle == null) return null;
+        return new BukkitPlatformWorld(this.handleCast(handle, World.class));
     }
 
     @Override
-    public PlatformOfflineUser offlineUser(Object handle) throws IllegalArgumentException {
-        return null;
+    public BukkitPlatformChunk chunk(Object handle) throws IllegalArgumentException {
+        if (handle == null) return null;
+        return new BukkitPlatformChunk(this.handleCast(handle, Chunk.class));
     }
 
     @Override
-    public PlatformWorld world(Object handle) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public PlatformChunk chunk(Object handle) throws IllegalArgumentException {
-        return null;
+    public BukkitPlatformBlock block(Object handle) throws IllegalArgumentException {
+        if (handle == null) return null;
+        return new BukkitPlatformBlock(this.handleCast(handle, Block.class));
     }
 
     @Override
     public PlatformLocation location(Object handle) throws IllegalArgumentException {
-        return null;
+        if (handle == null) return null;
+        final Location loc = this.handleCast(handle, Location.class);
+        return new PlatformLocation(
+                world(loc.getWorld()),
+                loc.getX(), loc.getY(), loc.getZ(),
+                loc.getYaw(), loc.getPitch()
+        );
     }
 
     @Override
     public PersistentDataContainer pdc(PlatformPersistentDataContainer object) {
         if (object == null) return null;
-        return ((BukkitPlatformPersistentDataContainer) object).handle();
+        return (PersistentDataContainer) object.handle();
     }
 
     @Override
-    public Object entity(PlatformEntity object) {
-        return null;
+    public Entity entity(PlatformEntity object) {
+        if (object == null) return null;
+        return (Entity) object.handle();
     }
 
     @Override
-    public Object entityType(PlatformEntityType object) {
-        return null;
+    public EntityType entityType(PlatformEntityType object) {
+        if (object == null) return null;
+        if (object instanceof NamedPlatformEntityType named) {
+            return BukkitPlatformEntityType.parseNamed(named);
+        }
+        return ((BukkitPlatformEntityType) object).handle();
     }
 
     @Override
-    public Object player(PlatformPlayer object) {
-        return null;
+    public Player player(PlatformPlayer object) {
+        if (object == null) return null;
+        return (Player) object.handle();
     }
 
     @Override
-    public Object inventory(PlatformInventory<?> object) {
-        return null;
+    public Inventory inventory(PlatformInventory object) {
+        if (object == null) return null;
+        return (Inventory) object.handle();
     }
 
     @Override
-    public Object item(PlatformItem object) {
-        return null;
+    public EquipmentSlot equipmentSlot(PlatformEquipmentSlot object) {
+        if (object == null) return null;
+        return EquipmentSlot.valueOf(object.name());
+    }
+
+    @Override
+    public ItemStack item(PlatformItem object) {
+        if (object == null) return null;
+        return (ItemStack) object.handle();
     }
 
     @Override
     public Material material(PlatformMaterial object) {
         if (object == null) return null;
-        if (object instanceof NamedPlatformMaterial named) {
-            return BukkitPlatformMaterial.parseNamed(named);
-        }
-        return ((BukkitPlatformMaterial) object).handle();
+        return BukkitPlatformMaterial.adapt(object);
     }
 
     @Override
@@ -163,33 +189,49 @@ public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
     }
 
     @Override
-    public Object user(PlatformUser object) {
-        return null;
+    public CommandSender user(PlatformUser object) {
+        if (object == null) return null;
+        return ((BukkitPlatformUser) object).handle();
     }
 
     @Override
-    public Object consoleUser(PlatformConsoleUser object) {
-        return null;
+    public ConsoleCommandSender consoleUser(PlatformConsoleUser object) {
+        if (object == null) return null;
+        return ((BukkitPlatformConsoleUser) object).handle();
     }
 
     @Override
-    public Object offlineUser(PlatformOfflineUser object) {
-        return null;
+    public OfflinePlayer offlineUser(PlatformOfflineUser object) {
+        if (object == null) return null;
+        return ((BukkitPlatformOfflineUser) object).handle();
     }
 
     @Override
-    public Object world(PlatformWorld object) {
-        return null;
+    public World world(PlatformWorld object) {
+        if (object == null) return null;
+        return (World) object.handle();
     }
 
     @Override
-    public Object chunk(PlatformChunk object) {
-        return null;
+    public Chunk chunk(PlatformChunk object) {
+        if (object == null) return null;
+        return (Chunk) object.handle();
     }
 
     @Override
-    public Object location(PlatformLocation object) {
-        return null;
+    public Block block(PlatformBlock object) {
+        if (object == null) return null;
+        return (Block) object.handle();
+    }
+
+    @Override
+    public Location location(PlatformLocation object) {
+        if (object == null) return null;
+        return new Location(
+                world(object.world()),
+                object.x(), object.y(), object.z(),
+                object.yaw(), object.pitch()
+        );
     }
 
 }

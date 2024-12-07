@@ -3,9 +3,7 @@ package io.github.wasabithumb.xclaim.platform.event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -75,40 +73,11 @@ public abstract class PlatformEventManager {
             return null;
         }
 
-        Field typeField;
+        PlatformEventType type;
         try {
-            typeField = paramType.getDeclaredField("TYPE");
-        } catch (NoSuchFieldException e) {
-            this.reportIssue(
-                    listener,
-                    new AssertionError(
-                            "Event class (" + paramType.getName() + ") has no TYPE field",
-                            e
-                    )
-            );
-            return null;
-        }
-
-        if (!Modifier.isStatic(typeField.getModifiers())) {
-            this.reportIssue(
-                    listener,
-                    new AssertionError(
-                            "TYPE field on event class (" + paramType.getName() +
-                                    ") is not static"
-                    )
-            );
-            return null;
-        }
-
-        Object typeUnqualified = typeField.get(null);
-        if (!(typeUnqualified instanceof PlatformEventType type)) {
-            this.reportIssue(
-                    listener,
-                    new AssertionError(
-                            "TYPE field on event class (" + paramType.getName() +
-                                    ") is of wrong type (got " + typeUnqualified.getClass().getName() + ")"
-                    )
-            );
+            type = PlatformEventType.of(paramType.asSubclass(PlatformEvent.class));
+        } catch (IllegalArgumentException e) {
+            this.reportIssue(listener, e);
             return null;
         }
 

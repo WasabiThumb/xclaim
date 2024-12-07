@@ -15,7 +15,7 @@ import io.github.wasabithumb.xclaim.gui2.spec.impl.PermissionListGuiSpec;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -45,12 +45,12 @@ public final class IndividualPermissionListGuiSpec extends PermissionListGuiSpec
     protected @NotNull ItemStack populatePermission(@NotNull Permission perm) {
         final boolean value = this.granted.contains(perm);
         final Component text = XClaim.lang.getComponent(value ? "gui-perm-enabled" : "gui-perm-disabled");
-        final TextColor tc = (value ? NamedTextColor.GREEN : NamedTextColor.RED);
+        final TextColor tc = (value ? ColorTag.GREEN : ColorTag.RED);
         final Material mat = (value ? Platform.get().getLimeToken() : Platform.get().getRedToken());
         return DisplayItem.create(
                 mat,
                 Component.text(perm.getPrintName()).color(tc),
-                Collections.singletonList(text.color(NamedTextColor.GRAY))
+                Collections.singletonList(text.color(ColorTag.GRAY))
         );
     }
 

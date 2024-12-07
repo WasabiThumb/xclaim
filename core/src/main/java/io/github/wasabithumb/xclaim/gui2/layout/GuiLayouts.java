@@ -2,8 +2,7 @@ package io.github.wasabithumb.xclaim.gui2.layout;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.gui2.layout.xml.XmlGuiLayout;
-import io.github.wasabithumb.xclaim.util.io.CloseListenerInputStream;
-import io.github.wasabithumb.xclaim.util.io.TeeInputStream;
+import io.github.wasabithumb.xclaim.util.io.stream.StreamUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -348,8 +347,8 @@ public class GuiLayouts {
                     ZipEntry ze = zf.getEntry(entry.bundledPath);
                     if (ze == null) throw new IOException("Entry \"" + entry.bundledPath + "\" no longer exists");
                     is = zf.getInputStream(ze);
-                    is = new TeeInputStream(is, new FileOutputStream(diskPath, false));
-                    is = new CloseListenerInputStream(is, zf);
+                    is = StreamUtil.tee(is, diskPath);
+                    is = StreamUtil.closeListener(is, zf);
                     close = false;
                 } finally {
                     if (close) {

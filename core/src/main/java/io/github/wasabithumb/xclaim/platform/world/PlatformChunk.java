@@ -11,4 +11,6 @@ public interface PlatformChunk extends PlatformObject {
 
     int z();
 
+    boolean isLoaded();
+
 }

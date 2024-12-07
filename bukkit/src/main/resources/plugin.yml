@@ -18,9 +18,6 @@ description: A fully-featured chunk claiming system for community servers
 website: https://wasabi.codes/
 folia-supported: true
 permissions:
-  xclaim.override:
-    description: Allows you to overwrite claimed chunks
-    default: false
   xclaim.admin:
     description: Allows you to modify/delete any claim
     default: false
@@ -32,9 +29,6 @@ permissions:
     default: false
   xclaim.restart:
     description: Allows you to restart xclaim with /xclaim restart
-    default: false
-  xclaim.clear:
-    description: Allows you to clear other players' claims with /xclaim clear
     default: false
 commands:
   xclaim:

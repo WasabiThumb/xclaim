@@ -9,7 +9,7 @@ import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,12 +33,12 @@ public final class VersionInfoGuiSpec implements GuiSpec {
         if (meta != null) {
             PluginDescriptionFile description = XClaim.instance.getDescription();
             Platform p = Platform.get();
-            p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-version")).color(NamedTextColor.GOLD));
+            p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-version")).color(ColorTag.GOLD));
             String apiVersion = Platform.get().getApiVersion(description);
             if (apiVersion == null) apiVersion = XClaim.lang.get("gui-vinf-mc-version-unspecified");
             p.metaLore(meta, Arrays.asList(
-                    Component.text(description.getVersion()).color(NamedTextColor.LIGHT_PURPLE),
-                    Component.text(XClaim.lang.get("gui-vinf-mc-version", apiVersion)).color(NamedTextColor.LIGHT_PURPLE)
+                    Component.text(description.getVersion()).color(ColorTag.LIGHT_PURPLE),
+                    Component.text(XClaim.lang.get("gui-vinf-mc-version", apiVersion)).color(ColorTag.LIGHT_PURPLE)
             ));
         }
         VERSION_STACK.setItemMeta(meta);
@@ -47,15 +47,15 @@ public final class VersionInfoGuiSpec implements GuiSpec {
         meta = AUTHOR_STACK.getItemMeta();
         if (meta != null) {
             Platform p = Platform.get();
-            p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(NamedTextColor.GOLD));
-            p.metaLore(meta, Collections.singletonList(Component.text(OWNER_NAME).color(NamedTextColor.LIGHT_PURPLE)));
+            p.metaDisplayName(meta, Component.text(XClaim.lang.get("gui-vinf-author")).color(ColorTag.GOLD));
+            p.metaLore(meta, Collections.singletonList(Component.text(OWNER_NAME).color(ColorTag.LIGHT_PURPLE)));
             if (meta instanceof SkullMeta) {
                 Platform.get().setOwningPlayer((SkullMeta) meta, OWNER_UUID, OWNER_NAME);
             }
         }
         AUTHOR_STACK.setItemMeta(meta);
     }
-    private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.get("gui-vinf-back"), NamedTextColor.RED);
+    private static final ItemStack BACK_STACK = DisplayItem.create(Material.BARRIER, XClaim.lang.get("gui-vinf-back"), ColorTag.RED);
 
     //
 

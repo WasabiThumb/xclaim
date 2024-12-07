@@ -14,7 +14,7 @@ import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +71,7 @@ public final class TransferOwnerGuiSpec implements GuiSpec {
         } else {
             String targetNameStr = this.target.getName();
             if (targetNameStr == null) targetNameStr = XClaim.lang.get("unknown") + " (" + this.target.getUniqueId() + ")";
-            targetName = Component.text(targetNameStr).color(NamedTextColor.GRAY);
+            targetName = Component.text(targetNameStr).color(ColorTag.GRAY);
         }
 
         final ItemStack head = Platform.get().preparePlayerSkull(

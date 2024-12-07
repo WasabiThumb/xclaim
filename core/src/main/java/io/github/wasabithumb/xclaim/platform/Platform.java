@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim.platform;
 
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventManager;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
@@ -29,6 +30,12 @@ public interface Platform {
 
     @NotNull PlatformItem createItem(@NotNull PlatformMaterial material, int amount);
 
-    <D> @NotNull PlatformInventory<D> createInventory(int size, @NotNull String name, @UnknownNullability D customData);
+    default @NotNull PlatformItem createItem(@NotNull PlatformMaterial material) {
+        return this.createItem(material, 1);
+    }
+
+    @NotNull PlatformItem createItem(byte @NotNull [] bytes);
+
+    <D> @NotNull PlatformCustomInventory<D> createInventory(int size, @NotNull String name, @NotNull D customData);
 
 }

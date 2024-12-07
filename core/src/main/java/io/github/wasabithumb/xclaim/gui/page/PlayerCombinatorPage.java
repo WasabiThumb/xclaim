@@ -7,7 +7,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import io.github.wasabithumb.xclaim.util.NameToPlayer;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -81,7 +81,7 @@ public abstract class PlayerCombinatorPage extends Page {
                 }
                 meta.addItemFlags(ItemFlag.values());
                 Platform.get().metaDisplayName(meta, niceName);
-                Platform.get().metaLore(meta, Collections.singletonList(Component.text(realName).color(NamedTextColor.GRAY)));
+                Platform.get().metaLore(meta, Collections.singletonList(Component.text(realName).color(ColorTag.GRAY)));
                 if (meta instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) meta, ply);
             }
             is.setItemMeta(meta);

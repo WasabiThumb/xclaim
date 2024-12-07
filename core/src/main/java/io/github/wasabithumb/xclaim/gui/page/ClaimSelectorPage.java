@@ -10,7 +10,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -91,7 +91,7 @@ public class ClaimSelectorPage extends Page {
                 }
                 setItem(idx, DisplayItem.create(
                         Platform.get().getGreenToken(),
-                        Component.text(claim.getName()).color(NamedTextColor.GREEN),
+                        Component.text(claim.getName()).color(ColorTag.GREEN),
                         lore
                 ));
                 i++;

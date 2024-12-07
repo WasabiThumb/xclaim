@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface PlatformUserManager {
@@ -12,6 +13,11 @@ public interface PlatformUserManager {
      * Returns the console user.
      */
     @NotNull PlatformConsoleUser console();
+
+    /**
+     * Returns all online players.
+     */
+    @NotNull List<PlatformPlayer> players();
 
     /**
      * Returns a user by their UUID.

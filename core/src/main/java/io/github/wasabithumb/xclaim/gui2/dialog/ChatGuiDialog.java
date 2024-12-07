@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.gui2.dialog;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +13,8 @@ final class ChatGuiDialog extends TickingGuiDialog {
     static {
         Component base = Component.text(' ').append(Component.newline()); // 1
         base = Component.empty()
-                .append(base.color(NamedTextColor.BLACK))
-                .append(base.color(NamedTextColor.DARK_GRAY)); // 2
+                .append(base.color(ColorTag.BLACK))
+                .append(base.color(ColorTag.DARK_GRAY)); // 2
 
         // 4, 8, 16, 32, 64
         for (int i=0; i < 5; i++) base = Component.empty().append(base).append(base);

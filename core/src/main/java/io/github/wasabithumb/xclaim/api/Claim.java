@@ -97,7 +97,7 @@ public class Claim {
     }
 
     public static @Nullable Claim getByChunk(@NotNull Chunk chunk) {
-        return getByChunk(ChunkReference.ofChunk(chunk));
+        return getByChunk(ChunkReference.of(chunk));
     }
 
     public static @Nullable Claim getByChunk(@NotNull ChunkReference cr) {
@@ -248,7 +248,7 @@ public class Claim {
     }
 
     Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull XCPlayer owner, @NotNull Map<Permission, TrustLevel> globalPerms, @NotNull Map<UUID, EnumSet<Permission>> playerPerms) {
-        this(name, chunks.stream().map(ChunkReference::ofChunk).collect(Collectors.toSet()), owner, globalPerms, playerPerms, -1);
+        this(name, chunks.stream().map(ChunkReference::of).collect(Collectors.toSet()), owner, globalPerms, playerPerms, -1);
     }
 
     public Claim(@NotNull String name, @NotNull Set<Chunk> chunks, @NotNull XCPlayer owner) {
@@ -370,7 +370,7 @@ public class Claim {
                 break;
             }
         }
-        ChunkReference ref = ChunkReference.ofChunk(chunk);
+        ChunkReference ref = ChunkReference.of(chunk);
         if (ret) ret = chunks.add(ref);
         if (ret) {
             generateBounds();
@@ -398,7 +398,7 @@ public class Claim {
     }
 
     public boolean removeChunk(@NotNull Chunk chunk) {
-         return this.removeChunk(ChunkReference.ofChunk(chunk));
+         return this.removeChunk(ChunkReference.of(chunk));
     }
 
     public boolean removeChunk(@NotNull ChunkReference ref) {

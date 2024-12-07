@@ -13,4 +13,16 @@ public enum TrustLevel {
     public static @NotNull TrustLevel @NotNull [] ascending() {
         return new TrustLevel[] { NONE, TRUSTED, VETERANS, ALL };
     }
+
+    @ApiStatus.Internal
+    public static @NotNull TrustLevel fromOrdinal(int raw) {
+        return switch (raw) {
+            case 0 -> ALL;
+            case 1 -> VETERANS;
+            case 2 -> TRUSTED;
+            case 3 -> NONE;
+            default -> throw new IllegalArgumentException("Invalid trust level ordinal: " + raw);
+        };
+    }
+
 }

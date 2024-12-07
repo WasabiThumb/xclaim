@@ -3,7 +3,7 @@ package io.github.wasabithumb.xclaim.gui2.dialog;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
@@ -25,7 +25,7 @@ abstract class AbstractGuiDialog implements GuiDialog {
 
     protected @NotNull Component wrapMessage(@NotNull Component message) {
         return message
-                .colorIfAbsent(NamedTextColor.WHITE)
+                .colorIfAbsent(ColorTag.WHITE)
                 .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 

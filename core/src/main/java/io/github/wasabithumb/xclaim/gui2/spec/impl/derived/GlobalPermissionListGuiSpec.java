@@ -11,7 +11,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import io.github.wasabithumb.xclaim.util.WordWrap;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
@@ -35,19 +35,19 @@ public final class GlobalPermissionListGuiSpec extends PermissionListGuiSpec {
         switch (tl) {
             case NONE:
                 mat = Platform.get().getRedToken();
-                col = NamedTextColor.RED;
+                col = ColorTag.RED;
                 break;
             case TRUSTED:
                 mat = Platform.get().getOrangeToken();
-                col = NamedTextColor.GOLD;
+                col = ColorTag.GOLD;
                 break;
             case VETERANS:
                 mat = Platform.get().getYellowToken();
-                col = NamedTextColor.YELLOW;
+                col = ColorTag.YELLOW;
                 break;
             case ALL:
                 mat = Platform.get().getLimeToken();
-                col = NamedTextColor.GREEN;
+                col = ColorTag.GREEN;
                 break;
             default:
                 throw new AssertionError();
@@ -55,7 +55,7 @@ public final class GlobalPermissionListGuiSpec extends PermissionListGuiSpec {
 
         List<Component> lore = new ArrayList<>();
         for (String s : WordWrap.wrap(perm.getDescription(), 25).split(System.lineSeparator())) {
-            lore.add(Component.text(s).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+            lore.add(Component.text(s).color(ColorTag.GRAY).decoration(TextDecoration.ITALIC, false));
         }
 
         return DisplayItem.create(mat, Component.text(perm.getPrintName()).color(col), lore);

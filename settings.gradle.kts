@@ -1,3 +1,3 @@
 
 rootProject.name = "xclaim"
-include("core", "bukkit")
+include("core", "bukkit", "paper")

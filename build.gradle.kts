@@ -10,6 +10,7 @@ subprojects {
     }
 }
 
+debugMode = hasProperty("enableDebug")
 javaVersion = 17
 annotationsVersion = "24.1.0"
 mcVersion = "1.18.2"

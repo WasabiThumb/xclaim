@@ -504,7 +504,7 @@ public class ChunkEditor {
 
         final int range = (int) Math.ceil(minDistance);
         final double minDistanceSqr = minDistance * minDistance;
-        final ChunkReference start = ChunkReference.ofChunk(chunk);
+        final ChunkReference start = ChunkReference.of(chunk);
         double distSqr;
 
         boolean xZero;

@@ -9,7 +9,7 @@ import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -60,11 +60,11 @@ public class InfoCommand implements Command {
         ) : "both");
         Component claimText = XClaim.lang.getComponent("cmd-info-claims-" + pluralType + "-plural", claimCount, chunkCount);
         audience.sendMessage(Component.text()
-                .append(Component.text("XClaim").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
+                .append(Component.text("XClaim").color(ColorTag.DARK_PURPLE).decorate(TextDecoration.BOLD))
                 .append(Component.newline())
                 .append(XClaim.lang.getComponent(
                         "cmd-info-author",
-                        Component.text("WasabiThumbs").color(NamedTextColor.GREEN).clickEvent(ClickEvent.runCommand("Boy, I sure do love Wasabi and think he makes some pretty great plugins!"))
+                        Component.text("WasabiThumbs").color(ColorTag.GREEN).clickEvent(ClickEvent.runCommand("Boy, I sure do love Wasabi and think he makes some pretty great plugins!"))
                 ))
                 .append(Component.newline())
                 .append(XClaim.lang.getComponent("cmd-info-version", description.getVersion()))

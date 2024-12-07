@@ -9,13 +9,12 @@ import io.github.wasabithumb.xclaim.util.AutoUpdater;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -160,11 +159,11 @@ public class UpdateCommand implements Command {
                     audience.sendMessage(XClaim.lang.getComponent("cmd-update-confirm-console"));
                 } else {
                     audience.sendMessage(Component.empty()
-                            .append(Component.text("* " + XClaim.lang.get("cmd-update-confirm-player-prompt") + " (").color(NamedTextColor.GRAY))
+                            .append(Component.text("* " + XClaim.lang.get("cmd-update-confirm-player-prompt") + " (").color(ColorTag.GRAY))
                             .append(XClaim.lang.getComponent("cmd-update-confirm-player-yes").clickEvent(ClickEvent.runCommand("/xclaim update " + XClaim.lang.get("cmd-update-arg-proceed-yes"))))
-                            .append(Component.text("/").color(NamedTextColor.GRAY))
+                            .append(Component.text("/").color(ColorTag.GRAY))
                             .append(XClaim.lang.getComponent("cmd-update-confirm-player-no").clickEvent(ClickEvent.runCommand("/xclaim update " + XClaim.lang.get("cmd-update-arg-proceed-no"))))
-                            .append(Component.text(")").color(NamedTextColor.GRAY))
+                            .append(Component.text(")").color(ColorTag.GRAY))
                     );
                 }
             }

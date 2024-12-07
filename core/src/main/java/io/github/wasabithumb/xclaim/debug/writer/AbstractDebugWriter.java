@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.debug.writer;
 
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 abstract class AbstractDebugWriter implements DebugWriter {
 
-    private TextColor color = NamedTextColor.WHITE;
+    private TextColor color = ColorTag.WHITE;
 
     @Override
     public void color(@NotNull TextColor color) {
@@ -41,12 +41,12 @@ abstract class AbstractDebugWriter implements DebugWriter {
         } catch (IOException e) {
             String msg = t.getMessage();
             if (msg == null) msg = "Unknown error";
-            this.println("* " + msg, NamedTextColor.DARK_RED);
+            this.println("* " + msg, ColorTag.DARK_RED);
             return;
         }
 
         for (String line : trace.split("\n")) {
-            this.println("* " + line, NamedTextColor.RED);
+            this.println("* " + line, ColorTag.RED);
         }
     }
 

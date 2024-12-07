@@ -6,7 +6,7 @@ import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.metric.Metric;
 import io.github.wasabithumb.xclaim.util.metric.MetricFormatter;
 import io.github.wasabithumb.xclaim.util.metric.MetricSet;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -141,7 +141,7 @@ public class DebugGoalInstance {
     }
 
     private void execute0(@NotNull DebugWriter writer) {
-        writer.color(NamedTextColor.WHITE);
+        writer.color(ColorTag.WHITE);
 
         final long start = System.nanoTime();
         Object out;
@@ -160,7 +160,7 @@ public class DebugGoalInstance {
         }
 
         if (this.returnsVoid()) return;
-        writer.color(NamedTextColor.GRAY);
+        writer.color(ColorTag.GRAY);
         writer.println("> " + out);
     }
 
@@ -170,7 +170,7 @@ public class DebugGoalInstance {
     }
 
     private void reportElapsed(@NotNull DebugWriter writer, long elapsed) {
-        writer.color(NamedTextColor.DARK_GRAY);
+        writer.color(ColorTag.DARK_GRAY);
         writer.println("> Done in " + TIMESTAMP_FORMAT.format(elapsed * 1e-9d, "s"));
     }
 

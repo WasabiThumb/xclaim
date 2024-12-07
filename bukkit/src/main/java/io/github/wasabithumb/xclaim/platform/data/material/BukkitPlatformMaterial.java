@@ -8,14 +8,48 @@ public record BukkitPlatformMaterial(
         @NotNull Material handle
 ) implements PlatformMaterial, PlatformObject {
 
-    public static @NotNull Material parseNamed(@NotNull NamedPlatformMaterial named) {
-        // NOTE: The names in the NamedPlatformMaterial happen to coincide with the Bukkit material names;
-        // take care to ensure this remains the case.
-        return Material.valueOf(named.name());
+    public static @NotNull Material adapt(@NotNull PlatformMaterial material) {
+        if (material instanceof NamedPlatformMaterial named) return parseNamed(named);
+        return ((BukkitPlatformMaterial) material).handle;
     }
 
-    public static @NotNull BukkitPlatformMaterial of(@NotNull Material material) {
-        return new BukkitPlatformMaterial(material);
+    public static @NotNull Material parseNamed(@NotNull NamedPlatformMaterial named) {
+        return switch (named) {
+            case PLAYER_HEAD      -> Material.PLAYER_HEAD;
+            case GREEN_CONCRETE   -> Material.GREEN_CONCRETE;
+            case RED_CONCRETE     -> Material.RED_CONCRETE;
+            case SKELETON_SKULL   -> Material.SKELETON_SKULL;
+            case ENCHANTING_TABLE -> Material.ENCHANTING_TABLE;
+            case CHEST_MINECART   -> Material.CHEST_MINECART;
+            case CRAFTING_TABLE   -> Material.CRAFTING_TABLE;
+            case FIREWORK_ROCKET  -> Material.FIREWORK_ROCKET;
+            case GREEN_DYE        -> Material.GREEN_DYE;
+            case RED_DYE          -> Material.RED_DYE;
+            case YELLOW_DYE       -> Material.YELLOW_DYE;
+            case ORANGE_DYE       -> Material.ORANGE_DYE;
+            case LIME_DYE         -> Material.LIME_DYE;
+            case SHIELD           -> Material.SHIELD;
+        };
+    }
+
+    public static @NotNull PlatformMaterial of(@NotNull Material material) {
+        return switch (material) {
+            case PLAYER_HEAD      -> NamedPlatformMaterial.PLAYER_HEAD;
+            case GREEN_CONCRETE   -> NamedPlatformMaterial.GREEN_CONCRETE;
+            case RED_CONCRETE     -> NamedPlatformMaterial.RED_CONCRETE;
+            case SKELETON_SKULL   -> NamedPlatformMaterial.SKELETON_SKULL;
+            case ENCHANTING_TABLE -> NamedPlatformMaterial.ENCHANTING_TABLE;
+            case CHEST_MINECART   -> NamedPlatformMaterial.CHEST_MINECART;
+            case CRAFTING_TABLE   -> NamedPlatformMaterial.CRAFTING_TABLE;
+            case FIREWORK_ROCKET  -> NamedPlatformMaterial.FIREWORK_ROCKET;
+            case GREEN_DYE        -> NamedPlatformMaterial.GREEN_DYE;
+            case RED_DYE          -> NamedPlatformMaterial.RED_DYE;
+            case YELLOW_DYE       -> NamedPlatformMaterial.YELLOW_DYE;
+            case ORANGE_DYE       -> NamedPlatformMaterial.ORANGE_DYE;
+            case LIME_DYE         -> NamedPlatformMaterial.LIME_DYE;
+            case SHIELD           -> NamedPlatformMaterial.SHIELD;
+            default -> new BukkitPlatformMaterial(material);
+        };
     }
 
     //

@@ -19,8 +19,15 @@ public record BukkitPlatformSound(
     }
 
     @Contract("_ -> new")
-    public static @NotNull BukkitPlatformSound of(@NotNull Sound sound) {
-        return new BukkitPlatformSound(sound);
+    public static @NotNull PlatformSound of(@NotNull Sound sound) {
+        return switch (sound) {
+            case BLOCK_ENCHANTMENT_TABLE_USE  -> NamedPlatformSound.MAGIC;
+            case UI_BUTTON_CLICK              -> NamedPlatformSound.CLICK;
+            case ENTITY_EXPERIENCE_ORB_PICKUP -> NamedPlatformSound.EXP;
+            case ENTITY_PLAYER_LEVELUP        -> NamedPlatformSound.LEVEL;
+            case ENTITY_GHAST_AMBIENT         -> NamedPlatformSound.WILDCARD;
+            default -> new BukkitPlatformSound(sound);
+        };
     }
 
     //

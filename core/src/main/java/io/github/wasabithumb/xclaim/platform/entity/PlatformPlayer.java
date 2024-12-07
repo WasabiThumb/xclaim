@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface PlatformPlayer extends PlatformEntity, PlatformUser {
 
-    @NotNull PlatformInventory<?> getInventory();
+    @NotNull PlatformInventory getInventory();
 
     @Nullable PlatformItem getItemInUse();
 
@@ -19,15 +19,22 @@ public interface PlatformPlayer extends PlatformEntity, PlatformUser {
 
     boolean isGliding();
 
-    void artificialElytraBoost(@Nullable PlatformItem item);
+    void boostElytra(@Nullable PlatformItem item);
 
-    void artificialBookOpen(@Nullable PlatformItem item);
+    void openBook(@Nullable PlatformItem item);
+
+    long getFirstPlayed();
 
     // START PlatformEntity
 
     @Override
     default @NotNull PlatformEntityType type() {
         return NamedPlatformEntityType.PLAYER;
+    }
+
+    @Override
+    default @Nullable PlatformPlayer sourcePlayer() {
+        return this;
     }
 
     // END PlatformEntity

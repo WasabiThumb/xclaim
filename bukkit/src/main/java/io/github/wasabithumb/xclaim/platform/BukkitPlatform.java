@@ -1,17 +1,15 @@
 package io.github.wasabithumb.xclaim.platform;
 
 import io.github.wasabithumb.xclaim.AbstractXClaimPlugin;
-import io.github.wasabithumb.xclaim.platform.event.PlatformEventManager;
-import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
-import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.event.BukkitPlatformEventManager;
+import io.github.wasabithumb.xclaim.platform.inventory.*;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
-import io.github.wasabithumb.xclaim.platform.scheduler.PlatformScheduler;
-import io.github.wasabithumb.xclaim.platform.user.PlatformUserManager;
-import io.github.wasabithumb.xclaim.platform.world.PlatformWorldManager;
+import io.github.wasabithumb.xclaim.platform.scheduler.BukkitPlatformScheduler;
+import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformUserManager;
+import io.github.wasabithumb.xclaim.platform.world.BukkitPlatformWorldManager;
 import org.bstats.bukkit.Metrics;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 @ApiStatus.Internal
 public abstract class BukkitPlatform implements Platform {
@@ -19,12 +17,18 @@ public abstract class BukkitPlatform implements Platform {
     protected final AbstractXClaimPlugin plugin;
     protected final BukkitPlatformMetrics metrics;
     protected final BukkitPlatformTypeAdapter adapter;
-    protected final PlatformScheduler scheduler;
+    protected final BukkitPlatformScheduler scheduler;
+    protected final BukkitPlatformUserManager users;
+    protected final BukkitPlatformWorldManager worlds;
+    protected final BukkitPlatformEventManager events;
     public BukkitPlatform(@NotNull AbstractXClaimPlugin plugin) {
         this.plugin = plugin;
-        this.metrics = this.createMetrics();
-        this.adapter = this.createAdapter();
+        this.metrics   = this.createMetrics();
+        this.adapter   = this.createAdapter();
         this.scheduler = this.createScheduler();
+        this.users     = this.createUsers();
+        this.worlds    = this.createWorlds();
+        this.events    = this.createEvents();
     }
 
     //
@@ -39,7 +43,15 @@ public abstract class BukkitPlatform implements Platform {
         return new BukkitPlatformMetrics(new Metrics(this.plugin, 16129));
     }
 
-    protected abstract @NotNull PlatformScheduler createScheduler();
+    protected abstract @NotNull BukkitPlatformScheduler createScheduler();
+
+    protected abstract @NotNull BukkitPlatformUserManager createUsers();
+
+    protected @NotNull BukkitPlatformWorldManager createWorlds() {
+        return new BukkitPlatformWorldManager();
+    }
+
+    protected abstract @NotNull BukkitPlatformEventManager createEvents();
 
     //
 
@@ -49,22 +61,22 @@ public abstract class BukkitPlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformUserManager users() {
-        return null;
+    public @NotNull BukkitPlatformUserManager users() {
+        return this.users;
     }
 
     @Override
-    public @NotNull PlatformWorldManager worlds() {
-        return null;
+    public @NotNull BukkitPlatformWorldManager worlds() {
+        return this.worlds;
     }
 
     @Override
-    public @NotNull PlatformEventManager events() {
-        return null;
+    public @NotNull BukkitPlatformEventManager events() {
+        return this.events;
     }
 
     @Override
-    public @NotNull PlatformScheduler scheduler() {
+    public @NotNull BukkitPlatformScheduler scheduler() {
         return this.scheduler;
     }
 
@@ -74,14 +86,14 @@ public abstract class BukkitPlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformItem createItem(@NotNull PlatformMaterial material, int amount) {
-        return null;
-    }
+    public abstract @NotNull BukkitPlatformItem createItem(@NotNull PlatformMaterial material, int amount);
 
     @Override
-    public @NotNull <D> PlatformInventory<D> createInventory(int size, @NotNull String name, @UnknownNullability D customData) {
-        return null;
-    }
+    public abstract @NotNull <D> BukkitPlatformCustomInventory<D> createInventory(
+            int size,
+            @NotNull String name,
+            @NotNull D customData
+    );
 
     //
 

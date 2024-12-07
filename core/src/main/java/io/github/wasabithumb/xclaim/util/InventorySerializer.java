@@ -1,63 +1,77 @@
 package io.github.wasabithumb.xclaim.util;
 
 import io.github.wasabithumb.xclaim.platform.Platform;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import static io.github.wasabithumb.xclaim.util.StreamUtil.readNBytes;
-import static io.github.wasabithumb.xclaim.util.StreamUtil.writeBytes;
+import java.nio.ByteOrder;
 
 public final class InventorySerializer {
 
-    private static final byte[] zeroBytes = ByteBuffer.allocate(Integer.BYTES).putInt(0).array();
-
-    public static byte @NotNull [] serialize(@NotNull Inventory inventory) {
+    public static byte @NotNull [] serialize(@NotNull PlatformInventory inventory) {
         return serialize(inventory.getContents());
     }
 
-    public static byte @NotNull [] serialize(@Nullable ItemStack @NotNull [] inventory) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        writeBytes(bos, ByteBuffer.allocate(Integer.BYTES).putInt(inventory.length).array());
-        for (ItemStack is : inventory) {
-            if (is == null) {
-                writeBytes(bos, zeroBytes);
-            } else {
-                byte[] bytes = Platform.get().itemStackSerializeBytes(is);
-                writeBytes(bos, ByteBuffer.allocate(Integer.BYTES).putInt(bytes.length).array());
-                writeBytes(bos, bytes);
-            }
+    private static byte @NotNull [] serialize(@Nullable PlatformItem @NotNull [] items) {
+        final int len = items.length;
+        byte[][] data = new byte[len][];
+        int dataLen = Integer.BYTES * (len + 1);
+
+        PlatformItem item;
+        byte[] itemData;
+        for (int i=0; i < len; i++) {
+            item = items[i];
+            itemData = (item == null) ? new byte[0] : item.toBytes();
+            data[i] = itemData;
+            dataLen += itemData.length;
         }
-        return bos.toByteArray();
+
+        ByteBuffer buf = ByteBuffer.allocate(dataLen);
+        buf.order(ByteOrder.LITTLE_ENDIAN);
+        buf.putInt(len);
+        for (int i=0; i < len; i++) {
+            itemData = data[i];
+            buf.putInt(itemData.length);
+            buf.put(itemData);
+        }
+        return buf.array();
     }
 
-    public static void deserialize(byte @NotNull [] bytes, @NotNull Inventory inventory) throws IllegalArgumentException {
-        inventory.setContents(deserialize(bytes));
+    public static void deserialize(@NotNull PlatformInventory inventory, byte @NotNull [] bytes) {
+        inventory.setContents(deserialize(inventory.platform(), bytes));
     }
 
-    public static @Nullable ItemStack @NotNull [] deserialize(byte @NotNull [] bytes) throws IllegalArgumentException {
+    private static @Nullable PlatformItem @NotNull [] deserialize(@NotNull Platform platform, byte @NotNull [] bytes) {
+        ByteBuffer buf = ByteBuffer.wrap(bytes);
+        int count = -1;
         try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            int length = ByteBuffer.wrap(readNBytes(bis, Integer.BYTES)).getInt();
-            ItemStack[] ret = new ItemStack[length];
-            for (int i=0; i < ret.length; i++) {
-                int len = ByteBuffer.wrap(readNBytes(bis, Integer.BYTES)).getInt();
-                if (len == 0) {
+            count = buf.getInt();
+            PlatformItem[] ret = new PlatformItem[count];
+            int len;
+            for (int i=0; i < count; i++) {
+                len = buf.getInt();
+                if (len < 0) {
+                    throw new IllegalArgumentException("Inventory bytes has negative entry length (" + len +
+                            ") at index " + i);
+                } else if (len == 0) {
                     ret[i] = null;
                 } else {
-                    byte[] bs = readNBytes(bis, len);
-                    ret[i] = Platform.get().itemStackDeserializeBytes(bs);
+                    byte[] tmp = new byte[len];
+                    buf.get(tmp, 0, len);
+                    ret[i] = platform.createItem(tmp);
                 }
             }
             return ret;
-        } catch (IOException | BufferUnderflowException e) {
-            throw new IllegalArgumentException("Malformed bytes", e);
+        } catch (BufferUnderflowException e) {
+            throw new IllegalArgumentException(
+                    "Inventory bytes violates size expectations (item count: " + count +
+                    ", byte length: " + bytes.length + ")",
+                    e
+            );
         }
     }
 

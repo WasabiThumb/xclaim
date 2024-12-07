@@ -1,21 +1,21 @@
 package io.github.wasabithumb.xclaim.platform.data;
 
+import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public final class BukkitPlatformPersistentDataContainer implements PlatformPersistentDataContainer {
 
-    private final Plugin plugin;
+    private final BukkitPlatform platform;
     private final PersistentDataContainer handle;
 
     @ApiStatus.Internal
-    public BukkitPlatformPersistentDataContainer(@NotNull Plugin plugin, @NotNull PersistentDataContainer handle) {
-        this.plugin = plugin;
+    public BukkitPlatformPersistentDataContainer(@NotNull BukkitPlatform platform, @NotNull PersistentDataContainer handle) {
+        this.platform = platform;
         this.handle = handle;
     }
 
@@ -51,7 +51,7 @@ public final class BukkitPlatformPersistentDataContainer implements PlatformPers
 
     @Contract("_ -> new")
     private @NotNull NamespacedKey namespaced(@NotNull String key) {
-        return new NamespacedKey(this.plugin, key);
+        return new NamespacedKey(this.platform.plugin(), key);
     }
 
     private <T> @NotNull PersistentDataType<?, ?> adapt(@NotNull PlatformPersistentDataType<T> type) {
