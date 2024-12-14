@@ -310,6 +310,12 @@ public class ChunkEditor {
         }
 
         @EventHandler
+        public void onInteractEntity(@NotNull PlayerInteractEntityEvent event) {
+            Player ply = event.getPlayer();
+            if (getEditing(ply) != null) event.setCancelled(true);
+        }
+
+        @EventHandler
         public void onLeave(@NotNull PlayerQuitEvent event) {
             Player ply = event.getPlayer();
             if (XClaim.mainConfig.editor().stopOnLeave()) {
