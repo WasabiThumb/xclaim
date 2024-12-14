@@ -57,9 +57,8 @@ public class PaperPlatformUser implements BukkitPlatformUser {
     }
 
     @Override
-    public @NotNull BukkitPlatformPlayer asPlayer() throws UnsupportedOperationException {
-        // TODO
-        return null;
+    public @NotNull PaperPlatformPlayer asPlayer() throws UnsupportedOperationException {
+        return this.platform.adapter().player(this.handle);
     }
 
     @Override

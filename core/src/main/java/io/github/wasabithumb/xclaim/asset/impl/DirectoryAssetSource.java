@@ -42,6 +42,7 @@ public class DirectoryAssetSource implements AssetSource {
 
     @Override
     public @NotNull List<String> list(boolean includeDirs, boolean includeFiles) throws IOException {
+        if (!this.dir.isDirectory()) return Collections.emptyList();
         File[] files = this.dir.listFiles();
         if (files == null) return Collections.emptyList();
         List<String> ret = new ArrayList<>(files.length);

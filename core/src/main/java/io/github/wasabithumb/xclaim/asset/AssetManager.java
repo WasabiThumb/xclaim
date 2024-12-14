@@ -21,6 +21,9 @@ public abstract class AssetManager {
 
     protected @NotNull AssetSource createResources() {
         File codeSource = new File(AssetManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        // TODO: This seems to cause problems with Windows! We probably shouldn't bother handling .paper-remapped,
+        // as when the migration is complete, the paper version should have a paper-plugin.yml and hint to Paper
+        // not to remap this plugin. This would keep this method clear of any platform-specific hacks.
         return AssetSource.archive(codeSource);
     }
 

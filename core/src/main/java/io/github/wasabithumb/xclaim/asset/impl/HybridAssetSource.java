@@ -52,20 +52,24 @@ public class HybridAssetSource implements AssetSource {
 
     @Override
     public @NotNull List<String> list(boolean includeDirs, boolean includeFiles) throws IOException {
-        List<String> ret = Collections.emptyList();
+        Collection<String> ret = Collections.emptyList();
         List<String> tmp;
         int mode = 0;
+        // 0 : nothing found; ret is unmodifiable empty list
+        // 1 : something found in exactly 1 source; ret is a potentially mutable non-empty list
+        // 2 : something found in 2 or more sources; ret is a mutable non-empty set
 
         for (Iterator<AssetSource> it = this.sources(LIST); it.hasNext(); ) {
             AssetSource source = it.next();
             tmp = source.list(includeDirs, includeFiles);
+            if (tmp.isEmpty()) continue;
             switch (mode) {
                 case 0:
                     ret = tmp;
                     mode = 1;
                     break;
                 case 1:
-                    List<String> cpy = new ArrayList<>(ret);
+                    Set<String> cpy = new HashSet<>(ret);
                     cpy.addAll(tmp);
                     ret = cpy;
                     mode = 2;
@@ -76,7 +80,11 @@ public class HybridAssetSource implements AssetSource {
             }
         }
 
-        return Collections.unmodifiableList(ret);
+        return switch (mode) {
+            case 0 -> (List<String>) ret;
+            case 1 -> Collections.unmodifiableList((List<String>) ret);
+            default -> List.copyOf(ret);
+        };
     }
 
     @Override
