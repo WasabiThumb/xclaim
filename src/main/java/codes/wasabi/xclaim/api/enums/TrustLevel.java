@@ -13,4 +13,15 @@ public enum TrustLevel {
     public static @NotNull TrustLevel @NotNull [] ascending() {
         return new TrustLevel[] { NONE, TRUSTED, VETERANS, ALL };
     }
+
+    public static TrustLevel fromString(String raw) {
+        if (raw == null || raw.isEmpty()) {
+            return null; // Handle null or empty strings
+        }
+        try {
+            return TrustLevel.valueOf(raw.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return TrustLevel.NONE; // Default fallback value
+        }
+    }
 }

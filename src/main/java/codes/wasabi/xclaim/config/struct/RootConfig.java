@@ -31,6 +31,9 @@ public interface RootConfig extends Config {
     @Contract(pure = true)
     @NotNull GuiConfig gui();
 
+    @Contract(pure = true)
+    @NotNull PermissionsConfig permissions();
+
     default boolean isLegacy() {
         return false;
     }
