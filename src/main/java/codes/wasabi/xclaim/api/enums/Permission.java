@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
-import java.util.Locale;
 
 public enum Permission {
     BUILD("perm-build-name", "perm-build-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultBuild()), BuildBreakHandler.Build.class),
@@ -56,7 +55,7 @@ public enum Permission {
                     break;
                 default:
                     throw e;
-            };
+            }
         }
         return p;
     }

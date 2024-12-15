@@ -1,10 +1,8 @@
 package codes.wasabi.xclaim.config.struct.sub;
 
-import codes.wasabi.xclaim.api.enums.TrustLevel;
+
 import codes.wasabi.xclaim.config.struct.Config;
 import org.jetbrains.annotations.UnknownNullability;
-
-import java.util.Locale;
 
 public interface PermissionsConfig extends Config {
 
