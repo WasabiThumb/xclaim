@@ -50,20 +50,25 @@ public class ChunkEditor {
             listener.register();
         }
 
-        void tryRegisterPaperEvents() {
-            // PAPER ONLY: Item frame change event
-            Class<? extends PlayerEvent> itemFrameEventClass;
-            try {
-                itemFrameEventClass = Class.forName("io.papermc.paper.event.player.PlayerItemFrameChangeEvent")
-                        .asSubclass(PlayerEvent.class);
-            } catch (ClassNotFoundException | ClassCastException ignored) {
-                return;
+        void tryRegisterConditionalEvents() {
+            // Register events that are not guaranteed to exist in Spigot 1.8+
+            final String[] miscPlayerEvents = new String[] {
+                    "io.papermc.paper.event.player.PlayerItemFrameChangeEvent",
+                    "org.bukkit.event.player.PlayerArmorStandManipulateEvent"
+            };
+            for (String className : miscPlayerEvents) {
+                try {
+                    this.registerMiscPlayerEvent(Class.forName(className).asSubclass(PlayerEvent.class));
+                } catch (ClassNotFoundException | ClassCastException ignored) { }
             }
+        }
+
+        private void registerMiscPlayerEvent(@NotNull Class<? extends PlayerEvent> clazz) {
             Bukkit.getPluginManager().registerEvent(
-                    itemFrameEventClass,
+                    clazz,
                     this,
                     EventPriority.NORMAL,
-                    (Listener ignored, Event event) -> this.onItemFrameChange((PlayerEvent) event),
+                    (Listener ignored, Event event) -> this.onMiscPlayerEvent((PlayerEvent) event),
                     XClaim.instance
             );
         }
@@ -425,8 +430,7 @@ public class ChunkEditor {
             }
         }
 
-        // PAPER ONLY
-        public void onItemFrameChange(@NotNull PlayerEvent event) {
+        public void onMiscPlayerEvent(@NotNull PlayerEvent event) {
             Player ply = event.getPlayer();
             if (getEditing(ply) != null && event instanceof Cancellable) {
                 ((Cancellable) event).setCancelled(true);
@@ -460,7 +464,7 @@ public class ChunkEditor {
         KEY_INVENTORY = Objects.requireNonNull(Platform.get().createNamespacedKey(XClaim.instance, "ce_inventory"));
         EVENTS = new Events();
         Bukkit.getPluginManager().registerEvents(EVENTS, XClaim.instance);
-        EVENTS.tryRegisterPaperEvents();
+        EVENTS.tryRegisterConditionalEvents();
     }
 
     private static final Map<UUID, Claim> editingMap = new HashMap<>();
