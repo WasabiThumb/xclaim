@@ -69,7 +69,7 @@ public class TomlDefaultPermissionsConfig extends TomlConfig implements DefaultP
 
     @Override
     public @UnknownNullability String defaultEntDamageNL() {
-        return this.getString("deafault-entity-damage-nl");
+        return this.getString("entity-damage-nl");
     }
 
     @Override

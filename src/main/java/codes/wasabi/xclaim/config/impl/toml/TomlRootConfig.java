@@ -23,7 +23,7 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
         this.worlds       = new TomlWorldsConfig(      this.getTable("worlds"));
         this.integrations = new TomlIntegrationsConfig(this.getTable("integrations"));
         this.gui          = new TomlGuiConfig(         this.getTable("gui"));
-        this.defaultPermissions  = new TomlDefaultPermissionsConfig( this.getTable("permissions"));
+        this.defaultPermissions  = new TomlDefaultPermissionsConfig( this.getTable("default-permissions"));
     }
 
     @Override

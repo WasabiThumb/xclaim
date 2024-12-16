@@ -1,7 +1,6 @@
 package codes.wasabi.xclaim.api.enums;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public enum TrustLevel {
