@@ -112,6 +112,85 @@ blacklist = [ "minigames", "pvp", "etc" ]
 case-sensitive = true
 
 
+[default-permissions]
+# Set global default permissions for new claims.
+# Values:
+# - ALL
+# - VETERANS
+# - TRUSTED
+# - NONE
+
+
+build = "TRUSTED"
+# Place blocks
+# DEFAULT: TRUSTED
+
+break = "TRUSTED"
+# Break blocks
+# DEFAULT: TRUSTED
+
+enter = "ALL"
+# Walk into the area
+# DEFAULT: ALL
+
+interact = "VETERANS"
+# Interact with buttons, chests, etc.
+# DEFAULT: VETERANS
+
+chest-open = "TRUSTED"
+# Interact with chests, for general interaction see Interact.
+# DEFAULT: TRUSTED
+
+ent-place = "VETERANS"
+# Put down boats, minecarts, armor stands, etc.
+# DEFAULT: VETERANS
+
+vehicle_place = "VETERANS"
+# Put down vehicles like minecarts
+# DEFAULT: VETERANS
+
+fire-use = "TRUSTED"
+# Use flint & steel and fire charges
+# DEFAULT: TRUSTED
+
+entity-friendly = "VETERANS"
+# Cause damage to things like cows, sheep, squid, etc
+# DEFAULT: VETERANS
+
+entity-damage-hostile = "VETERANS"
+# Cause damage to things like zombies, skeletons, slimes, etc
+# DEFAULT: VETERANS
+
+entity-damage-vehicle = "VETERANS"
+# Cause damage to things like boats and minecarts
+# DEFAULT: VETERANS
+
+entity-damage-nl = "VETERANS"
+# Cause damage to things like armor stands and decorations
+# DEFAULT: VETERANS
+
+entity-damage-misc = "ALL"
+# Cause damage to entities that don't fall into any other group
+# DEFAULT: ALL
+
+explode = "TRUSTED"
+# Cause explosions; when the source of an explosion is unclear, TRUSTED and VETERAN groups act like NONE
+# DEFAULT: TRUSTED
+
+item-drop = "ALL"
+# Drop items
+# DEFAULT: ALL
+
+manage = "NONE"
+# Modify the claim settings
+# DEFAULT: NONE
+
+delete = "NONE"
+# Remove the claim
+# DEFAULT: NONE
+
+
+
 [integrations.economy]
 # Enables economy. If false, all other options in this section do not apply.
 enabled = false

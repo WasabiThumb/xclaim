@@ -13,6 +13,7 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     private final DefaultingWorldsConfig worlds;
     private final DefaultingIntegrationsConfig integrations;
     private final DefaultingGuiConfig gui;
+    private final DefaultingDefaultPermissionsConfig defaultPermissions;
     public DefaultingRootConfig(@NotNull RootConfig backing) {
         super(backing);
         this.autoSave     = new DefaultingAutoSaveConfig(     backing.autoSave()     );
@@ -21,6 +22,7 @@ public final class DefaultingRootConfig extends FilterRootConfig {
         this.worlds       = new DefaultingWorldsConfig(       backing.worlds()       );
         this.integrations = new DefaultingIntegrationsConfig( backing.integrations() );
         this.gui          = new DefaultingGuiConfig(          backing.gui()          );
+        this.defaultPermissions  = new DefaultingDefaultPermissionsConfig(  backing.defaultPermissions()  );
     }
 
     @Override
@@ -66,6 +68,11 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     @Override
     public @NotNull DefaultingGuiConfig gui() {
         return this.gui;
+    }
+
+    @Override
+    public @NotNull DefaultingDefaultPermissionsConfig defaultPermissions() {
+        return this.defaultPermissions;
     }
 
 }
