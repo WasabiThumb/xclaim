@@ -10,23 +10,23 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 
 public enum Permission {
-    BUILD("perm-build-name", "perm-build-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultBuild()), BuildBreakHandler.Build.class),
-    BREAK("perm-break-name", "perm-break-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultBreak()), BuildBreakHandler.Break.class),
-    ENTER("perm-enter-name", "perm-enter-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEnter()), EnterHandler.class),
-    INTERACT("perm-interact-name", "perm-interact-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultInteract()), InteractHandler.class),
-    CHEST_OPEN("perm-chest-open-name", "perm-chest-open-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultChestOpen()), InteractHandler.Chests.class, (byte) 1),
-    ENT_PLACE("perm-ent-place-name", "perm-ent-place-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEntPlace()), InteractHandler.Entities.class, (byte) 1),
-    VEHICLE_PLACE("perm-vehicle-place-name", "perm-vehicle-place-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultVehiclePlace()), InteractHandler.Vehicles.class, (byte) 2),
-    FIRE_USE("perm-fire-use-name", "perm-fire-use-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultFireUse()), InteractHandler.Flammable.class, (byte) 1),
-    ENTITY_DAMAGE_FRIENDLY("perm-entity-damage-friendly-name", "perm-entity-damage-friendly-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEntFriendly()), DamageHandler.Friendly.class),
-    ENTITY_DAMAGE_HOSTILE("perm-entity-damage-hostile-name", "perm-entity-damage-hostile-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEntDamageHost()), DamageHandler.Hostile.class),
-    ENTITY_DAMAGE_VEHICLE("perm-entity-damage-vehicle-name", "perm-entity-damage-vehicle-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEntDamageVehicle()), DamageHandler.Vehicle.class),
-    ENTITY_DAMAGE_NL("perm-entity-damage-nl-name", "perm-entity-damage-nl-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEntDamageNL()), DamageHandler.NonLiving.class),
-    ENTITY_DAMAGE_MISC("perm-entity-damage-misc-name", "perm-entity-damage-misc-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultEntDamageMisc()), DamageHandler.Misc.class),
-    EXPLODE("perm-explode-name", "perm-explode-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultExplode()), ExplosionHandler.class),
-    ITEM_DROP("perm-item-drop-name", "perm-item-drop-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultItemDrop()), DropHandler.class),
-    MANAGE("perm-manage-name", "perm-manage-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultManage())),
-    DELETE("perm-delete-name", "perm-delete-description", TrustLevel.fromString(XClaim.mainConfig.permissions().defaultDelete()));
+    BUILD("perm-build-name", "perm-build-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultBuild()), BuildBreakHandler.Build.class),
+    BREAK("perm-break-name", "perm-break-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultBreak()), BuildBreakHandler.Break.class),
+    ENTER("perm-enter-name", "perm-enter-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEnter()), EnterHandler.class),
+    INTERACT("perm-interact-name", "perm-interact-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultInteract()), InteractHandler.class),
+    CHEST_OPEN("perm-chest-open-name", "perm-chest-open-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultChestOpen()), InteractHandler.Chests.class, (byte) 1),
+    ENT_PLACE("perm-ent-place-name", "perm-ent-place-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEntPlace()), InteractHandler.Entities.class, (byte) 1),
+    VEHICLE_PLACE("perm-vehicle-place-name", "perm-vehicle-place-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultVehiclePlace()), InteractHandler.Vehicles.class, (byte) 2),
+    FIRE_USE("perm-fire-use-name", "perm-fire-use-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultFireUse()), InteractHandler.Flammable.class, (byte) 1),
+    ENTITY_DAMAGE_FRIENDLY("perm-entity-damage-friendly-name", "perm-entity-damage-friendly-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEntFriendly()), DamageHandler.Friendly.class),
+    ENTITY_DAMAGE_HOSTILE("perm-entity-damage-hostile-name", "perm-entity-damage-hostile-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEntDamageHost()), DamageHandler.Hostile.class),
+    ENTITY_DAMAGE_VEHICLE("perm-entity-damage-vehicle-name", "perm-entity-damage-vehicle-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEntDamageVehicle()), DamageHandler.Vehicle.class),
+    ENTITY_DAMAGE_NL("perm-entity-damage-nl-name", "perm-entity-damage-nl-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEntDamageNL()), DamageHandler.NonLiving.class),
+    ENTITY_DAMAGE_MISC("perm-entity-damage-misc-name", "perm-entity-damage-misc-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultEntDamageMisc()), DamageHandler.Misc.class),
+    EXPLODE("perm-explode-name", "perm-explode-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultExplode()), ExplosionHandler.class),
+    ITEM_DROP("perm-item-drop-name", "perm-item-drop-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultItemDrop()), DropHandler.class),
+    MANAGE("perm-manage-name", "perm-manage-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultManage())),
+    DELETE("perm-delete-name", "perm-delete-description", TrustLevel.fromString(XClaim.mainConfig.defaultPermissions().defaultDelete()));
 
     /**
      * Wraps #valueOf with legacy support

@@ -112,7 +112,7 @@ blacklist = [ "minigames", "pvp", "etc" ]
 case-sensitive = true
 
 
-[permissions]
+[default-permissions]
 # Set global default permissions for new claims.
 # Values:
 # - ALL
@@ -121,73 +121,73 @@ case-sensitive = true
 # - NONE
 
 
-default-build = "TRUSTED"
+build = "TRUSTED"
 # Place blocks
-#DEFAULT: TRUSTED
+# DEFAULT: TRUSTED
 
-default-break = "TRUSTED"
+break = "TRUSTED"
 # Break blocks
-#DEFAULT: TRUSTED
+# DEFAULT: TRUSTED
 
-default-enter = "ALL"
+enter = "ALL"
 # Walk into the area
-#DEFAULT: ALL
+# DEFAULT: ALL
 
-default-interact = "VETERANS"
+interact = "VETERANS"
 # Interact with buttons, chests, etc.
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-default-chest-open = "TRUSTED"
+chest-open = "TRUSTED"
 # Interact with chests, for general interaction see Interact.
-#DEFAULT: TRUSTED
+# DEFAULT: TRUSTED
 
-default-ent-place = "VETERANS"
+ent-place = "VETERANS"
 # Put down boats, minecarts, armor stands, etc.
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-default-vehicle_place = "VETERANS"
+vehicle_place = "VETERANS"
 # Put down vehicles like minecarts
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-default-fire-use = "TRUSTED"
+fire-use = "TRUSTED"
 # Use flint & steel and fire charges
-#DEFAULT: TRUSTED
+# DEFAULT: TRUSTED
 
-default-entity-friendly = "VETERANS"
+entity-friendly = "VETERANS"
 # Cause damage to things like cows, sheep, squid, etc
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-default-entity-damage-hostile = "VETERANS"
+entity-damage-hostile = "VETERANS"
 # Cause damage to things like zombies, skeletons, slimes, etc
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-default-entity-damage-vehicle = "VETERANS"
+entity-damage-vehicle = "VETERANS"
 # Cause damage to things like boats and minecarts
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-deafault-entity-damage-nl = "VETERANS"
+entity-damage-nl = "VETERANS"
 # Cause damage to things like armor stands and decorations
-#DEFAULT: VETERANS
+# DEFAULT: VETERANS
 
-default-entity-damage-misc = "ALL"
+entity-damage-misc = "ALL"
 # Cause damage to entities that don't fall into any other group
-#DEFAULT: ALL
+# DEFAULT: ALL
 
-default-explode = "TRUSTED"
+explode = "TRUSTED"
 # Cause explosions; when the source of an explosion is unclear, TRUSTED and VETERAN groups act like NONE
-#DEFAULT: TRUSTED
+# DEFAULT: TRUSTED
 
-default-item-drop = "ALL"
+item-drop = "ALL"
 # Drop items
-#DEFAULT: ALL
+# DEFAULT: ALL
 
-default-manage = "NONE"
+manage = "NONE"
 # Modify the claim settings
-#DEFAULT: NONE
+# DEFAULT: NONE
 
-default-delete = "NONE
+delete = "NONE"
 # Remove the claim
-#DEFAULT: NONE
+# DEFAULT: NONE
 
 
 

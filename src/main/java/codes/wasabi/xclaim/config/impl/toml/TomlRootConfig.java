@@ -14,7 +14,7 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     private final TomlWorldsConfig worlds;
     private final TomlIntegrationsConfig integrations;
     private final TomlGuiConfig gui;
-    private final TomlPermissionsConfig permissions;
+    private final TomlDefaultPermissionsConfig defaultPermissions;
     public TomlRootConfig(@NotNull Toml table) {
         super(table);
         this.autoSave     = new TomlAutoSaveConfig(    this.getTable("auto-save"));
@@ -23,7 +23,7 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
         this.worlds       = new TomlWorldsConfig(      this.getTable("worlds"));
         this.integrations = new TomlIntegrationsConfig(this.getTable("integrations"));
         this.gui          = new TomlGuiConfig(         this.getTable("gui"));
-        this.permissions  = new TomlPermissionsConfig( this.getTable("permissions"));
+        this.defaultPermissions  = new TomlDefaultPermissionsConfig( this.getTable("permissions"));
     }
 
     @Override
@@ -72,8 +72,8 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     }
 
     @Override
-    public @NotNull TomlPermissionsConfig permissions() {
-        return this.permissions;
+    public @NotNull TomlDefaultPermissionsConfig defaultPermissions() {
+        return this.defaultPermissions;
     }
 
 }

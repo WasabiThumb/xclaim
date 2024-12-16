@@ -1,70 +1,70 @@
 package codes.wasabi.xclaim.config.impl.toml.sub;
 
 import codes.wasabi.xclaim.config.impl.toml.TomlConfig;
-import codes.wasabi.xclaim.config.struct.sub.PermissionsConfig;
+import codes.wasabi.xclaim.config.struct.sub.DefaultPermissionsConfig;
 import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-public class TomlPermissionsConfig extends TomlConfig implements PermissionsConfig {
+public class TomlDefaultPermissionsConfig extends TomlConfig implements DefaultPermissionsConfig {
 
-    public TomlPermissionsConfig(@Nullable Toml table) {
+    public TomlDefaultPermissionsConfig(@Nullable Toml table) {
         super(table);
     }
 
     @Override
     public @UnknownNullability String defaultBuild() {
-        return this.getString("default-build");
+        return this.getString("build");
     }
 
     @Override
     public @UnknownNullability String defaultBreak() {
-        return this.getString("default-break");
+        return this.getString("break");
     }
 
     @Override
     public @UnknownNullability String defaultEnter() {
-        return this.getString("default-enter");
+        return this.getString("enter");
     }
 
     @Override
     public @UnknownNullability String defaultInteract() {
-        return this.getString("default-interact");
+        return this.getString("interact");
     }
 
     @Override
     public @UnknownNullability String defaultChestOpen() {
-        return this.getString("default-chest-open");
+        return this.getString("chest-open");
     }
 
     @Override
     public @UnknownNullability String defaultEntPlace() {
-        return this.getString("default-ent-place");
+        return this.getString("ent-place");
     }
 
     @Override
     public @UnknownNullability String defaultVehiclePlace() {
-        return this.getString("default-vehicle_place");
+        return this.getString("vehicle_place");
     }
 
     @Override
     public @UnknownNullability String defaultFireUse() {
-        return this.getString("default-fire-use");
+        return this.getString("fire-use");
     }
 
     @Override
     public @UnknownNullability String defaultEntFriendly() {
-        return this.getString("default-entity-friendly");
+        return this.getString("entity-friendly");
     }
 
     @Override
     public @UnknownNullability String defaultEntDamageHost() {
-        return this.getString("default-entity-damage-hostile");
+        return this.getString("entity-damage-hostile");
     }
 
     @Override
     public @UnknownNullability String defaultEntDamageVehicle() {
-        return this.getString("default-entity-damage-vehicle");
+        return this.getString("entity-damage-vehicle");
     }
 
     @Override
@@ -74,26 +74,26 @@ public class TomlPermissionsConfig extends TomlConfig implements PermissionsConf
 
     @Override
     public @UnknownNullability String defaultEntDamageMisc() {
-        return this.getString("default-entity-damage-misc");
+        return this.getString("entity-damage-misc");
     }
 
     @Override
     public @UnknownNullability String defaultExplode() {
-        return this.getString("default-explode");
+        return this.getString("explode");
     }
 
     @Override
     public @UnknownNullability String defaultItemDrop() {
-        return this.getString("default-item-drop");
+        return this.getString("item-drop");
     }
 
     @Override
     public @UnknownNullability String defaultManage() {
-        return this.getString("default-manage");
+        return this.getString("manage");
     }
 
     @Override
     public @UnknownNullability String defaultDelete() {
-        return this.getString("default-delete");
+        return this.getString("delete");
     }
 }

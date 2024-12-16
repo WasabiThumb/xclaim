@@ -15,7 +15,7 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     private final YamlWorldsConfig worlds;
     private final YamlIntegrationsConfig integrations;
     private final YamlGuiConfig gui;
-    private final YamlPermissionsConfig permissions;
+    private final YamlDefaultPermissionsConfig defaultPermissions;
     public YamlRootConfig(@NotNull ConfigurationSection section) {
         super(section);
         final YamlLimits limits = YamlLimits.of(this.getSection("limits"));
@@ -26,7 +26,7 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
         this.worlds       = new YamlWorldsConfig(      this.getSection("worlds")          );
         this.integrations = new YamlIntegrationsConfig(section,                          limits);
         this.gui          = new YamlGuiConfig(); // Stub
-        this.permissions  = new YamlPermissionsConfig();
+        this.defaultPermissions  = new YamlDefaultPermissionsConfig();
     }
 
     @Override
@@ -75,8 +75,8 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     }
 
     @Override
-    public @NotNull YamlPermissionsConfig permissions() {
-        return this.permissions;
+    public @NotNull YamlDefaultPermissionsConfig defaultPermissions() {
+        return this.defaultPermissions;
     }
 
     @Override

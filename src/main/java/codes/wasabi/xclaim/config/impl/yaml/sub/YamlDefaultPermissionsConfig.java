@@ -1,12 +1,12 @@
 package codes.wasabi.xclaim.config.impl.yaml.sub;
 
 import codes.wasabi.xclaim.config.impl.yaml.YamlConfig;
-import codes.wasabi.xclaim.config.struct.sub.PermissionsConfig;
+import codes.wasabi.xclaim.config.struct.sub.DefaultPermissionsConfig;
 import org.jetbrains.annotations.UnknownNullability;
 
-public final class YamlPermissionsConfig extends YamlConfig implements PermissionsConfig {
+public final class YamlDefaultPermissionsConfig extends YamlConfig implements DefaultPermissionsConfig {
 
-    public YamlPermissionsConfig() {
+    public YamlDefaultPermissionsConfig() {
         super(null);
     }
 

@@ -32,7 +32,7 @@ public interface RootConfig extends Config {
     @NotNull GuiConfig gui();
 
     @Contract(pure = true)
-    @NotNull PermissionsConfig permissions();
+    @NotNull DefaultPermissionsConfig defaultPermissions();
 
     default boolean isLegacy() {
         return false;

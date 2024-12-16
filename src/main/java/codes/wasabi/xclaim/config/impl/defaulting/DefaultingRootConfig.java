@@ -3,7 +3,6 @@ package codes.wasabi.xclaim.config.impl.defaulting;
 import codes.wasabi.xclaim.config.impl.defaulting.sub.*;
 import codes.wasabi.xclaim.config.impl.filter.FilterRootConfig;
 import codes.wasabi.xclaim.config.struct.RootConfig;
-import codes.wasabi.xclaim.config.struct.sub.PermissionsConfig;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingRootConfig extends FilterRootConfig {
@@ -14,7 +13,7 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     private final DefaultingWorldsConfig worlds;
     private final DefaultingIntegrationsConfig integrations;
     private final DefaultingGuiConfig gui;
-    private final DefaultingPermissionsConfig permissions;
+    private final DefaultingDefaultPermissionsConfig defaultPermissions;
     public DefaultingRootConfig(@NotNull RootConfig backing) {
         super(backing);
         this.autoSave     = new DefaultingAutoSaveConfig(     backing.autoSave()     );
@@ -23,7 +22,7 @@ public final class DefaultingRootConfig extends FilterRootConfig {
         this.worlds       = new DefaultingWorldsConfig(       backing.worlds()       );
         this.integrations = new DefaultingIntegrationsConfig( backing.integrations() );
         this.gui          = new DefaultingGuiConfig(          backing.gui()          );
-        this.permissions  = new DefaultingPermissionsConfig(  backing.permissions()  );
+        this.defaultPermissions  = new DefaultingDefaultPermissionsConfig(  backing.defaultPermissions()  );
     }
 
     @Override
@@ -72,8 +71,8 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     }
 
     @Override
-    public @NotNull PermissionsConfig permissions() {
-        return this.permissions;
+    public @NotNull DefaultingDefaultPermissionsConfig defaultPermissions() {
+        return this.defaultPermissions;
     }
 
 }

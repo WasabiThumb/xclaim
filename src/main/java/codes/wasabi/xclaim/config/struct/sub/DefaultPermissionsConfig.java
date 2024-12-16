@@ -4,7 +4,7 @@ package codes.wasabi.xclaim.config.struct.sub;
 import codes.wasabi.xclaim.config.struct.Config;
 import org.jetbrains.annotations.UnknownNullability;
 
-public interface PermissionsConfig extends Config {
+public interface DefaultPermissionsConfig extends Config {
 
     @UnknownNullability String defaultBuild();
 
