@@ -145,7 +145,7 @@ ent-place = "VETERANS"
 # Put down boats, minecarts, armor stands, etc.
 # DEFAULT: VETERANS
 
-vehicle_place = "VETERANS"
+vehicle-place = "VETERANS"
 # Put down vehicles like minecarts
 # DEFAULT: VETERANS
 
@@ -153,7 +153,7 @@ fire-use = "TRUSTED"
 # Use flint & steel and fire charges
 # DEFAULT: TRUSTED
 
-entity-friendly = "VETERANS"
+entity-damage-friendly = "VETERANS"
 # Cause damage to things like cows, sheep, squid, etc
 # DEFAULT: VETERANS
 

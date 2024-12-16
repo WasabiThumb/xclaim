@@ -17,13 +17,13 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     private final TomlDefaultPermissionsConfig defaultPermissions;
     public TomlRootConfig(@NotNull Toml table) {
         super(table);
-        this.autoSave     = new TomlAutoSaveConfig(    this.getTable("auto-save"));
-        this.editor       = new TomlEditorConfig(      this.getTable("editor"));
-        this.rules        = new TomlRulesConfig(       this.getTable("rules"));
-        this.worlds       = new TomlWorldsConfig(      this.getTable("worlds"));
-        this.integrations = new TomlIntegrationsConfig(this.getTable("integrations"));
-        this.gui          = new TomlGuiConfig(         this.getTable("gui"));
-        this.defaultPermissions  = new TomlDefaultPermissionsConfig( this.getTable("default-permissions"));
+        this.autoSave            = new TomlAutoSaveConfig(          this.getTable("auto-save"));
+        this.editor              = new TomlEditorConfig(            this.getTable("editor"));
+        this.rules               = new TomlRulesConfig(             this.getTable("rules"));
+        this.worlds              = new TomlWorldsConfig(            this.getTable("worlds"));
+        this.integrations        = new TomlIntegrationsConfig(      this.getTable("integrations"));
+        this.gui                 = new TomlGuiConfig(               this.getTable("gui"));
+        this.defaultPermissions  = new TomlDefaultPermissionsConfig(this.getTable("default-permissions"));
     }
 
     @Override

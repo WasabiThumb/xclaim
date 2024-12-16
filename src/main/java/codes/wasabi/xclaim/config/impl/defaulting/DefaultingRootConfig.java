@@ -16,13 +16,13 @@ public final class DefaultingRootConfig extends FilterRootConfig {
     private final DefaultingDefaultPermissionsConfig defaultPermissions;
     public DefaultingRootConfig(@NotNull RootConfig backing) {
         super(backing);
-        this.autoSave     = new DefaultingAutoSaveConfig(     backing.autoSave()     );
-        this.editor       = new DefaultingEditorConfig(       backing.editor()       );
-        this.rules        = new DefaultingRulesConfig(        backing.rules()        );
-        this.worlds       = new DefaultingWorldsConfig(       backing.worlds()       );
-        this.integrations = new DefaultingIntegrationsConfig( backing.integrations() );
-        this.gui          = new DefaultingGuiConfig(          backing.gui()          );
-        this.defaultPermissions  = new DefaultingDefaultPermissionsConfig(  backing.defaultPermissions()  );
+        this.autoSave            = new DefaultingAutoSaveConfig(          backing.autoSave()            );
+        this.editor              = new DefaultingEditorConfig(            backing.editor()              );
+        this.rules               = new DefaultingRulesConfig(             backing.rules()               );
+        this.worlds              = new DefaultingWorldsConfig(            backing.worlds()              );
+        this.integrations        = new DefaultingIntegrationsConfig(      backing.integrations()        );
+        this.gui                 = new DefaultingGuiConfig(               backing.gui()                 );
+        this.defaultPermissions  = new DefaultingDefaultPermissionsConfig(backing.defaultPermissions()  );
     }
 
     @Override

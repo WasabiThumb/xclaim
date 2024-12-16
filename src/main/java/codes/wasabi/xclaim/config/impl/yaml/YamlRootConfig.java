@@ -20,13 +20,13 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
         super(section);
         final YamlLimits limits = YamlLimits.of(this.getSection("limits"));
 
-        this.autoSave     = new YamlAutoSaveConfig(    this.getSection("auto-save")       );
-        this.editor       = new YamlEditorConfig(      section                                 );
-        this.rules        = new YamlRulesConfig(       section,                          limits);
-        this.worlds       = new YamlWorldsConfig(      this.getSection("worlds")          );
-        this.integrations = new YamlIntegrationsConfig(section,                          limits);
-        this.gui          = new YamlGuiConfig(); // Stub
-        this.defaultPermissions  = new YamlDefaultPermissionsConfig();
+        this.autoSave            = new YamlAutoSaveConfig(    this.getSection("auto-save")       );
+        this.editor              = new YamlEditorConfig(      section                                 );
+        this.rules               = new YamlRulesConfig(       section,                          limits);
+        this.worlds              = new YamlWorldsConfig(      this.getSection("worlds")          );
+        this.integrations        = new YamlIntegrationsConfig(section,                          limits);
+        this.gui                 = new YamlGuiConfig();                // stub
+        this.defaultPermissions  = new YamlDefaultPermissionsConfig(); // stub
     }
 
     @Override

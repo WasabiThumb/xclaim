@@ -13,87 +13,87 @@ public class TomlDefaultPermissionsConfig extends TomlConfig implements DefaultP
     }
 
     @Override
-    public @UnknownNullability String defaultBuild() {
+    public @UnknownNullability String build() {
         return this.getString("build");
     }
 
     @Override
-    public @UnknownNullability String defaultBreak() {
+    public @UnknownNullability String breakBlocks() {
         return this.getString("break");
     }
 
     @Override
-    public @UnknownNullability String defaultEnter() {
+    public @UnknownNullability String enter() {
         return this.getString("enter");
     }
 
     @Override
-    public @UnknownNullability String defaultInteract() {
+    public @UnknownNullability String interact() {
         return this.getString("interact");
     }
 
     @Override
-    public @UnknownNullability String defaultChestOpen() {
+    public @UnknownNullability String chestOpen() {
         return this.getString("chest-open");
     }
 
     @Override
-    public @UnknownNullability String defaultEntPlace() {
+    public @UnknownNullability String entPlace() {
         return this.getString("ent-place");
     }
 
     @Override
-    public @UnknownNullability String defaultVehiclePlace() {
-        return this.getString("vehicle_place");
+    public @UnknownNullability String vehiclePlace() {
+        return this.getString("vehicle-place");
     }
 
     @Override
-    public @UnknownNullability String defaultFireUse() {
+    public @UnknownNullability String fireUse() {
         return this.getString("fire-use");
     }
 
     @Override
-    public @UnknownNullability String defaultEntFriendly() {
-        return this.getString("entity-friendly");
+    public @UnknownNullability String entDamageFriendly() {
+        return this.getString("entity-damage-friendly");
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageHost() {
+    public @UnknownNullability String entDamageHostile() {
         return this.getString("entity-damage-hostile");
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageVehicle() {
+    public @UnknownNullability String entDamageVehicle() {
         return this.getString("entity-damage-vehicle");
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageNL() {
+    public @UnknownNullability String entDamageNL() {
         return this.getString("entity-damage-nl");
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageMisc() {
+    public @UnknownNullability String entDamageMisc() {
         return this.getString("entity-damage-misc");
     }
 
     @Override
-    public @UnknownNullability String defaultExplode() {
+    public @UnknownNullability String explode() {
         return this.getString("explode");
     }
 
     @Override
-    public @UnknownNullability String defaultItemDrop() {
+    public @UnknownNullability String itemDrop() {
         return this.getString("item-drop");
     }
 
     @Override
-    public @UnknownNullability String defaultManage() {
+    public @UnknownNullability String manage() {
         return this.getString("manage");
     }
 
     @Override
-    public @UnknownNullability String defaultDelete() {
+    public @UnknownNullability String delete() {
         return this.getString("delete");
     }
 }

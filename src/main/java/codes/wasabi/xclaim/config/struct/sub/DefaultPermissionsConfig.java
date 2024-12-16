@@ -1,42 +1,42 @@
 package codes.wasabi.xclaim.config.struct.sub;
 
-
 import codes.wasabi.xclaim.config.struct.Config;
 import org.jetbrains.annotations.UnknownNullability;
 
 public interface DefaultPermissionsConfig extends Config {
 
-    @UnknownNullability String defaultBuild();
+    @UnknownNullability String build();
 
-    @UnknownNullability String defaultBreak();
+    @UnknownNullability String breakBlocks();
 
-    @UnknownNullability String defaultEnter();
+    @UnknownNullability String enter();
 
-    @UnknownNullability String defaultInteract();
+    @UnknownNullability String interact();
 
-    @UnknownNullability String defaultChestOpen();
+    @UnknownNullability String chestOpen();
 
-    @UnknownNullability String defaultEntPlace();
+    @UnknownNullability String entPlace();
 
-    @UnknownNullability String defaultVehiclePlace();
+    @UnknownNullability String vehiclePlace();
 
-    @UnknownNullability String defaultFireUse();
+    @UnknownNullability String fireUse();
 
-    @UnknownNullability String defaultEntFriendly();
+    @UnknownNullability String entDamageFriendly();
 
-    @UnknownNullability String defaultEntDamageHost();
+    @UnknownNullability String entDamageHostile();
 
-    @UnknownNullability String defaultEntDamageVehicle();
+    @UnknownNullability String entDamageVehicle();
 
-    @UnknownNullability String defaultEntDamageNL();
+    @UnknownNullability String entDamageNL();
 
-    @UnknownNullability String defaultEntDamageMisc();
+    @UnknownNullability String entDamageMisc();
 
-    @UnknownNullability String defaultExplode();
+    @UnknownNullability String explode();
 
-    @UnknownNullability String defaultItemDrop();
+    @UnknownNullability String itemDrop();
 
-    @UnknownNullability String defaultManage();
+    @UnknownNullability String manage();
 
-    @UnknownNullability String defaultDelete();
+    @UnknownNullability String delete();
+
 }

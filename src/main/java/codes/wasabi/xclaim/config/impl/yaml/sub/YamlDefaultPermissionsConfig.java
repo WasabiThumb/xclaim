@@ -11,87 +11,87 @@ public final class YamlDefaultPermissionsConfig extends YamlConfig implements De
     }
 
     @Override
-    public @UnknownNullability String defaultBuild() {
+    public @UnknownNullability String build() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultBreak() {
+    public @UnknownNullability String breakBlocks() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEnter() {
+    public @UnknownNullability String enter() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultInteract() {
+    public @UnknownNullability String interact() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultChestOpen() {
+    public @UnknownNullability String chestOpen() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEntPlace() {
+    public @UnknownNullability String entPlace() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultVehiclePlace() {
+    public @UnknownNullability String vehiclePlace() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultFireUse() {
+    public @UnknownNullability String fireUse() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEntFriendly() {
+    public @UnknownNullability String entDamageFriendly() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageHost() {
+    public @UnknownNullability String entDamageHostile() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageVehicle() {
+    public @UnknownNullability String entDamageVehicle() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageNL() {
+    public @UnknownNullability String entDamageNL() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultEntDamageMisc() {
+    public @UnknownNullability String entDamageMisc() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultExplode() {
+    public @UnknownNullability String explode() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultItemDrop() {
+    public @UnknownNullability String itemDrop() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultManage() {
+    public @UnknownNullability String manage() {
         return null;
     }
 
     @Override
-    public @UnknownNullability String defaultDelete() {
+    public @UnknownNullability String delete() {
         return null;
     }
 }

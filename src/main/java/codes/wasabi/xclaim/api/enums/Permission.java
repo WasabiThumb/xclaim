@@ -12,23 +12,23 @@ import java.lang.reflect.Constructor;
 import java.util.function.Function;
 
 public enum Permission {
-    BUILD("perm-build-name", "perm-build-description", DefaultPermissionsConfig::defaultBuild, BuildBreakHandler.Build.class),
-    BREAK("perm-break-name", "perm-break-description", DefaultPermissionsConfig::defaultBreak, BuildBreakHandler.Break.class),
-    ENTER("perm-enter-name", "perm-enter-description", DefaultPermissionsConfig::defaultEnter, EnterHandler.class),
-    INTERACT("perm-interact-name", "perm-interact-description", DefaultPermissionsConfig::defaultInteract, InteractHandler.class),
-    CHEST_OPEN("perm-chest-open-name", "perm-chest-open-description", DefaultPermissionsConfig::defaultChestOpen, InteractHandler.Chests.class, (byte) 1),
-    ENT_PLACE("perm-ent-place-name", "perm-ent-place-description", DefaultPermissionsConfig::defaultEntPlace, InteractHandler.Entities.class, (byte) 1),
-    VEHICLE_PLACE("perm-vehicle-place-name", "perm-vehicle-place-description", DefaultPermissionsConfig::defaultVehiclePlace, InteractHandler.Vehicles.class, (byte) 2),
-    FIRE_USE("perm-fire-use-name", "perm-fire-use-description", DefaultPermissionsConfig::defaultFireUse, InteractHandler.Flammable.class, (byte) 1),
-    ENTITY_DAMAGE_FRIENDLY("perm-entity-damage-friendly-name", "perm-entity-damage-friendly-description", DefaultPermissionsConfig::defaultEntFriendly, DamageHandler.Friendly.class),
-    ENTITY_DAMAGE_HOSTILE("perm-entity-damage-hostile-name", "perm-entity-damage-hostile-description", DefaultPermissionsConfig::defaultEntDamageHost, DamageHandler.Hostile.class),
-    ENTITY_DAMAGE_VEHICLE("perm-entity-damage-vehicle-name", "perm-entity-damage-vehicle-description", DefaultPermissionsConfig::defaultEntDamageVehicle, DamageHandler.Vehicle.class),
-    ENTITY_DAMAGE_NL("perm-entity-damage-nl-name", "perm-entity-damage-nl-description", DefaultPermissionsConfig::defaultEntDamageNL, DamageHandler.NonLiving.class),
-    ENTITY_DAMAGE_MISC("perm-entity-damage-misc-name", "perm-entity-damage-misc-description", DefaultPermissionsConfig::defaultEntDamageMisc, DamageHandler.Misc.class),
-    EXPLODE("perm-explode-name", "perm-explode-description", DefaultPermissionsConfig::defaultExplode, ExplosionHandler.class),
-    ITEM_DROP("perm-item-drop-name", "perm-item-drop-description", DefaultPermissionsConfig::defaultItemDrop, DropHandler.class),
-    MANAGE("perm-manage-name", "perm-manage-description", DefaultPermissionsConfig::defaultManage),
-    DELETE("perm-delete-name", "perm-delete-description", DefaultPermissionsConfig::defaultDelete);
+    BUILD("perm-build-name", "perm-build-description", DefaultPermissionsConfig::build, BuildBreakHandler.Build.class),
+    BREAK("perm-break-name", "perm-break-description", DefaultPermissionsConfig::breakBlocks, BuildBreakHandler.Break.class),
+    ENTER("perm-enter-name", "perm-enter-description", DefaultPermissionsConfig::enter, EnterHandler.class),
+    INTERACT("perm-interact-name", "perm-interact-description", DefaultPermissionsConfig::interact, InteractHandler.class),
+    CHEST_OPEN("perm-chest-open-name", "perm-chest-open-description", DefaultPermissionsConfig::chestOpen, InteractHandler.Chests.class, (byte) 1),
+    ENT_PLACE("perm-ent-place-name", "perm-ent-place-description", DefaultPermissionsConfig::entPlace, InteractHandler.Entities.class, (byte) 1),
+    VEHICLE_PLACE("perm-vehicle-place-name", "perm-vehicle-place-description", DefaultPermissionsConfig::vehiclePlace, InteractHandler.Vehicles.class, (byte) 2),
+    FIRE_USE("perm-fire-use-name", "perm-fire-use-description", DefaultPermissionsConfig::fireUse, InteractHandler.Flammable.class, (byte) 1),
+    ENTITY_DAMAGE_FRIENDLY("perm-entity-damage-friendly-name", "perm-entity-damage-friendly-description", DefaultPermissionsConfig::entDamageFriendly, DamageHandler.Friendly.class),
+    ENTITY_DAMAGE_HOSTILE("perm-entity-damage-hostile-name", "perm-entity-damage-hostile-description", DefaultPermissionsConfig::entDamageHostile, DamageHandler.Hostile.class),
+    ENTITY_DAMAGE_VEHICLE("perm-entity-damage-vehicle-name", "perm-entity-damage-vehicle-description", DefaultPermissionsConfig::entDamageVehicle, DamageHandler.Vehicle.class),
+    ENTITY_DAMAGE_NL("perm-entity-damage-nl-name", "perm-entity-damage-nl-description", DefaultPermissionsConfig::entDamageNL, DamageHandler.NonLiving.class),
+    ENTITY_DAMAGE_MISC("perm-entity-damage-misc-name", "perm-entity-damage-misc-description", DefaultPermissionsConfig::entDamageMisc, DamageHandler.Misc.class),
+    EXPLODE("perm-explode-name", "perm-explode-description", DefaultPermissionsConfig::explode, ExplosionHandler.class),
+    ITEM_DROP("perm-item-drop-name", "perm-item-drop-description", DefaultPermissionsConfig::itemDrop, DropHandler.class),
+    MANAGE("perm-manage-name", "perm-manage-description", DefaultPermissionsConfig::manage),
+    DELETE("perm-delete-name", "perm-delete-description", DefaultPermissionsConfig::delete);
 
     /**
      * Wraps #valueOf with legacy support
