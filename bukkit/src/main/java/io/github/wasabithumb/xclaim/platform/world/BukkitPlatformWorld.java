@@ -1,5 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.world;
 
+import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +58,11 @@ public class BukkitPlatformWorld implements PlatformWorld {
     @Override
     public int getMinHeight() {
         return this.handle().getMinHeight();
+    }
+
+    @Override
+    public boolean keepInventory() {
+        return Boolean.TRUE.equals(this.handle().getGameRuleValue(GameRule.KEEP_INVENTORY));
     }
 
 }

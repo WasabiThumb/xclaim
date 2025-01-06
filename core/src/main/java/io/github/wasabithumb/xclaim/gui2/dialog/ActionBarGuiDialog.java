@@ -1,25 +1,29 @@
 package io.github.wasabithumb.xclaim.gui2.dialog;
 
-import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
+import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 final class ActionBarGuiDialog extends TickingGuiDialog {
 
-    public ActionBarGuiDialog(@NotNull Player player, @NotNull Component message) {
-        super(player, message);
+    public ActionBarGuiDialog(
+            @NotNull XClaim runtime,
+            @NotNull PlatformPlayer player,
+            @NotNull String message
+    ) {
+        super(runtime, player, message);
     }
 
     @Override
     protected void tick() {
-        this.audience.sendActionBar(this.message);
+        this.player.sendActionBar(this.message);
     }
 
     @Override
     protected void lastTick() {
-        this.audience.sendActionBar(Component.empty());
+        this.player.sendActionBar("");
     }
 
     @Override

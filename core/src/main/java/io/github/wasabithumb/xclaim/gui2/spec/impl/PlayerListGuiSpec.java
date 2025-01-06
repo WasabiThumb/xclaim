@@ -1,35 +1,19 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl;
 
-import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.helper.PaginatedGuiSpec;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import io.github.wasabithumb.xclaim.util.NameToPlayer;
-import net.kyori.adventure.text.Component;
 import io.github.wasabithumb.xclaim.util.ColorTag;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-
-public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<OfflinePlayer> {
-
-    private static final ItemStack ADD_STACK = DisplayItem.create(
-            Material.EMERALD,
-            XClaim.lang.getComponent("gui-comb-add")
-    );
-
-    //
+public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<PlatformUser> {
 
     @Override
     public @NotNull String layout() {
@@ -39,45 +23,40 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<OfflinePlayer> 
     @Override
     public void populate(@NotNull GuiInstance instance) {
         super.populate(instance);
-        instance.set(1, ADD_STACK);
+        instance.set(1, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.EMERALD),
+                instance.runtime().lang("gui-comb-add")
+        ));
     }
 
     @Override
-    protected @Nullable ItemStack populateEntry(@NotNull GuiInstance instance, @NotNull OfflinePlayer player) {
-        ItemStack is = Platform.get().preparePlayerSkull(new ItemStack(Platform.get().getPlayerHeadMaterial(), 1));
-        ItemMeta meta = is.getItemMeta();
-        if (meta != null) {
-            String realName = player.getName();
-            if (realName == null) realName = player.getUniqueId().toString();
-            Component niceName;
-            if (player instanceof Player) {
-                niceName = Platform.get().playerDisplayName((Player) player);
-            } else {
-                niceName = Component.text(realName);
-            }
-            meta.addItemFlags(ItemFlag.values());
-            Platform.get().metaDisplayName(meta, niceName);
-            Platform.get().metaLore(meta, Collections.singletonList(Component.text(realName).color(ColorTag.GRAY)));
-            if (meta instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) meta, player);
+    protected @Nullable PlatformItem populateEntry(@NotNull GuiInstance instance, @NotNull PlatformUser player) {
+        String realName = player.displayName();
+        if (player instanceof PlatformPlayer ply) {
+            realName = ply.name();
         }
-        is.setItemMeta(meta);
-        return is;
+
+        return instance.platform()
+                .createItem(NamedPlatformMaterial.PLAYER_HEAD)
+                .skullOwner(player)
+                .displayName(player.displayName())
+                .lore(ColorTag.GRAY.format(realName))
+                .hideExtra();
     }
 
     @Override
     protected @NotNull GuiAction onClickExtra(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         if (slot.index() == 1) {
-            return GuiAction.prompt(XClaim.lang.getComponent("gui-comb-prompt"));
+            return GuiAction.prompt(instance.runtime().lang("gui-comb-prompt"));
         }
         return GuiAction.nothing();
     }
 
     @Override
     public @NotNull GuiAction onResponse(@NotNull GuiInstance instance, @NotNull String response) {
-        OfflinePlayer ply = NameToPlayer.getPlayer(response);
+        PlatformUser ply = instance.platform().users().matchUser(response);
         if (ply == null) {
-            Platform.getAdventure().player(instance.player())
-                    .sendMessage(XClaim.lang.getComponent("gui-comb-prompt-fail"));
+            instance.player().sendMessage(instance.runtime().lang("gui-comb-prompt-fail"));
             return GuiAction.exit();
         }
         return this.addPlayer(instance, ply) ? GuiAction.repopulate() : GuiAction.nothing();
@@ -105,6 +84,6 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<OfflinePlayer> 
 
     //
 
-    protected abstract boolean addPlayer(@NotNull GuiInstance instance, @NotNull OfflinePlayer player);
+    protected abstract boolean addPlayer(@NotNull GuiInstance instance, @NotNull PlatformUser player);
 
 }

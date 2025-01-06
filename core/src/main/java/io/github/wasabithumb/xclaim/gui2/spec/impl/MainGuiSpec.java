@@ -1,70 +1,15 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl;
 
-import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public final class MainGuiSpec implements GuiSpec {
-
-    private static final ItemStack NEW_STACK = DisplayItem.create(
-            Material.NETHER_STAR,
-            XClaim.lang.getComponent("gui-main-new")
-    );
-
-    private static final ItemStack EDIT_TRUST_STACK = DisplayItem.create(
-            Platform.get().getSkeletonSkullMaterial(),
-            XClaim.lang.getComponent("gui-main-edit-trust")
-    );
-
-    private static final ItemStack EDIT_CHUNK_STACK = DisplayItem.create(
-            Platform.get().getCraftingTableMaterial(),
-            XClaim.lang.getComponent("gui-main-edit-chunk")
-    );
-
-    private static final ItemStack RENAME_CHUNK_STACK = DisplayItem.create(
-            Material.NAME_TAG,
-            XClaim.lang.getComponent("gui-main-rename-chunk")
-    );
-
-    private static final ItemStack EDIT_PERM_STACK = DisplayItem.create(
-            Platform.get().getShieldMaterial(),
-            XClaim.lang.getComponent("gui-main-edit-perm")
-    );
-
-    private static final ItemStack TRANSFER_OWNER_STACK = DisplayItem.create(
-            Platform.get().getChestMinecartMaterial(),
-            XClaim.lang.getComponent("gui-main-transfer-owner")
-    );
-
-    private static final ItemStack CLEAR_ALL_STACK = DisplayItem.create(
-            Material.TNT,
-            XClaim.lang.getComponent("gui-main-clear-all")
-    );
-
-    private static final ItemStack DELETE_STACK = DisplayItem.create(
-            Material.BARRIER,
-            XClaim.lang.getComponent("gui-main-delete")
-    );
-
-    private static final ItemStack VERSION_STACK = DisplayItem.create(
-            Platform.get().getEnchantingTableMaterial(),
-            XClaim.lang.getComponent("gui-main-version")
-    );
-
-    private static final ItemStack EXIT_STACK = DisplayItem.create(
-            Material.ARROW,
-            XClaim.lang.getComponent("gui-main-exit")
-    );
-
-    //
 
     @Override
     public @NotNull String layout() {
@@ -73,43 +18,63 @@ public final class MainGuiSpec implements GuiSpec {
 
     @Override
     public void populate(@NotNull GuiInstance instance) {
-        instance.set(0, NEW_STACK);
-        instance.set(1, EDIT_TRUST_STACK);
-        instance.set(2, EDIT_CHUNK_STACK);
-        instance.set(3, RENAME_CHUNK_STACK);
-        instance.set(4, EDIT_PERM_STACK);
-        instance.set(5, TRANSFER_OWNER_STACK);
-        instance.set(6, CLEAR_ALL_STACK);
-        instance.set(7, DELETE_STACK);
-        instance.set(8, VERSION_STACK);
-        instance.set(9, EXIT_STACK);
+        instance.set(0, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.NETHER_STAR),
+                instance.runtime().lang("gui-main-new")
+        ));
+        instance.set(1, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.SKELETON_SKULL),
+                instance.runtime().lang("gui-main-edit-trust")
+        ));
+        instance.set(2, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.CRAFTING_TABLE),
+                instance.runtime().lang("gui-main-edit-chunk")
+        ));
+        instance.set(3, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.NAME_TAG),
+                instance.runtime().lang("gui-main-rename-chunk")
+        ));
+        instance.set(4, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.SHIELD),
+                instance.runtime().lang("gui-main-edit-perm")
+        ));
+        instance.set(5, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.CHEST_MINECART),
+                instance.runtime().lang("gui-main-transfer-owner")
+        ));
+        instance.set(6, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.TNT),
+                instance.runtime().lang("gui-main-clear-all")
+        ));
+        instance.set(7, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.BARRIER),
+                instance.runtime().lang("gui-main-delete")
+        ));
+        instance.set(8, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.ENCHANTING_TABLE),
+                instance.runtime().lang("gui-main-version")
+        ));
+        instance.set(9, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.ARROW),
+                instance.runtime().lang("gui-main-exit")
+        ));
     }
 
     @Override
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
-        switch (slot.index()) {
-            case 0:
-                return GuiAction.transfer(GuiSpecs.newClaim());
-            case 1:
-                return GuiAction.transfer(GuiSpecs.editTrust());
-            case 2:
-                return GuiAction.transfer(GuiSpecs.editChunks());
-            case 3:
-                return GuiAction.transfer(GuiSpecs.renameClaim());
-            case 4:
-                return GuiAction.transfer(GuiSpecs.editPerms());
-            case 5:
-                return GuiAction.transfer(GuiSpecs.transferableClaimSelector());
-            case 6:
-                return GuiAction.transfer(GuiSpecs.clearAll());
-            case 7:
-                return GuiAction.transfer(GuiSpecs.deletingClaimSelector());
-            case 8:
-                return GuiAction.transfer(GuiSpecs.versionInfo());
-            case 9:
-                return GuiAction.exit();
-        }
-        return GuiAction.nothing();
+        return switch (slot.index()) {
+            case 0 -> GuiAction.transfer(GuiSpecs.newClaim());
+            case 1 -> GuiAction.transfer(GuiSpecs.editTrust());
+            case 2 -> GuiAction.transfer(GuiSpecs.editChunks());
+            case 3 -> GuiAction.transfer(GuiSpecs.renameClaim());
+            case 4 -> GuiAction.transfer(GuiSpecs.editPerms());
+            case 5 -> GuiAction.transfer(GuiSpecs.transferableClaimSelector());
+            case 6 -> GuiAction.transfer(GuiSpecs.clearAll());
+            case 7 -> GuiAction.transfer(GuiSpecs.deletingClaimSelector());
+            case 8 -> GuiAction.transfer(GuiSpecs.versionInfo());
+            case 9 -> GuiAction.exit();
+            default -> GuiAction.nothing();
+        };
     }
 
 }

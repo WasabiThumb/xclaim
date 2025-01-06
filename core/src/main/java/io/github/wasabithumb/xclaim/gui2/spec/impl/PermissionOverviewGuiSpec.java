@@ -1,48 +1,16 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-
 public final class PermissionOverviewGuiSpec implements GuiSpec {
-
-    private static final ItemStack GLOBAL_STACK = DisplayItem.create(
-            Material.BUCKET,
-            XClaim.lang.getComponent("gui-perm-general"),
-            Arrays.asList(
-                    XClaim.lang.getComponent("gui-perm-general-line1"),
-                    XClaim.lang.getComponent("gui-perm-general-line2"),
-                    XClaim.lang.getComponent("gui-perm-general-line3")
-            )
-    );
-
-    private static final ItemStack PLAYER_STACK = DisplayItem.create(
-            Platform.get().getSkeletonSkullMaterial(),
-            XClaim.lang.getComponent("gui-perm-player"),
-            Arrays.asList(
-                    XClaim.lang.getComponent("gui-perm-player-line1"),
-                    XClaim.lang.getComponent("gui-perm-player-line2"),
-                    XClaim.lang.getComponent("gui-perm-player-line3"),
-                    XClaim.lang.getComponent("gui-perm-player-line4"),
-                    XClaim.lang.getComponent("gui-perm-player-line5")
-            )
-    );
-
-    private static final ItemStack BACK_STACK = DisplayItem.create(
-            Material.BARRIER,
-            XClaim.lang.getComponent("gui-perm-back")
-    );
 
     private final Claim claim;
     public PermissionOverviewGuiSpec(@NotNull Claim claim) {
@@ -56,22 +24,36 @@ public final class PermissionOverviewGuiSpec implements GuiSpec {
 
     @Override
     public void populate(@NotNull GuiInstance instance) {
-        instance.set(0, GLOBAL_STACK);
-        instance.set(1, PLAYER_STACK);
-        instance.set(2, BACK_STACK);
+        instance.set(0, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.BUCKET),
+                instance.runtime().lang("gui-perm-general"),
+                instance.runtime().lang("gui-perm-general-line1"),
+                instance.runtime().lang("gui-perm-general-line2"),
+                instance.runtime().lang("gui-perm-general-line3")
+        ));
+        instance.set(1, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.SKELETON_SKULL),
+                instance.runtime().lang("gui-perm-player"),
+                instance.runtime().lang("gui-perm-player-line1"),
+                instance.runtime().lang("gui-perm-player-line2"),
+                instance.runtime().lang("gui-perm-player-line3"),
+                instance.runtime().lang("gui-perm-player-line4"),
+                instance.runtime().lang("gui-perm-player-line5")
+        ));
+        instance.set(2, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.BARRIER),
+                instance.runtime().lang("gui-perm-back")
+        ));
     }
 
     @Override
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
-        switch (slot.index()) {
-            case 0:
-                return GuiAction.transfer(GuiSpecs.globalPermissionList(this.claim));
-            case 1:
-                return GuiAction.transfer(GuiSpecs.permissiblePlayerList(this.claim));
-            case 2:
-                return GuiAction.transfer(GuiSpecs.editPerms());
-        }
-        return GuiAction.nothing();
+        return switch (slot.index()) {
+            case 0 -> GuiAction.transfer(GuiSpecs.globalPermissionList(this.claim));
+            case 1 -> GuiAction.transfer(GuiSpecs.permissiblePlayerList(this.claim));
+            case 2 -> GuiAction.transfer(GuiSpecs.editPerms());
+            default -> GuiAction.nothing();
+        };
     }
 
 }

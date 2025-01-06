@@ -5,6 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 public interface PlatformInventoryInteractEvent extends PlatformInventoryEvent {
 
-    @Nullable PlatformPlayer target();
+    @Nullable PlatformPlayer player();
 
 }

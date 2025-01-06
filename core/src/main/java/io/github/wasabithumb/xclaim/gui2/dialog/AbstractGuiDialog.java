@@ -1,11 +1,7 @@
 package io.github.wasabithumb.xclaim.gui2.dialog;
 
-import io.github.wasabithumb.xclaim.platform.Platform;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import io.github.wasabithumb.xclaim.util.ColorTag;
-import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.entity.Player;
+import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -13,20 +9,18 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 abstract class AbstractGuiDialog implements GuiDialog {
 
-    protected final Player player;
-    protected final Audience audience;
-    protected final Component message;
+    protected final XClaim runtime;
+    protected final PlatformPlayer player;
+    protected final String message;
 
-    protected AbstractGuiDialog(@NotNull Player player, @NotNull Component message) {
+    protected AbstractGuiDialog(
+            @NotNull XClaim runtime,
+            @NotNull PlatformPlayer player,
+            @NotNull String message
+    ) {
+        this.runtime = runtime;
         this.player = player;
-        this.audience = Platform.getAdventure().player(player);
-        this.message = this.wrapMessage(message);
-    }
-
-    protected @NotNull Component wrapMessage(@NotNull Component message) {
-        return message
-                .colorIfAbsent(ColorTag.WHITE)
-                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+        this.message = message;
     }
 
     @Contract(" -> fail")

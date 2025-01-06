@@ -2,7 +2,6 @@ package io.github.wasabithumb.xclaim.gui2.action;
 
 import io.github.wasabithumb.xclaim.gui2.action.impl.*;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,7 @@ public interface GuiAction {
     }
 
     @Contract("_ -> new")
-    static @NotNull GuiAction prompt(@NotNull Component message) {
+    static @NotNull GuiAction prompt(@NotNull String message) {
         return new PromptGuiAction(message);
     }
 

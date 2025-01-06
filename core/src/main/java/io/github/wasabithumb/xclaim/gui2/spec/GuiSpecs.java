@@ -1,10 +1,10 @@
 package io.github.wasabithumb.xclaim.gui2.spec;
 
-import io.github.wasabithumb.xclaim.api.Claim;
 import io.github.wasabithumb.xclaim.api.enums.Permission;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.*;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.derived.*;
-import org.bukkit.OfflinePlayer;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 
 public final class GuiSpecs {
@@ -58,7 +58,7 @@ public final class GuiSpecs {
         return new PermissionLevelsGuiSpec(claim, permission);
     }
 
-    public static @NotNull GuiSpec individualPermissionList(@NotNull Claim claim, @NotNull OfflinePlayer subject) {
+    public static @NotNull GuiSpec individualPermissionList(@NotNull Claim claim, @NotNull PlatformUser subject) {
         return new IndividualPermissionListGuiSpec(claim, subject);
     }
 
@@ -70,7 +70,7 @@ public final class GuiSpecs {
         return new TransferableClaimSelectorGuiSpec();
     }
 
-    public static @NotNull GuiSpec transferOwner(@NotNull Claim claim, @NotNull OfflinePlayer target) {
+    public static @NotNull GuiSpec transferOwner(@NotNull Claim claim, @NotNull PlatformUser target) {
         return new TransferOwnerGuiSpec(claim, target);
     }
 

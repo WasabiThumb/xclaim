@@ -12,12 +12,11 @@ public record ClaimMutationContext(
         @NotNull ClaimManager manager,
         @NotNull Claim claim,
         @NotNull ClaimData data,
-        @NotNull PlatformUser user,
-        boolean silent
+        @NotNull PlatformUser user
 ) {
 
     ClaimMutationContext(@NotNull Claim claim, @NotNull PlatformUser user) {
-        this(claim.manager().runtime(), claim.manager(), claim, claim.data(), user, false);
+        this(claim.manager().runtime(), claim.manager(), claim, claim.data(), user);
     }
 
 }

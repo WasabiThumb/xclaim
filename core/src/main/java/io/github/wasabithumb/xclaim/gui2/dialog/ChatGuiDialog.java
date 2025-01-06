@@ -1,42 +1,36 @@
 package io.github.wasabithumb.xclaim.gui2.dialog;
 
-import net.kyori.adventure.text.Component;
-import io.github.wasabithumb.xclaim.util.ColorTag;
-import org.bukkit.entity.Player;
+import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 final class ChatGuiDialog extends TickingGuiDialog {
 
-    private static final Component SCREEN_CLEAR;
-    static {
-        Component base = Component.text(' ').append(Component.newline()); // 1
-        base = Component.empty()
-                .append(base.color(ColorTag.BLACK))
-                .append(base.color(ColorTag.DARK_GRAY)); // 2
-
-        // 4, 8, 16, 32, 64
-        for (int i=0; i < 5; i++) base = Component.empty().append(base).append(base);
-        SCREEN_CLEAR = base;
-    }
-
-    public ChatGuiDialog(@NotNull Player player, @NotNull Component message) {
-        super(player, message);
+    private static final String SCREEN_CLEAR = "<black> <br></black><dark_gray> <br></dark_gray>";
+    public ChatGuiDialog(
+            @NotNull XClaim runtime,
+            @NotNull PlatformPlayer player,
+            @NotNull String message
+    ) {
+        super(runtime, player, message);
     }
 
     @Override
     protected void tick() {
-        this.audience.sendMessage(Component.empty()
-                .append(SCREEN_CLEAR)
-                .append(this.message)
-                .append(Component.newline())
-        );
+        this.sendClear();
+        this.player.sendMessage(this.message + "<br>");
     }
 
     @Override
     protected void lastTick() {
-        this.audience.sendMessage(SCREEN_CLEAR);
+        this.sendClear();
+    }
+
+    private void sendClear() {
+        for (int i=0; i < 64; i++)
+            this.player.sendMessage(SCREEN_CLEAR);
     }
 
 }

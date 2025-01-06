@@ -20,6 +20,11 @@ tasks.compileJava.configure {
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://jitpack.io")
+    maven("https://repo.essentialsx.net/releases/")
+    maven("https://maven.enginehub.org/repo/")
+    maven("https://repo.bluecolored.de/releases/")
+    maven("https://repo.mikeprimm.com/")
 }
 
 dependencies {
@@ -27,6 +32,22 @@ dependencies {
     compileOnly("org.jetbrains:annotations:${annotationsVersion}")
     implementation("org.bstats:bstats-bukkit:${statsVersion}")
     compileOnly("org.spigotmc:spigot-api:${serverVersion}")
+
+    // Vault integration
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+
+    // Essentials integration
+    compileOnly("net.essentialsx:EssentialsX:2.20.1")
+
+    // WorldGuard integration
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
+
+    // BlueMap integration
+    compileOnly("de.bluecolored:bluemap-api:2.7.3")
+
+    // Dynmap integration
+    compileOnly("us.dynmap:DynmapCoreAPI:3.6")
+    compileOnly("us.dynmap:dynmap-api:3.6")
 }
 
 tasks.jar {
@@ -41,7 +62,7 @@ tasks.shadowJar {
 }
 
 artifacts {
-    add("shadow", tasks.shadowJar)
+    add("default", tasks.shadowJar)
 }
 
 tasks.build {

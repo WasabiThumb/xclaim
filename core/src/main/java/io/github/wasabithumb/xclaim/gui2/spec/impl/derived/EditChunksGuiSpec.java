@@ -1,37 +1,34 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
-import io.github.wasabithumb.xclaim.gui.ChunkEditor;
+import io.github.wasabithumb.xclaim.claim.Claim;
+import io.github.wasabithumb.xclaim.config.struct.sub.WorldsConfig;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.ClaimSelectorGuiSpec;
-import io.github.wasabithumb.xclaim.platform.Platform;
-import net.kyori.adventure.audience.Audience;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import org.jetbrains.annotations.NotNull;
 
 public final class EditChunksGuiSpec extends ClaimSelectorGuiSpec {
 
     @Override
     protected @NotNull GuiAction onClickClaim(@NotNull GuiInstance instance, @NotNull Claim claim) {
-        final Player ply = instance.player();
-        final World w = ply.getWorld();
-        final Audience audience = Platform.getAdventure().player(ply);
+        final PlatformPlayer ply = instance.player();
+        final WorldsConfig cfg = instance.runtime().rootConfig().worlds();
+        final PlatformWorld w = ply.location().world();
 
-        if (!XClaim.mainConfig.worlds().checkLists(w)) {
-            audience.sendMessage(XClaim.lang.getComponent("gui-edit-chunk-disallowed"));
+        if (!cfg.checkLists(w)) {
+            ply.sendMessage(instance.runtime().lang("gui-edit-chunk-disallowed"));
             return GuiAction.exit();
         }
 
-        final World cw = claim.getWorld();
-        if (cw != null && !w.getUID().equals(cw.getUID())) {
-            audience.sendMessage(XClaim.lang.getComponent("gui-edit-chunk-fail"));
+        final PlatformWorld cw = claim.world();
+        if (cw != null && !cw.uuid().equals(w.uuid())) {
+            ply.sendMessage(instance.runtime().lang("gui-edit-chunk-fail"));
             return GuiAction.exit();
         }
 
-        ChunkEditor.startEditing(ply, claim);
+        instance.runtime().gui().editor().enter(ply, claim);
         return GuiAction.exit();
     }
 

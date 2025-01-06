@@ -5,7 +5,7 @@ import io.github.wasabithumb.xclaim.config.impl.toml.helpers.TomlGroupableValue;
 import io.github.wasabithumb.xclaim.config.struct.helpers.ConfigComparators;
 import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
 import com.moandjiezana.toml.Toml;
-import org.bukkit.permissions.Permissible;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -37,17 +37,17 @@ public final class TomlRulesConfig extends TomlConfig implements RulesConfig {
     }
 
     @Override
-    public @UnknownNullability Integer maxChunks(@Nullable Permissible target) {
+    public @UnknownNullability Integer maxChunks(@Nullable PlatformUser target) {
         return this.maxChunks.get(target);
     }
 
     @Override
-    public @UnknownNullability Integer maxClaims(@Nullable Permissible target) {
+    public @UnknownNullability Integer maxClaims(@Nullable PlatformUser target) {
         return this.maxClaims.get(target);
     }
 
     @Override
-    public @UnknownNullability Integer maxClaimsInWorld(@Nullable Permissible target) {
+    public @UnknownNullability Integer maxClaimsInWorld(@Nullable PlatformUser target) {
         return this.maxClaimsInWorld.get(target);
     }
 

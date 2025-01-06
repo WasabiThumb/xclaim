@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.config.impl.yaml.YamlConfig;
 import io.github.wasabithumb.xclaim.config.impl.yaml.helpers.YamlLimits;
 import io.github.wasabithumb.xclaim.config.struct.helpers.ConfigComparators;
 import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
@@ -57,19 +58,19 @@ public final class YamlRulesConfig extends YamlConfig implements RulesConfig {
     }
 
     @Override
-    public @UnknownNullability Integer maxChunks(@Nullable Permissible target) {
+    public @UnknownNullability Integer maxChunks(@Nullable PlatformUser target) {
         if (this.limits == null) return null;
         return this.limits.getInt(target, "max-chunks", ConfigComparators.INT_NATURAL_OR_INF);
     }
 
     @Override
-    public @UnknownNullability Integer maxClaims(@Nullable Permissible target) {
+    public @UnknownNullability Integer maxClaims(@Nullable PlatformUser target) {
         if (this.limits == null) return null;
         return this.limits.getInt(target, "max-claims", ConfigComparators.INT_NATURAL_OR_INF);
     }
 
     @Override
-    public @UnknownNullability Integer maxClaimsInWorld(@Nullable Permissible target) {
+    public @UnknownNullability Integer maxClaimsInWorld(@Nullable PlatformUser target) {
         if (this.limits == null) return null;
         return this.limits.getInt(target, "max-claims-in-world", ConfigComparators.INT_NATURAL_OR_INF);
     }

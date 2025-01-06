@@ -47,6 +47,11 @@ public final class BukkitPlatformPersistentDataContainer implements PlatformPers
         this.handle.set(key, type, type.getComplexType().cast(value));
     }
 
+    @Override
+    public void remove(@NotNull String key) {
+        this.handle.remove(this.namespaced(key));
+    }
+
     //
 
     @Contract("_ -> new")

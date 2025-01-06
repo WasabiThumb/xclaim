@@ -2,15 +2,14 @@ package io.github.wasabithumb.xclaim.gui2.action.impl;
 
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.action.GuiActionType;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public final class PromptGuiAction implements GuiAction {
 
-    private final Component text;
-    public PromptGuiAction(@NotNull Component message) {
+    private final String text;
+    public PromptGuiAction(@NotNull String message) {
         this.text = message;
     }
 
@@ -19,7 +18,7 @@ public final class PromptGuiAction implements GuiAction {
         return GuiActionType.PROMPT;
     }
 
-    public @NotNull Component message() {
+    public @NotNull String message() {
         return this.text;
     }
 

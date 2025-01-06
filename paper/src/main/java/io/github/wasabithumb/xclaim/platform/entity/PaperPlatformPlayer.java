@@ -2,6 +2,9 @@ package io.github.wasabithumb.xclaim.platform.entity;
 
 import io.github.wasabithumb.xclaim.platform.PaperPlatform;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.misc.PaperPlatformBossBar;
+import io.github.wasabithumb.xclaim.platform.misc.PlatformBossBar;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +32,23 @@ public class PaperPlatformPlayer extends BukkitPlatformPlayer {
     @Override
     public void sendActionBar(@NotNull String text) {
         this.handle.sendActionBar(this.platform().mm().deserialize(text));
+    }
+
+    @Override
+    public @NotNull PaperPlatformBossBar createBossBar(
+            @NotNull String text,
+            float progress,
+            @NotNull PlatformBossBar.Color color,
+            @NotNull PlatformBossBar.Overlay overlay
+    ) {
+        PaperPlatformBossBar ret = PaperPlatformBossBar.create(
+                this.platform().mm().deserialize(text),
+                progress,
+                color,
+                overlay
+        );
+        ret.show(this.handle());
+        return ret;
     }
 
     @Override

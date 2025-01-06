@@ -1,13 +1,13 @@
 package io.github.wasabithumb.xclaim.config.struct.helpers;
 
-import it.unimi.dsi.fastutil.ints.IntComparator;
+import java.util.Comparator;
 
 public final class ConfigComparators {
 
     /**
      * A comparator that reports the natural comparison, treating values less than 0 as infinity.
      */
-    public static final IntComparator INT_NATURAL_OR_INF = (a, b) -> {
+    public static final Comparator<Integer> INT_NATURAL_OR_INF = (a, b) -> {
         int flag = 0;
         if (a < 0) flag |= 2;
         if (b < 0) flag |= 1;

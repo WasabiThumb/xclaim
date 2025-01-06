@@ -1,13 +1,13 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.api.Claim;
-import io.github.wasabithumb.xclaim.api.XCPlayer;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.PlayerListGuiSpec;
-import org.bukkit.OfflinePlayer;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
+import io.github.wasabithumb.xclaim.util.ProxyList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -15,34 +15,45 @@ import java.util.*;
 public final class PermissiblePlayerListGuiSpec extends PlayerListGuiSpec {
 
     private final Claim claim;
-    private final Set<XCPlayer> added = new LinkedHashSet<>();
+    private final Set<UUID> added = new LinkedHashSet<>();
     public PermissiblePlayerListGuiSpec(@NotNull Claim claim) {
         this.claim = claim;
     }
 
     @Override
-    protected boolean addPlayer(@NotNull GuiInstance instance, @NotNull OfflinePlayer player) {
-        return this.added.add(XCPlayer.of(player));
+    protected boolean addPlayer(@NotNull GuiInstance instance, @NotNull PlatformUser player) {
+        return this.added.add(player.uuid());
     }
 
     @Override
-    protected @NotNull Collection<OfflinePlayer> getEntries(@NotNull GuiInstance instance) {
-        final Set<XCPlayer> intrinsic = this.claim.getUserPermissions().keySet();
+    protected @NotNull Collection<PlatformUser> getEntries(@NotNull GuiInstance instance) {
+        final Set<UUID> intrinsic = this.claim.getUserPermissionKeys();
         final int intrinsicCount = intrinsic.size();
-        final List<OfflinePlayer> ret = new ArrayList<>(intrinsicCount + this.added.size());
+        final List<UUID> backing = new ArrayList<>(intrinsicCount + this.added.size());
 
-        for (XCPlayer ply : intrinsic) ret.add(ply.getOfflinePlayer());
-        for (XCPlayer ply : this.added) {
+        backing.addAll(intrinsic);
+        for (UUID ply : this.added) {
             if (intrinsic.contains(ply)) continue;
-            ret.add(ply.getOfflinePlayer());
+            backing.add(ply);
         }
 
-        ret.subList(0, intrinsicCount).sort(Comparator.comparing(OfflinePlayer::getName));
+        final List<PlatformUser> ret = new ProxyList<>(
+                backing,
+                instance.platform().users()::getUser,
+                PlatformUser::uuid
+        );
+        ret.subList(0, intrinsicCount).sort(Comparator.comparing((PlatformUser user) -> {
+            if (user.isPlayer()) {
+                return user.asPlayer().name();
+            } else {
+                return user.displayName();
+            }
+        }));
         return ret;
     }
 
     @Override
-    protected @NotNull GuiAction onClickEntry(@NotNull GuiInstance instance, @NotNull OfflinePlayer entry) {
+    protected @NotNull GuiAction onClickEntry(@NotNull GuiInstance instance, @NotNull PlatformUser entry) {
         return GuiAction.transfer(GuiSpecs.individualPermissionList(this.claim, entry));
     }
 

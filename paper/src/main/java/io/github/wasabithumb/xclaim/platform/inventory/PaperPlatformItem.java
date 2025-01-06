@@ -1,10 +1,17 @@
 package io.github.wasabithumb.xclaim.platform.inventory;
 
 import io.github.wasabithumb.xclaim.platform.PaperPlatform;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.user.PlatformConsoleUser;
+import io.github.wasabithumb.xclaim.platform.user.PlatformOfflineUser;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,6 +63,21 @@ public class PaperPlatformItem extends BukkitPlatformItem {
         }
 
         this.handle.lore(Arrays.asList(parsed));
+        return this;
+    }
+
+    @Override
+    public PaperPlatformItem skullOwner(@Nullable PlatformUser user) {
+        this.modifyMeta((ItemMeta meta) -> {
+            if (!(meta instanceof SkullMeta sm)) return;
+            if (user instanceof PlatformPlayer ply) {
+                sm.setOwningPlayer(this.platform().adapter().player(ply));
+            } else if (user instanceof PlatformOfflineUser offline) {
+                sm.setOwningPlayer(this.platform.adapter().offlineUser(offline));
+            } else {
+                sm.setOwningPlayer(null);
+            }
+        });
         return this;
     }
 

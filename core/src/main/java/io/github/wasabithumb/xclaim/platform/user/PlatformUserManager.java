@@ -20,6 +20,13 @@ public interface PlatformUserManager {
     @NotNull List<PlatformPlayer> players();
 
     /**
+     * Returns the number of online players.
+     */
+    default int playerCount() {
+        return this.players().size();
+    }
+
+    /**
      * Returns a user by their UUID.
      * If the UUID is all 0, returns the {@link PlatformConsoleUser}.
      * If the UUID is that of an online player,

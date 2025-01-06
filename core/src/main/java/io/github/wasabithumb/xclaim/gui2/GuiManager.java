@@ -1,22 +1,16 @@
 package io.github.wasabithumb.xclaim.gui2;
 
 import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.gui2.editor.ClaimEditor;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiLayouts;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
-import io.github.wasabithumb.xclaim.platform.Platform;
-import io.github.wasabithumb.xclaim.platform.legacy.PlatformChatListener;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
+import io.github.wasabithumb.xclaim.platform.event.PlatformListener;
+import io.github.wasabithumb.xclaim.platform.event.helper.PlatformInventoryEvent;
+import io.github.wasabithumb.xclaim.platform.event.impl.*;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,14 +18,23 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-public class GuiManager implements GuiService, Listener {
+public class GuiManager implements PlatformListener {
 
+    private final XClaim runtime;
     private final GuiLayouts layouts;
     private final Set<GuiInstance> instances = Collections.synchronizedSet(new HashSet<>());
     private final Map<UUID, WeakReference<GuiInstance>> chatTickets = Collections.synchronizedMap(new HashMap<>());
-    private PlatformChatListener chatListener;
-    public GuiManager() {
+    private final ClaimEditor editor;
+
+    public GuiManager(@NotNull XClaim runtime) {
+        this.runtime = runtime;
         this.layouts = new GuiLayouts();
+        this.editor = new ClaimEditor(runtime);
+    }
+
+    @Contract(value = "-> !null", pure = true)
+    public final XClaim runtime() {
+        return this.runtime;
     }
 
     @Contract(value = "-> !null", pure = true)
@@ -39,43 +42,40 @@ public class GuiManager implements GuiService, Listener {
         return this.layouts;
     }
 
-    @Override
+    public @NotNull ClaimEditor editor() {
+        return this.editor;
+    }
+
     public void start() {
         this.layouts.startLoading();
-
-        Bukkit.getPluginManager().registerEvents(this, XClaim.instance);
-        this.chatListener = Platform.get().onChat();
-        this.chatListener.onChat(this::onChat);
+        this.runtime.platform().events().register(this);
+        this.editor.enable();
     }
 
-    @Override
     public void stop() {
         this.clear();
-
-        this.chatListener.unregister();
-        HandlerList.unregisterAll(this);
+        this.runtime.platform().events().unregister(this);
+        this.editor.disable();
     }
 
-    @Override
-    public void openGui(@NotNull Player target) {
+    public void openGui(@NotNull PlatformPlayer target) {
         final GuiInstance instance = GuiInstance.open(this, target, GuiSpecs.main());
         this.instances.add(instance);
     }
 
     public void clear() {
         GuiInstance[] toClose;
+        int nToClose = 0;
         synchronized (this.instances) {
             final int len = this.instances.size();
             toClose = new GuiInstance[len];
-
-            int i = 0;
             for (GuiInstance instance : this.instances) {
-                toClose[i++] = instance;
+                toClose[nToClose++] = instance;
             }
-
             this.instances.clear();
         }
-        for (GuiInstance gui : toClose) gui.close();
+        for (int i=0; i < nToClose; i++)
+            toClose[i].close();
         this.chatTickets.clear();
     }
 
@@ -83,63 +83,66 @@ public class GuiManager implements GuiService, Listener {
         this.instances.remove(instance);
     }
 
-    void addChatTicket(@NotNull Player player, @NotNull GuiInstance instance) {
-        this.chatTickets.put(player.getUniqueId(), new WeakReference<>(instance));
+    void addChatTicket(@NotNull PlatformPlayer player, @NotNull GuiInstance instance) {
+        this.chatTickets.put(player.uuid(), new WeakReference<>(instance));
     }
 
     // Listener Helpers
 
-    private @Nullable GuiInstance getInstance(@NotNull Inventory inv) {
-        final InventoryHolder holder = inv.getHolder();
-        if (holder instanceof GuiInstance) return (GuiInstance) holder;
+    private @Nullable GuiInstance getInstance(@NotNull PlatformInventory inv) {
+        if (inv instanceof PlatformCustomInventory<?> pci) {
+            Object custom = pci.data();
+            if (custom instanceof GuiInstance gui) return gui;
+        }
         return null;
     }
 
-    private @Nullable GuiInstance getInstance(@NotNull InventoryEvent event) {
-        return this.getInstance(event.getInventory());
+    private @Nullable GuiInstance getInstance(@NotNull PlatformInventoryEvent event) {
+        return this.getInstance(event.inventory());
     }
 
     // Listeners
 
-    @EventHandler
-    public void onClick(@NotNull InventoryClickEvent event) {
+    @PlatformEventHandler
+    public void onClick(@NotNull PlatformInventoryClickEvent event) {
         GuiInstance instance = this.getInstance(event);
         if (instance == null) return;
         event.setCancelled(true);
-        instance.click(event.getSlot());
+        instance.click(event.slot());
     }
 
-    @EventHandler
-    public void onDrag(@NotNull InventoryDragEvent event) {
+    @PlatformEventHandler
+    public void onDrag(@NotNull PlatformInventoryDragEvent event) {
         if (this.getInstance(event) != null) event.setCancelled(true);
     }
 
-    @EventHandler
-    public void onClose(@NotNull InventoryCloseEvent event) {
+    @PlatformEventHandler
+    public void onClose(@NotNull PlatformInventoryCloseEvent event) {
         GuiInstance instance = this.getInstance(event);
         if (instance == null) return;
-        if (this.chatTickets.containsKey(instance.player().getUniqueId())) return;
+        if (this.chatTickets.containsKey(instance.player().uuid())) return;
         this.untrack(instance);
     }
 
-    @EventHandler
-    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
-        final UUID uuid = event.getPlayer().getUniqueId();
-        this.instances.removeIf((GuiInstance i) -> i.player().getUniqueId().equals(uuid));
+    @PlatformEventHandler
+    public void onPlayerQuit(@NotNull PlatformPlayerQuitEvent event) {
+        final UUID uuid = event.player().uuid();
+        this.instances.removeIf((GuiInstance i) -> i.player().uuid().equals(uuid));
         this.chatTickets.remove(uuid);
     }
 
-    public void onChat(@NotNull PlatformChatListener.Data data) {
-        final Player ply = data.ply();
-        final UUID uuid = ply.getUniqueId();
+    @PlatformEventHandler
+    public void onChat(@NotNull PlatformChatEvent event) {
+        final PlatformPlayer ply = event.player();
+        final UUID uuid = ply.uuid();
 
         final WeakReference<GuiInstance> instanceRef = this.chatTickets.remove(uuid);
         if (instanceRef == null) return;
         final GuiInstance instance = instanceRef.get();
         if (instance == null) return;
 
-        data.doCancel();
-        Platform.get().getScheduler().synchronize(() -> instance.respond(data.message()));
+        event.setCancelled(true);
+        this.runtime.platform().scheduler().synchronize(() -> instance.respond(event.plainMessage()));
     }
 
 }

@@ -4,18 +4,12 @@ import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.api.enums.Permission;
 import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
 import io.github.wasabithumb.xclaim.api.enums.permission.PermissionHandler;
-import io.github.wasabithumb.xclaim.gui.ChunkEditor;
-import io.github.wasabithumb.xclaim.map.MapService;
-import io.github.wasabithumb.xclaim.map.MapServiceOp;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataType;
-import io.github.wasabithumb.xclaim.util.BoundingBox;
+import io.github.wasabithumb.xclaim.util.BABB;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import io.github.wasabithumb.xclaim.util.StringUtil;
-import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -206,7 +200,7 @@ public class Claim {
     private final Map<Permission, TrustLevel> globalPerms;
     private final Map<UUID, EnumSet<Permission>> playerPerms;
     private final List<java.util.function.Consumer<Claim>> ownerChangeCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private BoundingBox outerBounds;
+    private BABB outerBounds;
     private boolean manageHandlers = false;
     private long graceStart = -1;
 
@@ -218,10 +212,10 @@ public class Claim {
     }
 
     private void generateBounds() {
-        BoundingBox bb = null;
+        BABB bb = null;
         boolean set = false;
         for (ChunkReference c : chunks) {
-            BoundingBox bounds = c.getBounds();
+            BABB bounds = c.getBounds();
             if (!set) {
                 bb = bounds;
                 set = true;
@@ -229,11 +223,11 @@ public class Claim {
                 bb.union(bounds);
             }
         }
-        outerBounds = (set ? bb : new BoundingBox());
+        outerBounds = (set ? bb : new BABB());
         validateMarkers();
     }
 
-    public @NotNull BoundingBox getOuterBounds() {
+    public @NotNull BABB getOuterBounds() {
         return outerBounds;
     }
 

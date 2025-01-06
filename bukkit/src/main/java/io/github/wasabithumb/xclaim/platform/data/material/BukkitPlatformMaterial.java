@@ -29,6 +29,15 @@ public record BukkitPlatformMaterial(
             case ORANGE_DYE       -> Material.ORANGE_DYE;
             case LIME_DYE         -> Material.LIME_DYE;
             case SHIELD           -> Material.SHIELD;
+            case SPYGLASS         -> Material.SPYGLASS;
+            case ARROW            -> Material.ARROW;
+            case BARRIER          -> Material.BARRIER;
+            case NETHER_STAR      -> Material.NETHER_STAR;
+            case NAME_TAG         -> Material.NAME_TAG;
+            case TNT              -> Material.TNT;
+            case BUCKET           -> Material.BUCKET;
+            case EMERALD          -> Material.EMERALD;
+            case BOOK             -> Material.BOOK;
         };
     }
 
@@ -48,6 +57,15 @@ public record BukkitPlatformMaterial(
             case ORANGE_DYE       -> NamedPlatformMaterial.ORANGE_DYE;
             case LIME_DYE         -> NamedPlatformMaterial.LIME_DYE;
             case SHIELD           -> NamedPlatformMaterial.SHIELD;
+            case SPYGLASS         -> NamedPlatformMaterial.SPYGLASS;
+            case ARROW            -> NamedPlatformMaterial.ARROW;
+            case BARRIER          -> NamedPlatformMaterial.BARRIER;
+            case NETHER_STAR      -> NamedPlatformMaterial.NETHER_STAR;
+            case NAME_TAG         -> NamedPlatformMaterial.NAME_TAG;
+            case TNT              -> NamedPlatformMaterial.TNT;
+            case BUCKET           -> NamedPlatformMaterial.BUCKET;
+            case EMERALD          -> NamedPlatformMaterial.EMERALD;
+            case BOOK             -> NamedPlatformMaterial.BOOK;
             default -> new BukkitPlatformMaterial(material);
         };
     }

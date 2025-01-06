@@ -1,12 +1,12 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.helpers;
 
 import com.moandjiezana.toml.Toml;
-import it.unimi.dsi.fastutil.ints.IntComparator;
-import org.bukkit.permissions.Permissible;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +50,7 @@ public abstract class TomlGroupableValue<T> {
 
     protected abstract int compare(@NotNull T a, @NotNull T b);
 
-    public @Nullable T get(@Nullable Permissible target) {
+    public @Nullable T get(@Nullable PlatformUser target) {
         if (this.mode == 1) {
             return this.getMode1(target, (Toml) this.value, this.keys);
         } else if (this.mode == 2) {
@@ -59,7 +59,7 @@ public abstract class TomlGroupableValue<T> {
         return null;
     }
 
-    private @Nullable T getMode1(@Nullable Permissible target, @NotNull Toml table, @NotNull Set<String> keys) {
+    private @Nullable T getMode1(@Nullable PlatformUser target, @NotNull Toml table, @NotNull Set<String> keys) {
         T ret = null;
         boolean any = false;
 
@@ -83,7 +83,7 @@ public abstract class TomlGroupableValue<T> {
         return ret;
     }
 
-    private boolean inGroup(@Nullable Permissible target, @NotNull String group) {
+    private boolean inGroup(@Nullable PlatformUser target, @NotNull String group) {
         if (group.equals("default")) return true;
         if (target == null) return false;
         if (target.isOp()) return true;
@@ -94,8 +94,8 @@ public abstract class TomlGroupableValue<T> {
 
     public static final class Int extends TomlGroupableValue<Integer> {
 
-        private final IntComparator comparator;
-        public Int(@Nullable Toml table, @NotNull String key, @NotNull IntComparator comparator) {
+        private final Comparator<Integer> comparator;
+        public Int(@Nullable Toml table, @NotNull String key, @NotNull Comparator<Integer> comparator) {
             super(table, key);
             this.comparator = comparator;
         }

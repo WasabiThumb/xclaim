@@ -1,15 +1,16 @@
 package io.github.wasabithumb.xclaim.gui2.spec.helper;
 
-import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiPagination;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.util.ColorTag;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,20 +19,30 @@ import java.util.Comparator;
 
 public abstract class PaginatedGuiSpec<T> implements GuiSpec {
 
-    private static final ItemStack PREVIOUS_STACK = DisplayItem.create(
-            Material.ARROW,
-            XClaim.lang.getComponent("gui-comb-previous")
-    );
+    @Contract("_ -> new")
+    private static @NotNull PlatformItem createPreviousItem(@NotNull GuiInstance instance) {
+        return DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.ARROW),
+                instance.runtime().lang("gui-comb-previous")
+        );
+    }
 
-    private static final ItemStack NEXT_STACK = DisplayItem.create(
-            Material.ARROW,
-            XClaim.lang.getComponent("gui-comb-next")
-    );
+    @Contract("_ -> new")
+    private static @NotNull PlatformItem createNextItem(@NotNull GuiInstance instance) {
+        return DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.ARROW),
+                instance.runtime().lang("gui-comb-next")
+        );
+    }
 
-    private static final ItemStack BACK_STACK = DisplayItem.create(
-            Material.BARRIER,
-            XClaim.lang.getComponent("gui-comb-back")
-    );
+    @Contract("_ -> new")
+    private static @NotNull PlatformItem createBackItem(@NotNull GuiInstance instance) {
+        return DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.BARRIER),
+                instance.runtime().lang("gui-comb-back"),
+                ColorTag.RED
+        );
+    }
 
     //
 
@@ -50,14 +61,14 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
 
         this.queuedForce = false;
 
-        instance.set(this.getBackSlot(), BACK_STACK);
+        instance.set(this.getBackSlot(), createBackItem(instance));
         instance.set(
                 this.getPreviousSlot(),
-                state.hasPrevious() ? PREVIOUS_STACK : this.getPreviousExtra()
+                state.hasPrevious() ? createPreviousItem(instance) : this.getPreviousExtra(instance)
         );
         instance.set(
                 this.getNextSlot(),
-                state.hasNext() ? NEXT_STACK : this.getNextExtra()
+                state.hasNext() ? createNextItem(instance) : this.getNextExtra(instance)
         );
 
         this.paginationState = state;
@@ -102,7 +113,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     protected abstract int getPreviousSlot();
 
     /** Provides the item to use where "previous page" would go when no previous page exists. */
-    protected @Nullable ItemStack getPreviousExtra() {
+    protected @Nullable PlatformItem getPreviousExtra(@NotNull GuiInstance instance) {
         return null;
     }
 
@@ -110,7 +121,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     protected abstract int getNextSlot();
 
     /** Provides the item to use where "next page" would go when no next page exists. */
-    protected @Nullable ItemStack getNextExtra() {
+    protected @Nullable PlatformItem getNextExtra(@NotNull GuiInstance instance) {
         return null;
     }
 
@@ -118,7 +129,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     protected abstract int getBackSlot();
 
     /** Provides the item to represent the given paginated entry. */
-    protected abstract @Nullable ItemStack populateEntry(@NotNull GuiInstance instance, @NotNull T entry);
+    protected abstract @Nullable PlatformItem populateEntry(@NotNull GuiInstance instance, @NotNull T entry);
 
     /** Specifies the action to run when a paginated entry is clicked. */
     protected abstract @NotNull GuiAction onClickEntry(@NotNull GuiInstance instance, @NotNull T entry);

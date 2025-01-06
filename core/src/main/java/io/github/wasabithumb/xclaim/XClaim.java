@@ -9,8 +9,9 @@ import io.github.wasabithumb.xclaim.claim.data.impl.sqlite.SQLiteClaimDataManage
 import io.github.wasabithumb.xclaim.config.impl.defaulting.DefaultingRootConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlRootConfig;
 import io.github.wasabithumb.xclaim.config.struct.RootConfig;
-import io.github.wasabithumb.xclaim.debug.Debuggable;
+import io.github.wasabithumb.xclaim.gui2.GuiManager;
 import io.github.wasabithumb.xclaim.i18n.Lang;
+import io.github.wasabithumb.xclaim.integration.Integrations;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUserManager;
@@ -26,18 +27,24 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Debuggable
 public class XClaim {
 
     private final XClaimBootstrap bootstrap;
     private RootConfig rootConfig = null;
     private Lang lang = null;
+    private Integrations integrations = null;
     private TrustManager trust = null;
     private ClaimManager claims = null;
+    private GuiManager gui = null;
 
     @ApiStatus.Internal
     XClaim(@NotNull XClaimBootstrap bootstrap) {
         this.bootstrap = bootstrap;
+    }
+
+    @ApiStatus.Internal
+    public @NotNull XClaimBootstrap bootstrap() {
+        return this.bootstrap;
     }
 
     public @NotNull Platform platform() {
@@ -66,12 +73,24 @@ public class XClaim {
         return this.lang.get(key, args);
     }
 
+    public @NotNull String lang(@NotNull String key, @NotNull Object @NotNull ... args) {
+        return this.lang.get(key, args);
+    }
+
     public @NotNull TrustManager trust() {
         return this.trust;
     }
 
     public @NotNull ClaimManager claims() {
         return this.claims;
+    }
+
+    public @NotNull Integrations integrations() {
+        return this.integrations;
+    }
+
+    public @NotNull GuiManager gui() {
+        return this.gui;
     }
 
     //
@@ -84,15 +103,17 @@ public class XClaim {
             this.adminBroadcast(this.lang("config-migration-line1"));
             this.adminBroadcast(this.lang("config-migration-line2"));
         }
-        // TODO: Integrations
+        this.loadIntegrations();
         this.loadTrust();
-        this.loadClaims();
+        this.loadClaims(); // TODO: Claim enforcement
+        this.loadGUI();
+        // TODO: Commands, movement, grace
     }
 
     void disable() {
     }
 
-    //
+    /* STARTUP TASKS */
 
     private void loadRootConfig() {
         RootConfig cfg;
@@ -258,6 +279,16 @@ public class XClaim {
 
         this.logger().log(Level.WARNING, this.lang("claims-load-err"), loadError);
         return null;
+    }
+
+    private void loadIntegrations() {
+        this.integrations = new Integrations(this);
+        this.integrations.startup();
+    }
+
+    private void loadGUI() {
+        this.gui = new GuiManager(this);
+        this.gui.start();
     }
 
     //

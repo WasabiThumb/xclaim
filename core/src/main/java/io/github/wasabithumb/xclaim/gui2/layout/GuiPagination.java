@@ -1,13 +1,14 @@
 package io.github.wasabithumb.xclaim.gui2.layout;
 
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.WeakLink;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class GuiPagination<T> {
 
@@ -39,7 +40,7 @@ public class GuiPagination<T> {
         this.page++;
     }
 
-    public synchronized @NotNull State populate(@NotNull GuiInstance instance, @NotNull Function<T, ItemStack> mapper) {
+    public synchronized @NotNull State populate(@NotNull GuiInstance instance, @NotNull Function<T, PlatformItem> mapper) {
         Data<T> data = this.getData(instance);
         if (data == null) return State.ONLY_PAGE;
 

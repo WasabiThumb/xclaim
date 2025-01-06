@@ -4,8 +4,11 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
 import io.github.wasabithumb.xclaim.platform.inventory.BukkitPlatformInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.BukkitPlatformItem;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformUser;
+import org.bukkit.Color;
+import org.bukkit.Particle;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +30,18 @@ public abstract class BukkitPlatformPlayer extends BukkitPlatformEntity implemen
         return (Player) this.handle;
     }
 
+    public @NotNull String name() {
+        return this.handle().getName();
+    }
+
     @Override
     public @NotNull BukkitPlatformInventory getInventory() {
         return this.platform.adapter().inventory(this.handle().getInventory());
+    }
+
+    @Override
+    public int getHeldItemSlot() {
+        return this.handle().getInventory().getHeldItemSlot();
     }
 
     @Override
@@ -71,8 +83,30 @@ public abstract class BukkitPlatformPlayer extends BukkitPlatformEntity implemen
     }
 
     @Override
+    public void openInventory(@NotNull PlatformInventory inventory) {
+        this.handle().openInventory(this.platform.adapter().inventory(inventory));
+    }
+
+    @Override
+    public void closeInventory() {
+        this.handle().closeInventory();
+    }
+
+    @Override
     public long getFirstPlayed() {
         return this.handle().getFirstPlayed();
+    }
+
+    @Override
+    public void sendRedstoneParticle(int rgb, double x, double y, double z) {
+        Particle.DustOptions opts = new Particle.DustOptions(Color.fromRGB(rgb), 1);
+        this.handle().spawnParticle(
+                Particle.REDSTONE,
+                x, y, z,
+                1,
+                0.02d, 0.02d, 0.02d,
+                opts
+        );
     }
 
 }

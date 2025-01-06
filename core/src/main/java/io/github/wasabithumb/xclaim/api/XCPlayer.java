@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
+@Deprecated
 public class XCPlayer {
 
     private static final ReentrantReadWriteLock trustConfigLock = new ReentrantReadWriteLock();

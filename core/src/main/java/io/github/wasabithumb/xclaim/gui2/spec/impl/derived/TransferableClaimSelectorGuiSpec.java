@@ -1,14 +1,11 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.ClaimSelectorGuiSpec;
-import io.github.wasabithumb.xclaim.util.NameToPlayer;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransferableClaimSelectorGuiSpec extends ClaimSelectorGuiSpec {
@@ -18,7 +15,7 @@ public final class TransferableClaimSelectorGuiSpec extends ClaimSelectorGuiSpec
     @Override
     protected @NotNull GuiAction onClickClaim(@NotNull GuiInstance instance, @NotNull Claim claim) {
         this.selection = claim;
-        return GuiAction.prompt(XClaim.lang.getComponent("gui-tx-prompt"));
+        return GuiAction.prompt(instance.runtime().lang("gui-tx-prompt"));
     }
 
     @Override
@@ -29,18 +26,18 @@ public final class TransferableClaimSelectorGuiSpec extends ClaimSelectorGuiSpec
             return GuiAction.exit();
         }
 
-        OfflinePlayer op = NameToPlayer.getPlayer(response);
-        if (op == null) {
-            instance.audience().sendMessage(XClaim.lang.getComponent("gui-tx-prompt-fail"));
+        PlatformUser user = instance.platform().users().matchUser(response);
+        if (user == null) {
+            instance.player().sendMessage(instance.runtime().lang("gui-tx-prompt-fail"));
             return GuiAction.exit();
         }
 
-        return GuiAction.transfer(GuiSpecs.transferOwner(selection, op));
+        return GuiAction.transfer(GuiSpecs.transferOwner(selection, user));
     }
 
     @Override
-    protected boolean canDisplay(@NotNull Claim claim, @NotNull Player player) {
-        return claim.getOwner().getUniqueId().equals(player.getUniqueId());
+    protected boolean canDisplay(@NotNull Claim claim, @NotNull PlatformUser player) {
+        return claim.owner().uuid().equals(player.uuid());
     }
 
 }

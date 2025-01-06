@@ -1,14 +1,13 @@
 package io.github.wasabithumb.xclaim.config.impl.yaml.helpers;
 
-import it.unimi.dsi.fastutil.ints.IntComparator;
-import it.unimi.dsi.fastutil.longs.LongComparator;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.function.BiFunction;
 
 @ApiStatus.Internal
@@ -26,9 +25,9 @@ public class YamlLimits {
     }
 
     private @Nullable Long getLong(
-            @Nullable Permissible target,
+            @Nullable PlatformUser target,
             @NotNull String key,
-            @NotNull LongComparator cmp,
+            @NotNull Comparator<Long> cmp,
             @NotNull BiFunction<ConfigurationSection, String, Long> extractor
     ) {
         long max = 0L;
@@ -60,20 +59,20 @@ public class YamlLimits {
     /**
      * Returns the greatest value inherited by "target" for the given "key" via the provided comparator
      */
-    public @Nullable Long getLong(@Nullable Permissible target, @NotNull String key, @NotNull LongComparator cmp) {
+    public @Nullable Long getLong(@Nullable PlatformUser target, @NotNull String key, @NotNull Comparator<Long> cmp) {
         return this.getLong(target, key, cmp, ConfigurationSection::getLong);
     }
 
     /**
      * Returns the greatest value inherited by "target" for the given "key" via the provided comparator
      */
-    public @Nullable Integer getInt(@Nullable Permissible target, @NotNull String key, @NotNull IntComparator cmp) {
+    public @Nullable Integer getInt(@Nullable PlatformUser target, @NotNull String key, @NotNull Comparator<Integer> cmp) {
         Long l = this.getLong(target, key, new IntAsLongComparator(cmp), (a, b) -> (long) a.getInt(b));
         if (l == null) return null;
         return l.intValue();
     }
 
-    private boolean inGroup(@Nullable Permissible target, @NotNull String groupName) {
+    private boolean inGroup(@Nullable PlatformUser target, @NotNull String groupName) {
         if (groupName.equals("default")) return true;
         if (target == null) return false;
         if (target.isOp()) return true;
@@ -82,15 +81,10 @@ public class YamlLimits {
 
     //
 
-    private static final class IntAsLongComparator implements LongComparator {
-
-        private final IntComparator backing;
-        IntAsLongComparator(IntComparator backing) {
-            this.backing = backing;
-        }
+    private record IntAsLongComparator(Comparator<Integer> backing) implements Comparator<Long> {
 
         @Override
-        public int compare(long a, long b) {
+        public int compare(Long a, Long b) {
             return this.backing.compare(Math.toIntExact(a), Math.toIntExact(b));
         }
 

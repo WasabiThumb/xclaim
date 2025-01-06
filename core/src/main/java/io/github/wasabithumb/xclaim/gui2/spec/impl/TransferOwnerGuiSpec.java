@@ -1,53 +1,25 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
-import io.github.wasabithumb.xclaim.api.XCPlayer;
-import io.github.wasabithumb.xclaim.api.enums.Permission;
-import io.github.wasabithumb.xclaim.api.event.XClaimEvent;
-import io.github.wasabithumb.xclaim.api.event.XClaimTransferOwnerEvent;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.data.sound.NamedPlatformSound;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.Component;
 import io.github.wasabithumb.xclaim.util.ColorTag;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 public final class TransferOwnerGuiSpec implements GuiSpec {
 
-    private static final ItemStack YES_STACK = DisplayItem.create(
-            Platform.get().getGreenConcreteMaterial(),
-            XClaim.lang.getComponent("gui-tx-yes"),
-            Arrays.asList(
-                    XClaim.lang.getComponent("gui-tx-yes-line1"),
-                    XClaim.lang.getComponent("gui-tx-yes-line2"),
-                    XClaim.lang.getComponent("gui-tx-yes-line3")
-            )
-    );
-
-    private static final ItemStack NO_STACK = DisplayItem.create(
-            Platform.get().getRedConcreteMaterial(),
-            XClaim.lang.getComponent("gui-tx-no"),
-            Arrays.asList(
-                    XClaim.lang.getComponent("gui-tx-no-line1"),
-                    XClaim.lang.getComponent("gui-tx-no-line2")
-            )
-    );
-
     private final Claim claim;
-    private final OfflinePlayer target;
-    public TransferOwnerGuiSpec(@NotNull Claim claim, @NotNull OfflinePlayer target) {
+    private final PlatformUser target;
+    public TransferOwnerGuiSpec(@NotNull Claim claim, @NotNull PlatformUser target) {
         this.claim = claim;
         this.target = target;
     }
@@ -59,34 +31,44 @@ public final class TransferOwnerGuiSpec implements GuiSpec {
 
     @Override
     public void populate(@NotNull GuiInstance instance) {
-        instance.set(0, YES_STACK);
-        instance.set(1, NO_STACK);
-        instance.set(2, this.getTargetHead());
+        instance.set(0, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.GREEN_CONCRETE),
+                instance.runtime().lang("gui-tx-yes"),
+                instance.runtime().lang("gui-tx-yes-line1"),
+                instance.runtime().lang("gui-tx-yes-line2"),
+                instance.runtime().lang("gui-tx-yes-line3")
+        ));
+        instance.set(1, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.RED_CONCRETE),
+                instance.runtime().lang("gui-tx-no"),
+                instance.runtime().lang("gui-tx-no-line1"),
+                instance.runtime().lang("gui-tx-no-line2")
+        ));
+        instance.set(2, this.getTargetHead(instance));
     }
 
-    private @NotNull ItemStack getTargetHead() {
-        Component targetName;
-        if (this.target instanceof Player) {
-            targetName = Platform.get().playerDisplayName((Player) this.target);
+    private @NotNull PlatformItem getTargetHead(@NotNull GuiInstance instance) {
+        String targetName;
+        String display = this.target.displayName();
+
+        if (this.target instanceof PlatformPlayer ply) {
+            String real = ply.name();
+            if (display.equals(real)) {
+                targetName = display;
+            } else {
+                targetName = ColorTag.GRAY.format(
+                        ColorTag.WHITE.format(ply.displayName()) +
+                                " (" + ply.name() + ")"
+                );
+            }
         } else {
-            String targetNameStr = this.target.getName();
-            if (targetNameStr == null) targetNameStr = XClaim.lang.get("unknown") + " (" + this.target.getUniqueId() + ")";
-            targetName = Component.text(targetNameStr).color(ColorTag.GRAY);
+            targetName = ColorTag.GRAY.format(this.target.displayName());
         }
 
-        final ItemStack head = Platform.get().preparePlayerSkull(
-                DisplayItem.create(
-                        Platform.get().getPlayerHeadMaterial(),
-                        targetName
-                )
-        );
-
-        ItemMeta im = head.getItemMeta();
-        if (im != null) {
-            if (im instanceof SkullMeta) Platform.get().setOwningPlayer((SkullMeta) im, this.target);
-        }
-        head.setItemMeta(im);
-        return head;
+        return DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.PLAYER_HEAD),
+                targetName
+        ).skullOwner(this.target);
     }
 
     @Override
@@ -97,20 +79,12 @@ public final class TransferOwnerGuiSpec implements GuiSpec {
             return GuiAction.nothing();
         }
 
-        if (!XClaimEvent.dispatch(new XClaimTransferOwnerEvent(
-                instance.player(),
-                this.claim,
-                this.claim.getOwner(),
-                XCPlayer.of(this.target)
-        ))) {
-            return GuiAction.exit();
-        }
+        // TODO: Handle failure
+        this.claim.transferOwner(instance.player())
+                .setNewOwner(this.target)
+                .commit();
 
-        this.claim.setOwner(this.target);
-        this.claim.setUserPermission(instance.player(), Permission.MANAGE, true);
-
-        instance.audience().sendMessage(XClaim.lang.getComponent("gui-tx-success"));
-        instance.playSound(Platform.get().getLevelSound(), 1f, 1f);
+        instance.player().playSound(NamedPlatformSound.LEVEL);
         return GuiAction.transfer(GuiSpecs.transferableClaimSelector());
     }
 

@@ -23,4 +23,6 @@ public interface PlatformWorld extends PlatformObject {
 
     int getMaxHeight();
 
+    boolean keepInventory();
+
 }

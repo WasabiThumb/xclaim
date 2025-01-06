@@ -165,7 +165,25 @@ public final class ClaimData {
                 this.lock.unlock(stamp);
             }
         } finally {
-            this.freezeLock.lock();
+            this.freezeLock.unlock();
+        }
+    }
+
+    public boolean removeChunks(Set<Long> chunks) {
+        this.freezeLock.lock();
+        try {
+            final long stamp = this.lock.writeLock();
+            try {
+                if (this.chunks.removeAll(chunks)) {
+                    this.dirtyMask |= DIRTY_CHUNKS;
+                    return true;
+                }
+                return false;
+            } finally {
+                this.lock.unlock(stamp);
+            }
+        } finally {
+            this.freezeLock.unlock();
         }
     }
 
@@ -520,7 +538,7 @@ public final class ClaimData {
 
         @NotNull String asName() throws UnsupportedOperationException;
 
-        boolean matches(@NotNull PlatformWorld world);
+        boolean matches(@Nullable PlatformWorld world);
 
         //
 
@@ -543,7 +561,8 @@ public final class ClaimData {
             }
 
             @Override
-            public boolean matches(@NotNull PlatformWorld world) {
+            public boolean matches(@Nullable PlatformWorld world) {
+                if (world == null) return false;
                 return this.value.equals(world.uuid());
             }
 
@@ -568,7 +587,8 @@ public final class ClaimData {
             }
 
             @Override
-            public boolean matches(@NotNull PlatformWorld world) {
+            public boolean matches(@Nullable PlatformWorld world) {
+                if (world == null) return false;
                 return this.value.equals(world.name());
             }
 

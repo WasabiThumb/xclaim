@@ -16,7 +16,7 @@ public abstract class ClaimTransaction {
     protected final Claim claim;
     protected final ClaimData data;
     protected final PlatformUser user;
-    protected final boolean silent;
+    protected boolean silent;
     protected boolean valid;
 
     public ClaimTransaction(@NotNull ClaimMutationContext context) {
@@ -25,7 +25,7 @@ public abstract class ClaimTransaction {
         this.claim = context.claim();
         this.data = context.data();
         this.user = context.user();
-        this.silent = context.silent();
+        this.silent = false;
         this.valid = true;
     }
 

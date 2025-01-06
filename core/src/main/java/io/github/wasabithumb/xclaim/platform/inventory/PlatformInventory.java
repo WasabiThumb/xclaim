@@ -26,4 +26,6 @@ public interface PlatformInventory extends PlatformObject {
 
     @Nullable PlatformBlock getContainerBlock();
 
+    void clear();
+
 }

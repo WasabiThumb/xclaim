@@ -1,7 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.inventory;
 
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
-import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.world.PlatformBlock;
 import org.bukkit.block.Container;
 import org.bukkit.inventory.Inventory;
@@ -103,6 +102,11 @@ public abstract class BukkitPlatformInventory implements PlatformInventory {
             return this.platform.adapter().block(c.getBlock());
         }
         return null;
+    }
+
+    @Override
+    public void clear() {
+        this.handle.clear();
     }
 
 }

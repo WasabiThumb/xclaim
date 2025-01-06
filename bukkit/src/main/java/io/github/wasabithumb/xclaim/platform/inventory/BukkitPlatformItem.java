@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.data.material.BukkitPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import org.bukkit.Bukkit;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -47,9 +48,12 @@ public abstract class BukkitPlatformItem implements PlatformItem {
 
     @Override
     public BukkitPlatformItem hideExtra() {
-        return this.modifyMeta((ItemMeta m) -> {
-            m.addItemFlags(ItemFlag.values());
-        });
+        return this.modifyMeta((ItemMeta m) -> m.addItemFlags(ItemFlag.values()));
+    }
+
+    @Override
+    public BukkitPlatformItem holographic() {
+        return this.modifyMeta((ItemMeta m) -> m.addEnchant(Enchantment.DAMAGE_ALL, 1, true));
     }
 
 }

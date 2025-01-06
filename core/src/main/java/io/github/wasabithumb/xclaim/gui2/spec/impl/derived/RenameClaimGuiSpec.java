@@ -1,11 +1,9 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.ClaimSelectorGuiSpec;
-import io.github.wasabithumb.xclaim.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 
 public final class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
@@ -17,7 +15,7 @@ public final class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
         synchronized (this) {
             this.target = claim;
         }
-        return GuiAction.prompt(XClaim.lang.getComponent("gui-rename-chunk-prompt"));
+        return GuiAction.prompt(instance.runtime().lang("gui-rename-chunk-prompt"));
     }
 
     @Override
@@ -29,14 +27,12 @@ public final class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
             this.target = null;
         }
 
-        if (response.length() > 50) {
-            Platform.getAdventure().player(instance.player())
-                    .sendMessage(XClaim.lang.getComponent("gui-rename-chunk-fail"));
-            return GuiAction.exit();
-        }
+        boolean success = target.rename(instance.player())
+                .setNewName(response)
+                .commit()
+                .isSuccess();
 
-        target.setName(response);
-        return GuiAction.repopulate();
+        return success ? GuiAction.repopulate() : GuiAction.exit();
     }
 
 }

@@ -1,21 +1,18 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.api.Claim;
 import io.github.wasabithumb.xclaim.api.enums.Permission;
 import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.gui2.spec.impl.PermissionListGuiSpec;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import io.github.wasabithumb.xclaim.util.WordWrap;
-import net.kyori.adventure.text.Component;
 import io.github.wasabithumb.xclaim.util.ColorTag;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -28,37 +25,38 @@ public final class GlobalPermissionListGuiSpec extends PermissionListGuiSpec {
     }
 
     @Override
-    protected @NotNull ItemStack populatePermission(@NotNull Permission perm) {
-        TrustLevel tl = this.claim.getPermission(perm);
-        Material mat;
-        TextColor col;
-        switch (tl) {
-            case NONE:
-                mat = Platform.get().getRedToken();
-                col = ColorTag.RED;
-                break;
-            case TRUSTED:
-                mat = Platform.get().getOrangeToken();
-                col = ColorTag.GOLD;
-                break;
-            case VETERANS:
-                mat = Platform.get().getYellowToken();
-                col = ColorTag.YELLOW;
-                break;
-            case ALL:
-                mat = Platform.get().getLimeToken();
-                col = ColorTag.GREEN;
-                break;
-            default:
-                throw new AssertionError();
+    protected @NotNull PlatformItem populatePermission(@NotNull GuiInstance instance, @NotNull Permission perm) {
+        TrustLevel tl = this.claim.getGlobalPermission(perm);
+        PlatformMaterial mat;
+        ColorTag col = switch (tl) {
+            case NONE -> {
+                mat = NamedPlatformMaterial.RED_DYE;
+                yield ColorTag.RED;
+            }
+            case TRUSTED -> {
+                mat = NamedPlatformMaterial.ORANGE_DYE;
+                yield ColorTag.GOLD;
+            }
+            case VETERANS -> {
+                mat = NamedPlatformMaterial.YELLOW_DYE;
+                yield ColorTag.YELLOW;
+            }
+            case ALL -> {
+                mat = NamedPlatformMaterial.GREEN_DYE;
+                yield ColorTag.GREEN;
+            }
+        };
+
+        List<String> lore = new ArrayList<>();
+        for (String s : WordWrap.wrap(perm.getDescription(), 25).split("\\r?\\n")) {
+            lore.add(ColorTag.GRAY.format(s));
         }
 
-        List<Component> lore = new ArrayList<>();
-        for (String s : WordWrap.wrap(perm.getDescription(), 25).split(System.lineSeparator())) {
-            lore.add(Component.text(s).color(ColorTag.GRAY).decoration(TextDecoration.ITALIC, false));
-        }
-
-        return DisplayItem.create(mat, Component.text(perm.getPrintName()).color(col), lore);
+        return DisplayItem.format(
+                instance.platform().createItem(mat),
+                col.format(perm.getPrintName()),
+                lore
+        );
     }
 
     @Override

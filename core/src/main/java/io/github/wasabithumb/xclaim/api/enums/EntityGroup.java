@@ -2,11 +2,6 @@ package io.github.wasabithumb.xclaim.api.enums;
 
 import static io.github.wasabithumb.xclaim.api.enums.EntityGroupCheck.*;
 
-import io.github.wasabithumb.xclaim.debug.Debuggable;
-import io.github.wasabithumb.xclaim.debug.goal.DebugGoal;
-import io.github.wasabithumb.xclaim.debug.writer.DebugWriter;
-import io.github.wasabithumb.xclaim.util.ColorTag;
-import org.bukkit.entity.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -14,10 +9,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Set;
-import java.util.function.Predicate;
 
-@Debuggable
 public enum EntityGroup {
     FRIENDLY(alive(true), armorStand(false), hostile(false)),
     HOSTILE(alive(true), armorStand(false), hostile(true)),
@@ -75,24 +67,5 @@ public enum EntityGroup {
     public boolean contains(@NotNull Entity entity) {
         return this.predicate.test(entity.getType());
     }
-
-    // START Debug
-
-    @ApiStatus.Internal
-    @DebugGoal(async = true)
-    public static void debug(@NotNull DebugWriter out) {
-        for (EntityGroup eg : values()) {
-            out.color(ColorTag.GOLD);
-            out.println("= " + eg.name() + " =");
-
-            out.color(ColorTag.WHITE);
-            for (EntityType et : eg.getSet()) {
-                out.println("- " + et.name());
-            }
-            out.println();
-        }
-    }
-
-    // END Debug
 
 }

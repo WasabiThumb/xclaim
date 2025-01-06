@@ -86,6 +86,15 @@ public class Claim {
         return this.data.getWorld().resolve(this.manager.runtime().platform().worlds());
     }
 
+    public boolean isValid() {
+        this.state.lock.lock();
+        try {
+            return this.state.attachedName != null;
+        } finally {
+            this.state.lock.unlock();
+        }
+    }
+
     public int chunkCount() {
         return this.data.getChunkCount();
     }
@@ -102,16 +111,43 @@ public class Claim {
         return Collections.unmodifiableSet(ret);
     }
 
-    public boolean containsChunk(@NotNull ChunkReference cr) {
-        PlatformWorld world = this.world();
-        UUID worldId = (world != null) ? world.uuid() : new UUID(0L, 0L);
-        if (!worldId.equals(cr.world.uuid())) return false;
-        long token = BitManipulation.i32i64(cr.x, cr.z);
+    public boolean containsChunk(int x, int z) {
+        long token = BitManipulation.i32i64(x, z);
         return this.data.containsChunk(token);
+    }
+
+    public boolean containsChunk(@NotNull ChunkReference cr) {
+        if (!this.data.getWorld().matches(cr.world)) return false;
+        return this.containsChunk(cr.x, cr.z);
     }
 
     public boolean containsChunk(@NotNull PlatformChunk chunk) {
         return this.containsChunk(ChunkReference.of(chunk));
+    }
+
+    public long minSquareDistance(@NotNull ChunkReference cr) {
+        long ret = Long.MAX_VALUE;
+        if (!this.data.getWorld().matches(cr.world))
+            return ret;
+
+        Set<Long> tags = this.data.getChunks();
+        int[] tmp;
+        long dist;
+        long component;
+
+        for (Long tag : tags) {
+            tmp = BitManipulation.i64i32(tag);
+            component = tmp[0] - cr.x;
+            dist = (component * component);
+            component = tmp[1] - cr.z;
+            dist += (component * component);
+            if (dist < ret) {
+                ret = dist;
+                if (dist == 0L) break;
+            }
+        }
+
+        return ret;
     }
 
     public boolean checkPermission(@NotNull PlatformUser user, @NotNull Permission permission) {
@@ -139,6 +175,19 @@ public class Claim {
             default:
                 return false;
         }
+    }
+
+    public @NotNull TrustLevel getGlobalPermission(@NotNull Permission permission) {
+        return this.data.getGlobalPermission(permission);
+    }
+
+    public @NotNull Set<Permission> getUserPermissions(@NotNull PlatformUser user) {
+        return this.data.getUserPermissions(user.uuid());
+    }
+
+    @ApiStatus.Experimental
+    public @NotNull Set<UUID> getUserPermissionKeys() {
+        return Collections.unmodifiableSet(this.data.getUserPermissions().keySet());
     }
 
     /**
@@ -178,6 +227,18 @@ public class Claim {
 
     public @NotNull ModifyChunksClaimTransaction modifyChunks(@Nullable PlatformUser user) {
         return this.createTransaction(ModifyChunksClaimTransaction.class, user);
+    }
+
+    public @NotNull ModifyPermissionsClaimTransaction modifyPermissions(@Nullable PlatformUser user) {
+        return this.createTransaction(ModifyPermissionsClaimTransaction.class, user);
+    }
+
+    public @NotNull TransferOwnerClaimTransaction transferOwner(@Nullable PlatformUser user) {
+        return this.createTransaction(TransferOwnerClaimTransaction.class, user);
+    }
+
+    public @NotNull RenameClaimTransaction rename(@Nullable PlatformUser user) {
+        return this.createTransaction(RenameClaimTransaction.class, user);
     }
 
     //

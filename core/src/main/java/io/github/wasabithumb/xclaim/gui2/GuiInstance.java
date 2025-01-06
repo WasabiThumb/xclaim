@@ -11,25 +11,27 @@ import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.layout.map.GuiSlotMap;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.platform.Platform;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GuiInstance implements InventoryHolder {
+public class GuiInstance {
 
-    public static @NotNull GuiInstance open(@NotNull GuiManager manager, @NotNull Player player, @NotNull GuiSpec spec) {
+    public static @NotNull GuiInstance open(
+            @NotNull GuiManager manager,
+            @NotNull PlatformPlayer player,
+            @NotNull GuiSpec spec
+    ) {
         final GuiInstance ret = new GuiInstance(manager, player);
         ret.setSpecInternal(spec, 6);
-        ret.inventory = Platform.get().createInventory(
-                ret,
+        ret.inventory = manager.runtime().platform().createInventory(
                 9 * ret.layout.getHeight(),
-                XClaim.lang.getComponent("gui-name")
+                manager.runtime().lang("gui-name"),
+                ret
         );
         ret.populate();
         player.openInventory(ret.inventory);
@@ -39,14 +41,14 @@ public class GuiInstance implements InventoryHolder {
     //
 
     private final GuiManager manager;
-    private final Player player;
+    private final PlatformPlayer player;
     private GuiSpec spec;
     private GuiLayout layout;
     private GuiSlotMap slotMap;
-    private Inventory inventory;
+    private PlatformCustomInventory<GuiInstance> inventory;
     private GuiDialog dialog = null;
 
-    GuiInstance(@NotNull GuiManager manager, @NotNull Player player) {
+    GuiInstance(@NotNull GuiManager manager, @NotNull PlatformPlayer player) {
         this.manager = manager;
         this.player = player;
     }
@@ -81,32 +83,31 @@ public class GuiInstance implements InventoryHolder {
         return this.manager;
     }
 
-    @Override
-    public @NotNull Inventory getInventory() {
+    public @NotNull XClaim runtime() {
+        return this.manager.runtime();
+    }
+
+    public @NotNull Platform platform() {
+        return this.manager.runtime().platform();
+    }
+
+    public @NotNull PlatformInventory inventory() {
         return this.inventory;
     }
 
-    public @NotNull Inventory inventory() {
-        return this.inventory;
-    }
-
-    public @NotNull Player player() {
+    public @NotNull PlatformPlayer player() {
         return this.player;
     }
 
-    public @NotNull Audience audience() {
-        return Platform.getAdventure().player(this.player);
-    }
-
-    public void playSound(@NotNull Sound sound, float volume, float pitch) {
-        this.player.playSound(this.player.getLocation(), sound, volume, pitch);
+    public void playSound(@NotNull PlatformSound sound) {
+        this.player.playSound(sound);
     }
 
     public synchronized @Nullable GuiSlot getSlot(int index) {
         return this.layout.getSlot(index);
     }
 
-    public void set(@Nullable GuiSlot slot, int index, @Nullable ItemStack item) {
+    public void set(@Nullable GuiSlot slot, int index, @Nullable PlatformItem item) {
         if (slot == null) return;
 
         final int lw = this.layout.getWidth();
@@ -117,15 +118,15 @@ public class GuiInstance implements InventoryHolder {
         this.inventory.setItem(((y + slot.y()) * lw) + x + slot.x(), item);
     }
 
-    public void set(int slotIndex, int index, @Nullable ItemStack item) {
+    public void set(int slotIndex, int index, @Nullable PlatformItem item) {
         this.set(this.getSlot(slotIndex), index, item);
     }
 
-    public void set(@Nullable GuiSlot slot, @Nullable ItemStack item) {
+    public void set(@Nullable GuiSlot slot, @Nullable PlatformItem item) {
         this.set(slot, 0, item);
     }
 
-    public void set(int slotIndex, @Nullable ItemStack item) {
+    public void set(int slotIndex, @Nullable PlatformItem item) {
         this.set(this.getSlot(slotIndex), 0, item);
     }
 
@@ -134,13 +135,13 @@ public class GuiInstance implements InventoryHolder {
     public void close() {
         this.destroyPrompt();
         this.manager.untrack(this);
-        this.inventory.close();
+        this.player.closeInventory();
     }
 
-    public void prompt(@NotNull Component message) {
+    public void prompt(@NotNull String message) {
         this.manager.addChatTicket(this.player, this);
-        this.inventory.close();
-        this.dialog = GuiDialog.show(this.player, message);
+        this.player.closeInventory();
+        this.dialog = GuiDialog.show(this.manager().runtime(), this.player, message);
     }
 
     protected void destroyPrompt() {

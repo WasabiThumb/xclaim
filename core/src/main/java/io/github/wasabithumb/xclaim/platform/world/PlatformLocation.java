@@ -111,4 +111,11 @@ public final class PlatformLocation {
         );
     }
 
+    public @NotNull PlatformChunk chunk() {
+        return this.world.getChunk(
+                this.blockX() >> 4,
+                this.blockZ() >> 4
+        );
+    }
+
 }

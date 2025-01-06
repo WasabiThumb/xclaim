@@ -4,11 +4,12 @@ import io.github.wasabithumb.xclaim.config.impl.yaml.YamlConfig;
 import io.github.wasabithumb.xclaim.config.impl.yaml.helpers.YamlLimits;
 import io.github.wasabithumb.xclaim.config.struct.helpers.ConfigComparators;
 import io.github.wasabithumb.xclaim.config.struct.sub.integrations.EconomyConfig;
-import it.unimi.dsi.fastutil.ints.IntComparators;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+
+import java.util.Comparator;
 
 public final class YamlEconomyConfig extends YamlConfig implements EconomyConfig {
 
@@ -19,19 +20,19 @@ public final class YamlEconomyConfig extends YamlConfig implements EconomyConfig
     }
 
     @Override
-    public @UnknownNullability Integer claimPrice(@Nullable Permissible target) {
+    public @UnknownNullability Integer claimPrice(@Nullable PlatformUser target) {
         if (this.limits == null) return null;
-        return this.limits.getInt(target, "claim-price", IntComparators.OPPOSITE_COMPARATOR);
+        return this.limits.getInt(target, "claim-price", Comparator.reverseOrder());
     }
 
     @Override
-    public @UnknownNullability Integer unclaimReward(@Nullable Permissible target) {
+    public @UnknownNullability Integer unclaimReward(@Nullable PlatformUser target) {
         if (this.limits == null) return null;
-        return this.limits.getInt(target, "unclaim-reward", IntComparators.NATURAL_COMPARATOR);
+        return this.limits.getInt(target, "unclaim-reward", Comparator.naturalOrder());
     }
 
     @Override
-    public @UnknownNullability Integer freeChunks(@Nullable Permissible target) {
+    public @UnknownNullability Integer freeChunks(@Nullable PlatformUser target) {
         if (this.limits == null) return null;
         return this.limits.getInt(target, "free-chunks", ConfigComparators.INT_NATURAL_OR_INF);
     }

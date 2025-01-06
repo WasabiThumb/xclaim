@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.struct.sub.GuiConfig;
 import com.moandjiezana.toml.Toml;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -13,23 +14,29 @@ public final class TomlGuiConfig extends TomlConfig implements GuiConfig {
     }
 
     @Override
-    public @UnknownNullability Integer versionRaw() {
-        return this.getInt("version");
+    public @NotNull Integer versionRaw() {
+        return 2;
     }
 
     @Override
     public @UnknownNullability Integer height() {
-        return this.versionRaw() == 2 ? this.getInt("v2.height") : null;
+        Integer ret = this.getInt("height");
+        if (ret == null) ret = this.getInt("v2.height"); // Old key
+        return ret;
     }
 
     @Override
     public @UnknownNullability String basisRaw() {
-        return this.versionRaw() == 2 ? this.getString("v2.basis") : null;
+        String ret = this.getString("basis");
+        if (ret == null) ret = this.getString("v2.basis"); // Old key
+        return ret;
     }
 
     @Override
     public @UnknownNullability String dialogRaw() {
-        return this.versionRaw() == 2 ? this.getString("v2.dialog") : null;
+        String ret = this.getString("dialog");
+        if (ret == null) ret = this.getString("v2.dialog"); // Old key
+        return ret;
     }
 
 }

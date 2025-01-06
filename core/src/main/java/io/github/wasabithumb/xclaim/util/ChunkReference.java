@@ -79,22 +79,9 @@ public class ChunkReference {
         );
     }
 
-    /*
-    public BoundingBox getBounds() {
-        World w = this.world;
-        Vector a = this.getLocation(0, Platform.get().getWorldMinHeight(w), 0).toVector();
-        Vector b = this.getLocation(15, w.getMaxHeight() - 1, 15).toVector();
-
-        return new BoundingBox(
-                Math.min(a.getX(), b.getX()),
-                Math.min(a.getY(), b.getY()),
-                Math.min(a.getZ(), b.getZ()),
-                Math.max(a.getX(), b.getX()) + 1,
-                Math.max(a.getY(), b.getY()) + 1,
-                Math.max(a.getZ(), b.getZ()) + 1
-        );
+    public @NotNull BABB getBounds() {
+        return BABB.of(this);
     }
-     */
 
     @Contract("null -> false")
     public boolean matches(PlatformChunk chunk) {

@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterRulesConfig;
 import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
-import org.bukkit.permissions.Permissible;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,17 +33,17 @@ public final class DefaultingRulesConfig extends FilterRulesConfig {
     }
 
     @Override
-    public @NotNull Integer maxChunks(@Nullable Permissible target) {
+    public @NotNull Integer maxChunks(@Nullable PlatformUser target) {
         return this.nullFallback(this.backing().maxChunks(target), 20);
     }
 
     @Override
-    public @NotNull Integer maxClaims(@Nullable Permissible target) {
+    public @NotNull Integer maxClaims(@Nullable PlatformUser target) {
         return this.nullFallback(this.backing().maxClaims(target), 5);
     }
 
     @Override
-    public @NotNull Integer maxClaimsInWorld(@Nullable Permissible target) {
+    public @NotNull Integer maxClaimsInWorld(@Nullable PlatformUser target) {
         return this.nullFallback(this.backing().maxClaimsInWorld(target), -1);
     }
 

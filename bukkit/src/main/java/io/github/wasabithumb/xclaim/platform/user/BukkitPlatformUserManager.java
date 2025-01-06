@@ -35,6 +35,11 @@ public class BukkitPlatformUserManager implements PlatformUserManager {
         return new ProxyList<>(players, this.adapter::player);
     }
 
+    @Override
+    public int playerCount() {
+        return Bukkit.getOnlinePlayers().size();
+    }
+
     @Contract("null -> null; !null -> !null")
     public PlatformUser fromOfflinePlayer(OfflinePlayer op) {
         if (op == null) return null;

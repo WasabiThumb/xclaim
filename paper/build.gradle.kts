@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
+
 plugins {
     id("io.github.goooler.shadow") version "8.1.8"
     java
@@ -34,11 +36,14 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    transform(ServiceFileTransformer::class.java) {
+        setPath("META-INF/integrations")
+    }
     archiveClassifier.set("")
 }
 
 artifacts {
-    add("shadow", tasks.shadowJar)
+    add("default", tasks.shadowJar)
 }
 
 tasks.build {

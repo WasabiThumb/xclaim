@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.struct.sub;
 
 import io.github.wasabithumb.xclaim.config.struct.Config;
-import org.bukkit.World;
+import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -36,13 +36,7 @@ public interface WorldsConfig extends Config {
 
         if (Objects.equals(this.useWhitelist(), Boolean.TRUE)) {
             list = this.whitelist();
-            ok: {
-                if (list == null) break ok;
-                for (String white : list) {
-                    if (predicate.test(white)) break ok;
-                }
-                return false;
-            }
+            if (list == null || list.stream().noneMatch(predicate)) return false;
         }
 
         if (Objects.equals(this.useBlacklist(), Boolean.TRUE)) {
@@ -55,8 +49,8 @@ public interface WorldsConfig extends Config {
         return true;
     }
 
-    default boolean checkLists(@NotNull World world) {
-        return this.checkLists(world.getName());
+    default boolean checkLists(@NotNull PlatformWorld world) {
+        return this.checkLists(world.name());
     }
 
 }

@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.struct.sub;
 
 import io.github.wasabithumb.xclaim.config.struct.Config;
-import org.bukkit.permissions.Permissible;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -20,11 +20,11 @@ public interface RulesConfig extends Config {
 
     @UnknownNullability Boolean exemptOwner();
 
-    @UnknownNullability Integer maxChunks(@Nullable Permissible target);
+    @UnknownNullability Integer maxChunks(@Nullable PlatformUser target);
 
-    @UnknownNullability Integer maxClaims(@Nullable Permissible target);
+    @UnknownNullability Integer maxClaims(@Nullable PlatformUser target);
 
-    @UnknownNullability Integer maxClaimsInWorld(@Nullable Permissible target);
+    @UnknownNullability Integer maxClaimsInWorld(@Nullable PlatformUser target);
 
     //
 

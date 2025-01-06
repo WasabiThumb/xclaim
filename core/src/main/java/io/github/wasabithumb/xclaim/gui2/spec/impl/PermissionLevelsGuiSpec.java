@@ -1,63 +1,20 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
 import io.github.wasabithumb.xclaim.api.enums.Permission;
 import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
-import io.github.wasabithumb.xclaim.api.event.XClaimEvent;
-import io.github.wasabithumb.xclaim.api.event.XClaimSetPermissionEvent;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui2.spec.GuiSpecs;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 public final class PermissionLevelsGuiSpec implements GuiSpec {
 
-    private static final ItemStack[] LEVEL_STACKS = new ItemStack[] {
-            DisplayItem.create(
-                    Platform.get().getRedToken(),
-                    XClaim.lang.getComponent("gui-perm-tl-none"),
-                    Arrays.asList(
-                            XClaim.lang.getComponent("gui-perm-tl-none-line1"),
-                            XClaim.lang.getComponent("gui-perm-tl-none-line2")
-                    )
-            ),
-            DisplayItem.create(
-                    Platform.get().getOrangeToken(),
-                    XClaim.lang.getComponent("gui-perm-tl-trusted"),
-                    Arrays.asList(
-                            XClaim.lang.getComponent("gui-perm-tl-trusted-line1"),
-                            XClaim.lang.getComponent("gui-perm-tl-trusted-line2"),
-                            XClaim.lang.getComponent("gui-perm-tl-trusted-line3")
-                    )
-            ),
-            DisplayItem.create(
-                    Platform.get().getYellowToken(),
-                    XClaim.lang.getComponent("gui-perm-tl-veterans"),
-                    Arrays.asList(
-                            XClaim.lang.getComponent("gui-perm-tl-veterans-line1"),
-                            XClaim.lang.getComponent("gui-perm-tl-veterans-line2"),
-                            XClaim.lang.getComponent("gui-perm-tl-veterans-line3")
-                    )
-            ),
-            DisplayItem.create(
-                    Platform.get().getLimeToken(),
-                    XClaim.lang.getComponent("gui-perm-tl-all"),
-                    Arrays.asList(
-                            XClaim.lang.getComponent("gui-perm-tl-all-line1"),
-                            XClaim.lang.getComponent("gui-perm-tl-all-line2")
-                    )
-            )
-    };
     private static final TrustLevel[] ALL_LEVELS = TrustLevel.ascending();
 
     private final Claim claim;
@@ -74,17 +31,11 @@ public final class PermissionLevelsGuiSpec implements GuiSpec {
 
     @Override
     public void populate(@NotNull GuiInstance instance) {
-        final TrustLevel current = this.claim.getPermission(this.permission);
-        ItemStack item;
-        for (int i=0; i < LEVEL_STACKS.length; i++) {
-            item = LEVEL_STACKS[i];
-            if (current == ALL_LEVELS[i]) {
-                item = item.clone();
-                ItemMeta meta = item.getItemMeta();
-                if (meta != null) meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
-                item.setItemMeta(meta);
-            }
-            instance.set(i, item);
+        TrustLevel current = this.claim.getGlobalPermission(this.permission);
+        for (int i=0; i < ALL_LEVELS.length; i++) {
+            TrustLevel level = ALL_LEVELS[i];
+            PlatformItem item = this.getDisplayItem(instance, level);
+            instance.set(i, level == current ? item.holographic() : item);
         }
     }
 
@@ -93,19 +44,46 @@ public final class PermissionLevelsGuiSpec implements GuiSpec {
         final int slotIndex = slot.index();
         if (0 <= slotIndex && slotIndex <= 3) {
             final TrustLevel trustLevel = ALL_LEVELS[slotIndex];
-
-            if (!XClaimEvent.dispatch(new XClaimSetPermissionEvent(
-                    instance.player(),
-                    this.claim,
-                    this.permission,
-                    this.claim.getPermission(this.permission),
-                    trustLevel
-            ))) return GuiAction.exit();
-
-            this.claim.setPermission(this.permission, trustLevel);
-            return GuiAction.transfer(GuiSpecs.globalPermissionList(this.claim));
+            boolean success = this.claim.modifyPermissions(instance.player())
+                    .setGlobalPermission(this.permission, trustLevel)
+                    .commit()
+                    .isSuccess();
+            return success ?
+                    GuiAction.transfer(GuiSpecs.globalPermissionList(this.claim)) :
+                    GuiAction.exit();
         }
         return GuiAction.nothing();
+    }
+
+    private @NotNull PlatformItem getDisplayItem(@NotNull GuiInstance instance, @NotNull TrustLevel tl) {
+        return switch (tl) {
+            case NONE -> DisplayItem.format(
+                    instance.platform().createItem(NamedPlatformMaterial.RED_DYE),
+                    instance.runtime().lang("gui-perm-tl-none"),
+                    instance.runtime().lang("gui-perm-tl-none-line1"),
+                    instance.runtime().lang("gui-perm-tl-none-line2")
+            );
+            case TRUSTED -> DisplayItem.format(
+                    instance.platform().createItem(NamedPlatformMaterial.ORANGE_DYE),
+                    instance.runtime().lang("gui-perm-tl-trusted"),
+                    instance.runtime().lang("gui-perm-tl-trusted-line1"),
+                    instance.runtime().lang("gui-perm-tl-trusted-line2"),
+                    instance.runtime().lang("gui-perm-tl-trusted-line1")
+            );
+            case VETERANS -> DisplayItem.format(
+                    instance.platform().createItem(NamedPlatformMaterial.YELLOW_DYE),
+                    instance.runtime().lang("gui-perm-tl-veterans"),
+                    instance.runtime().lang("gui-perm-tl-veterans-line1"),
+                    instance.runtime().lang("gui-perm-tl-veterans-line2"),
+                    instance.runtime().lang("gui-perm-tl-veterans-line1")
+            );
+            case ALL -> DisplayItem.format(
+                    instance.platform().createItem(NamedPlatformMaterial.GREEN_DYE),
+                    instance.runtime().lang("gui-perm-tl-all"),
+                    instance.runtime().lang("gui-perm-tl-all-line1"),
+                    instance.runtime().lang("gui-perm-tl-all-line2")
+            );
+        };
     }
 
 }

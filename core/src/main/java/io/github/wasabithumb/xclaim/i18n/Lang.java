@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class Lang {
 
@@ -48,6 +49,12 @@ public final class Lang {
         LangString data = this.map.get(key);
         if (data == null) return FALLBACK_MESSAGE;
         return data.resolve(args);
+    }
+
+    public @NotNull String get(@NotNull String key, @NotNull Object @NotNull ... args) {
+        String[] str = new String[args.length];
+        for (int i=0; i < args.length; i++) str[i] = Objects.toString(args[i]);
+        return this.get(key, str);
     }
 
     public void serialize(@NotNull OutputStream os) throws IOException {

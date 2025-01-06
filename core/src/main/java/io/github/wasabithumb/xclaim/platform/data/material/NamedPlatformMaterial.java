@@ -14,7 +14,16 @@ public enum NamedPlatformMaterial implements PlatformMaterial {
     YELLOW_DYE,
     ORANGE_DYE,
     LIME_DYE,
-    SHIELD;
+    SHIELD,
+    SPYGLASS,
+    ARROW,
+    BARRIER,
+    NETHER_STAR,
+    NAME_TAG,
+    TNT,
+    BUCKET,
+    EMERALD,
+    BOOK;
 
     @Override
     public boolean isSoil() {

@@ -1,35 +1,25 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl;
 
-import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.api.Claim;
-import io.github.wasabithumb.xclaim.api.XCPlayer;
 import io.github.wasabithumb.xclaim.api.enums.Permission;
+import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui2.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui2.spec.helper.PaginatedGuiSpec;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
-import net.kyori.adventure.text.Component;
 import io.github.wasabithumb.xclaim.util.ColorTag;
-import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import io.github.wasabithumb.xclaim.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
-
-    private static final ItemStack SEARCH_STACK = DisplayItem.create(
-            Platform.get().getSpyglassMaterial(),
-            XClaim.lang.getComponent("gui-sel-search")
-    );
-
-    //
 
     protected Collection<Claim> entries = null;
     private Comparator<Claim> sort = null;
@@ -45,11 +35,17 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     protected synchronized @NotNull Collection<Claim> getEntries(@NotNull GuiInstance instance) {
         if (this.entries != null) return this.entries;
 
-        final Player player = instance.player();
-        final Set<Claim> all = Claim.getAll();
-        if (player.isOp()) return this.entries = new HashSet<>(all);
+        final PlatformPlayer player = instance.player();
+        final List<Claim> all = instance.runtime().claims().getAll();
+        if (player.isOp()) return this.entries = new ArrayList<>(all);
 
-        final int sizeEstimate = Math.max(Math.floorDiv(all.size(), Bukkit.getOnlinePlayers().size() + 1), 8);
+        final int sizeEstimate = Math.max(
+                Math.floorDiv(
+                        all.size(),
+                        instance.platform().users().playerCount() + 1
+                ),
+                8
+        );
         final List<Claim> entries = new ArrayList<>(sizeEstimate);
         for (Claim c : all) {
             if (!this.canDisplay(c, player)) continue;
@@ -59,8 +55,8 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         return this.entries = entries;
     }
 
-    protected boolean canDisplay(@NotNull Claim claim, @NotNull Player player)  {
-        return claim.hasPermission(player, this.requiredPermission());
+    protected boolean canDisplay(@NotNull Claim claim, @NotNull PlatformUser user)  {
+        return claim.checkPermission(user, this.requiredPermission());
     }
 
     /** Not used if canDisplay is overriden */
@@ -72,14 +68,14 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     protected synchronized final @NotNull Comparator<Claim> getSort(@NotNull GuiInstance instance) {
         if (this.sort != null) return this.sort;
 
-        final Player player = instance.player();
-        final UUID id = player.getUniqueId();
-        final ChunkReference cr = ChunkReference.of(player.getLocation());
+        final PlatformPlayer player = instance.player();
+        final UUID id = player.uuid();
+        final ChunkReference cr = ChunkReference.of(player.location());
 
         // Default sort: Sort by distance (ascending), own claims first.
         return this.sort = Comparator.comparingLong((Claim c) -> {
             long ret = c.minSquareDistance(cr);
-            if (c.getOwner().getUniqueId().equals(id)) ret |= Long.MIN_VALUE;
+            if (c.owner().uuid().equals(id)) ret |= Long.MIN_VALUE;
             return ret;
         });
     }
@@ -95,8 +91,11 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     }
 
     @Override
-    protected @NotNull ItemStack getPreviousExtra() {
-        return SEARCH_STACK;
+    protected @NotNull PlatformItem getPreviousExtra(@NotNull GuiInstance instance) {
+        return DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.SPYGLASS),
+                instance.runtime().lang("gui-sel-search")
+        );
     }
 
     @Override
@@ -110,47 +109,40 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     }
 
     @Override
-    protected @Nullable ItemStack populateEntry(@NotNull GuiInstance instance, @NotNull Claim claim) {
-        final XCPlayer owner = claim.getOwner();
-        final ChunkReference curChunk = ChunkReference.of(instance.player().getLocation());
-        final Player ownerOnline = owner.getPlayer();
-        Component ownerName;
-        if (ownerOnline != null) {
-            ownerName = Platform.get().playerDisplayName(ownerOnline);
-        } else {
-            String nm = owner.getName();
-            if (nm == null) nm = owner.getUniqueId().toString();
-            ownerName = Component.text(nm);
-        }
+    protected @Nullable PlatformItem populateEntry(@NotNull GuiInstance instance, @NotNull Claim claim) {
+        final PlatformUser owner = claim.owner();
+        final ChunkReference curChunk = ChunkReference.of(instance.player().location());
+        final String ownerName = owner.displayName();
 
-        final List<Component> lore = new ArrayList<>();
-        lore.add(XClaim.lang.getComponent("gui-sel-owned", ownerName));
+        final List<String> lore = new ArrayList<>();
+        lore.add(instance.runtime().lang("gui-sel-owned", ownerName));
 
-        Set<ChunkReference> chunks = claim.getChunks();
+        Set<ChunkReference> chunks = claim.chunks();
         int chunkCount = chunks.size();
         if (chunkCount == 1) {
-            lore.add(XClaim.lang.getComponent("gui-sel-chunk-count", chunkCount));
+            lore.add(instance.runtime().lang("gui-sel-chunk-count", chunkCount));
         } else {
-            lore.add(XClaim.lang.getComponent("gui-sel-chunk-count-plural", chunkCount));
+            lore.add(instance.runtime().lang("gui-sel-chunk-count-plural", chunkCount));
         }
         if (chunkCount > 0) {
             ChunkReference c = chunks.iterator().next();
-            lore.add(XClaim.lang.getComponent("gui-sel-first-chunk", c.getCenterBlockX(), c.getCenterBlockZ()));
+            lore.add(instance.runtime().lang("gui-sel-first-chunk", c.getCenterBlockX(), c.getCenterBlockZ()));
         }
         if (chunks.contains(curChunk)) {
-            lore.add(XClaim.lang.getComponent("gui-sel-within"));
+            lore.add(instance.runtime().lang("gui-sel-within"));
         }
 
-        return DisplayItem.create(
-                Platform.get().getGreenToken(),
-                Component.text(claim.getName()).color(ColorTag.GREEN),
+        return DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.GREEN_DYE),
+                claim.name(),
+                ColorTag.GREEN,
                 lore
         );
     }
 
     @Override
     protected @NotNull GuiAction onClickEntry(@NotNull GuiInstance instance, @NotNull Claim entry) {
-        if (!entry.isCanonical()) {
+        if (!entry.isValid()) {
             synchronized (this) {
                 this.entries = null;
             }
@@ -165,16 +157,15 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     protected @NotNull GuiAction onClickExtra(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         if (slot.index() == this.getPreviousSlot()) {
             // Search
-            return GuiAction.prompt(XClaim.lang.getComponent("gui-sel-prompt"));
+            return GuiAction.prompt(instance.runtime().lang("gui-sel-prompt"));
         }
         return GuiAction.nothing();
     }
 
     @Override
     public @NotNull GuiAction onResponse(@NotNull GuiInstance instance, @NotNull String response) {
-        final LevenshteinDistance strDist = LevenshteinDistance.getDefaultInstance();
         synchronized (this) {
-            this.sort = Comparator.comparingInt((Claim c) -> strDist.apply(c.getName(), response));
+            this.sort = Comparator.comparingInt((Claim c) -> StringUtil.distance(c.name(), response));
         }
         this.pagination.resetPage();
         return GuiAction.repopulate();
