@@ -23,7 +23,8 @@ public enum NamedPlatformMaterial implements PlatformMaterial {
     TNT,
     BUCKET,
     EMERALD,
-    BOOK;
+    BOOK,
+    WRITTEN_BOOK;
 
     @Override
     public boolean isSoil() {
@@ -34,4 +35,10 @@ public enum NamedPlatformMaterial implements PlatformMaterial {
     public boolean ignites() {
         return false;
     }
+
+    @Override
+    public boolean isBucket() {
+        return this == BUCKET;
+    }
+
 }

@@ -40,6 +40,9 @@ public abstract class BukkitPlatformEventManager extends PlatformEventManager {
 
     protected void registerAllImpls() {
         this.registerImpls(
+                BukkitPlatformBlockBreakEvent.class,
+                BukkitPlatformBlockMultiPlaceEvent.class,
+                BukkitPlatformBlockPlaceEvent.class,
                 BukkitPlatformEntityPlaceEvent.class,
                 BukkitPlatformEntityExplodeEvent.class,
                 BukkitPlatformEntityDamagedEvent.class,

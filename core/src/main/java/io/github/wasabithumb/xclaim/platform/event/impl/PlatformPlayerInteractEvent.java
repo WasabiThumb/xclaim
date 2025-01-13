@@ -4,6 +4,8 @@ import io.github.wasabithumb.xclaim.platform.event.PlatformEventType;
 import io.github.wasabithumb.xclaim.platform.event.helper.PlatformPlayerEvent;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformEquipmentSlot;
 import io.github.wasabithumb.xclaim.platform.world.PlatformBlock;
+import io.github.wasabithumb.xclaim.platform.world.PlatformDirection;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface PlatformPlayerInteractEvent extends PlatformPlayerEvent {
@@ -24,5 +26,7 @@ public interface PlatformPlayerInteractEvent extends PlatformPlayerEvent {
     @Nullable PlatformEquipmentSlot getHand();
 
     @Nullable PlatformBlock getClickedBlock();
+
+    @NotNull PlatformDirection face();
 
 }

@@ -313,6 +313,13 @@ public final class ClaimEditor {
                 default:
                     return;
             }
+
+            if (t.isDeleting()) {
+                // TODO: Better error message
+                // Allowing the player to delete from here would be technically OK, but very confusing.
+                ply.sendMessage(this.parent.runtime.lang("permHandler-stdError"));
+                return;
+            }
             t.commit();
         }
 

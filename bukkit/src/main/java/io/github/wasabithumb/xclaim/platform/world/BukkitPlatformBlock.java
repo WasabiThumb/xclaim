@@ -4,6 +4,8 @@ import io.github.wasabithumb.xclaim.platform.data.material.BukkitPlatformMateria
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.jetbrains.annotations.NotNull;
 
 public class BukkitPlatformBlock implements PlatformBlock {
@@ -51,6 +53,18 @@ public class BukkitPlatformBlock implements PlatformBlock {
     @Override
     public boolean isContainer() {
         return this.handle.getState() instanceof Container;
+    }
+
+    @Override
+    public boolean canWaterlog() {
+        BlockData bd = this.handle().getBlockData();
+        return (bd instanceof Waterlogged wl) && !wl.isWaterlogged();
+    }
+
+    @Override
+    public boolean isWaterlogged() {
+        BlockData bd = this.handle().getBlockData();
+        return (bd instanceof Waterlogged wl) && wl.isWaterlogged();
     }
 
 }

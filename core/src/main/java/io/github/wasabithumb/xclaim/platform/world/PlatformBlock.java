@@ -24,4 +24,20 @@ public interface PlatformBlock extends PlatformObject {
 
     boolean isContainer();
 
+    boolean canWaterlog();
+
+    boolean isWaterlogged();
+
+    default @NotNull PlatformBlock relative(int x, int y, int z) {
+        return this.world().getBlock(
+                this.x() + x,
+                this.y() + y,
+                this.z() + z
+        );
+    }
+
+    default @NotNull PlatformBlock relative(@NotNull PlatformDirection direction) {
+        return this.relative(direction.modX(), direction.modY(), direction.modZ());
+    }
+
 }

@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.claim;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
+import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcement;
 import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.Integrations;
@@ -27,6 +28,7 @@ public class ClaimManager {
 
     private final XClaim runtime;
     private final ClaimDataManager data;
+    private final ClaimEnforcement enforcement;
     private final AtomicInteger idCounter = new AtomicInteger(1);
     private final Map<String, Claim> byName = new HashMap<>();
     private final ReadWriteLock byNameLock = new ReentrantReadWriteLock();
@@ -38,6 +40,7 @@ public class ClaimManager {
     public ClaimManager(@NotNull XClaim runtime, @NotNull ClaimDataManager data) {
         this.runtime = runtime;
         this.data = data;
+        this.enforcement = new ClaimEnforcement(this);
     }
 
     /**
@@ -256,6 +259,8 @@ public class ClaimManager {
             @NotNull Set<Long> chunks,
             boolean updateChunks
     ) {
+        this.enforcement.setEnabled(true);
+
         name = name.toLowerCase(Locale.ROOT);
         if (!name.equals(state.attachedName)) {
             this.byNameLock.writeLock().lock();
@@ -340,18 +345,20 @@ public class ClaimManager {
             map.queueOperation(MapOperation.delete(claim));
         }
 
+        boolean empty;
         this.byNameLock.writeLock().lock();
         try {
             Claim removed = this.byName.remove(state.attachedName);
             if (!claim.equals(removed))
                 this.byName.put(state.attachedName, claim);
             state.attachedName = null;
+            empty = this.byName.isEmpty();
         } finally {
             this.byNameLock.writeLock().unlock();
         }
+        if (empty) this.enforcement.setEnabled(false);
 
         if (state.attachedRegions.isEmpty()) return;
-
         this.byRegionLock.writeLock().lock();
         try {
             Set<Claim> set;

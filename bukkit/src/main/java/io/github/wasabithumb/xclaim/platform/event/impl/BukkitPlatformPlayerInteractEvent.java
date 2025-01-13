@@ -4,6 +4,8 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.event.helper.BukkitPlatformPlayerEvent;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformEquipmentSlot;
 import io.github.wasabithumb.xclaim.platform.world.BukkitPlatformBlock;
+import io.github.wasabithumb.xclaim.platform.world.PlatformDirection;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +49,12 @@ public class BukkitPlatformPlayerInteractEvent extends BukkitPlatformPlayerEvent
     @Override
     public @Nullable BukkitPlatformBlock getClickedBlock() {
         return this.platform.adapter().block(this.handle.getClickedBlock());
+    }
+
+    @Override
+    public @NotNull PlatformDirection face() {
+        BlockFace bf = this.handle.getBlockFace();
+        return PlatformDirection.of(bf.getModX(), bf.getModY(), bf.getModZ());
     }
 
 }

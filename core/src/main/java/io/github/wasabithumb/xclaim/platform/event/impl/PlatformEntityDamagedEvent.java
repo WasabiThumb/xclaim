@@ -12,7 +12,7 @@ public interface PlatformEntityDamagedEvent extends PlatformEntityEvent {
 
     //
 
-    @Nullable PlatformEntity getDamager();
+    @Nullable PlatformEntity damager();
 
     double getDamage();
 

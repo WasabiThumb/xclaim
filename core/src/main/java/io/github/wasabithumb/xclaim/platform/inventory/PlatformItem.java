@@ -43,4 +43,6 @@ public interface PlatformItem extends PlatformObject {
 
     byte @NotNull [] toBytes();
 
+    boolean isConsumable();
+
 }

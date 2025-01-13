@@ -38,6 +38,7 @@ public record BukkitPlatformMaterial(
             case BUCKET           -> Material.BUCKET;
             case EMERALD          -> Material.EMERALD;
             case BOOK             -> Material.BOOK;
+            case WRITTEN_BOOK     -> Material.WRITTEN_BOOK;
         };
     }
 
@@ -66,6 +67,7 @@ public record BukkitPlatformMaterial(
             case BUCKET           -> NamedPlatformMaterial.BUCKET;
             case EMERALD          -> NamedPlatformMaterial.EMERALD;
             case BOOK             -> NamedPlatformMaterial.BOOK;
+            case WRITTEN_BOOK     -> NamedPlatformMaterial.WRITTEN_BOOK;
             default -> new BukkitPlatformMaterial(material);
         };
     }
@@ -85,6 +87,11 @@ public record BukkitPlatformMaterial(
     @Override
     public boolean ignites() {
         return this.handle.equals(Material.FLINT_AND_STEEL) || this.handle.equals(Material.FIRE_CHARGE);
+    }
+
+    @Override
+    public boolean isBucket() {
+        return this.handle.name().contains("BUCKET");
     }
 
 }

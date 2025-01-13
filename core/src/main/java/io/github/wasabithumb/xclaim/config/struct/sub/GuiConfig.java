@@ -9,14 +9,6 @@ import java.util.Locale;
 
 public interface GuiConfig extends Config {
 
-    @UnknownNullability Integer versionRaw();
-
-    default @UnknownNullability Version version() {
-        Integer raw = this.versionRaw();
-        if (raw == null) return null;
-        return (raw == 2) ? Version.V2 : Version.V1;
-    }
-
     @UnknownNullability Integer height();
 
     @UnknownNullability String basisRaw();
@@ -41,13 +33,6 @@ public interface GuiConfig extends Config {
         } catch (IllegalArgumentException ignored) {
             return GuiDialogType.ACTION_BAR;
         }
-    }
-
-    //
-
-    enum Version {
-        V1,
-        V2
     }
 
 }

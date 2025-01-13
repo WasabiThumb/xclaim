@@ -13,16 +13,6 @@ public final class DefaultingGuiConfig extends FilterGuiConfig {
     }
 
     @Override
-    public @NotNull Integer versionRaw() {
-        return this.nullFallback(this.backing().versionRaw(), 1);
-    }
-
-    @Override
-    public @NotNull Version version() {
-        return this.nullFallback(this.backing().version(), Version.V1);
-    }
-
-    @Override
     public @NotNull Integer height() {
         return this.nullFallback(this.backing().height(), 3);
     }

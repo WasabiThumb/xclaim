@@ -85,7 +85,8 @@ public final class Integrations {
      */
     @Contract(" -> new")
     public @NotNull Integration @NotNull [] all() {
-        final Integration[] ret = new Integration[Integer.bitCount(this.flags)];
+        final int count = Integer.bitCount(this.flags);
+        final Integration[] ret = new Integration[count];
         int head = 0;
 
         if (this.hasMap())
@@ -95,8 +96,9 @@ public final class Integrations {
             ret[head++] = this.protection;
 
         if (this.hasEconomy())
-            ret[head] = this.economy;
+            ret[head++] = this.economy;
 
+        assert head == count;
         return ret;
     }
 

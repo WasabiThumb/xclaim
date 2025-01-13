@@ -105,7 +105,7 @@ public class XClaim {
         }
         this.loadIntegrations();
         this.loadTrust();
-        this.loadClaims(); // TODO: Claim enforcement
+        this.loadClaims();
         this.loadGUI();
         // TODO: Commands, movement, grace
     }

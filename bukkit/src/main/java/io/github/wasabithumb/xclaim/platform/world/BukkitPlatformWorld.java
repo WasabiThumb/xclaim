@@ -1,7 +1,9 @@
 package io.github.wasabithumb.xclaim.platform.world;
 
 import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.Reference;
@@ -63,6 +65,16 @@ public class BukkitPlatformWorld implements PlatformWorld {
     @Override
     public boolean keepInventory() {
         return Boolean.TRUE.equals(this.handle().getGameRuleValue(GameRule.KEEP_INVENTORY));
+    }
+
+    @Override
+    public void createExplosion(@NotNull PlatformLocation location, int power, boolean setFire, boolean breakBlocks) {
+        this.handle().createExplosion(
+                new Location(this.handle(), location.x(), location.y(), location.z()),
+                power,
+                setFire,
+                breakBlocks
+        );
     }
 
 }

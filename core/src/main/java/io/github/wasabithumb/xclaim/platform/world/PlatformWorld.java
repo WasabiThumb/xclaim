@@ -25,4 +25,6 @@ public interface PlatformWorld extends PlatformObject {
 
     boolean keepInventory();
 
+    void createExplosion(@NotNull PlatformLocation location, int power, boolean setFire, boolean breakBlocks);
+
 }

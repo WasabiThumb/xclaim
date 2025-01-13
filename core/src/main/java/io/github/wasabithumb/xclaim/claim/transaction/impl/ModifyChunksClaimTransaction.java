@@ -134,13 +134,14 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     }
 
     public boolean isDeleting() {
-        return this.effectiveChunkCount() == 0;
+        return this.effectiveChunkCount(false) == 0;
     }
 
     @Contract(" -> this")
     public @NotNull ModifyChunksClaimTransaction clear() {
         if (this.manageCheck()) return this;
         for (Long token : this.data.getChunks()) {
+            if (this.removals.contains(token)) continue;
             this.subtractUnclaimReward();
             this.removals.add(token);
         }
@@ -155,12 +156,19 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
 
     //
 
-    private int effectiveChunkCount() {
-        int curChunks = this.additions.size() - this.removals.size();
-        for (Claim c : this.manager.getByOwner(this.user)) {
-            curChunks += c.chunkCount();
+    private int effectiveChunkCount(boolean all) {
+        int curChunks = this.data.getChunkCount() + this.additions.size() - this.removals.size();
+        if (all) {
+            for (Claim c : this.manager.getByOwner(this.user)) {
+                if (c.equals(this.claim)) continue;
+                curChunks += c.chunkCount();
+            }
         }
         return curChunks;
+    }
+
+    private int effectiveChunkCount() {
+        return this.effectiveChunkCount(true);
     }
 
     private boolean hasProtectionConflict(@NotNull ChunkReference cr) {
@@ -312,6 +320,7 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
             this.langMessage("chunk-editor-reward", eco.format(price));
             this.price = 0;
         }
+
         return true;
     }
 

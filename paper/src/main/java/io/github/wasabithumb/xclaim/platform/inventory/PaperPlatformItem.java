@@ -2,20 +2,21 @@ package io.github.wasabithumb.xclaim.platform.inventory;
 
 import io.github.wasabithumb.xclaim.platform.PaperPlatform;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
-import io.github.wasabithumb.xclaim.platform.user.PlatformConsoleUser;
 import io.github.wasabithumb.xclaim.platform.user.PlatformOfflineUser;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class PaperPlatformItem extends BukkitPlatformItem {
 
@@ -84,6 +85,23 @@ public class PaperPlatformItem extends BukkitPlatformItem {
     @Override
     public byte @NotNull [] toBytes() {
         return this.handle.serializeAsBytes();
+    }
+
+    @Override
+    public boolean isConsumable() {
+        try {
+            Method m1 = ItemStack.class.getMethod("getDataTypes");
+            Object types = m1.invoke(this.handle);
+
+            Class<?> c2 = Class.forName("io.papermc.paper.datacomponent.DataComponentTypes");
+            Field f1 = c2.getField("CONSUMABLE");
+            Object type = f1.get(null);
+
+            Method m2 = Set.class.getMethod("contains", Object.class);
+            return (Boolean) m2.invoke(types, type);
+        } catch (ReflectiveOperationException | SecurityException ignored) { }
+
+        return this.handle.getType().isEdible();
     }
 
 }

@@ -35,7 +35,7 @@ public final class IndividualPermissionListGuiSpec extends PermissionListGuiSpec
         final PlatformMaterial mat = value ? NamedPlatformMaterial.LIME_DYE : NamedPlatformMaterial.RED_DYE;
         return DisplayItem.format(
                 instance.platform().createItem(mat),
-                perm.getPrintName(),
+                perm.getPrintName(instance.runtime().lang()),
                 col,
                 ColorTag.GRAY.format(text)
         );

@@ -15,7 +15,7 @@ public class BukkitPlatformEntityDamagedEvent extends BukkitPlatformEntityEvent<
     }
 
     @Override
-    public @Nullable PlatformEntity getDamager() {
+    public @Nullable PlatformEntity damager() {
         if (this.handle instanceof EntityDamageByEntityEvent byEntity) {
             return this.platform.adapter().entity(byEntity.getDamager());
         }

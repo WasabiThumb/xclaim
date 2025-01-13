@@ -14,12 +14,12 @@ public class BukkitPlatformHangingBreakEvent extends BukkitPlatformEvent<Hanging
     }
 
     @Override
-    public @NotNull PlatformEntity getEntity() {
+    public @NotNull PlatformEntity entity() {
         return this.platform.adapter().entity(this.handle.getEntity());
     }
 
     @Override
-    public @Nullable PlatformEntity getRemover() {
+    public @Nullable PlatformEntity remover() {
         return this.platform.adapter().entity(this.handle.getRemover());
     }
 

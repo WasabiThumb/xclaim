@@ -1,5 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.entity;
 
+import io.github.wasabithumb.xclaim.api.enums.EntityGroup;
 import io.github.wasabithumb.xclaim.platform.PlatformObject;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
@@ -28,5 +29,17 @@ public interface PlatformEntity extends PlatformObject {
     boolean isExplosive();
 
     @Nullable PlatformPlayer sourcePlayer();
+
+    boolean isInGroup(@NotNull EntityGroup group);
+
+    void damage(double damage);
+
+    void addVelocity(double x, double y, double z);
+
+    @Nullable PlatformEntity target();
+
+    boolean isPoweredCreeper();
+
+    void remove();
 
 }

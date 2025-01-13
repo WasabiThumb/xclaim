@@ -24,7 +24,10 @@ public enum PlatformEventType {
     ENTITY_DEATH,
     INVENTORY_CLICK,
     INVENTORY_DRAG,
-    INVENTORY_CLOSE;
+    INVENTORY_CLOSE,
+    BLOCK_PLACE,
+    BLOCK_MULTI_PLACE,
+    BLOCK_BREAK;
 
     @ApiStatus.Internal
     public static @NotNull PlatformEventType of(@NotNull Class<? extends PlatformEvent> clazz) throws IllegalArgumentException {

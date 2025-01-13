@@ -14,4 +14,7 @@ public interface PlatformMaterial {
     /** True if the material creates fire when interacted with */
     boolean ignites();
 
+    /** True if the material is a bucket */
+    boolean isBucket();
+
 }

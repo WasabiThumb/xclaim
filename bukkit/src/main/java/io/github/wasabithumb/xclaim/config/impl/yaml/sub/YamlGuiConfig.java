@@ -11,11 +11,6 @@ public final class YamlGuiConfig extends YamlConfig implements GuiConfig {
     }
 
     @Override
-    public @UnknownNullability Integer versionRaw() {
-        return 0;
-    }
-
-    @Override
     public @UnknownNullability Integer height() {
         return null;
     }
