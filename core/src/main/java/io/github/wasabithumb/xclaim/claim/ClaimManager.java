@@ -223,7 +223,7 @@ public class ClaimManager {
                 throw new NullPointerException(token.toString());
             }
             state = new ClaimState();
-            this.commit(new Claim(this, data, state));
+            this.commit0(new Claim(this, data, state), true);
         }
     }
 
@@ -232,11 +232,15 @@ public class ClaimManager {
      */
     @ApiStatus.Internal
     public void commit(@NotNull Claim claim) {
+        this.commit0(claim, false);
+    }
+
+    private void commit0(@NotNull Claim claim, boolean initial) {
         ClaimData data = claim.data();
         String name = data.getName();
         UUID owner = data.getOwner();
         Set<Long> chunks = data.getChunks();
-        boolean updateChunks = data.didUpdateChunks();
+        boolean updateChunks = initial || data.didUpdateChunks();
 
         ClaimState state = claim.state();
         state.lock.lock();
