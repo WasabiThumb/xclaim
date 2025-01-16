@@ -27,7 +27,7 @@ repositories {
 dependencies {
     implementation(project(":core"))
     implementation(project(":bukkit"))
-    implementation(project(":paper:bootstrap"))
+    implementation(project(":paper:extras"))
     compileOnly("org.jetbrains:annotations:${annotationsVersion}")
     compileOnly("io.papermc.paper:paper-api:${serverVersion}")
 }

@@ -74,6 +74,26 @@ public class Claim {
         }
     }
 
+    @Contract("null -> false")
+    public boolean matchesToken(@Nullable String token) {
+        if (token == null) return false;
+        ClaimData.Token own = this.data.getToken();
+        if (own instanceof ClaimData.Token.Int) {
+            if (token.length() != 8) return false;
+            int n = 0;
+            int tmp;
+            for (int i=0; i < 8; i++) {
+                n <<= 4;
+                tmp = Character.digit(token.charAt(i), 16);
+                if (tmp == -1) return false;
+                n |= tmp;
+            }
+            return n == own.asInt();
+        } else {
+            return own.value().toString().equals(token);
+        }
+    }
+
     public @NotNull String name() {
         return this.data.getName();
     }

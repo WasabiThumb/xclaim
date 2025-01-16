@@ -142,7 +142,11 @@ public class GuiManager implements PlatformListener {
         if (instance == null) return;
 
         event.setCancelled(true);
-        this.runtime.platform().scheduler().synchronize(() -> instance.respond(event.plainMessage()));
+        this.runtime.platform().scheduler()
+                .newTask()
+                .targetEntity(ply)
+                .executor(() -> instance.respond(event.plainMessage()))
+                .build();
     }
 
 }

@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.gui2.dialog;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
-import io.github.wasabithumb.xclaim.platform.scheduler.PlatformSchedulerTask;
+import io.github.wasabithumb.xclaim.platform.scheduler.task.PlatformSchedulerTask;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,11 +57,13 @@ abstract class TickingGuiDialog extends AbstractGuiDialog {
         synchronized (this.mutex) {
             if (this.task != null) this.throwDoubleShow();
             this.closing = false;
-            this.task = this.runtime.platform().scheduler().runTaskTimer(
-                    this::tickOrLast,
-                    this.delay(),
-                    this.period()
-            );
+            this.task = this.runtime.platform().scheduler()
+                    .newTask()
+                    .targetEntity(this.player)
+                    .executor(this::tickOrLast)
+                    .delayTicks(this.delay())
+                    .periodTicks(this.period())
+                    .build();
         }
     }
 

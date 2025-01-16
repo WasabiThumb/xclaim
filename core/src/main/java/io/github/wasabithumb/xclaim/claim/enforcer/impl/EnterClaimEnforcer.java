@@ -9,7 +9,7 @@ import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerJoinEvent;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerMoveEvent;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerQuitEvent;
-import io.github.wasabithumb.xclaim.platform.scheduler.PlatformSchedulerTask;
+import io.github.wasabithumb.xclaim.platform.scheduler.task.PlatformSchedulerTask;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import org.jetbrains.annotations.ApiStatus;
@@ -110,11 +110,11 @@ public final class EnterClaimEnforcer extends ClaimEnforcer {
         if (occluding) {
             synchronized (this.occluding) {
                 if (this.occluding.containsKey(uuid)) return;
-                PlatformSchedulerTask task = this.platform().scheduler().runTaskTimer(
-                        new OccludingTask(ply),
-                        0L,
-                        1L
-                );
+                PlatformSchedulerTask task = this.platform().scheduler()
+                        .newTask()
+                        .executor(new OccludingTask(ply))
+                        .periodTicks(1)
+                        .build();
                 this.occluding.put(uuid, task);
             }
         } else {

@@ -7,13 +7,14 @@ import io.github.wasabithumb.xclaim.platform.inventory.PaperPlatformCustomInvent
 import io.github.wasabithumb.xclaim.platform.inventory.PaperPlatformItem;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.platform.scheduler.BukkitPlatformScheduler;
-import io.github.wasabithumb.xclaim.platform.scheduler.FoliaPlatformScheduler;
-import io.github.wasabithumb.xclaim.platform.scheduler.FoliaPlatformSchedulerReflection;
 import io.github.wasabithumb.xclaim.platform.user.PaperPlatformUserManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Constructor;
 
 public class PaperPlatform extends BukkitPlatform {
 
@@ -34,8 +35,11 @@ public class PaperPlatform extends BukkitPlatform {
 
     @Override
     protected @NotNull BukkitPlatformScheduler createScheduler() {
-        FoliaPlatformSchedulerReflection folia = FoliaPlatformSchedulerReflection.tryInit();
-        if (folia != null) return new FoliaPlatformScheduler(this.plugin, folia);
+        try {
+            Class<?> foliaClass = Class.forName("io.github.wasabithumb.xclaim.platform.scheduler.impl.folia.FoliaPlatformScheduler");
+            Constructor<?> foliaConstructor = foliaClass.getConstructor(Plugin.class, BukkitPlatformTypeAdapter.class);
+            return (BukkitPlatformScheduler) foliaConstructor.newInstance(this.plugin, this.adapter);
+        } catch (ReflectiveOperationException | LinkageError | SecurityException ignored) { }
         return BukkitPlatformScheduler.legacy(this.plugin);
     }
 

@@ -47,7 +47,7 @@ public final class ClaimEditor {
         this.worker = new Worker(this);
         this.cache = Collections.synchronizedMap(new HashMap<>());
         this.claimItem = DisplayItem.format(
-                runtime.platform().createItem(NamedPlatformMaterial.GREEN_DYE),
+                runtime.platform().createItem(NamedPlatformMaterial.LIME_DYE),
                 runtime.lang("chunk-editor-claim")
         );
         this.unclaimItem = DisplayItem.format(
@@ -100,6 +100,12 @@ public final class ClaimEditor {
     public boolean exit(@NotNull PlatformPlayer ply) {
         UUID uuid = ply.uuid();
         if (!this.cache.containsKey(uuid)) return false;
+        this.clear(ply);
+        this.cache.remove(uuid);
+        return true;
+    }
+
+    private void clear(@NotNull PlatformPlayer ply) {
         PlatformInventory inv = ply.getInventory();
         PlatformPersistentDataContainer pdc = ply.pdc();
         try {
@@ -116,8 +122,6 @@ public final class ClaimEditor {
         }
         pdc.remove(KEY_EDITING);
         pdc.remove(KEY_INVENTORY);
-        this.cache.remove(uuid);
-        return true;
     }
 
     private void highlightChunk(@NotNull PlatformPlayer ply, @NotNull Claim claim, @NotNull PlatformChunk chunk) {
@@ -316,6 +320,27 @@ public final class ClaimEditor {
             }
 
             t.commit();
+        }
+
+        @PlatformEventHandler
+        public void onJoin(@NotNull PlatformPlayerJoinEvent event) {
+            PlatformPlayer ply = event.player();
+            PlatformPersistentDataContainer pdc = ply.pdc();
+            String editing = pdc.getElse(KEY_EDITING, PlatformPersistentDataType.STRING, null);
+            if (editing == null) return;
+
+            Claim claim = null;
+            for (Claim c : this.parent.runtime.claims().getAll()) {
+                if (c.matchesToken(editing)) {
+                    claim = c;
+                    break;
+                }
+            }
+            if (claim == null) {
+                this.parent.clear(ply);
+                return;
+            }
+            this.parent.cache.put(ply.uuid(), claim);
         }
 
         @PlatformEventHandler

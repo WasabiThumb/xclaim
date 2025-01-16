@@ -6,7 +6,7 @@ public class GraceRoutine {
 /*
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.platform.Platform;
-import io.github.wasabithumb.xclaim.platform.scheduler.PlatformSchedulerTask;
+import io.github.wasabithumb.xclaim.platform.scheduler.task.PlatformSchedulerTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

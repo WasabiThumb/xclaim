@@ -123,6 +123,7 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
         if (this.manageCheck()) return this;
         if (this.data.getWorld().matches(cr.world) && this.update(cr.x, cr.z, false)) {
             if (this.isDeleting() && (!this.allowDeletion || !this.checkPermission(Permission.DELETE))) {
+                // TODO: More detailed error message
                 this.langMessage("permHandler-stdError");
                 this.valid = false;
                 return this;

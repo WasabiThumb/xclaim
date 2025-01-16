@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.platform.scheduler;
+package io.github.wasabithumb.xclaim.platform.scheduler.task;
 
 public interface PlatformSchedulerTask {
 
