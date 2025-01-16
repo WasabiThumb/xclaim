@@ -85,12 +85,12 @@ public abstract class BukkitPlatformEventManager extends PlatformEventManager {
     @Override
     public void register(@NotNull PlatformListener listener) {
         final List<Entry> entries = this.processEntries(listener);
-        this.platform.scheduler().synchronize(() -> this.register0(listener, entries));
+        this.register0(listener, entries);
     }
 
     @Override
     public void unregister(@NotNull PlatformListener listener) {
-        this.platform.scheduler().synchronize(() -> this.unregister0(listener));
+        this.unregister0(listener);
     }
 
     @Override
@@ -229,6 +229,7 @@ public abstract class BukkitPlatformEventManager extends PlatformEventManager {
 
         @Override
         public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
+            if (!this.adapter.bukkitClass().isInstance(event)) return;
             try {
                 this.method.invoke(
                         this.target,

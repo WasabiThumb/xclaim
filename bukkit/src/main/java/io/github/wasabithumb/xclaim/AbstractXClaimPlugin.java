@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim;
 import io.github.wasabithumb.xclaim.assets.BukkitAssetManager;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.claim.data.impl.yaml.YamlClaimDataManager;
+import io.github.wasabithumb.xclaim.command.BukkitCommandBinding;
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlRootConfig;
 import io.github.wasabithumb.xclaim.config.struct.RootConfig;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
@@ -50,6 +51,11 @@ public abstract class AbstractXClaimPlugin extends JavaPlugin implements XClaimB
 
     //
 
+    @ApiStatus.Internal
+    public static final BukkitCommandBinding MAIN_COMMAND = new BukkitCommandBinding();
+
+    //
+
     protected boolean init;
     protected BukkitPlatform platform;
     protected BukkitAssetManager assets;
@@ -70,6 +76,8 @@ public abstract class AbstractXClaimPlugin extends JavaPlugin implements XClaimB
             return;
         }
 
+        MAIN_COMMAND.bind(this.instance);
+
         Bukkit.getServicesManager().register(
                 XClaim.class,
                 this.instance,
@@ -81,6 +89,8 @@ public abstract class AbstractXClaimPlugin extends JavaPlugin implements XClaimB
     @Override
     public void onDisable() {
         Bukkit.getServicesManager().unregister(XClaim.class, this.instance);
+
+        MAIN_COMMAND.unbind();
 
         try {
             this.instance.disable();

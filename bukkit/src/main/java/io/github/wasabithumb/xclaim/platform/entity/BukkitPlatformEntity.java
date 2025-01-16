@@ -1,6 +1,5 @@
 package io.github.wasabithumb.xclaim.platform.entity;
 
-import io.github.wasabithumb.xclaim.api.enums.EntityGroup;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.data.BukkitPlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
@@ -84,7 +83,7 @@ public class BukkitPlatformEntity implements PlatformEntity {
     }
 
     @Override
-    public boolean isInGroup(@NotNull EntityGroup group) {
+    public boolean isInGroup(@NotNull PlatformEntityGroup group) {
         return BukkitPlatformEntityGroupCheck.test(group, this.handle);
     }
 

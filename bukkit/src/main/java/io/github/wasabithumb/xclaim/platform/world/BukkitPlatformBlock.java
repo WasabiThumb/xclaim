@@ -8,6 +8,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class BukkitPlatformBlock implements PlatformBlock {
 
     protected final Block handle;
@@ -65,6 +67,20 @@ public class BukkitPlatformBlock implements PlatformBlock {
     public boolean isWaterlogged() {
         BlockData bd = this.handle().getBlockData();
         return (bd instanceof Waterlogged wl) && wl.isWaterlogged();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.handle.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof BukkitPlatformBlock other) {
+            return Objects.equals(this.handle, other.handle);
+        }
+        return super.equals(obj);
     }
 
 }

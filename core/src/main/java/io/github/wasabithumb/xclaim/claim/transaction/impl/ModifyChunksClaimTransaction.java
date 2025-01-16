@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.claim.transaction.impl;
 
-import io.github.wasabithumb.xclaim.api.enums.Permission;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimMutationContext;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
@@ -28,6 +28,7 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     private final Set<Long> removals = new HashSet<>();
     private int price = 0;
     private boolean ignorePlacementRules = false;
+    private boolean allowDeletion = true;
     public ModifyChunksClaimTransaction(@NotNull ClaimMutationContext context) {
         super(context);
     }
@@ -57,6 +58,12 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     @Contract("_ -> this")
     public @NotNull ModifyChunksClaimTransaction ignorePlacementRules(boolean ignore) {
         this.ignorePlacementRules = ignore;
+        return this;
+    }
+
+    @Contract("_ -> this")
+    public @NotNull ModifyChunksClaimTransaction allowDeletion(boolean allowDeletion) {
+        this.allowDeletion = allowDeletion;
         return this;
     }
 
@@ -115,7 +122,7 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     public @NotNull ModifyChunksClaimTransaction removeChunk(@NotNull ChunkReference cr) {
         if (this.manageCheck()) return this;
         if (this.data.getWorld().matches(cr.world) && this.update(cr.x, cr.z, false)) {
-            if (this.isDeleting() && !this.checkPermission(Permission.DELETE)) {
+            if (this.isDeleting() && (!this.allowDeletion || !this.checkPermission(Permission.DELETE))) {
                 this.langMessage("permHandler-stdError");
                 this.valid = false;
                 return this;
@@ -202,6 +209,7 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     private boolean hasChunkLimitConflict() {
         RulesConfig rules = this.runtime.rootConfig().rules();
         int maxChunks = rules.maxChunks(this.user);
+        if (maxChunks < 0) return false;
         return this.effectiveChunkCount() >= maxChunks;
     }
 

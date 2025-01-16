@@ -61,8 +61,11 @@ public abstract class GuiSlotMap {
     }
 
     protected void populate(@NotNull GuiLayout layout) {
+        GuiSlot slot;
         int w, h;
-        for (GuiSlot slot : layout) {
+        for (int i=0; i < layout.getMaxSlot(); i++) {
+            slot = layout.getSlot(i);
+            if (slot == null) continue;
             w = slot.width();
             h = slot.height();
             if (w == 1 && h == 1) {

@@ -5,7 +5,6 @@ import io.github.wasabithumb.xclaim.XClaimBootstrap;
 import io.github.wasabithumb.xclaim.asset.AssetManager;
 import io.github.wasabithumb.xclaim.asset.AssetPath;
 import io.github.wasabithumb.xclaim.asset.AssetSource;
-import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.config.struct.Config;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.platform.Platform;
@@ -20,9 +19,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 @ApiStatus.Internal
 final class IntegrationLoader<T extends Integration> {
+
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("\\s*#");
+
+    //
 
     private final Class<T> clazz;
     IntegrationLoader(@NotNull Class<T> clazz) {
@@ -44,7 +48,7 @@ final class IntegrationLoader<T extends Integration> {
                 T instance;
                 while ((line = br.readLine()) != null) {
                     if (line.isEmpty()) continue;
-                    instance = this.init(line);
+                    instance = this.init(this.strip(line));
                     if (instance == null) continue;
                     if (ret == null || instance.weight() > ret.weight()) ret = instance;
                 }
@@ -84,6 +88,7 @@ final class IntegrationLoader<T extends Integration> {
         } catch (InvocationTargetException | ExceptionInInitializerError e) {
             Throwable t = e.getCause();
             if (t instanceof IntegrationException) return null;
+            if (t instanceof LinkageError) return null;
             throw new AssertionError("Unexpected exception in constructor", e);
         } catch (ReflectiveOperationException | SecurityException e) {
             throw new AssertionError("Unexpected reflection error", e);
@@ -169,6 +174,29 @@ final class IntegrationLoader<T extends Integration> {
         }
 
         return false;
+    }
+
+    private @NotNull String strip(@NotNull String line) {
+        final int len = line.length();
+        int start = 0;
+        int end = len;
+        char c;
+
+        while (start < len) {
+            c = line.charAt(start);
+            if (!Character.isWhitespace(c)) break;
+            start++;
+        }
+
+        for (int i=start; i < len; i++) {
+            c = line.charAt(i);
+            if (Character.isWhitespace(c) || c == '#') {
+                end = i;
+                break;
+            }
+        }
+
+        return line.substring(start, end);
     }
 
 }

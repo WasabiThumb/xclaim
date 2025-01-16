@@ -47,6 +47,7 @@ public final class InventorySerializer {
 
     private static @Nullable PlatformItem @NotNull [] deserialize(@NotNull Platform platform, byte @NotNull [] bytes) {
         ByteBuffer buf = ByteBuffer.wrap(bytes);
+        buf.order(ByteOrder.LITTLE_ENDIAN);
         int count = -1;
         try {
             count = buf.getInt();

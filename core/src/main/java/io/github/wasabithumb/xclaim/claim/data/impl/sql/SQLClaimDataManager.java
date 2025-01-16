@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.claim.data.impl.sql;
 
-import io.github.wasabithumb.xclaim.api.enums.Permission;
-import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
@@ -45,7 +45,7 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
             ctx.psInfoInsert.setString(1, name);
             ctx.psInfoInsert.setString(2, owner.toString());
             ctx.psInfoInsert.setString(3, world.uuid().toString());
-            ctx.psInfoInsert.executeQuery();
+            ctx.psInfoInsert.execute();
 
             ctx.psInfoSelectByName.setString(1, name);
             ResultSet rs = ctx.psInfoSelectByName.executeQuery();
@@ -103,7 +103,7 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
                 if (name.equals("token")) continue;
                 Permission perm;
                 try {
-                    perm = Permission.valueOf(name);
+                    perm = Permission.fromSQLName(name);
                 } catch (IllegalArgumentException ignored) {
                     continue;
                 }
@@ -131,7 +131,7 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
                 if (name.equals("token")) continue;
                 Permission perm;
                 try {
-                    perm = Permission.valueOf(name);
+                    perm = Permission.fromSQLName(name);
                 } catch (IllegalArgumentException ignored) {
                     continue;
                 }
@@ -338,14 +338,14 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
             }
 
             this.psInfoInsert        = connection.prepareStatement("INSERT INTO xcClaimInfo (name, owner, world) VALUES (?, ?, ?)");
-            this.psInfoSelectTokens  = connection.prepareStatement("SELECT (token) FROM xcClaimInfo");
-            this.psInfoSelectByToken = connection.prepareStatement("SELECT (name, owner, world) FROM xcClaimInfo WHERE token=?");
-            this.psInfoSelectByName  = connection.prepareStatement("SELECT (token) FROM xcClaimInfo WHERE name=?");
+            this.psInfoSelectTokens  = connection.prepareStatement("SELECT token FROM xcClaimInfo");
+            this.psInfoSelectByToken = connection.prepareStatement("SELECT name, owner, world FROM xcClaimInfo WHERE token=?");
+            this.psInfoSelectByName  = connection.prepareStatement("SELECT token FROM xcClaimInfo WHERE name=?");
             this.psInfoDelete        = connection.prepareStatement("DELETE FROM xcClaimInfo WHERE token=?");
             this.psInfoUpdate        = connection.prepareStatement("UPDATE xcClaimInfo SET name=?, owner=? WHERE token=?");
 
             this.psChunksInsert = connection.prepareStatement("INSERT INTO xcClaimChunks (token, x, z) VALUES (?, ?, ?)");
-            this.psChunksSelect = connection.prepareStatement("SELECT (x, z) FROM xcClaimChunks WHERE token=?");
+            this.psChunksSelect = connection.prepareStatement("SELECT x, z FROM xcClaimChunks WHERE token=?");
             this.psChunksDeleteSingle = connection.prepareStatement("DELETE FROM xcClaimChunks WHERE token=? AND x=? AND z=?");
             this.psChunksDelete = connection.prepareStatement("DELETE FROM xcClaimChunks WHERE token=?");
 
@@ -353,10 +353,10 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
             Set<String> globalPermissionsColumns = this.getColumnNames(connection, "xcClaimGlobalPermissions");
             Map<Permission, PreparedStatement> psGlobalPermissionsUpsert = new EnumMap<>(Permission.class);
             for (Permission p : Permission.values()) {
-                final String name = p.name();
+                final String name = p.sqlName();
                 if (!globalPermissionsColumns.contains(name)) {
                     try (Statement s = connection.createStatement()) {
-                        s.executeQuery("ALTER TABLE xcClaimGlobalPermissions ADD " + name + " TINYINT UNSIGNED NOT NULL DEFAULT 255");
+                        s.execute("ALTER TABLE xcClaimGlobalPermissions ADD " + name + " TINYINT UNSIGNED NOT NULL DEFAULT 255");
                     }
                 }
                 psGlobalPermissionsUpsert.put(
@@ -373,10 +373,10 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
             Map<Permission, PreparedStatement> psUserPermissionsInsert = new EnumMap<>(Permission.class);
             Map<Permission, PreparedStatement> psUserPermissionsUpdate = new EnumMap<>(Permission.class);
             for (Permission p : Permission.values()) {
-                final String name = p.name();
+                final String name = p.sqlName();
                 if (!userPermissionsColumns.contains(name)) {
                     try (Statement s = connection.createStatement()) {
-                        s.executeQuery("ALTER TABLE xcClaimUserPermissions ADD " + name + " TINYINT UNSIGNED NOT NULL DEFAULT 0");
+                        s.execute("ALTER TABLE xcClaimUserPermissions ADD " + name + " TINYINT UNSIGNED NOT NULL DEFAULT 0");
                     }
                 }
                 psUserPermissionsInsert.put(

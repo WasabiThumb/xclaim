@@ -21,19 +21,7 @@ permissions:
   xclaim.admin:
     description: Allows you to modify/delete any claim
     default: false
-  xclaim.import:
-    description: Allows you to import claims from the ClaimChunk plugin
-    default: false
-  xclaim.update:
-    description: Allows you to update xclaim with /xclaim update
-    default: false
-  xclaim.restart:
-    description: Allows you to restart xclaim with /xclaim restart
-    default: false
 commands:
   xclaim:
     description: XClaim main command
     aliases: [ xc ]
-  importclaims:
-    description: Safely imports claims from the ClaimChunk plugin
-    permission: xclaim.import

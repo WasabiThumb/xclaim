@@ -1,5 +1,4 @@
 plugins {
-    id("io.github.goooler.shadow") version "8.1.8"
     java
 }
 
@@ -25,10 +24,12 @@ repositories {
     maven("https://maven.enginehub.org/repo/")
     maven("https://repo.bluecolored.de/releases/")
     maven("https://repo.mikeprimm.com/")
+    maven("https://repo.extendedclip.com/releases/")
 }
 
 dependencies {
     implementation(project(":core"))
+
     compileOnly("org.jetbrains:annotations:${annotationsVersion}")
     implementation("org.bstats:bstats-bukkit:${statsVersion}")
     compileOnly("org.spigotmc:spigot-api:${serverVersion}")
@@ -48,23 +49,7 @@ dependencies {
     // Dynmap integration
     compileOnly("us.dynmap:DynmapCoreAPI:3.6")
     compileOnly("us.dynmap:dynmap-api:3.6")
-}
 
-tasks.jar {
-    enabled = false
-}
-
-tasks.shadowJar {
-    archiveClassifier.set("")
-
-    val libPkg = "io.github.wasabithumb.xclaim.shadow"
-    relocate("org.bstats", "${libPkg}.bstats")
-}
-
-artifacts {
-    add("default", tasks.shadowJar)
-}
-
-tasks.build {
-    dependsOn(tasks.shadowJar)
+    // Placeholder integration
+    compileOnly("me.clip:placeholderapi:2.11.6")
 }

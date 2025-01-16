@@ -1,6 +1,5 @@
 package io.github.wasabithumb.xclaim.platform.entity;
 
-import io.github.wasabithumb.xclaim.api.enums.EntityGroup;
 import io.github.wasabithumb.xclaim.platform.PlatformObject;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
@@ -30,7 +29,7 @@ public interface PlatformEntity extends PlatformObject {
 
     @Nullable PlatformPlayer sourcePlayer();
 
-    boolean isInGroup(@NotNull EntityGroup group);
+    boolean isInGroup(@NotNull PlatformEntityGroup group);
 
     void damage(double damage);
 

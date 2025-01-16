@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.gui2.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.api.enums.Permission;
-import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui2.GuiInstance;
 import io.github.wasabithumb.xclaim.gui2.action.GuiAction;

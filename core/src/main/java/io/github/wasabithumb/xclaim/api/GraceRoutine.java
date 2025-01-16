@@ -1,5 +1,9 @@
 package io.github.wasabithumb.xclaim.api;
 
+public class GraceRoutine {
+}
+
+/*
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.scheduler.PlatformSchedulerTask;
@@ -16,6 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class GraceRoutine implements Listener {
 
@@ -122,3 +127,4 @@ public class GraceRoutine implements Listener {
     }
 
 }
+*/

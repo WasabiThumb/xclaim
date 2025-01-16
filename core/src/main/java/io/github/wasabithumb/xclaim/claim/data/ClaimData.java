@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.claim.data;
 
-import io.github.wasabithumb.xclaim.api.enums.Permission;
-import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorldManager;
 import org.jetbrains.annotations.*;

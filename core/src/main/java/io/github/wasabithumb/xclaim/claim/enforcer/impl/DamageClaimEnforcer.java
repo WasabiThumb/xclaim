@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.claim.enforcer.impl;
 
-import io.github.wasabithumb.xclaim.api.enums.EntityGroup;
-import io.github.wasabithumb.xclaim.api.enums.Permission;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformEntityGroup;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
@@ -21,7 +21,7 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
 
     //
 
-    protected abstract @NotNull EntityGroup group();
+    protected abstract @NotNull PlatformEntityGroup group();
 
     protected boolean inGroup(@NotNull PlatformEntity entity) {
         return entity.isInGroup(this.group());
@@ -61,8 +61,8 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
         }
 
         @Override
-        protected @NotNull EntityGroup group() {
-            return EntityGroup.FRIENDLY;
+        protected @NotNull PlatformEntityGroup group() {
+            return PlatformEntityGroup.FRIENDLY;
         }
 
         @Override
@@ -79,8 +79,8 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
         }
 
         @Override
-        protected @NotNull EntityGroup group() {
-            return EntityGroup.HOSTILE;
+        protected @NotNull PlatformEntityGroup group() {
+            return PlatformEntityGroup.HOSTILE;
         }
 
         @Override
@@ -97,8 +97,8 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
         }
 
         @Override
-        protected @NotNull EntityGroup group() {
-            return EntityGroup.VEHICLE;
+        protected @NotNull PlatformEntityGroup group() {
+            return PlatformEntityGroup.VEHICLE;
         }
 
         @Override
@@ -115,8 +115,8 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
         }
 
         @Override
-        protected @NotNull EntityGroup group() {
-            return EntityGroup.NOT_ALIVE;
+        protected @NotNull PlatformEntityGroup group() {
+            return PlatformEntityGroup.NOT_ALIVE;
         }
 
         @Override
@@ -133,8 +133,8 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
         }
 
         @Override
-        protected @NotNull EntityGroup group() {
-            return EntityGroup.MISC;
+        protected @NotNull PlatformEntityGroup group() {
+            return PlatformEntityGroup.MISC;
         }
 
         @Override

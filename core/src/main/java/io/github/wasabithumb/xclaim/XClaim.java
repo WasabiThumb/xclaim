@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.asset.AssetSource;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.claim.data.impl.sqlite.SQLiteClaimDataManager;
+import io.github.wasabithumb.xclaim.command.CommandManager;
 import io.github.wasabithumb.xclaim.config.impl.defaulting.DefaultingRootConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlRootConfig;
 import io.github.wasabithumb.xclaim.config.struct.RootConfig;
@@ -36,6 +37,7 @@ public class XClaim {
     private TrustManager trust = null;
     private ClaimManager claims = null;
     private GuiManager gui = null;
+    private CommandManager commands = null;
 
     @ApiStatus.Internal
     XClaim(@NotNull XClaimBootstrap bootstrap) {
@@ -93,6 +95,10 @@ public class XClaim {
         return this.gui;
     }
 
+    public @NotNull CommandManager commands() {
+        return this.commands;
+    }
+
     //
 
     void enable() {
@@ -107,10 +113,23 @@ public class XClaim {
         this.loadTrust();
         this.loadClaims();
         this.loadGUI();
-        // TODO: Commands, movement, grace
+        this.loadCommands();
+        // TODO: Movement, grace
     }
 
     void disable() {
+        this.gui.stop();
+        this.integrations.shutdown();
+        try {
+            this.claims.close();
+        } catch (Exception e) {
+            this.logger().log(Level.WARNING, "Exception while shutting down claim manager", e);
+        }
+        try {
+            this.trust.close();
+        } catch (Exception e) {
+            this.logger().log(Level.WARNING, "Exception while shutting down trust manager", e);
+        }
     }
 
     /* STARTUP TASKS */
@@ -289,6 +308,10 @@ public class XClaim {
     private void loadGUI() {
         this.gui = new GuiManager(this);
         this.gui.start();
+    }
+
+    private void loadCommands() {
+        this.commands = new CommandManager(this);
     }
 
     //

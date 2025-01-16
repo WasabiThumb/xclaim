@@ -27,6 +27,7 @@ repositories {
 dependencies {
     implementation(project(":core"))
     implementation(project(":bukkit"))
+    implementation(project(":paper:bootstrap"))
     compileOnly("org.jetbrains:annotations:${annotationsVersion}")
     compileOnly("io.papermc.paper:paper-api:${serverVersion}")
 }
@@ -36,10 +37,30 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    archiveClassifier.set("")
+
+    manifest {
+        attributes["Enable-Debug"] = if (debugMode) "true" else "false"
+    }
+
     transform(ServiceFileTransformer::class.java) {
         setPath("META-INF/integrations")
     }
-    archiveClassifier.set("")
+
+    // Library exclusions (present in Paper)
+    dependencies {
+        exclude(dependency("com.google.code.gson:gson"))
+        exclude(dependency("org.slf4j:slf4j-api"))
+    }
+
+    // Library relocations
+    val libPkg = "io.github.wasabithumb.xclaim.shadow"
+    relocate("com.moandjiezana.toml", "${libPkg}.toml")
+    relocate("org.reflections", "${libPkg}.reflections")
+    relocate("org.bstats", "${libPkg}.bstats")
+    relocate("com.github.benmanes.caffeine", "${libPkg}.caffeine")
+    relocate("org.sqlite", "${libPkg}.sqlite")
+    relocate("org.bstats", "${libPkg}.bstats")
 }
 
 artifacts {

@@ -1,12 +1,11 @@
 package io.github.wasabithumb.xclaim.gui2.layout;
 
 import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.asset.AssetManager;
+import io.github.wasabithumb.xclaim.config.struct.sub.GuiConfig;
 import io.github.wasabithumb.xclaim.gui2.layout.xml.XmlGuiLayout;
 import io.github.wasabithumb.xclaim.util.io.stream.StreamUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
+import org.jetbrains.annotations.*;
 
 import java.io.*;
 import java.util.*;
@@ -22,14 +21,18 @@ import java.util.zip.ZipInputStream;
 
 public class GuiLayouts {
 
-    private static final Pattern FILE_PATTERN = Pattern.compile("^layouts/([a-z\\-]+)\\.xml$");
-
+    private final XClaim runtime;
     private LoadStage stage = LoadStage.IDLE;
     private final StampedLock stageLock = new StampedLock();
     private Throwable fatal = null;
     private final Object endPreEntriesSignal = new Object();
     protected LinkedList<LoadEntry> entries = new LinkedList<>();
     private Map<String, LoadResult> map = new HashMap<>();
+
+    @ApiStatus.Internal
+    public GuiLayouts(@NotNull XClaim runtime) {
+        this.runtime = runtime;
+    }
 
     //
 
@@ -262,13 +265,9 @@ public class GuiLayouts {
     protected static class LoadEntry {
 
         final String name;
-        final String bundledPath;
-        final File diskPath;
         final CompletableFuture<GuiLayout> value = new CompletableFuture<>();
-        LoadEntry(@NotNull String name, @NotNull String bundledPath, @NotNull File diskPath) {
+        LoadEntry(@NotNull String name) {
             this.name = name;
-            this.bundledPath = bundledPath;
-            this.diskPath = diskPath;
         }
 
     }
@@ -303,68 +302,47 @@ public class GuiLayouts {
             this.parent.transferEntries();
         }
 
+        private @NotNull AssetManager assets() {
+            return this.parent.runtime.assets();
+        }
+
         private void populateEntries() throws IOException {
-            final File dataFolder = XClaim.instance.getDataFolder();
-            final File layoutsFolder = new File(dataFolder, "layouts");
+            final File layoutsFolder = this.assets().data().resolve("layouts");
 
             if ((!layoutsFolder.isDirectory()) && (!layoutsFolder.mkdirs())) {
                 throw new IOException("Failed to create new directory: " + layoutsFolder.getAbsolutePath());
             }
 
-            try (FileInputStream fis = new FileInputStream(XClaim.jarFile);
-                 ZipInputStream zis = new ZipInputStream(fis)
-            ) {
-                ZipEntry ze;
-                Matcher m;
-                LoadEntry entry;
-                while ((ze = zis.getNextEntry()) != null) {
-                    m = FILE_PATTERN.matcher(ze.getName());
-                    if (!m.matches()) continue;
+            List<String> files = this.assets()
+                    .resources()
+                    .sub("layouts")
+                    .list(false, true);
 
-                    entry = new LoadEntry(
-                            m.group(1),
-                            ze.getName(),
-                            new File(layoutsFolder, m.group(1) + ".xml")
-                    );
-                    this.parent.entries.add(entry);
-                }
+            LoadEntry entry;
+            for (String file : files) {
+                if (!file.endsWith(".xml")) continue;
+                entry = new LoadEntry(file.substring(0, file.length() - 4));
+                this.parent.entries.add(entry);
             }
         }
 
         private @NotNull GuiLayout resolveEntry(@NotNull LoadEntry entry) throws IOException {
-            final File diskPath = entry.diskPath;
+            final String path = "layouts/" + entry.name + ".xml";
 
-            InputStream is;
-            if (diskPath.isFile()) {
-                //noinspection IOStreamConstructor
-                is = new FileInputStream(diskPath);
-            } else {
-                boolean close = true;
-                ZipFile zf = null;
-                is = null;
-                try {
-                    zf = new ZipFile(XClaim.jarFile);
-                    ZipEntry ze = zf.getEntry(entry.bundledPath);
-                    if (ze == null) throw new IOException("Entry \"" + entry.bundledPath + "\" no longer exists");
-                    is = zf.getInputStream(ze);
-                    is = StreamUtil.tee(is, diskPath);
-                    is = StreamUtil.closeListener(is, zf);
-                    close = false;
-                } finally {
-                    if (close) {
-                        if (zf != null) zf.close();
-                        if (is != null) is.close();
-                    }
+            if (!this.assets().data().exists(path)) {
+                try (InputStream is = this.assets().resources().read(path);
+                     OutputStream os = this.assets().data().write(path)
+                ) {
+                    StreamUtil.pipe(is, os);
                 }
             }
 
-            try {
-                XmlGuiLayout ret = new XmlGuiLayout(XClaim.mainConfig.gui().height());
-                ret.setDefaultBasis(XClaim.mainConfig.gui().basis());
+            try (InputStream is = this.assets().data().read(path)) {
+                GuiConfig cfg = this.parent.runtime.rootConfig().gui();
+                XmlGuiLayout ret = new XmlGuiLayout(cfg.height());
+                ret.setDefaultBasis(cfg.basis());
                 ret.read(is);
                 return ret;
-            } finally {
-                is.close();
             }
         }
 

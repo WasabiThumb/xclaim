@@ -154,8 +154,8 @@ public final class ClaimEditor {
         double y1 = ply.location().y() - 1d;
         double y2 = y1 + 4d;
 
-        for (int i=0; i < 2; i++) {
-            double y = (i == 0) ? y1 : y2;
+        for (int i=0; i < 6; i++) {
+            double y = y1 + ((y2 - y1) * (i / 5d));
             this.beam(
                     ply,
                     rgb,
@@ -227,7 +227,7 @@ public final class ClaimEditor {
         double dz = z2 - z1;
 
         double mag = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        double factor = 0.05d / mag;
+        double factor = 0.2d / mag;
         dx *= factor;
         dy *= factor;
         dz *= factor;
@@ -238,7 +238,7 @@ public final class ClaimEditor {
             x1 += dx;
             y1 += dy;
             z1 += dz;
-            travelled += 0.05d;
+            travelled += 0.2d;
         }
     }
 
@@ -305,6 +305,7 @@ public final class ClaimEditor {
                     break;
                 case SLOT_UNCLAIM:
                     t = claim.modifyChunks(ply)
+                            .allowDeletion(false)
                             .removeChunk(ply.location().chunk());
                     break;
                 case SLOT_QUIT:
@@ -314,12 +315,6 @@ public final class ClaimEditor {
                     return;
             }
 
-            if (t.isDeleting()) {
-                // TODO: Better error message
-                // Allowing the player to delete from here would be technically OK, but very confusing.
-                ply.sendMessage(this.parent.runtime.lang("permHandler-stdError"));
-                return;
-            }
             t.commit();
         }
 

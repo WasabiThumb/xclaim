@@ -1,5 +1,12 @@
 package io.github.wasabithumb.xclaim.api;
 
+public class MovementRoutine {
+
+    // TODO
+
+}
+
+/*
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
@@ -107,3 +114,4 @@ public class MovementRoutine implements Listener {
     }
 
 }
+*/

@@ -8,10 +8,7 @@ import io.github.wasabithumb.xclaim.trust.TrustSet;
 import io.github.wasabithumb.xclaim.util.SQLHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.logging.Logger;
@@ -160,6 +157,10 @@ public abstract class SQLTrustManager extends SQLHelper<SQLTrustManager.Context>
 
         @Override
         public void prepare(@NotNull Connection connection) throws SQLException {
+            try (Statement s = connection.createStatement()) {
+                s.execute("CREATE TABLE IF NOT EXISTS xcTrust (owner VARCHAR(36) PRIMARY KEY, players TEXT NOT NULL)");
+            }
+
             this.psInsert = connection.prepareStatement("INSERT INTO xcTrust (owner, players) VALUES (?, ?) ON CONFLICT(owner) DO UPDATE SET players = ?");
             this.psSelect = connection.prepareStatement("SELECT players FROM xcTrust WHERE owner = ?");
             this.psList   = connection.prepareStatement("SELECT owner FROM xcTrust");

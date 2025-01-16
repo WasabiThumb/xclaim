@@ -1,6 +1,5 @@
 package io.github.wasabithumb.xclaim.platform.entity;
 
-import io.github.wasabithumb.xclaim.api.enums.EntityGroup;
 import org.bukkit.entity.Enemy;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -8,13 +7,13 @@ import org.bukkit.entity.Vehicle;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @ApiStatus.Internal
 sealed abstract class BukkitPlatformEntityGroupCheck implements Predicate<Entity> {
 
-    static boolean test(@NotNull EntityGroup group, @NotNull Entity entity) {
+    static boolean test(@NotNull PlatformEntityGroup group, @NotNull Entity entity) {
         return switch (group) {
             case FRIENDLY -> test(entity, alive(true), armorStand(false), hostile(false));
             case HOSTILE -> test(entity, alive(true), armorStand(false), hostile(true));
@@ -51,34 +50,34 @@ sealed abstract class BukkitPlatformEntityGroupCheck implements Predicate<Entity
     }
 
     private static @NotNull BukkitPlatformEntityGroupCheck misc(final boolean misc) {
-        return new ByType(MISC_TYPES::contains, misc);
+        return new ByType((EntityType et) -> MISC_TYPES.contains(et.name()), misc);
     }
 
-    private static final EnumSet<EntityType> MISC_TYPES = EnumSet.of(
-            EntityType.AREA_EFFECT_CLOUD,
-            EntityType.ARROW,
-            EntityType.DRAGON_FIREBALL,
-            EntityType.DROPPED_ITEM,
-            EntityType.EGG,
-            EntityType.ENDER_CRYSTAL,
-            EntityType.ENDER_PEARL,
-            EntityType.ENDER_SIGNAL,
-            EntityType.EVOKER_FANGS,
-            EntityType.EXPERIENCE_ORB,
-            EntityType.FALLING_BLOCK,
-            EntityType.FIREBALL,
-            EntityType.FIREWORK,
-            EntityType.FISHING_HOOK,
-            EntityType.LIGHTNING,
-            EntityType.LLAMA_SPIT,
-            EntityType.MARKER,
-            EntityType.SMALL_FIREBALL,
-            EntityType.SNOWBALL,
-            EntityType.SPECTRAL_ARROW,
-            EntityType.SPLASH_POTION,
-            EntityType.THROWN_EXP_BOTTLE,
-            EntityType.TRIDENT,
-            EntityType.UNKNOWN
+    private static final Set<String> MISC_TYPES = Set.of(
+            "AREA_EFFECT_CLOUD",
+            "ARROW",
+            "DRAGON_FIREBALL",
+            "DROPPED_ITEM",
+            "EGG",
+            "ENDER_CRYSTAL",
+            "ENDER_PEARL",
+            "ENDER_SIGNAL",
+            "EVOKER_FANGS",
+            "EXPERIENCE_ORB",
+            "FALLING_BLOCK",
+            "FIREBALL",
+            "FIREWORK",
+            "FISHING_HOOK",
+            "LIGHTNING",
+            "LLAMA_SPIT",
+            "MARKER",
+            "SMALL_FIREBALL",
+            "SNOWBALL",
+            "SPECTRAL_ARROW",
+            "SPLASH_POTION",
+            "THROWN_EXP_BOTTLE",
+            "TRIDENT",
+            "UNKNOWN"
     );
 
     //

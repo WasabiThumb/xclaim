@@ -28,7 +28,7 @@ public class GuiManager implements PlatformListener {
 
     public GuiManager(@NotNull XClaim runtime) {
         this.runtime = runtime;
-        this.layouts = new GuiLayouts();
+        this.layouts = new GuiLayouts(runtime);
         this.editor = new ClaimEditor(runtime);
     }
 

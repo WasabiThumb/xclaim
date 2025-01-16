@@ -1,15 +1,12 @@
 package io.github.wasabithumb.xclaim.gui2.layout;
 
-import org.apache.commons.lang3.stream.IntStreams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
-public interface GuiLayout extends Iterable<GuiSlot> {
+public interface GuiLayout {
 
     default int getWidth() {
         return 9;
@@ -25,14 +22,6 @@ public interface GuiLayout extends Iterable<GuiSlot> {
 
     default void addSlot(@NotNull GuiSlot slot) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    default @NotNull Iterator<GuiSlot> iterator() {
-        return IntStreams.rangeClosed(this.getMaxSlot())
-                .mapToObj(this::getSlot)
-                .filter(Objects::nonNull)
-                .iterator();
     }
 
 }

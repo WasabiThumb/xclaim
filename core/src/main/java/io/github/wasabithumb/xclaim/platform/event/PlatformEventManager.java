@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +20,21 @@ public abstract class PlatformEventManager {
     //
 
     protected final @NotNull List<Entry> processEntries(@NotNull PlatformListener listener) {
-        final Class<?> clazz = listener.getClass();
+        List<Entry> ret = new ArrayList<>();
+
+        Class<?> clazz = listener.getClass();
+        do {
+            ret.addAll(this.processEntriesAtLevel(listener, clazz));
+            clazz = clazz.getSuperclass();
+        } while (clazz != null && PlatformListener.class.isAssignableFrom(clazz));
+
+        if (ret.isEmpty()) {
+            this.reportIssue(listener, new AssertionError("Listener has no event handlers"));
+        }
+        return Collections.unmodifiableList(ret);
+    }
+
+    protected final @NotNull List<Entry> processEntriesAtLevel(@NotNull PlatformListener listener, @NotNull Class<?> clazz) {
         final Method[] methods = clazz.getDeclaredMethods();
         final Entry[] entries = new Entry[methods.length];
         int count = 0;
@@ -37,7 +52,6 @@ public abstract class PlatformEventManager {
         }
 
         if (count == 0) {
-            this.reportIssue(listener, new AssertionError("Listener has no event handlers"));
             return Collections.emptyList();
         }
 

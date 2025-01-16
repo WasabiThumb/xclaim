@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.asset.AssetSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,15 @@ public class DirectoryAssetSource implements AssetSource {
 
     @Override
     public @NotNull DirectoryAssetSource sub(@NotNull AssetPath path) {
-        return new DirectoryAssetSource(this.resolve(this.dir, path));
+        File target = this.resolve(this.dir, path);
+        if (!target.isDirectory()) {
+            try {
+                Files.createDirectories(target.toPath());
+            } catch (IOException e) {
+                throw new AssertionError("Failed to create new directory @ " + target.getAbsolutePath(), e);
+            }
+        }
+        return new DirectoryAssetSource(target);
     }
 
     @Override

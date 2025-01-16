@@ -127,7 +127,9 @@ public class ClaimManager {
             curClaims++;
             if (c.world().uuid().equals(firstChunk.world.uuid())) curClaimsInWorld++;
         }
-        if (curClaims >= maxClaims || curClaimsInWorld >= maxClaimsInWorld) {
+        if ((maxClaims >= 0 && curClaims >= maxClaims) ||
+                (maxClaimsInWorld >= 0 && curClaimsInWorld >= maxClaimsInWorld)
+        ) {
             if (!silent) user.sendMessage(this.runtime.lang("gui-new-max-claims"));
             return null;
         }

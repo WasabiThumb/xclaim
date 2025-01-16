@@ -101,8 +101,8 @@ final class LangString {
 
         @Override
         public @NotNull CharSequence resolve(@NotNull String @NotNull [] args) {
-            if (this.index < 0 || this.index >= args.length) return "???";
-            return args[this.index];
+            if (this.index < 1 || this.index > args.length) return "???";
+            return args[this.index - 1];
         }
 
     }

@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.claim.transaction.impl;
 
-import io.github.wasabithumb.xclaim.api.enums.Permission;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.claim.ClaimMutationContext;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;

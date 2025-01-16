@@ -97,11 +97,23 @@ public abstract class BukkitPlatformPlayer extends BukkitPlatformEntity implemen
         return this.handle().getFirstPlayed();
     }
 
+    private static final Particle DUST_PARTICLE;
+    static {
+        Particle dust;
+        try {
+            //noinspection JavaReflectionMemberAccess
+            dust = (Particle) Particle.class.getField("DUST").get(null);
+        } catch (ReflectiveOperationException e) {
+            dust = Particle.REDSTONE;
+        }
+        DUST_PARTICLE = dust;
+    }
+
     @Override
     public void sendRedstoneParticle(int rgb, double x, double y, double z) {
         Particle.DustOptions opts = new Particle.DustOptions(Color.fromRGB(rgb), 1);
         this.handle().spawnParticle(
-                Particle.REDSTONE,
+                DUST_PARTICLE,
                 x, y, z,
                 1,
                 0.02d, 0.02d, 0.02d,

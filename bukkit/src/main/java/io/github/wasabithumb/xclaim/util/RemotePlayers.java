@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +24,8 @@ public final class RemotePlayers {
 
     public static @Nullable OfflinePlayer fetch(@NotNull String name) {
         try {
-            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + URLEncoder.encode(name, StandardCharsets.UTF_8));
+            URL url = URI.create("https://api.mojang.com/users/profiles/minecraft/" +
+                    URLEncoder.encode(name, StandardCharsets.UTF_8)).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);

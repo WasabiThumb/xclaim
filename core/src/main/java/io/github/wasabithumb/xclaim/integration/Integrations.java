@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.config.struct.sub.IntegrationsConfig;
 import io.github.wasabithumb.xclaim.integration.economy.EconomyIntegration;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
+import io.github.wasabithumb.xclaim.integration.placeholder.PlaceholderIntegration;
 import io.github.wasabithumb.xclaim.integration.protection.ProtectionIntegration;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -13,18 +14,23 @@ import org.jetbrains.annotations.UnknownNullability;
 /**
  * Accessor for integrations
  * @see #map()
+ * @see #protection()
+ * @see #economy()
+ * @see #placeholder()
  */
 public final class Integrations {
 
-    private static final int MAP        = 0b0001;
-    private static final int PROTECTION = 0b0010;
-    private static final int ECONOMY    = 0b0100;
+    private static final int MAP         = 0b0001;
+    private static final int PROTECTION  = 0b0010;
+    private static final int ECONOMY     = 0b0100;
+    private static final int PLACEHOLDER = 0b1000;
 
     //
 
     private final MapIntegration map;
     private final ProtectionIntegration protection;
     private final EconomyIntegration economy;
+    private final PlaceholderIntegration placeholder;
     private final int flags;
     private boolean init;
 
@@ -57,9 +63,13 @@ public final class Integrations {
             economy = null;
         }
 
+        PlaceholderIntegration placeholder = Integration.load(PlaceholderIntegration.class, runtime);
+        if (placeholder != null) flags |= PLACEHOLDER;
+
         this.map = map;
         this.protection = protection;
         this.economy = economy;
+        this.placeholder = placeholder;
         this.flags = flags;
         this.init = false;
     }
@@ -97,6 +107,9 @@ public final class Integrations {
 
         if (this.hasEconomy())
             ret[head++] = this.economy;
+
+        if (this.hasPlaceholder())
+            ret[head++] = this.placeholder;
 
         assert head == count;
         return ret;
@@ -154,6 +167,20 @@ public final class Integrations {
      */
     public boolean hasEconomy() {
         return this.has(ECONOMY);
+    }
+
+    /**
+     * The placeholder (e.g. PAPI) integration. Will be non-null if {@link #hasPlaceholder()} is true.
+     */
+    public @UnknownNullability PlaceholderIntegration placeholder() {
+        return this.placeholder;
+    }
+
+    /**
+     * @return True if {@link #placeholder()} is non-null.
+     */
+    public boolean hasPlaceholder() {
+        return this.has(PLACEHOLDER);
     }
 
 }

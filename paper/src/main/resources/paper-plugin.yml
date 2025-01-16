@@ -1,0 +1,37 @@
+name: XClaim
+description: "A fully-featured chunk claiming system for community servers"
+version: "2.0.0"
+api-version: "1.19"
+main: "io.github.wasabithumb.xclaim.XClaimPlugin"
+bootstrapper: "io.github.wasabithumb.xclaim.XClaimPluginBootstrap"
+prefix: "XC"
+authors:
+  - WasabiThumb
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+    dynmap:
+      load: BEFORE
+      required: false
+    Essentials:
+      load: BEFORE
+      required: false
+    EssentialsX:
+      load: BEFORE
+      required: false
+    Vault:
+      load: BEFORE
+      required: false
+    BlueMap:
+      load: BEFORE
+      required: false
+    WorldGuard:
+      load: BEFORE
+      required: false
+folia-supported: true
+permissions:
+  xclaim.admin:
+    description: Allows you to modify/delete any claim
+    default: false

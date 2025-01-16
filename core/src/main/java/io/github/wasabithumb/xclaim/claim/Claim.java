@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.claim;
 
-import io.github.wasabithumb.xclaim.api.enums.Permission;
-import io.github.wasabithumb.xclaim.api.enums.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
 import io.github.wasabithumb.xclaim.claim.transaction.impl.*;
