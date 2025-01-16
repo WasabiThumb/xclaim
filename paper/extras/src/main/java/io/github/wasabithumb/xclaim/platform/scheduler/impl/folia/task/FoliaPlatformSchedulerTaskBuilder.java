@@ -51,7 +51,7 @@ public final class FoliaPlatformSchedulerTaskBuilder extends BukkitPlatformSched
             return this.facets.global().runAtFixedRate(
                     this.plugin,
                     executor,
-                    this.delay.ticks(),
+                    this.delay.isInstant() ? 1L : this.delay.ticks(),
                     this.period.isInstant() ? 1L : this.period.ticks()
             );
         } else if (this.delay.isInstant()) {
@@ -63,7 +63,7 @@ public final class FoliaPlatformSchedulerTaskBuilder extends BukkitPlatformSched
             return this.facets.global().runDelayed(
                     this.plugin,
                     executor,
-                    this.delay.ticks()
+                    this.delay.isInstant() ? 1L : this.delay.ticks()
             );
         }
     }
@@ -101,7 +101,7 @@ public final class FoliaPlatformSchedulerTaskBuilder extends BukkitPlatformSched
                     bc.getX(),
                     bc.getZ(),
                     executor,
-                    this.delay.ticks(),
+                    this.delay.isInstant() ? 1L : this.delay.ticks(),
                     this.period.isInstant() ? 1L : this.period.ticks()
             );
         } else if (this.delay.isInstant()) {
@@ -119,7 +119,7 @@ public final class FoliaPlatformSchedulerTaskBuilder extends BukkitPlatformSched
                     bc.getX(),
                     bc.getZ(),
                     executor,
-                    this.delay.ticks()
+                    this.delay.isInstant() ? 1L : this.delay.ticks()
             );
         }
     }
@@ -132,7 +132,7 @@ public final class FoliaPlatformSchedulerTaskBuilder extends BukkitPlatformSched
                     this.plugin,
                     executor,
                     null,
-                    this.delay.ticks(),
+                    this.delay.isInstant() ? 1L : this.delay.ticks(),
                     this.period.isInstant() ? 1L : this.period.ticks()
             );
         } else if (this.delay.isInstant()) {
@@ -146,7 +146,7 @@ public final class FoliaPlatformSchedulerTaskBuilder extends BukkitPlatformSched
                     this.plugin,
                     executor,
                     null,
-                    this.delay.ticks()
+                    this.delay.isInstant() ? 1L : this.delay.ticks()
             );
         }
         if (st == null)

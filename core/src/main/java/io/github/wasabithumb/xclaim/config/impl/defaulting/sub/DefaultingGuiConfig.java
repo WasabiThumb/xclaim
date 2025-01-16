@@ -2,8 +2,8 @@ package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterGuiConfig;
 import io.github.wasabithumb.xclaim.config.struct.sub.GuiConfig;
-import io.github.wasabithumb.xclaim.gui2.dialog.GuiDialogType;
-import io.github.wasabithumb.xclaim.gui2.layout.GuiBasis;
+import io.github.wasabithumb.xclaim.gui.dialog.GuiDialogType;
+import io.github.wasabithumb.xclaim.gui.layout.GuiBasis;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingGuiConfig extends FilterGuiConfig {

@@ -50,6 +50,9 @@ tasks.shadowJar {
     // Library exclusions (present in Paper)
     dependencies {
         exclude(dependency("com.google.code.gson:gson"))
+        exclude(dependency("com.google.errorprone:error_prone_annotations"))
+        exclude(dependency("commons-lang:commons-lang"))
+        exclude(dependency("org.checkerframework:checker-qual"))
         exclude(dependency("org.slf4j:slf4j-api"))
     }
 

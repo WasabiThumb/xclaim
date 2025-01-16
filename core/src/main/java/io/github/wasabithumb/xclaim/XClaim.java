@@ -10,7 +10,7 @@ import io.github.wasabithumb.xclaim.command.CommandManager;
 import io.github.wasabithumb.xclaim.config.impl.defaulting.DefaultingRootConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlRootConfig;
 import io.github.wasabithumb.xclaim.config.struct.RootConfig;
-import io.github.wasabithumb.xclaim.gui2.GuiManager;
+import io.github.wasabithumb.xclaim.gui.GuiManager;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.Integrations;
 import io.github.wasabithumb.xclaim.platform.Platform;

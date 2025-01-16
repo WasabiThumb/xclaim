@@ -1,8 +1,8 @@
 package io.github.wasabithumb.xclaim.config.struct.sub;
 
 import io.github.wasabithumb.xclaim.config.struct.Config;
-import io.github.wasabithumb.xclaim.gui2.dialog.GuiDialogType;
-import io.github.wasabithumb.xclaim.gui2.layout.GuiBasis;
+import io.github.wasabithumb.xclaim.gui.dialog.GuiDialogType;
+import io.github.wasabithumb.xclaim.gui.layout.GuiBasis;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Locale;

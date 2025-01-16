@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.command.impl;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.command.NullaryCommand;
-import io.github.wasabithumb.xclaim.gui2.GuiManager;
+import io.github.wasabithumb.xclaim.gui.GuiManager;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
