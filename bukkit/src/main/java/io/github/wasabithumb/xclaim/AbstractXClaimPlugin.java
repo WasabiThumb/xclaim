@@ -10,6 +10,7 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.trust.TrustManager;
 import io.github.wasabithumb.xclaim.trust.impl.yaml.YamlTrustManager;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
@@ -77,6 +78,15 @@ public abstract class AbstractXClaimPlugin extends JavaPlugin implements XClaimB
         }
 
         MAIN_COMMAND.bind(this.instance);
+        if (!MAIN_COMMAND.isHandled()) {
+            PluginCommand cmd = this.getCommand("xclaim");
+            if (cmd != null) {
+                cmd.setDescription(this.instance.lang("cmd-xc-description"));
+                cmd.setExecutor(MAIN_COMMAND);
+                cmd.setTabCompleter(MAIN_COMMAND);
+                MAIN_COMMAND.markHandled();
+            }
+        }
 
         Bukkit.getServicesManager().register(
                 XClaim.class,

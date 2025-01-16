@@ -13,6 +13,7 @@ import java.util.List;
 public class BukkitCommandBinding implements CommandExecutor, TabCompleter {
 
     private XClaim runtime = null;
+    private boolean handled = false;
 
     //
 
@@ -26,6 +27,14 @@ public class BukkitCommandBinding implements CommandExecutor, TabCompleter {
 
     private synchronized @Nullable XClaim getRuntime() {
         return this.runtime;
+    }
+
+    public synchronized boolean isHandled() {
+        return this.handled;
+    }
+
+    public synchronized void markHandled() {
+        this.handled = true;
     }
 
     //

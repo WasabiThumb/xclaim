@@ -52,6 +52,11 @@ public class PaperPlatformPlayer extends BukkitPlatformPlayer {
     }
 
     @Override
+    public boolean canBoostElytra() {
+        return true;
+    }
+
+    @Override
     public void boostElytra(@Nullable PlatformItem item) {
         if (item == null) return;
         this.handle().boostElytra(this.platform.adapter().item(item));

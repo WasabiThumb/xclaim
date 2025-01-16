@@ -1,5 +1,6 @@
 package io.github.wasabithumb.xclaim;
 
+import io.github.wasabithumb.xclaim.command.BukkitCommandBinding;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -26,13 +27,14 @@ public class XClaimPluginBootstrap implements PluginBootstrap {
     }
 
     private void registerCommands(@NotNull Commands commands) {
+        BukkitCommandBinding binding = AbstractXClaimPlugin.MAIN_COMMAND;
         commands.register(
                 "xclaim",
                 Collections.singletonList("xc"),
                 new BasicCommand() {
                     @Override
                     public void execute(@NotNull CommandSourceStack stack, @NotNull String @NotNull [] strings) {
-                        AbstractXClaimPlugin.MAIN_COMMAND.onCommand(
+                        binding.onCommand(
                                 stack.getSender(),
                                 null,
                                 null,
@@ -42,7 +44,7 @@ public class XClaimPluginBootstrap implements PluginBootstrap {
 
                     @Override
                     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String @NotNull [] strings) {
-                        List<String> ret = AbstractXClaimPlugin.MAIN_COMMAND.onTabComplete(
+                        List<String> ret = binding.onTabComplete(
                                 stack.getSender(),
                                 null,
                                 null,
@@ -53,6 +55,7 @@ public class XClaimPluginBootstrap implements PluginBootstrap {
                     }
                 }
         );
+        binding.markHandled();
     }
 
 }

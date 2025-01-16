@@ -31,6 +31,8 @@ public interface PlatformPlayer extends PlatformEntity, PlatformUser {
 
     boolean isGliding();
 
+    boolean canBoostElytra();
+
     void boostElytra(@Nullable PlatformItem item);
 
     void openBook(@Nullable PlatformItem item);

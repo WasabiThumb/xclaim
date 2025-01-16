@@ -71,8 +71,12 @@ public final class InteractClaimEnforcer extends ClaimEnforcer {
 
         if (type.equals(NamedPlatformMaterial.FIREWORK_ROCKET)) {
             if (ply.isGliding()) {
-                ply.boostElytra(item);
-                return 2;
+                if (ply.canBoostElytra()) {
+                    ply.boostElytra(item);
+                    return 2;
+                } else {
+                    return 1;
+                }
             }
             return 0;
         }

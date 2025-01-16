@@ -21,15 +21,20 @@ tasks.compileJava.configure {
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 }
 
 dependencies {
     implementation(project(":core"))
     implementation(project(":bukkit"))
-    implementation(project(":paper:extras"))
     compileOnly("org.jetbrains:annotations:${annotationsVersion}")
-    compileOnly("io.papermc.paper:paper-api:${serverVersion}")
+    compileOnly("org.spigotmc:spigot-api:${serverVersion}")
+
+    // Adventure
+    implementation("net.kyori:adventure-api:4.18.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.4")
+    implementation("net.kyori:adventure-text-minimessage:4.18.0")
+    implementation("net.kyori:adventure-text-serializer-plain:4.18.0")
 }
 
 tasks.jar {
@@ -47,15 +52,6 @@ tasks.shadowJar {
         setPath("META-INF/integrations")
     }
 
-    // Library exclusions (present in Paper)
-    dependencies {
-        exclude(dependency("com.google.code.gson:gson"))
-        exclude(dependency("com.google.errorprone:error_prone_annotations"))
-        exclude(dependency("commons-lang:commons-lang"))
-        exclude(dependency("org.checkerframework:checker-qual"))
-        exclude(dependency("org.slf4j:slf4j-api"))
-    }
-
     // Library relocations
     val libPkg = "io.github.wasabithumb.xclaim.shadow"
     relocate("com.moandjiezana.toml", "${libPkg}.toml")
@@ -64,6 +60,7 @@ tasks.shadowJar {
     relocate("com.github.benmanes.caffeine", "${libPkg}.caffeine")
     relocate("org.sqlite", "${libPkg}.sqlite")
     relocate("org.bstats", "${libPkg}.bstats")
+    relocate("net.kyori.adventure", "${libPkg}.adventure")
 }
 
 artifacts {
