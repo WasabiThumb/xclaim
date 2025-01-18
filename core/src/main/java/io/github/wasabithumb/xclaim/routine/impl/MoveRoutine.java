@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.routine.impl;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.Claim;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventCategory;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
@@ -89,7 +90,7 @@ public final class MoveRoutine extends Routine implements PlatformListener {
 
                 Claim claim = this.runtime.claims().getByChunk(center.getRelative(dx, dz));
                 if (claim == null) continue;
-                // if (claim.checkPermission(player, Permission.ENTER)) continue;
+                if (claim.checkPermission(player, Permission.ENTER)) continue;
                 flags |= f;
             }
         }

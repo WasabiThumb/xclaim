@@ -1,15 +1,10 @@
 package io.github.wasabithumb.xclaim.platform.inventory;
 
 import io.github.wasabithumb.xclaim.platform.PaperPlatform;
-import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
-import io.github.wasabithumb.xclaim.platform.user.PlatformOfflineUser;
-import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -20,9 +15,22 @@ import java.util.Set;
 
 public class PaperPlatformItem extends BukkitPlatformItem {
 
+    private static final Method M_ITEM_META_GLINT;
+    static {
+        Method m1 = null;
+        try {
+            m1 = ItemMeta.class.getMethod("setEnchantmentGlintOverride", Boolean.class);
+        } catch (ReflectiveOperationException | SecurityException ignored) { }
+        M_ITEM_META_GLINT = m1;
+    }
+
+    //
+
     public PaperPlatformItem(@NotNull PaperPlatform platform, @NotNull ItemStack handle) {
         super(platform, handle);
     }
+
+    //
 
     protected @NotNull PaperPlatform platform() {
         return (PaperPlatform) this.platform;
@@ -87,6 +95,22 @@ public class PaperPlatformItem extends BukkitPlatformItem {
         } catch (ReflectiveOperationException | SecurityException ignored) { }
 
         return this.handle.getType().isEdible();
+    }
+
+    @Override
+    public PaperPlatformItem holographic() {
+        if (M_ITEM_META_GLINT == null) {
+            super.holographic();
+            return this;
+        }
+        this.modifyMeta((ItemMeta meta) -> {
+            try {
+                M_ITEM_META_GLINT.invoke(meta, Boolean.TRUE);
+            } catch (ReflectiveOperationException | SecurityException e) {
+                throw new AssertionError(e);
+            }
+        });
+        return this;
     }
 
 }
