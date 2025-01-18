@@ -1,5 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.world;
 
+import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.data.material.BukkitPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import org.bukkit.block.Block;
@@ -12,10 +13,15 @@ import java.util.Objects;
 
 public class BukkitPlatformBlock implements PlatformBlock {
 
+    protected final BukkitPlatform platform;
     protected final Block handle;
-    public BukkitPlatformBlock(@NotNull Block handle) {
+
+    public BukkitPlatformBlock(@NotNull BukkitPlatform platform, @NotNull Block handle) {
+        this.platform = platform;
         this.handle = handle;
     }
+
+    //
 
     @Override
     public @NotNull Block handle() {
@@ -24,7 +30,7 @@ public class BukkitPlatformBlock implements PlatformBlock {
 
     @Override
     public @NotNull BukkitPlatformWorld world() {
-        return new BukkitPlatformWorld(this.handle.getWorld());
+        return new BukkitPlatformWorld(this.platform, this.handle.getWorld());
     }
 
     @Override

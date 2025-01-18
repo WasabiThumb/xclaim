@@ -102,19 +102,19 @@ public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
     @Override
     public BukkitPlatformWorld world(Object handle) throws IllegalArgumentException {
         if (handle == null) return null;
-        return new BukkitPlatformWorld(this.handleCast(handle, World.class));
+        return new BukkitPlatformWorld(this.platform, this.handleCast(handle, World.class));
     }
 
     @Override
     public BukkitPlatformChunk chunk(Object handle) throws IllegalArgumentException {
         if (handle == null) return null;
-        return new BukkitPlatformChunk(this.handleCast(handle, Chunk.class));
+        return new BukkitPlatformChunk(this.platform, this.handleCast(handle, Chunk.class));
     }
 
     @Override
     public BukkitPlatformBlock block(Object handle) throws IllegalArgumentException {
         if (handle == null) return null;
-        return new BukkitPlatformBlock(this.handleCast(handle, Block.class));
+        return new BukkitPlatformBlock(this.platform, this.handleCast(handle, Block.class));
     }
 
     @Override

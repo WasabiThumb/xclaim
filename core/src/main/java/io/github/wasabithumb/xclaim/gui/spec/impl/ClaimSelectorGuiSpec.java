@@ -36,7 +36,7 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         if (this.entries != null) return this.entries;
 
         final PlatformPlayer player = instance.player();
-        final List<Claim> all = instance.runtime().claims().getAll();
+        final Collection<Claim> all = instance.runtime().claims().getAll();
         if (player.isOp()) return this.entries = new ArrayList<>(all);
 
         final int sizeEstimate = Math.max(

@@ -31,10 +31,10 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:${serverVersion}")
 
     // Adventure
-    implementation("net.kyori:adventure-api:4.18.0")
+    implementation("net.kyori:adventure-api:4.17.0")
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
-    implementation("net.kyori:adventure-text-minimessage:4.18.0")
-    implementation("net.kyori:adventure-text-serializer-plain:4.18.0")
+    implementation("net.kyori:adventure-text-minimessage:4.17.0")
+    implementation("net.kyori:adventure-text-serializer-plain:4.17.0")
 }
 
 tasks.jar {

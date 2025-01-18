@@ -11,6 +11,7 @@ import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
 import io.github.wasabithumb.xclaim.integration.map.MapOperation;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.platform.world.PlatformChunk;
+import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import io.github.wasabithumb.xclaim.util.BitManipulation;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import org.jetbrains.annotations.ApiStatus;
@@ -84,7 +85,7 @@ public class ClaimManager {
         return this.getByChunk(ChunkReference.of(chunk));
     }
 
-    public @NotNull List<Claim> getAll() {
+    public @NotNull Collection<Claim> getAll() {
         this.byNameLock.readLock().lock();
         try {
             return List.copyOf(this.byName.values());
@@ -93,7 +94,7 @@ public class ClaimManager {
         }
     }
 
-    public @NotNull Set<Claim> getByOwner(@NotNull PlatformUser user) {
+    public @NotNull Collection<Claim> getByOwner(@NotNull PlatformUser user) {
         this.byOwnerLock.readLock().lock();
         try {
             Set<Claim> set = this.byOwner.get(user.uuid());
@@ -102,6 +103,22 @@ public class ClaimManager {
         } finally {
             this.byOwnerLock.readLock().unlock();
         }
+    }
+
+    public @NotNull Collection<Claim> getByWorld(@NotNull PlatformWorld world) {
+        List<Claim> ret;
+        this.byOwnerLock.readLock().lock();
+        try {
+            Collection<Claim> values = this.byName.values();
+            ret = new ArrayList<>(values.size());
+            for (Claim candidate : values) {
+                if (!candidate.data().getWorld().matches(world)) continue;
+                ret.add(candidate);
+            }
+        } finally {
+            this.byOwnerLock.readLock().unlock();
+        }
+        return Collections.unmodifiableList(ret);
     }
 
     /**

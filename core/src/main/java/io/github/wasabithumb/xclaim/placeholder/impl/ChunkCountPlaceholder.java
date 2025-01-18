@@ -8,6 +8,7 @@ import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Set;
 
 @ApiStatus.Internal
@@ -24,7 +25,7 @@ public final class ChunkCountPlaceholder extends AbstractPlaceholder {
 
     @Override
     public @NotNull String resolve(@NotNull PlatformUser user, @NotNull PlaceholderArgumentQueue args) {
-        Set<Claim> claims = this.claims().getByOwner(user);
+        Collection<Claim> claims = this.claims().getByOwner(user);
         int count = 0;
         for (Claim c : claims) count += c.chunkCount();
         return Integer.toString(count);

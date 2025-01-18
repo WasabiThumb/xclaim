@@ -48,7 +48,7 @@ public abstract class BukkitPlatform implements Platform {
     protected abstract @NotNull BukkitPlatformUserManager createUsers();
 
     protected @NotNull BukkitPlatformWorldManager createWorlds() {
-        return new BukkitPlatformWorldManager();
+        return new BukkitPlatformWorldManager(this);
     }
 
     protected abstract @NotNull BukkitPlatformEventManager createEvents();

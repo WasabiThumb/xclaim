@@ -64,6 +64,7 @@ public final class BukkitPlatformPersistentDataContainer implements PlatformPers
             case 0 -> PersistentDataType.STRING;
             case 1 -> PersistentDataType.BYTE;
             case 2 -> PersistentDataType.BYTE_ARRAY;
+            case 3 -> PersistentDataType.LONG;
             default -> throw new AssertionError("Unhandled type ordinal: " + type.ordinal());
         };
     }

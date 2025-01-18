@@ -8,6 +8,7 @@ public sealed interface PlatformPersistentDataType<T> {
     PlatformPersistentDataType<String> STRING     = new Impl<>(0, String.class, "");
     PlatformPersistentDataType<Byte> BYTE         = new Impl<>(1, Byte.class, (byte) 0);
     PlatformPersistentDataType<byte[]> BYTE_ARRAY = new Impl<>(2, byte[].class, new byte[0]);
+    PlatformPersistentDataType<Long> LONG         = new Impl<>(3, Long.class, 0L);
 
     //
 

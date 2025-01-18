@@ -5,7 +5,6 @@ import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -21,28 +20,6 @@ public class ChunkReference {
                 location.blockX() >> 4,
                 location.blockZ() >> 4
         );
-    }
-
-    public static int compare(@Nullable Object a, @Nullable Object b) {
-        final int at = (a == null) ? 3 : ((a instanceof ChunkReference) ? 0 : ((a instanceof PlatformChunk) ? 1 : 2));
-        final int bt = (b == null) ? 3 : ((b instanceof ChunkReference) ? 0 : ((b instanceof PlatformChunk) ? 1 : 2));
-
-        if (at > 1) {
-            return at - bt;
-        } else if (bt > 1) {
-            return bt - at;
-        }
-
-        final ChunkReference ar = (at == 0) ? ((ChunkReference) a) : ChunkReference.of((PlatformChunk) a);
-        final ChunkReference br = (bt == 0) ? ((ChunkReference) b) : ChunkReference.of((PlatformChunk) b);
-        int tmp;
-
-        tmp = ar.world.uuid().compareTo(br.world.uuid());
-        if (tmp != 0) return tmp;
-        tmp = Integer.compare(ar.x, br.x);
-        if (tmp != 0) return tmp;
-        tmp = Integer.compare(ar.z, br.z);
-        return tmp;
     }
 
     public final PlatformWorld world;

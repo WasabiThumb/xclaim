@@ -1,14 +1,20 @@
 package io.github.wasabithumb.xclaim.platform.world;
 
+import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import org.bukkit.Chunk;
 import org.jetbrains.annotations.NotNull;
 
 public class BukkitPlatformChunk implements PlatformChunk {
 
+    protected final BukkitPlatform platform;
     protected final Chunk handle;
-    public BukkitPlatformChunk(@NotNull Chunk handle) {
+
+    public BukkitPlatformChunk(@NotNull BukkitPlatform platform, @NotNull Chunk handle) {
+        this.platform = platform;
         this.handle = handle;
     }
+
+    //
 
     @Override
     public @NotNull Chunk handle() {
@@ -17,7 +23,7 @@ public class BukkitPlatformChunk implements PlatformChunk {
 
     @Override
     public @NotNull BukkitPlatformWorld world() {
-        return new BukkitPlatformWorld(this.handle.getWorld());
+        return new BukkitPlatformWorld(this.platform, this.handle.getWorld());
     }
 
     @Override

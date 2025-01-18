@@ -11,6 +11,7 @@ import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Set;
 
 public final class ClearAllGuiSpec implements GuiSpec {
@@ -47,7 +48,7 @@ public final class ClearAllGuiSpec implements GuiSpec {
                 this.stage = 1;
                 return GuiAction.repopulate();
             }
-            Set<Claim> claims = instance.runtime().claims().getByOwner(instance.player());
+            Collection<Claim> claims = instance.runtime().claims().getByOwner(instance.player());
             for (Claim c : claims) {
                 c.modifyChunks(instance.player())
                         .silent(true)

@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim.platform.world;
 
 import io.github.wasabithumb.xclaim.platform.PlatformObject;
+import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -26,5 +27,7 @@ public interface PlatformWorld extends PlatformObject {
     boolean keepInventory();
 
     void createExplosion(@NotNull PlatformLocation location, int power, boolean setFire, boolean breakBlocks);
+
+    @NotNull PlatformPersistentDataContainer pdc();
 
 }
