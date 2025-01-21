@@ -43,6 +43,7 @@ public abstract class BukkitPlatformEventManager extends PlatformEventManager {
                 BukkitPlatformBlockBreakEvent.class,
                 BukkitPlatformBlockMultiPlaceEvent.class,
                 BukkitPlatformBlockPlaceEvent.class,
+                BukkitPlatformBlockFlowEvent.class,
                 BukkitPlatformEntityPlaceEvent.class,
                 BukkitPlatformEntityExplodeEvent.class,
                 BukkitPlatformEntityDamagedEvent.class,

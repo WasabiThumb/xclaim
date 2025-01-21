@@ -7,7 +7,7 @@ import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.gui.spec.impl.PlayerListGuiSpec;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

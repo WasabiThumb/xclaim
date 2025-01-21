@@ -28,6 +28,7 @@ public enum PlatformEventType {
     INVENTORY_CLOSE,
     BLOCK_PLACE,
     BLOCK_MULTI_PLACE,
+    BLOCK_FLOW,
     BLOCK_BREAK;
 
     @ApiStatus.Internal

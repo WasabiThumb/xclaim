@@ -12,7 +12,7 @@ import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import io.github.wasabithumb.xclaim.trust.TrustSet;
 import io.github.wasabithumb.xclaim.util.BitManipulation;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
-import io.github.wasabithumb.xclaim.util.ProxySet;
+import io.github.wasabithumb.xclaim.util.collections.ProxySet;
 import io.github.wasabithumb.xclaim.util.StringUtil;
 import org.jetbrains.annotations.*;
 

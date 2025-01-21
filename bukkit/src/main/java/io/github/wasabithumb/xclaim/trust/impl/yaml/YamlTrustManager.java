@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.trust.impl.yaml;
 
 import io.github.wasabithumb.xclaim.trust.TrustManager;
-import io.github.wasabithumb.xclaim.util.ProxySet;
+import io.github.wasabithumb.xclaim.util.collections.ProxySet;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.ApiStatus;

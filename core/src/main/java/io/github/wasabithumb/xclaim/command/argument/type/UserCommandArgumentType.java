@@ -3,7 +3,7 @@ package io.github.wasabithumb.xclaim.command.argument.type;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;

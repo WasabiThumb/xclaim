@@ -3,7 +3,7 @@ package io.github.wasabithumb.xclaim.platform.event.impl;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.event.helper.BukkitPlatformEntityEvent;
 import io.github.wasabithumb.xclaim.platform.world.PlatformBlock;
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.bukkit.block.Block;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jetbrains.annotations.NotNull;

@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.util.tracer;
 
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

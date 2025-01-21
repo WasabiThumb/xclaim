@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.sub.WorldsConfig;
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

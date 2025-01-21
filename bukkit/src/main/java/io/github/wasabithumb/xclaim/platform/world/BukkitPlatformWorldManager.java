@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.platform.world;
 
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.ApiStatus;

@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.misc;
 
-import io.github.wasabithumb.xclaim.util.MapUtil;
+import io.github.wasabithumb.xclaim.util.collections.MapUtil;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;

@@ -4,7 +4,7 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatformTypeAdapter;
 import io.github.wasabithumb.xclaim.platform.event.helper.BukkitPlatformEntityEvent;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
-import io.github.wasabithumb.xclaim.util.ProxyList;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

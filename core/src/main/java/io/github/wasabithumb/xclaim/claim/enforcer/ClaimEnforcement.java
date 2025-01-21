@@ -24,6 +24,7 @@ public final class ClaimEnforcement {
             DropClaimEnforcer.class,
             EnterClaimEnforcer.class,
             ExplodeClaimEnforcer.class,
+            FluidClaimEnforcer.class,
             IgniteClaimEnforcer.class,
             InteractClaimEnforcer.class,
             PlaceClaimEnforcer.Entities.class,

@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.util;
+package io.github.wasabithumb.xclaim.util.collections;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
