@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.config.sub.WorldsConfig;
 import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.spec.impl.ClaimSelectorGuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import org.jetbrains.annotations.NotNull;
@@ -18,13 +19,13 @@ public final class EditChunksGuiSpec extends ClaimSelectorGuiSpec {
         final PlatformWorld w = ply.location().world();
 
         if (!cfg.checkLists(w)) {
-            ply.sendMessage(instance.runtime().lang("gui-edit-chunk-disallowed"));
+            ply.sendMessage(instance.runtime().lang(I18N.GUI_EDIT_CHUNK_DISALLOWED));
             return GuiAction.exit();
         }
 
         final PlatformWorld cw = claim.world();
         if (cw != null && !cw.uuid().equals(w.uuid())) {
-            ply.sendMessage(instance.runtime().lang("gui-edit-chunk-fail"));
+            ply.sendMessage(instance.runtime().lang(I18N.GUI_EDIT_CHUNK_FAIL));
             return GuiAction.exit();
         }
 

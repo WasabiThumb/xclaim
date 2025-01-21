@@ -7,6 +7,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.gui.spec.impl.PermissionListGuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
@@ -30,12 +31,12 @@ public final class IndividualPermissionListGuiSpec extends PermissionListGuiSpec
     @Override
     protected @NotNull PlatformItem populatePermission(@NotNull GuiInstance instance, @NotNull Permission perm) {
         final boolean value = this.granted.contains(perm);
-        final String text = instance.runtime().lang(value ? "gui-perm-enabled" : "gui-perm-disabled");
+        final String text = instance.runtime().lang(value ? I18N.GUI_PERM_ENABLED : I18N.GUI_PERM_DISABLED);
         final ColorTag col = value ? ColorTag.GREEN : ColorTag.RED;
         final PlatformMaterial mat = value ? NamedPlatformMaterial.GREEN_CONCRETE : NamedPlatformMaterial.RED_CONCRETE;
         return DisplayItem.format(
                 instance.platform().createItem(mat),
-                perm.getPrintName(instance.runtime().lang()),
+                perm.getPrintName().format(instance.runtime().lang()),
                 col,
                 ColorTag.GRAY.format(text)
         );

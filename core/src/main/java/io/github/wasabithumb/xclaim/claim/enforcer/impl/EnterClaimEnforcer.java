@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerMoveEvent;
@@ -45,7 +46,7 @@ public final class EnterClaimEnforcer extends ClaimEnforcer {
         if (fromClaim != null && !fromClaim.checkPermission(ply, Permission.ENTER)) return;
 
         event.setCancelled(true);
-        ply.sendMessage(this.lang().get("permHandler-stdError"));
+        ply.sendMessage(this.lang().get(I18N.PERM_HANDLER_STD_ERROR));
     }
 
 }

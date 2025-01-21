@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import org.jetbrains.annotations.NotNull;
@@ -20,43 +21,43 @@ public final class MainGuiSpec implements GuiSpec {
     public void populate(@NotNull GuiInstance instance) {
         instance.set(0, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.NETHER_STAR),
-                instance.runtime().lang("gui-main-new")
+                instance.runtime().lang(I18N.GUI_MAIN_NEW)
         ));
         instance.set(1, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.SKELETON_SKULL),
-                instance.runtime().lang("gui-main-edit-trust")
+                instance.runtime().lang(I18N.GUI_MAIN_EDIT_TRUST)
         ));
         instance.set(2, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.CRAFTING_TABLE),
-                instance.runtime().lang("gui-main-edit-chunk")
+                instance.runtime().lang(I18N.GUI_MAIN_EDIT_CHUNK)
         ));
         instance.set(3, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.NAME_TAG),
-                instance.runtime().lang("gui-main-rename-chunk")
+                instance.runtime().lang(I18N.GUI_MAIN_RENAME_CHUNK)
         ));
         instance.set(4, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.SHIELD),
-                instance.runtime().lang("gui-main-edit-perm")
+                instance.runtime().lang(I18N.GUI_MAIN_EDIT_PERM)
         ));
         instance.set(5, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.CHEST_MINECART),
-                instance.runtime().lang("gui-main-transfer-owner")
+                instance.runtime().lang(I18N.GUI_MAIN_TRANSFER_OWNER)
         ));
         instance.set(6, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.TNT),
-                instance.runtime().lang("gui-main-clear-all")
+                instance.runtime().lang(I18N.GUI_MAIN_CLEAR_ALL)
         ));
         instance.set(7, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.BARRIER),
-                instance.runtime().lang("gui-main-delete")
+                instance.runtime().lang(I18N.GUI_MAIN_DELETE)
         ));
         instance.set(8, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.ENCHANTING_TABLE),
-                instance.runtime().lang("gui-main-version")
+                instance.runtime().lang(I18N.GUI_MAIN_VERSION)
         ));
         instance.set(9, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.ARROW),
-                instance.runtime().lang("gui-main-exit")
+                instance.runtime().lang(I18N.GUI_MAIN_EXIT)
         ));
     }
 

@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.gui.layout.GuiPagination;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.ColorTag;
@@ -23,7 +24,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     private static @NotNull PlatformItem createPreviousItem(@NotNull GuiInstance instance) {
         return DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.ARROW),
-                instance.runtime().lang("gui-comb-previous")
+                instance.runtime().lang(I18N.GUI_COMB_PREVIOUS)
         );
     }
 
@@ -31,7 +32,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     private static @NotNull PlatformItem createNextItem(@NotNull GuiInstance instance) {
         return DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.ARROW),
-                instance.runtime().lang("gui-comb-next")
+                instance.runtime().lang(I18N.GUI_COMB_NEXT)
         );
     }
 
@@ -39,7 +40,7 @@ public abstract class PaginatedGuiSpec<T> implements GuiSpec {
     private static @NotNull PlatformItem createBackItem(@NotNull GuiInstance instance) {
         return DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.BARRIER),
-                instance.runtime().lang("gui-comb-back"),
+                instance.runtime().lang(I18N.GUI_COMB_BACK),
                 ColorTag.RED
         );
     }

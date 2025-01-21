@@ -9,6 +9,7 @@ import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.math.Color;
 import de.bluecolored.bluemap.api.math.Shape;
 import io.github.wasabithumb.xclaim.claim.Claim;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.IntegrationInject;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
@@ -119,7 +120,7 @@ public class BluemapMapIntegration implements MapIntegration {
             bmw = opt.get();
 
             ret = MarkerSet.builder()
-                    .label(this.lang.get("dynmap-marker-name"))
+                    .label(this.lang.get(I18N.DYNMAP_MARKER_NAME))
                     .build();
             this.markerSets.put(uid, ret);
         }

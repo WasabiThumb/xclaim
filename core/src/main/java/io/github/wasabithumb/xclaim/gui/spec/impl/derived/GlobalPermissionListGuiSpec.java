@@ -48,13 +48,13 @@ public final class GlobalPermissionListGuiSpec extends PermissionListGuiSpec {
         };
 
         List<String> lore = new ArrayList<>();
-        for (String s : WordWrap.wrap(perm.getDescription(instance.runtime().lang()), 25).split("\\r?\\n")) {
+        for (String s : WordWrap.wrap(perm.getDescription().format(instance.runtime().lang()), 25).split("\\r?\\n")) {
             lore.add(ColorTag.GRAY.format(s));
         }
 
         return DisplayItem.format(
                 instance.platform().createItem(mat),
-                col.format(perm.getPrintName(instance.runtime().lang())),
+                col.format(perm.getPrintName().format(instance.runtime().lang())),
                 lore
         );
     }

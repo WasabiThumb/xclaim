@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.command;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.command.impl.RootCommand;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,7 @@ public class CommandManager {
         if (next != null) {
             Command<?> sub = null;
             for (Command<?> candidate : root.subCommands()) {
-                if (candidate.name(this.runtime.lang()).equalsIgnoreCase(next)) {
+                if (candidate.name().format(this.runtime.lang()).equalsIgnoreCase(next)) {
                     sub = candidate;
                     break;
                 }
@@ -55,7 +56,7 @@ public class CommandManager {
             }
         }
         if (root.requiresPlayerExecutor() && !user.isPlayer()) {
-            user.sendMessage(this.runtime.lang("cmdmgr-err-player"));
+            user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_PLAYER));
             return;
         }
         this.getAdapter(root)
@@ -83,7 +84,7 @@ public class CommandManager {
         if (next != null) {
             Command<?> sub = null;
             for (Command<?> candidate : root.subCommands()) {
-                String name = candidate.name(this.runtime.lang());
+                String name = candidate.name().format(this.runtime.lang());
                 if (args.size() < 2) set.add(name);
                 if (name.equalsIgnoreCase(next)) {
                     sub = candidate;

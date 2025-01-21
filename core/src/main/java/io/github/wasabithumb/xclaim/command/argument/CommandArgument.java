@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.command.argument;
 
 import io.github.wasabithumb.xclaim.command.argument.type.CommandArgumentType;
-import io.github.wasabithumb.xclaim.i18n.Lang;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
@@ -15,8 +15,8 @@ public final class CommandArgument<T> {
     //
 
     private final CommandArgumentType<T> type;
-    private final String name;
-    private final String description;
+    private final Translatable name;
+    private final Translatable description;
     private final boolean optional;
     private T value;
 
@@ -24,8 +24,8 @@ public final class CommandArgument<T> {
 
     CommandArgument(
             @NotNull CommandArgumentType<T> type,
-            @NotNull String name,
-            @NotNull String description,
+            @NotNull Translatable name,
+            @NotNull Translatable description,
             boolean optional
     ) {
         this.type = type;
@@ -38,12 +38,12 @@ public final class CommandArgument<T> {
         return this.type;
     }
 
-    public @NotNull String name(@NotNull Lang lang) {
-        return lang.get(this.name);
+    public @NotNull Translatable name() {
+        return this.name;
     }
 
-    public @NotNull String description(@NotNull Lang lang) {
-        return lang.get(this.description);
+    public @NotNull Translatable description() {
+        return this.description;
     }
 
     public @UnknownNullability T get() {
@@ -76,8 +76,8 @@ public final class CommandArgument<T> {
     public static final class Builder<Q> {
 
         private final CommandArgumentType<Q> type;
-        private String name;
-        private String description;
+        private Translatable name;
+        private Translatable description;
         private boolean optional;
 
         Builder(@NotNull CommandArgumentType<Q> type) {
@@ -88,13 +88,13 @@ public final class CommandArgument<T> {
         }
 
         @Contract("_ -> this")
-        public @NotNull Builder<Q> name(@NotNull String name) {
+        public @NotNull Builder<Q> name(@NotNull Translatable name) {
             this.name = name;
             return this;
         }
 
         @Contract("_ -> this")
-        public @NotNull Builder<Q> description(@NotNull String description) {
+        public @NotNull Builder<Q> description(@NotNull Translatable description) {
             this.description = description;
             return this;
         }

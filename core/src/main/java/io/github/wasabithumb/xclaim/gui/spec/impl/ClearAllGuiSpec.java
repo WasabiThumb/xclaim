@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
@@ -27,15 +28,15 @@ public final class ClearAllGuiSpec implements GuiSpec {
     public void populate(@NotNull GuiInstance instance) {
         PlatformItem yes = DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.GREEN_CONCRETE),
-                instance.runtime().lang(this.stage == 0 ? "gui-clear-yes" : "gui-clear-yes2"),
-                instance.runtime().lang("gui-clear-yes-line1"),
-                instance.runtime().lang("gui-clear-yes-line2")
+                instance.runtime().lang(this.stage == 0 ? I18N.GUI_CLEAR_YES : I18N.GUI_CLEAR_YES2),
+                instance.runtime().lang(I18N.GUI_CLEAR_YES_LINE1),
+                instance.runtime().lang(I18N.GUI_CLEAR_YES_LINE2)
         );
         PlatformItem no = DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.RED_CONCRETE),
-                instance.runtime().lang("gui-clear-no"),
-                instance.runtime().lang("gui-clear-no-line1"),
-                instance.runtime().lang("gui-clear-no-line2")
+                instance.runtime().lang(I18N.GUI_CLEAR_NO),
+                instance.runtime().lang(I18N.GUI_CLEAR_NO_LINE1),
+                instance.runtime().lang(I18N.GUI_CLEAR_NO_LINE2)
         );
         instance.set(this.stage, yes);
         instance.set(1 - this.stage, no);

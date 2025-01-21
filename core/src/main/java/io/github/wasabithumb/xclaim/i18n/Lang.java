@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.i18n;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -45,16 +46,25 @@ public final class Lang {
         }
     }
 
-    public @NotNull String get(@NotNull String key, @NotNull String @NotNull ... args) {
+    @ApiStatus.Obsolete
+    public @NotNull String get(@NotNull String key, @NotNull Object @NotNull ... args) {
+        String[] str;
+        if (args instanceof String[] asStr) {
+            str = asStr;
+        } else {
+            str = new String[args.length];
+            for (int i=0; i < args.length; i++) str[i] = Objects.toString(args[i]);
+        }
         LangString data = this.map.get(key);
         if (data == null) return FALLBACK_MESSAGE;
-        return data.resolve(args);
+        return data.resolve(str);
     }
 
-    public @NotNull String get(@NotNull String key, @NotNull Object @NotNull ... args) {
-        String[] str = new String[args.length];
-        for (int i=0; i < args.length; i++) str[i] = Objects.toString(args[i]);
-        return this.get(key, str);
+    public @NotNull String get(@NotNull Translatable key, @NotNull Object @NotNull ... args) {
+        if (key instanceof Translatable.Keyed keyed) {
+            return this.get(keyed.key(), args);
+        }
+        throw new IllegalArgumentException("Lang cannot accept literal (" + key + ")");
     }
 
     public void serialize(@NotNull OutputStream os) throws IOException {

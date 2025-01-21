@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.helper.PaginatedGuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
@@ -94,7 +95,7 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     protected @NotNull PlatformItem getPreviousExtra(@NotNull GuiInstance instance) {
         return DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.SPYGLASS),
-                instance.runtime().lang("gui-sel-search")
+                instance.runtime().lang(I18N.GUI_SEL_SEARCH)
         );
     }
 
@@ -115,21 +116,21 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         final String ownerName = owner.displayName();
 
         final List<String> lore = new ArrayList<>();
-        lore.add(instance.runtime().lang("gui-sel-owned", ownerName));
+        lore.add(instance.runtime().lang(I18N.GUI_SEL_OWNED, ownerName));
 
         Set<ChunkReference> chunks = claim.chunks();
         int chunkCount = chunks.size();
         if (chunkCount == 1) {
-            lore.add(instance.runtime().lang("gui-sel-chunk-count", chunkCount));
+            lore.add(instance.runtime().lang(I18N.GUI_SEL_CHUNK_COUNT, chunkCount));
         } else {
-            lore.add(instance.runtime().lang("gui-sel-chunk-count-plural", chunkCount));
+            lore.add(instance.runtime().lang(I18N.GUI_SEL_CHUNK_COUNT_PLURAL, chunkCount));
         }
         if (chunkCount > 0) {
             ChunkReference c = chunks.iterator().next();
-            lore.add(instance.runtime().lang("gui-sel-first-chunk", c.getCenterBlockX(), c.getCenterBlockZ()));
+            lore.add(instance.runtime().lang(I18N.GUI_SEL_FIRST_CHUNK, c.getCenterBlockX(), c.getCenterBlockZ()));
         }
         if (chunks.contains(curChunk)) {
-            lore.add(instance.runtime().lang("gui-sel-within"));
+            lore.add(instance.runtime().lang(I18N.GUI_SEL_WITHIN));
         }
 
         return DisplayItem.format(
@@ -157,7 +158,7 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
     protected @NotNull GuiAction onClickExtra(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         if (slot.index() == this.getPreviousSlot()) {
             // Search
-            return GuiAction.prompt(instance.runtime().lang("gui-sel-prompt"));
+            return GuiAction.prompt(instance.runtime().lang(I18N.GUI_SEL_PROMPT));
         }
         return GuiAction.nothing();
     }

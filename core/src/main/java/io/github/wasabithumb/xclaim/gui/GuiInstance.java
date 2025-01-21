@@ -10,6 +10,7 @@ import io.github.wasabithumb.xclaim.gui.layout.GuiLayout;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.layout.map.GuiSlotMap;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -30,7 +31,7 @@ public class GuiInstance {
         ret.setSpecInternal(spec, 6);
         ret.inventory = manager.runtime().platform().createInventory(
                 9 * ret.layout.getHeight(),
-                manager.runtime().lang("gui-name"),
+                manager.runtime().lang(I18N.GUI_NAME),
                 ret
         );
         ret.populate();

@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.event.PlatformListener;
@@ -57,7 +58,7 @@ public abstract class ClaimEnforcer implements PlatformListener {
         if (claim.checkPermission(user, this.permission())) {
             return false;
         } else {
-            user.sendMessage(this.lang().get("permHandler-stdError"));
+            user.sendMessage(this.lang().get(I18N.PERM_HANDLER_STD_ERROR));
             return true;
         }
     }

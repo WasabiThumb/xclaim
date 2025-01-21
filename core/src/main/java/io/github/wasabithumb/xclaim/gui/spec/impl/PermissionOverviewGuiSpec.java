@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
 import org.jetbrains.annotations.NotNull;
@@ -26,23 +27,23 @@ public final class PermissionOverviewGuiSpec implements GuiSpec {
     public void populate(@NotNull GuiInstance instance) {
         instance.set(0, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.BUCKET),
-                instance.runtime().lang("gui-perm-general"),
-                instance.runtime().lang("gui-perm-general-line1"),
-                instance.runtime().lang("gui-perm-general-line2"),
-                instance.runtime().lang("gui-perm-general-line3")
+                instance.runtime().lang(I18N.GUI_PERM_GENERAL),
+                instance.runtime().lang(I18N.GUI_PERM_GENERAL_LINE1),
+                instance.runtime().lang(I18N.GUI_PERM_GENERAL_LINE2),
+                instance.runtime().lang(I18N.GUI_PERM_GENERAL_LINE3)
         ));
         instance.set(1, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.SKELETON_SKULL),
-                instance.runtime().lang("gui-perm-player"),
-                instance.runtime().lang("gui-perm-player-line1"),
-                instance.runtime().lang("gui-perm-player-line2"),
-                instance.runtime().lang("gui-perm-player-line3"),
-                instance.runtime().lang("gui-perm-player-line4"),
-                instance.runtime().lang("gui-perm-player-line5")
+                instance.runtime().lang(I18N.GUI_PERM_PLAYER),
+                instance.runtime().lang(I18N.GUI_PERM_PLAYER_LINE1),
+                instance.runtime().lang(I18N.GUI_PERM_PLAYER_LINE2),
+                instance.runtime().lang(I18N.GUI_PERM_PLAYER_LINE3),
+                instance.runtime().lang(I18N.GUI_PERM_PLAYER_LINE4),
+                instance.runtime().lang(I18N.GUI_PERM_PLAYER_LINE5)
         ));
         instance.set(2, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.BARRIER),
-                instance.runtime().lang("gui-perm-back")
+                instance.runtime().lang(I18N.GUI_PERM_BACK)
         ));
     }
 

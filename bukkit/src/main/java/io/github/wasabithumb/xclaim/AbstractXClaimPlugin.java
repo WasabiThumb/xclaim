@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.claim.data.impl.yaml.YamlClaimDataManager;
 import io.github.wasabithumb.xclaim.command.BukkitCommandBinding;
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlRootConfig;
 import io.github.wasabithumb.xclaim.config.RootConfig;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.trust.TrustManager;
 import io.github.wasabithumb.xclaim.trust.impl.yaml.YamlTrustManager;
@@ -81,7 +82,7 @@ public abstract class AbstractXClaimPlugin extends JavaPlugin implements XClaimB
         if (!MAIN_COMMAND.isHandled()) {
             PluginCommand cmd = this.getCommand("xclaim");
             if (cmd != null) {
-                cmd.setDescription(this.instance.lang("cmd-xc-description"));
+                cmd.setDescription(this.instance.lang(I18N.CMD_XC_DESCRIPTION));
                 cmd.setExecutor(MAIN_COMMAND);
                 cmd.setTabCompleter(MAIN_COMMAND);
                 MAIN_COMMAND.markHandled();

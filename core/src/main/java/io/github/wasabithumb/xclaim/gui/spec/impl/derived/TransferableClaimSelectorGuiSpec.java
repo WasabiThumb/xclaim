@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
 import io.github.wasabithumb.xclaim.gui.spec.impl.ClaimSelectorGuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public final class TransferableClaimSelectorGuiSpec extends ClaimSelectorGuiSpec
     @Override
     protected @NotNull GuiAction onClickClaim(@NotNull GuiInstance instance, @NotNull Claim claim) {
         this.selection = claim;
-        return GuiAction.prompt(instance.runtime().lang("gui-tx-prompt"));
+        return GuiAction.prompt(instance.runtime().lang(I18N.GUI_TX_PROMPT));
     }
 
     @Override
@@ -28,7 +29,7 @@ public final class TransferableClaimSelectorGuiSpec extends ClaimSelectorGuiSpec
 
         PlatformUser user = instance.platform().users().matchUser(response);
         if (user == null) {
-            instance.player().sendMessage(instance.runtime().lang("gui-tx-prompt-fail"));
+            instance.player().sendMessage(instance.runtime().lang(I18N.GUI_TX_PROMPT_FAIL));
             return GuiAction.exit();
         }
 

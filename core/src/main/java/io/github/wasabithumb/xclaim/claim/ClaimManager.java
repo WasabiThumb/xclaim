@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcement;
 import io.github.wasabithumb.xclaim.config.sub.RulesConfig;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.Integrations;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
@@ -131,7 +132,7 @@ public class ClaimManager {
     public @Nullable Claim create(@Nullable PlatformUser user, @NotNull ChunkReference firstChunk, boolean silent) {
         if (user == null) user = this.runtime.platform().users().console();
         if (!this.runtime.rootConfig().worlds().checkLists(firstChunk.world)) {
-            if (!silent) user.sendMessage(this.runtime.lang("gui-new-disallowed"));
+            if (!silent) user.sendMessage(this.runtime.lang(I18N.GUI_NEW_DISALLOWED));
             return null;
         }
 
@@ -147,7 +148,7 @@ public class ClaimManager {
         if ((maxClaims >= 0 && curClaims >= maxClaims) ||
                 (maxClaimsInWorld >= 0 && curClaimsInWorld >= maxClaimsInWorld)
         ) {
-            if (!silent) user.sendMessage(this.runtime.lang("gui-new-max-claims"));
+            if (!silent) user.sendMessage(this.runtime.lang(I18N.GUI_NEW_MAX_CLAIMS));
             return null;
         }
 
@@ -161,7 +162,12 @@ public class ClaimManager {
                     .addChunk(firstChunk)
                     .commit()
                     .isSuccess();
-            return success ? c : null;
+
+            if (success) {
+                if (!silent) user.sendMessage(this.runtime.lang(I18N.GUI_NEW_SUCCESS, c.name()));
+                return c;
+            }
+            return null;
         } finally {
             if (!success) this.data.queueDrop(cd);
         }
@@ -202,7 +208,7 @@ public class ClaimManager {
     }
 
     private @NotNull String nextClaimName() {
-        String root = this.runtime.lang("new-claim") + " #";
+        String root = this.runtime.lang(I18N.NEW_CLAIM) + " #";
         int rootLen = root.length();
         StringBuilder sb = new StringBuilder(root);
         String ret;
@@ -222,11 +228,11 @@ public class ClaimManager {
     public void load() {
         final Logger logger = this.runtime.logger();
         final Lang lang = this.runtime.lang();
-        logger.log(Level.INFO, lang.get("claims-load"));
+        logger.log(Level.INFO, lang.get(I18N.CLAIMS_LOAD));
         try {
             this.load0();
         } catch (Exception e) {
-            logger.log(Level.WARNING, lang.get("claims-load-err"), e);
+            logger.log(Level.WARNING, lang.get(I18N.CLAIMS_LOAD_ERR), e);
         }
     }
 

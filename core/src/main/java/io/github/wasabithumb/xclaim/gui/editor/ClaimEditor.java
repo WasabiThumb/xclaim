@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.gui.editor;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.transaction.impl.ModifyChunksClaimTransaction;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataType;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
@@ -48,15 +49,15 @@ public final class ClaimEditor {
         this.cache = Collections.synchronizedMap(new HashMap<>());
         this.claimItem = DisplayItem.format(
                 runtime.platform().createItem(NamedPlatformMaterial.LIME_DYE),
-                runtime.lang("chunk-editor-claim")
+                runtime.lang(I18N.CHUNK_EDITOR_CLAIM)
         );
         this.unclaimItem = DisplayItem.format(
                 runtime.platform().createItem(NamedPlatformMaterial.RED_DYE),
-                runtime.lang("chunk-editor-unclaim")
+                runtime.lang(I18N.CHUNK_EDITOR_UNCLAIM)
         );
         this.quitItem = DisplayItem.format(
                 runtime.platform().createItem(NamedPlatformMaterial.BARRIER),
-                runtime.lang("chunk-editor-quit")
+                runtime.lang(I18N.CHUNK_EDITOR_QUIT)
         );
     }
 
@@ -128,24 +129,24 @@ public final class ClaimEditor {
         String ref;
         ColorTag color;
         if (claim.containsChunk(chunk)) {
-            ref = this.runtime.lang("chunk-editor-info-claimed");
+            ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_CLAIMED);
             color = ColorTag.GREEN;
         } else {
             Claim cur = this.runtime.claims().getByChunk(chunk);
             if (cur == null) {
-                ref = this.runtime.lang("chunk-editor-info-open");
+                ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_OPEN);
                 color = ColorTag.GRAY;
             } else if (cur.owner().uuid().equals(ply.uuid())) {
-                ref = this.runtime.lang("chunk-editor-info-owned");
+                ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_OWNED);
                 color = ColorTag.YELLOW;
             } else {
-                ref = this.runtime.lang("chunk-editor-info-taken", cur.owner().displayName());
+                ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_TAKEN, cur.owner().displayName());
                 color = ColorTag.RED;
             }
         }
 
         ply.sendMessage(this.runtime.lang(
-                "chunk-editor-info",
+                I18N.CHUNK_EDITOR_INFO,
                 chunk.x(),
                 chunk.z()
         ));

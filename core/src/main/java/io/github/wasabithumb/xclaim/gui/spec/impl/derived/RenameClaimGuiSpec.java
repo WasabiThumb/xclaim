@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.spec.impl.ClaimSelectorGuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import org.jetbrains.annotations.NotNull;
 
 public final class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
@@ -15,7 +16,7 @@ public final class RenameClaimGuiSpec extends ClaimSelectorGuiSpec {
         synchronized (this) {
             this.target = claim;
         }
-        return GuiAction.prompt(instance.runtime().lang("gui-rename-chunk-prompt"));
+        return GuiAction.prompt(instance.runtime().lang(I18N.GUI_RENAME_CHUNK_PROMPT));
     }
 
     @Override

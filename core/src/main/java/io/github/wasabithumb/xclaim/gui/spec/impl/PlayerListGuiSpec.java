@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.helper.PaginatedGuiSpec;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
@@ -25,7 +26,7 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<PlatformUser> {
         super.populate(instance);
         instance.set(1, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.EMERALD),
-                instance.runtime().lang("gui-comb-add")
+                instance.runtime().lang(I18N.GUI_COMB_ADD)
         ));
     }
 
@@ -47,7 +48,7 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<PlatformUser> {
     @Override
     protected @NotNull GuiAction onClickExtra(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         if (slot.index() == 1) {
-            return GuiAction.prompt(instance.runtime().lang("gui-comb-prompt"));
+            return GuiAction.prompt(instance.runtime().lang(I18N.GUI_COMB_PROMPT));
         }
         return GuiAction.nothing();
     }
@@ -56,7 +57,7 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<PlatformUser> {
     public @NotNull GuiAction onResponse(@NotNull GuiInstance instance, @NotNull String response) {
         PlatformUser ply = instance.platform().users().matchUser(response);
         if (ply == null) {
-            instance.player().sendMessage(instance.runtime().lang("gui-comb-prompt-fail"));
+            instance.player().sendMessage(instance.runtime().lang(I18N.GUI_COMB_PROMPT_FAIL));
             return GuiAction.exit();
         }
         return this.addPlayer(instance, ply) ? GuiAction.repopulate() : GuiAction.nothing();

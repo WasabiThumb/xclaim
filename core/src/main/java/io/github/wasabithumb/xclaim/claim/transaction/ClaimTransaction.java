@@ -6,6 +6,8 @@ import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.ClaimMutationContext;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
+import io.github.wasabithumb.xclaim.i18n.I18N;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,9 +31,9 @@ public abstract class ClaimTransaction {
         this.valid = true;
     }
 
-    protected final void langMessage(@NotNull String langKey, @NotNull String @NotNull ... args) {
+    protected final void langMessage(@NotNull Translatable key, @NotNull Object @NotNull ... args) {
         if (this.valid && !this.silent)
-            this.user.sendMessage(this.runtime.lang(langKey, args));
+            this.user.sendMessage(this.runtime.lang(key, args));
     }
 
     protected final boolean checkPermission(@NotNull Permission permission) {
@@ -41,7 +43,7 @@ public abstract class ClaimTransaction {
     protected final boolean manageCheck() {
         if (this.checkPermission(Permission.MANAGE)) return false;
         this.valid = false;
-        this.langMessage("permHandler-stdError");
+        this.langMessage(I18N.PERM_HANDLER_STD_ERROR);
         return true;
     }
 

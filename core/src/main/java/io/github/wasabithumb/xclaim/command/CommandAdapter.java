@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.command;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.command.argument.CommandArgument;
 import io.github.wasabithumb.xclaim.command.argument.type.CommandArgumentType;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -106,7 +107,7 @@ final class CommandAdapter<A extends Record> {
             this.command.execute(this.runtime, user, boxed);
         } catch (Throwable t) {
             this.runtime.logger().log(Level.WARNING, "An error occurred while dispatching a command", t);
-            user.sendMessage(this.runtime.lang("cmdmgr-err-unexpected", t.getClass().getSimpleName()));
+            user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_UNEXPECTED, t.getClass().getSimpleName()));
         }
     }
 
@@ -125,7 +126,7 @@ final class CommandAdapter<A extends Record> {
         String next;
         while ((next = args.poll()) != null) {
             if (count >= this.max) {
-                user.sendMessage(this.runtime.lang("cmdmgr-err-max-args", this.max));
+                user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_MAX_ARGS, this.max));
                 return null;
             }
 
@@ -133,7 +134,7 @@ final class CommandAdapter<A extends Record> {
             CommandArgumentType.ParseResult<?> result = type.parse(this.runtime, user, next);
             if (!result.isSuccess()) {
                 // TODO: The error message should be forwarded
-                user.sendMessage(this.runtime.lang("cmdmgr-err-malformed"));
+                user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_MALFORMED));
                 return null;
             }
 
@@ -148,7 +149,7 @@ final class CommandAdapter<A extends Record> {
         }
 
         if (count < this.min) {
-            user.sendMessage(this.runtime.lang("cmdmgr-err-min-args", this.min));
+            user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_MIN_ARGS, this.min));
             return null;
         }
 

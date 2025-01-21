@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
@@ -28,7 +29,7 @@ public final class VersionInfoGuiSpec implements GuiSpec {
     public void populate(@NotNull GuiInstance instance) {
         instance.set(0, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.BOOK),
-                instance.runtime().lang("gui-vinf-version"),
+                instance.runtime().lang(I18N.GUI_VINF_VERSION),
                 ColorTag.GOLD
                 // TODO: More info!
         ));
@@ -36,7 +37,7 @@ public final class VersionInfoGuiSpec implements GuiSpec {
         PlatformUser author = instance.platform().users().getUser(OWNER_UUID);
         instance.set(1, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.PLAYER_HEAD),
-                instance.runtime().lang("gui-vinf-author"),
+                instance.runtime().lang(I18N.GUI_VINF_AUTHOR),
                 ColorTag.GOLD,
                 ColorTag.LIGHT_PURPLE.format("Wasabi_Thumbs"),
                 "<click:open_url:'https://wasabithumb.github.io/'><gray>https://wasabithumb.github.io/</gray></click>"
@@ -44,7 +45,7 @@ public final class VersionInfoGuiSpec implements GuiSpec {
 
         instance.set(2, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.BARRIER),
-                instance.runtime().lang("gui-vinf-back"),
+                instance.runtime().lang(I18N.GUI_VINF_BACK),
                 ColorTag.RED
         ));
     }

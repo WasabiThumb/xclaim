@@ -11,7 +11,9 @@ import io.github.wasabithumb.xclaim.config.impl.defaulting.DefaultingRootConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlRootConfig;
 import io.github.wasabithumb.xclaim.config.RootConfig;
 import io.github.wasabithumb.xclaim.gui.GuiManager;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Lang;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.integration.Integrations;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -73,12 +75,8 @@ public class XClaim {
         return this.lang;
     }
 
-    public @NotNull String lang(@NotNull String key, @NotNull String @NotNull ... args) {
-        return this.lang.get(key, args);
-    }
-
-    public @NotNull String lang(@NotNull String key, @NotNull Object @NotNull ... args) {
-        return this.lang.get(key, args);
+    public @NotNull String lang(@NotNull Translatable key, @NotNull Object @NotNull ... args) {
+        return key.format(this.lang, args);
     }
 
     public @NotNull TrustManager trust() {
@@ -108,8 +106,8 @@ public class XClaim {
         this.loadLang();
         if (this.rootConfig.isLegacy()) {
             // Warn about usage of the legacy config
-            this.adminBroadcast(this.lang("config-migration-line1"));
-            this.adminBroadcast(this.lang("config-migration-line2"));
+            this.adminBroadcast(this.lang(I18N.CONFIG_MIGRATION_LINE1));
+            this.adminBroadcast(this.lang(I18N.CONFIG_MIGRATION_LINE2));
         }
         this.loadIntegrations();
         this.loadTrust();
@@ -243,7 +241,7 @@ public class XClaim {
     }
 
     private void loadTrust() {
-        this.logger().log(Level.INFO, this.lang("trust-load"));
+        this.logger().log(Level.INFO, this.lang(I18N.TRUST_LOAD));
         Throwable loadError = null;
 
         // Try loading legacy
@@ -267,7 +265,7 @@ public class XClaim {
             loadError = e;
         }
 
-        this.logger().log(Level.WARNING, this.lang("trust-load-err"), loadError);
+        this.logger().log(Level.WARNING, this.lang(I18N.TRUST_LOAD_ERR), loadError);
     }
 
     private void loadClaims() {
@@ -299,7 +297,7 @@ public class XClaim {
             loadError = e;
         }
 
-        this.logger().log(Level.WARNING, this.lang("claims-load-err"), loadError);
+        this.logger().log(Level.WARNING, this.lang(I18N.CLAIMS_LOAD_ERR), loadError);
         return null;
     }
 

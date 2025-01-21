@@ -3,7 +3,8 @@ package io.github.wasabithumb.xclaim.command.impl;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.command.Command;
 import io.github.wasabithumb.xclaim.command.NullaryCommand;
-import io.github.wasabithumb.xclaim.i18n.Lang;
+import io.github.wasabithumb.xclaim.i18n.I18N;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -17,13 +18,13 @@ public final class RootCommand implements NullaryCommand {
     //
 
     @Override
-    public @NotNull String name(@NotNull Lang lang) {
-        return "xclaim";
+    public @NotNull Translatable name() {
+        return Translatable.literal("xclaim");
     }
 
     @Override
-    public @NotNull String description(@NotNull Lang lang) {
-        return lang.get("cmd-xc-description");
+    public @NotNull Translatable description() {
+        return I18N.CMD_XC_DESCRIPTION;
     }
 
     @Override
@@ -34,7 +35,7 @@ public final class RootCommand implements NullaryCommand {
     @Override
     public void execute(@NotNull XClaim runtime, @NotNull PlatformUser user) {
         if (!user.isPlayer()) {
-            user.sendMessage(runtime.lang("cmdmgr-err-player"));
+            user.sendMessage(runtime.lang(I18N.CMDMGR_ERR_PLAYER));
             return;
         }
         this.guiCommand.execute(runtime, user);

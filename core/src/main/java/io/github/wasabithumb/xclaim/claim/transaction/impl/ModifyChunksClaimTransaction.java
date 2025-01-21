@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.claim.ClaimMutationContext;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
 import io.github.wasabithumb.xclaim.config.sub.RulesConfig;
 import io.github.wasabithumb.xclaim.config.sub.integrations.EconomyConfig;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.integration.Integrations;
 import io.github.wasabithumb.xclaim.integration.economy.EconomyIntegration;
 import io.github.wasabithumb.xclaim.integration.protection.ProtectionIntegration;
@@ -71,44 +72,44 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     public @NotNull ModifyChunksClaimTransaction addChunk(@NotNull ChunkReference cr) {
         if (this.manageCheck()) return this;
         if (!this.data.getWorld().matches(cr.world)) {
-            this.langMessage("chunk-editor-wrong-world");
+            this.langMessage(I18N.CHUNK_EDITOR_WRONG_WORLD);
             this.valid = false;
             return this;
         }
         if (this.hasProtectionConflict(cr)) {
-            this.langMessage("chunk-editor-protection-deny");
+            this.langMessage(I18N.CHUNK_EDITOR_PROTECTION_DENY);
             this.valid = false;
             return this;
         }
         if (this.hasOverrideConflict(cr)) {
-            this.langMessage("chunk-editor-taken");
+            this.langMessage(I18N.CHUNK_EDITOR_TAKEN);
             this.valid = false;
             return this;
         }
         if (this.hasChunkLimitConflict()) {
-            this.langMessage("chunk-editor-max");
+            this.langMessage(I18N.CHUNK_EDITOR_MAX);
             this.valid = false;
             return this;
         }
         if (this.hasDistanceConflict(cr)) {
-            this.langMessage("chunk-editor-min-distance-deny");
+            this.langMessage(I18N.CHUNK_EDITOR_MIN_DISTANCE_DENY);
             this.valid = false;
             return this;
         }
         if (this.hasPlacementConflict(cr)) {
-            this.langMessage("chunk-editor-adjacent");
+            this.langMessage(I18N.CHUNK_EDITOR_ADJACENT);
             this.valid = false;
             return this;
         }
         if (this.update(cr.x, cr.z, true)) {
             if (this.hasPoorConflict()) {
-                this.langMessage("chunk-editor-cant-afford");
+                this.langMessage(I18N.CHUNK_EDITOR_CANT_AFFORD);
                 this.valid = false;
                 return this;
             }
-            this.langMessage("chunk-editor-add", Integer.toString(cr.x), Integer.toString(cr.z));
+            this.langMessage(I18N.CHUNK_EDITOR_ADD, Integer.toString(cr.x), Integer.toString(cr.z));
         } else {
-            this.langMessage("chunk-editor-redundant-add");
+            this.langMessage(I18N.CHUNK_EDITOR_REDUNDANT_ADD);
         }
         return this;
     }
@@ -124,14 +125,14 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
         if (this.data.getWorld().matches(cr.world) && this.update(cr.x, cr.z, false)) {
             if (this.isDeleting() && (!this.allowDeletion || !this.checkPermission(Permission.DELETE))) {
                 // TODO: More detailed error message
-                this.langMessage("permHandler-stdError");
+                this.langMessage(I18N.PERM_HANDLER_STD_ERROR);
                 this.valid = false;
                 return this;
             }
             this.subtractUnclaimReward();
-            this.langMessage("chunk-editor-remove");
+            this.langMessage(I18N.CHUNK_EDITOR_REMOVE);
         } else {
-            this.langMessage("chunk-editor-redundant-remove");
+            this.langMessage(I18N.CHUNK_EDITOR_REDUNDANT_REMOVE);
         }
         return this;
     }
@@ -317,16 +318,16 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
         double price = this.price;
         if (cmp > 0) {
             if (eco.take(this.user, price)) {
-                this.langMessage("chunk-editor-pay-success", eco.format(price));
+                this.langMessage(I18N.CHUNK_EDITOR_PAY_SUCCESS, eco.format(price));
                 this.price = 0;
             } else {
-                this.langMessage("chunk-editor-pay-fail", eco.format(price));
+                this.langMessage(I18N.CHUNK_EDITOR_PAY_FAIL, eco.format(price));
                 return false;
             }
         } else {
             price = -price;
             eco.give(this.user, price);
-            this.langMessage("chunk-editor-reward", eco.format(price));
+            this.langMessage(I18N.CHUNK_EDITOR_REWARD, eco.format(price));
             this.price = 0;
         }
 

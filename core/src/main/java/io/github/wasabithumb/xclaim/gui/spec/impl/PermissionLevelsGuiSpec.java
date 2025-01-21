@@ -8,6 +8,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.util.DisplayItem;
@@ -59,29 +60,29 @@ public final class PermissionLevelsGuiSpec implements GuiSpec {
         return switch (tl) {
             case NONE -> DisplayItem.format(
                     instance.platform().createItem(NamedPlatformMaterial.RED_DYE),
-                    instance.runtime().lang("gui-perm-tl-none"),
-                    instance.runtime().lang("gui-perm-tl-none-line1"),
-                    instance.runtime().lang("gui-perm-tl-none-line2")
+                    instance.runtime().lang(I18N.GUI_PERM_TL_NONE),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_NONE_LINE1),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_NONE_LINE2)
             );
             case TRUSTED -> DisplayItem.format(
                     instance.platform().createItem(NamedPlatformMaterial.ORANGE_DYE),
-                    instance.runtime().lang("gui-perm-tl-trusted"),
-                    instance.runtime().lang("gui-perm-tl-trusted-line1"),
-                    instance.runtime().lang("gui-perm-tl-trusted-line2"),
-                    instance.runtime().lang("gui-perm-tl-trusted-line1")
+                    instance.runtime().lang(I18N.GUI_PERM_TL_TRUSTED),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_TRUSTED_LINE1),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_TRUSTED_LINE2),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_TRUSTED_LINE3)
             );
             case VETERANS -> DisplayItem.format(
                     instance.platform().createItem(NamedPlatformMaterial.YELLOW_DYE),
-                    instance.runtime().lang("gui-perm-tl-veterans"),
-                    instance.runtime().lang("gui-perm-tl-veterans-line1"),
-                    instance.runtime().lang("gui-perm-tl-veterans-line2"),
-                    instance.runtime().lang("gui-perm-tl-veterans-line1")
+                    instance.runtime().lang(I18N.GUI_PERM_TL_VETERANS),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_VETERANS_LINE1),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_VETERANS_LINE2),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_VETERANS_LINE3)
             );
             case ALL -> DisplayItem.format(
                     instance.platform().createItem(NamedPlatformMaterial.LIME_DYE),
-                    instance.runtime().lang("gui-perm-tl-all"),
-                    instance.runtime().lang("gui-perm-tl-all-line1"),
-                    instance.runtime().lang("gui-perm-tl-all-line2")
+                    instance.runtime().lang(I18N.GUI_PERM_TL_ALL),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_ALL_LINE1),
+                    instance.runtime().lang(I18N.GUI_PERM_TL_ALL_LINE2)
             );
         };
     }

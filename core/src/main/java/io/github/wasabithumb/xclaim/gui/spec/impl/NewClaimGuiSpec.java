@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.sound.NamedPlatformSound;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -23,16 +24,16 @@ public final class NewClaimGuiSpec implements GuiSpec {
     public void populate(@NotNull GuiInstance instance) {
         instance.set(0, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.GREEN_CONCRETE),
-                instance.runtime().lang("gui-new-confirm"),
-                instance.runtime().lang("gui-new-confirm-line1"),
-                instance.runtime().lang("gui-new-confirm-line2"),
-                instance.runtime().lang("gui-new-confirm-line3")
+                instance.runtime().lang(I18N.GUI_NEW_CONFIRM),
+                instance.runtime().lang(I18N.GUI_NEW_CONFIRM_LINE1),
+                instance.runtime().lang(I18N.GUI_NEW_CONFIRM_LINE2),
+                instance.runtime().lang(I18N.GUI_NEW_CONFIRM_LINE3)
         ));
         instance.set(1, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.RED_CONCRETE),
-                instance.runtime().lang("gui-new-cancel"),
-                instance.runtime().lang("gui-new-cancel-line1"),
-                instance.runtime().lang("gui-new-cancel-line2")
+                instance.runtime().lang(I18N.GUI_NEW_CANCEL),
+                instance.runtime().lang(I18N.GUI_NEW_CANCEL_LINE1),
+                instance.runtime().lang(I18N.GUI_NEW_CANCEL_LINE2)
         ));
     }
 

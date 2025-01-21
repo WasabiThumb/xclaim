@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.routine.impl;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.config.sub.WorldsConfig;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataType;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -60,7 +61,7 @@ public final class GraceRoutine extends Routine implements PlatformListener {
         }
 
         final PlatformUser owner = claim.owner();
-        final String message = this.runtime.lang("grace-remove", claim.name());
+        final String message = this.runtime.lang(I18N.GRACE_REMOVE, claim.name());
         owner.sendMessage(message);
     }
 
@@ -106,7 +107,7 @@ public final class GraceRoutine extends Routine implements PlatformListener {
         }
 
         if (count != 0)
-            ply.sendMessage(this.runtime.lang("grace-alert", count));
+            ply.sendMessage(this.runtime.lang(I18N.GRACE_ALERT, count));
     }
 
     //

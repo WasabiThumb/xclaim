@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.integration.map.dynmap;
 
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.config.sub.integrations.MapConfig;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.IntegrationInject;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
@@ -75,7 +76,7 @@ public class DynmapMapIntegration implements MapIntegration {
         if (ms == null) {
             ms = markerAPI.createMarkerSet(
                     MARKER_SET_KEY,
-                    this.lang.get("dynmap-marker-name"),
+                    this.lang.get(I18N.DYNMAP_MARKER_NAME),
                     null,
                     false
             );

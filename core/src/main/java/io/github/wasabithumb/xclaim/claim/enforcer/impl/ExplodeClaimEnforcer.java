@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.entity.NamedPlatformEntityType;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformEntity;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -107,7 +108,7 @@ public final class ExplodeClaimEnforcer extends ClaimEnforcer {
         PlatformPlayer source = entity.sourcePlayer();
         if (source == null) return false;
         if (claim.checkPermission(source, Permission.EXPLODE)) return true;
-        source.sendMessage(this.lang().get("permHandler-stdError"));
+        source.sendMessage(this.lang().get(I18N.PERM_HANDLER_STD_ERROR));
         return false;
     }
 

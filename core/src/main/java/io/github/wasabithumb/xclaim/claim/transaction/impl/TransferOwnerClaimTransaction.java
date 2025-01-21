@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.claim.transaction.impl;
 import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.claim.ClaimMutationContext;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -28,10 +29,10 @@ public class TransferOwnerClaimTransaction extends ClaimTransaction {
         if (this.manageCheck()) return this;
         if (!this.user.uuid().equals(this.data.getOwner())) {
             this.valid = false;
-            this.langMessage("permHandler-stdError");
+            this.langMessage(I18N.PERM_HANDLER_STD_ERROR);
         } else {
             this.newOwner = newOwner.uuid();
-            this.langMessage("gui-tx-success");
+            this.langMessage(I18N.GUI_TX_SUCCESS);
         }
         return this;
     }

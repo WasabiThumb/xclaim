@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.command;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.i18n.Lang;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -13,9 +14,9 @@ import java.util.List;
 
 public interface Command<A extends Record> {
 
-    @NotNull String name(@NotNull Lang lang);
+    @NotNull Translatable name();
 
-    @NotNull String description(@NotNull Lang lang);
+    @NotNull Translatable description();
 
     @NotNull Class<A> argsClass();
 

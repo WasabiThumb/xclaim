@@ -3,7 +3,8 @@ package io.github.wasabithumb.xclaim.command.impl;
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.command.NullaryCommand;
 import io.github.wasabithumb.xclaim.gui.GuiManager;
-import io.github.wasabithumb.xclaim.i18n.Lang;
+import io.github.wasabithumb.xclaim.i18n.I18N;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
@@ -11,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
 public final class GuiCommand implements NullaryCommand {
 
     @Override
-    public @NotNull String name(@NotNull Lang lang) {
-        return lang.get("cmd-gui-name");
+    public @NotNull Translatable name() {
+        return I18N.CMD_GUI_NAME;
     }
 
     @Override
-    public @NotNull String description(@NotNull Lang lang) {
-        return lang.get("cmd-gui-description");
+    public @NotNull Translatable description() {
+        return I18N.CMD_GUI_DESCRIPTION;
     }
 
     @Override
@@ -31,7 +32,7 @@ public final class GuiCommand implements NullaryCommand {
         GuiManager gui = runtime.gui();
 
         if (gui.editor().getEditing(ply) != null) {
-            user.sendMessage(runtime.lang("cmd-gui-err-restricted"));
+            user.sendMessage(runtime.lang(I18N.CMD_GUI_ERR_RESTRICTED));
             return;
         }
 

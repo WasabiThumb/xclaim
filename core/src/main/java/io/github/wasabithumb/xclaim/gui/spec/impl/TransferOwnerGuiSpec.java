@@ -6,6 +6,7 @@ import io.github.wasabithumb.xclaim.gui.action.GuiAction;
 import io.github.wasabithumb.xclaim.gui.layout.GuiSlot;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpec;
 import io.github.wasabithumb.xclaim.gui.spec.GuiSpecs;
+import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.sound.NamedPlatformSound;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -33,16 +34,16 @@ public final class TransferOwnerGuiSpec implements GuiSpec {
     public void populate(@NotNull GuiInstance instance) {
         instance.set(0, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.GREEN_CONCRETE),
-                instance.runtime().lang("gui-tx-yes"),
-                instance.runtime().lang("gui-tx-yes-line1"),
-                instance.runtime().lang("gui-tx-yes-line2"),
-                instance.runtime().lang("gui-tx-yes-line3")
+                instance.runtime().lang(I18N.GUI_TX_YES),
+                instance.runtime().lang(I18N.GUI_TX_YES_LINE1),
+                instance.runtime().lang(I18N.GUI_TX_YES_LINE2),
+                instance.runtime().lang(I18N.GUI_TX_YES_LINE3)
         ));
         instance.set(1, DisplayItem.format(
                 instance.platform().createItem(NamedPlatformMaterial.RED_CONCRETE),
-                instance.runtime().lang("gui-tx-no"),
-                instance.runtime().lang("gui-tx-no-line1"),
-                instance.runtime().lang("gui-tx-no-line2")
+                instance.runtime().lang(I18N.GUI_TX_NO),
+                instance.runtime().lang(I18N.GUI_TX_NO_LINE1),
+                instance.runtime().lang(I18N.GUI_TX_NO_LINE2)
         ));
         instance.set(2, this.getTargetHead(instance));
     }
