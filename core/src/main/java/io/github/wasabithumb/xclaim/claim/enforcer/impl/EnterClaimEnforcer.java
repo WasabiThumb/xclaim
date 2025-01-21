@@ -8,6 +8,7 @@ import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerMoveEvent;
+import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerTeleportEvent;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import io.github.wasabithumb.xclaim.util.ChunkReference;
 import org.jetbrains.annotations.ApiStatus;
@@ -46,6 +47,19 @@ public final class EnterClaimEnforcer extends ClaimEnforcer {
         if (fromClaim != null && !fromClaim.checkPermission(ply, Permission.ENTER)) return;
 
         event.setCancelled(true);
+        ply.sendMessage(this.lang().get(I18N.PERM_HANDLER_STD_ERROR));
+    }
+
+    @PlatformEventHandler
+    public void onTeleport(@NotNull PlatformPlayerTeleportEvent event) {
+        PlatformPlayer ply = event.player();
+        Claim dest = this.claimAt(event.destination());
+
+        if (dest == null) return;
+        if (dest.checkPermission(ply, Permission.ENTER)) return;
+
+        event.setCancelled(true);
+        // TODO: More informative message
         ply.sendMessage(this.lang().get(I18N.PERM_HANDLER_STD_ERROR));
     }
 

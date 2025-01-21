@@ -11,6 +11,7 @@ import io.github.wasabithumb.xclaim.platform.event.PlatformListener;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerJoinEvent;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerMoveEvent;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerQuitEvent;
+import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerTeleportEvent;
 import io.github.wasabithumb.xclaim.platform.scheduler.task.PlatformSchedulerTask;
 import io.github.wasabithumb.xclaim.platform.world.PlatformChunk;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
@@ -76,6 +77,12 @@ public final class MoveRoutine extends Routine implements PlatformListener {
                     toClaim.name()
             ));
         }
+    }
+
+    @PlatformEventHandler(category = PlatformEventCategory.MONITOR)
+    public void onTeleport(@NotNull PlatformPlayerTeleportEvent event) {
+        if (event.isCancelled()) return;
+        this.updateBarriers(event.player(), ChunkReference.of(event.destination().chunk()));
     }
 
     //

@@ -53,6 +53,7 @@ public abstract class BukkitPlatformEventManager extends PlatformEventManager {
                 BukkitPlatformPlayerInteractEntityEvent.class,
                 BukkitPlatformPlayerDropItemEvent.class,
                 BukkitPlatformPlayerMoveEvent.class,
+                BukkitPlatformPlayerTeleportEvent.class,
                 BukkitPlatformPlayerJoinEvent.class,
                 BukkitPlatformPlayerQuitEvent.class,
                 BukkitPlatformInventoryClickEvent.class,

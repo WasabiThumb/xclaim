@@ -19,6 +19,7 @@ public enum PlatformEventType {
     PLAYER_DROP_ITEM,
     ENTITY_PICKUP_ITEM,
     PLAYER_MOVE,
+    PLAYER_TELEPORT,
     PLAYER_JOIN,
     PLAYER_QUIT,
     ENTITY_DEATH,
