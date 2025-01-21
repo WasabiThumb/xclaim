@@ -3,7 +3,6 @@ package io.github.wasabithumb.xclaim.platform.entity;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
 import io.github.wasabithumb.xclaim.platform.inventory.BukkitPlatformInventory;
-import io.github.wasabithumb.xclaim.platform.inventory.BukkitPlatformItem;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformUser;
@@ -42,11 +41,6 @@ public abstract class BukkitPlatformPlayer extends BukkitPlatformEntity implemen
     @Override
     public int getHeldItemSlot() {
         return this.handle().getInventory().getHeldItemSlot();
-    }
-
-    @Override
-    public @Nullable BukkitPlatformItem getItemInUse() {
-        return this.platform.adapter().item(this.handle().getItemInUse());
     }
 
     @Override

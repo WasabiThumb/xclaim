@@ -16,8 +16,6 @@ public interface PlatformPlayer extends PlatformEntity, PlatformUser {
 
     int getHeldItemSlot();
 
-    @Nullable PlatformItem getItemInUse();
-
     void sendActionBar(@NotNull String text);
 
     @NotNull PlatformBossBar createBossBar(

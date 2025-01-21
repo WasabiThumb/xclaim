@@ -42,7 +42,7 @@ public final class GlobalPermissionListGuiSpec extends PermissionListGuiSpec {
                 yield ColorTag.YELLOW;
             }
             case ALL -> {
-                mat = NamedPlatformMaterial.GREEN_DYE;
+                mat = NamedPlatformMaterial.LIME_DYE;
                 yield ColorTag.GREEN;
             }
         };

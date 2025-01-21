@@ -118,4 +118,13 @@ public final class PlatformLocation {
         );
     }
 
+    //
+
+
+    @Override
+    public @NotNull String toString() {
+        return "PlatformLocation[world=" + (this.world == null ? "null" : this.world.name()) + ", x=" + this.x +
+                ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + "]";
+    }
+
 }

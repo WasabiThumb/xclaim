@@ -31,8 +31,8 @@ public final class IndividualPermissionListGuiSpec extends PermissionListGuiSpec
     protected @NotNull PlatformItem populatePermission(@NotNull GuiInstance instance, @NotNull Permission perm) {
         final boolean value = this.granted.contains(perm);
         final String text = instance.runtime().lang(value ? "gui-perm-enabled" : "gui-perm-disabled");
-        final ColorTag col = value ? ColorTag.GRAY : ColorTag.RED;
-        final PlatformMaterial mat = value ? NamedPlatformMaterial.LIME_DYE : NamedPlatformMaterial.RED_DYE;
+        final ColorTag col = value ? ColorTag.GREEN : ColorTag.RED;
+        final PlatformMaterial mat = value ? NamedPlatformMaterial.GREEN_CONCRETE : NamedPlatformMaterial.RED_CONCRETE;
         return DisplayItem.format(
                 instance.platform().createItem(mat),
                 perm.getPrintName(instance.runtime().lang()),

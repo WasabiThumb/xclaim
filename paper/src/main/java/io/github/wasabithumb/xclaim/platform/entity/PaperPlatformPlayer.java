@@ -4,10 +4,13 @@ import io.github.wasabithumb.xclaim.platform.PaperPlatform;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.platform.misc.PaperPlatformBossBar;
 import io.github.wasabithumb.xclaim.platform.misc.PlatformBossBar;
-import net.kyori.adventure.bossbar.BossBar;
+import io.github.wasabithumb.xclaim.util.identity.Identities;
+import io.github.wasabithumb.xclaim.util.identity.Identity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class PaperPlatformPlayer extends BukkitPlatformPlayer {
 
@@ -19,9 +22,33 @@ public class PaperPlatformPlayer extends BukkitPlatformPlayer {
         return (PaperPlatform) this.platform;
     }
 
+    protected @NotNull Identity identity() {
+        return Identities.get(this.handle());
+    }
+
+    @Override
+    public @NotNull UUID uuid() {
+        return this.identity().uuid();
+    }
+
+    @Override
+    public @NotNull String name() {
+        return this.identity().name();
+    }
+
     @Override
     public @NotNull String displayName() {
-        return this.platform().mm().serialize(this.handle().displayName());
+        return this.identity().displayName();
+    }
+
+    @Override
+    public boolean isOp() {
+        return this.identity().isOp();
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull String permission) {
+        return this.identity().hasPermission(permission);
     }
 
     @Override

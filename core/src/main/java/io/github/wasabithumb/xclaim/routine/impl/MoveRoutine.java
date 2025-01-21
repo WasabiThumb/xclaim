@@ -47,6 +47,7 @@ public final class MoveRoutine extends Routine implements PlatformListener {
 
     @PlatformEventHandler(category = PlatformEventCategory.MONITOR)
     public void onMove(@NotNull PlatformPlayerMoveEvent event) {
+        if (event.isCancelled()) return;
         PlatformPlayer player = event.player();
         PlatformLocation from = event.getFrom();
         PlatformLocation to = event.getTo();
