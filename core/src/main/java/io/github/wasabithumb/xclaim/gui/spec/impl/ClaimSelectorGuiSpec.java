@@ -133,7 +133,7 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         }
 
         return DisplayItem.format(
-                instance.platform().createItem(NamedPlatformMaterial.GREEN_DYE),
+                instance.platform().createItem(NamedPlatformMaterial.LIME_DYE),
                 claim.name(),
                 ColorTag.GREEN,
                 lore

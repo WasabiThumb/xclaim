@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterEditorConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.EditorConfig;
+import io.github.wasabithumb.xclaim.config.sub.EditorConfig;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingEditorConfig extends FilterEditorConfig {

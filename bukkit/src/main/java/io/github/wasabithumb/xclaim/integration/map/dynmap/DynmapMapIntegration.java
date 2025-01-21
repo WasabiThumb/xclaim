@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.integration.map.dynmap;
 
 import io.github.wasabithumb.xclaim.claim.Claim;
-import io.github.wasabithumb.xclaim.config.struct.sub.integrations.MapConfig;
+import io.github.wasabithumb.xclaim.config.sub.integrations.MapConfig;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.IntegrationInject;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;

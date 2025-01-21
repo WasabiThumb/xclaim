@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.config.impl.filter;
 
-import io.github.wasabithumb.xclaim.config.struct.RootConfig;
+import io.github.wasabithumb.xclaim.config.RootConfig;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class FilterRootConfig extends FilterConfig implements RootConfig {

@@ -5,7 +5,7 @@ import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.claim.data.impl.yaml.YamlClaimDataManager;
 import io.github.wasabithumb.xclaim.command.BukkitCommandBinding;
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlRootConfig;
-import io.github.wasabithumb.xclaim.config.struct.RootConfig;
+import io.github.wasabithumb.xclaim.config.RootConfig;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.trust.TrustManager;
 import io.github.wasabithumb.xclaim.trust.impl.yaml.YamlTrustManager;

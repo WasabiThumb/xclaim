@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.config.impl.defaulting;
 
 import io.github.wasabithumb.xclaim.config.impl.defaulting.sub.*;
 import io.github.wasabithumb.xclaim.config.impl.filter.FilterRootConfig;
-import io.github.wasabithumb.xclaim.config.struct.RootConfig;
+import io.github.wasabithumb.xclaim.config.RootConfig;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingRootConfig extends FilterRootConfig {

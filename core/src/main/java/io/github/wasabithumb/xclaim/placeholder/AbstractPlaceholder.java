@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.placeholder;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
-import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
+import io.github.wasabithumb.xclaim.config.sub.RulesConfig;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorldManager;
 import org.jetbrains.annotations.NotNull;

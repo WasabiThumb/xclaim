@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.yaml.sub.integrations;
 
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.integrations.MapConfig;
+import io.github.wasabithumb.xclaim.config.sub.integrations.MapConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;

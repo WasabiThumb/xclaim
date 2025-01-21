@@ -2,11 +2,10 @@ package io.github.wasabithumb.xclaim.config.impl.yaml.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlConfig;
 import io.github.wasabithumb.xclaim.config.impl.yaml.helpers.YamlLimits;
-import io.github.wasabithumb.xclaim.config.struct.helpers.ConfigComparators;
-import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
+import io.github.wasabithumb.xclaim.config.helpers.ConfigComparators;
+import io.github.wasabithumb.xclaim.config.sub.RulesConfig;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;

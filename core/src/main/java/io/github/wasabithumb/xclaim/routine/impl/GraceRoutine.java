@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.routine.impl;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.Claim;
-import io.github.wasabithumb.xclaim.config.struct.sub.WorldsConfig;
+import io.github.wasabithumb.xclaim.config.sub.WorldsConfig;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataType;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;

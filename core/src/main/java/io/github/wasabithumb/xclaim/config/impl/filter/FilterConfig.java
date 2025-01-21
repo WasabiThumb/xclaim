@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.config.impl.filter;
 
-import io.github.wasabithumb.xclaim.config.struct.Config;
+import io.github.wasabithumb.xclaim.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

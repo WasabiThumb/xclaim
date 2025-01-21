@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.config.struct.helpers;
+package io.github.wasabithumb.xclaim.config.helpers;
 
 import java.util.Comparator;
 

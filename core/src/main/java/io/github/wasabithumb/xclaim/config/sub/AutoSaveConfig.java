@@ -1,6 +1,6 @@
-package io.github.wasabithumb.xclaim.config.struct.sub;
+package io.github.wasabithumb.xclaim.config.sub;
 
-import io.github.wasabithumb.xclaim.config.struct.helpers.ToggleableConfig;
+import io.github.wasabithumb.xclaim.config.helpers.ToggleableConfig;
 import org.jetbrains.annotations.UnknownNullability;
 
 public interface AutoSaveConfig extends ToggleableConfig {

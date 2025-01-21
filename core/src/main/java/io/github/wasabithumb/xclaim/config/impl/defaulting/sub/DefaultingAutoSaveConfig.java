@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterAutoSaveConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.AutoSaveConfig;
+import io.github.wasabithumb.xclaim.config.sub.AutoSaveConfig;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingAutoSaveConfig extends FilterAutoSaveConfig {

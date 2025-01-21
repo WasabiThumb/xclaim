@@ -3,7 +3,7 @@ package io.github.wasabithumb.xclaim.config.impl.yaml.sub;
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlConfig;
 import io.github.wasabithumb.xclaim.config.impl.yaml.helpers.YamlLimits;
 import io.github.wasabithumb.xclaim.config.impl.yaml.sub.integrations.*;
-import io.github.wasabithumb.xclaim.config.struct.sub.IntegrationsConfig;
+import io.github.wasabithumb.xclaim.config.sub.IntegrationsConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.sub.integrations.*;
-import io.github.wasabithumb.xclaim.config.struct.sub.IntegrationsConfig;
+import io.github.wasabithumb.xclaim.config.sub.IntegrationsConfig;
 import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

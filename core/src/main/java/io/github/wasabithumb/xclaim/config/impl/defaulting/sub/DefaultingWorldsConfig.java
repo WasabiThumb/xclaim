@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterWorldsConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.WorldsConfig;
+import io.github.wasabithumb.xclaim.config.sub.WorldsConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

@@ -1,6 +1,6 @@
-package io.github.wasabithumb.xclaim.config.struct.sub.integrations;
+package io.github.wasabithumb.xclaim.config.sub.integrations;
 
-import io.github.wasabithumb.xclaim.config.struct.helpers.ToggleableConfig;
+import io.github.wasabithumb.xclaim.config.helpers.ToggleableConfig;
 import org.jetbrains.annotations.UnknownNullability;
 
 public interface MapConfig extends ToggleableConfig {

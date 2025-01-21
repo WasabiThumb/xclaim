@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.filter.sub.integrations;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.FilterConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.integrations.MapConfig;
+import io.github.wasabithumb.xclaim.config.sub.integrations.MapConfig;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class FilterMapConfig extends FilterConfig implements MapConfig {

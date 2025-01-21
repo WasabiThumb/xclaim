@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub.integrations;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.integrations.FilterEconomyConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.integrations.EconomyConfig;
+import io.github.wasabithumb.xclaim.config.sub.integrations.EconomyConfig;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

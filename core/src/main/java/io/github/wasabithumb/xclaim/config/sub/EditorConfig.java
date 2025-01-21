@@ -1,6 +1,6 @@
-package io.github.wasabithumb.xclaim.config.struct.sub;
+package io.github.wasabithumb.xclaim.config.sub;
 
-import io.github.wasabithumb.xclaim.config.struct.Config;
+import io.github.wasabithumb.xclaim.config.Config;
 import org.jetbrains.annotations.UnknownNullability;
 
 public interface EditorConfig extends Config {

@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.defaulting.sub.integrations.*;
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterIntegrationsConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.IntegrationsConfig;
+import io.github.wasabithumb.xclaim.config.sub.IntegrationsConfig;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingIntegrationsConfig extends FilterIntegrationsConfig {

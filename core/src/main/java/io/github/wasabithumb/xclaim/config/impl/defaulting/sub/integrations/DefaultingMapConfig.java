@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub.integrations;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.integrations.FilterMapConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.integrations.MapConfig;
+import io.github.wasabithumb.xclaim.config.sub.integrations.MapConfig;
 import org.jetbrains.annotations.NotNull;
 
 public final class DefaultingMapConfig extends FilterMapConfig {

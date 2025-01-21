@@ -1,5 +1,6 @@
 package io.github.wasabithumb.xclaim.integration;
 
+import io.github.wasabithumb.xclaim.config.Config;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.*;
@@ -14,7 +15,7 @@ import java.lang.annotation.*;
  *     <li>{@link io.github.wasabithumb.xclaim.platform.Platform Platform}</li>
  *     <li>{@link io.github.wasabithumb.xclaim.platform.PlatformTypeAdapter PlatformTypeAdapter}</li>
  *     <li>{@link java.util.logging.Logger Logger}</li>
- *     <li>Any {@link io.github.wasabithumb.xclaim.config.struct.Config Config}</li>
+ *     <li>Any {@link Config Config}</li>
  * </ul>
  */
 @Target(ElementType.FIELD)

@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.gui.layout;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.asset.AssetManager;
-import io.github.wasabithumb.xclaim.config.struct.sub.GuiConfig;
+import io.github.wasabithumb.xclaim.config.sub.GuiConfig;
 import io.github.wasabithumb.xclaim.gui.layout.xml.XmlGuiLayout;
 import io.github.wasabithumb.xclaim.util.io.stream.StreamUtil;
 import org.jetbrains.annotations.*;

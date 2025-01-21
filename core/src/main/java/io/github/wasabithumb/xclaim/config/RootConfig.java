@@ -1,6 +1,6 @@
-package io.github.wasabithumb.xclaim.config.struct;
+package io.github.wasabithumb.xclaim.config;
 
-import io.github.wasabithumb.xclaim.config.struct.sub.*;
+import io.github.wasabithumb.xclaim.config.sub.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;

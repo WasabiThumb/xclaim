@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.integration;
 
 import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.config.struct.sub.IntegrationsConfig;
+import io.github.wasabithumb.xclaim.config.sub.IntegrationsConfig;
 import io.github.wasabithumb.xclaim.integration.economy.EconomyIntegration;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
 import io.github.wasabithumb.xclaim.integration.placeholder.PlaceholderIntegration;

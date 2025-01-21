@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.config.impl.yaml;
 
-import io.github.wasabithumb.xclaim.config.struct.Config;
+import io.github.wasabithumb.xclaim.config.Config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.ApiStatus;

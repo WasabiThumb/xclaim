@@ -78,7 +78,7 @@ public final class PermissionLevelsGuiSpec implements GuiSpec {
                     instance.runtime().lang("gui-perm-tl-veterans-line1")
             );
             case ALL -> DisplayItem.format(
-                    instance.platform().createItem(NamedPlatformMaterial.GREEN_DYE),
+                    instance.platform().createItem(NamedPlatformMaterial.LIME_DYE),
                     instance.runtime().lang("gui-perm-tl-all"),
                     instance.runtime().lang("gui-perm-tl-all-line1"),
                     instance.runtime().lang("gui-perm-tl-all-line2")

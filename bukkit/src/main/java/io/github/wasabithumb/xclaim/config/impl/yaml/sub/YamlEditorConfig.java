@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.yaml.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.yaml.YamlConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.EditorConfig;
+import io.github.wasabithumb.xclaim.config.sub.EditorConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;

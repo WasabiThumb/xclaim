@@ -2,8 +2,7 @@ package io.github.wasabithumb.xclaim;
 
 import io.github.wasabithumb.xclaim.asset.AssetManager;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
-import io.github.wasabithumb.xclaim.command.CommandManager;
-import io.github.wasabithumb.xclaim.config.struct.RootConfig;
+import io.github.wasabithumb.xclaim.config.RootConfig;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.trust.TrustManager;
 import org.jetbrains.annotations.ApiStatus;

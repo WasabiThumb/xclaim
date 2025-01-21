@@ -5,7 +5,7 @@ import io.github.wasabithumb.xclaim.XClaimBootstrap;
 import io.github.wasabithumb.xclaim.asset.AssetManager;
 import io.github.wasabithumb.xclaim.asset.AssetPath;
 import io.github.wasabithumb.xclaim.asset.AssetSource;
-import io.github.wasabithumb.xclaim.config.struct.Config;
+import io.github.wasabithumb.xclaim.config.Config;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.PlatformTypeAdapter;

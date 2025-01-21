@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.config.impl.yaml;
 
 import io.github.wasabithumb.xclaim.config.impl.yaml.helpers.YamlLimits;
 import io.github.wasabithumb.xclaim.config.impl.yaml.sub.*;
-import io.github.wasabithumb.xclaim.config.struct.RootConfig;
+import io.github.wasabithumb.xclaim.config.RootConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;

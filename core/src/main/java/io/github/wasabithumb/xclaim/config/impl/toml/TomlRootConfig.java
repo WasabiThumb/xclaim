@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.toml;
 
 import io.github.wasabithumb.xclaim.config.impl.toml.sub.*;
-import io.github.wasabithumb.xclaim.config.struct.RootConfig;
+import io.github.wasabithumb.xclaim.config.RootConfig;
 import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;

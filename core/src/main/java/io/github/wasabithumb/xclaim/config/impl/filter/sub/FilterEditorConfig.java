@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.filter.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.FilterConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.EditorConfig;
+import io.github.wasabithumb.xclaim.config.sub.EditorConfig;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class FilterEditorConfig extends FilterConfig implements EditorConfig {

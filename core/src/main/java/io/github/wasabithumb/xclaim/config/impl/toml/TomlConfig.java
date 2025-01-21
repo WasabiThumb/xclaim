@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.config.impl.toml;
 
-import io.github.wasabithumb.xclaim.config.struct.Config;
+import io.github.wasabithumb.xclaim.config.Config;
 import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;

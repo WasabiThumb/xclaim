@@ -4,7 +4,7 @@ import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcement;
-import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
+import io.github.wasabithumb.xclaim.config.sub.RulesConfig;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.integration.Integrations;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;

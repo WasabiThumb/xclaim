@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterRulesConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.RulesConfig;
+import io.github.wasabithumb.xclaim.config.sub.RulesConfig;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

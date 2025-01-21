@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.config.impl.defaulting.sub;
 
 import io.github.wasabithumb.xclaim.config.impl.filter.sub.FilterGuiConfig;
-import io.github.wasabithumb.xclaim.config.struct.sub.GuiConfig;
+import io.github.wasabithumb.xclaim.config.sub.GuiConfig;
 import io.github.wasabithumb.xclaim.gui.dialog.GuiDialogType;
 import io.github.wasabithumb.xclaim.gui.layout.GuiBasis;
 import org.jetbrains.annotations.NotNull;

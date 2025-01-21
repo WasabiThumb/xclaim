@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.config.struct;
+package io.github.wasabithumb.xclaim.config;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -2,8 +2,8 @@ package io.github.wasabithumb.xclaim.config.impl.toml.sub.integrations;
 
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.helpers.TomlGroupableValue;
-import io.github.wasabithumb.xclaim.config.struct.helpers.ConfigComparators;
-import io.github.wasabithumb.xclaim.config.struct.sub.integrations.EconomyConfig;
+import io.github.wasabithumb.xclaim.config.helpers.ConfigComparators;
+import io.github.wasabithumb.xclaim.config.sub.integrations.EconomyConfig;
 import com.moandjiezana.toml.Toml;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Nullable;
