@@ -29,10 +29,10 @@ public class TransferOwnerClaimTransaction extends ClaimTransaction {
         if (this.manageCheck()) return this;
         if (!this.user.uuid().equals(this.data.getOwner())) {
             this.valid = false;
-            this.langMessage(I18N.PERM_HANDLER_STD_ERROR);
+            this.message(I18N.PERM_HANDLER_STD_ERROR);
         } else {
             this.newOwner = newOwner.uuid();
-            this.langMessage(I18N.GUI_TX_SUCCESS);
+            this.message(I18N.GUI_TX_SUCCESS);
         }
         return this;
     }

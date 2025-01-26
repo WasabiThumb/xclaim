@@ -121,8 +121,8 @@ public final class ClaimEditor {
         } catch (Exception ignored) {
             inv.clear();
         }
-        pdc.remove(KEY_EDITING);
-        pdc.remove(KEY_INVENTORY);
+        pdc.remove(KEY_EDITING, PlatformPersistentDataType.STRING);
+        pdc.remove(KEY_INVENTORY, PlatformPersistentDataType.BYTE_ARRAY);
     }
 
     private void highlightChunk(@NotNull PlatformPlayer ply, @NotNull Claim claim, @NotNull PlatformChunk chunk) {
@@ -134,22 +134,21 @@ public final class ClaimEditor {
         } else {
             Claim cur = this.runtime.claims().getByChunk(chunk);
             if (cur == null) {
-                ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_OPEN);
+                ref = I18N.CHUNK_EDITOR_INFO_OPEN.format(this.runtime);
                 color = ColorTag.GRAY;
             } else if (cur.owner().uuid().equals(ply.uuid())) {
-                ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_OWNED);
+                ref = I18N.CHUNK_EDITOR_INFO_OWNED.format(this.runtime);
                 color = ColorTag.YELLOW;
             } else {
-                ref = this.runtime.lang(I18N.CHUNK_EDITOR_INFO_TAKEN, cur.owner().displayName());
+                ref = I18N.CHUNK_EDITOR_INFO_TAKEN.with(cur.owner().displayName()).format(this.runtime);
                 color = ColorTag.RED;
             }
         }
 
-        ply.sendMessage(this.runtime.lang(
-                I18N.CHUNK_EDITOR_INFO,
-                chunk.x(),
-                chunk.z()
-        ));
+        ply.sendMessage(I18N.CHUNK_EDITOR_INFO
+                .with(chunk.x(), chunk.z())
+                .format(this.runtime)
+        );
         ply.sendMessage(color.format(ref));
         ply.playSound(NamedPlatformSound.EXP);
 

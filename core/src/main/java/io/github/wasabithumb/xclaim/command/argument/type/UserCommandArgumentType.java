@@ -1,6 +1,8 @@
 package io.github.wasabithumb.xclaim.command.argument.type;
 
 import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.i18n.I18N;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.util.collections.ProxyList;
@@ -12,6 +14,11 @@ import java.util.List;
 
 @ApiStatus.Internal
 final class UserCommandArgumentType implements CommandArgumentType<PlatformUser> {
+
+    @Override
+    public @NotNull Translatable name() {
+        return I18N.ARG_OFFLINE_PLAYER_NAME;
+    }
 
     @Override
     public @NotNull Class<PlatformUser> typeClass() {

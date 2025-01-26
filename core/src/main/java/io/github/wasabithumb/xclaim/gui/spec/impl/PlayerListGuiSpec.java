@@ -33,8 +33,8 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<PlatformUser> {
     @Override
     protected @Nullable PlatformItem populateEntry(@NotNull GuiInstance instance, @NotNull PlatformUser player) {
         String realName = player.displayName();
-        if (player instanceof PlatformPlayer ply) {
-            realName = ply.name();
+        if (player.isPlayer()) {
+            realName = player.asPlayer().name();
         }
 
         return instance.platform()

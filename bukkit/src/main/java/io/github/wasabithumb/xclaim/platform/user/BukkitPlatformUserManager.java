@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
 import io.github.wasabithumb.xclaim.platform.BukkitPlatformTypeAdapter;
 import io.github.wasabithumb.xclaim.platform.entity.BukkitPlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.util.MojAPI;
 import io.github.wasabithumb.xclaim.util.RemotePlayers;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -13,12 +14,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BukkitPlatformUserManager implements PlatformUserManager {
 
     protected final BukkitPlatformTypeAdapter adapter;
+    protected final Logger logger;
     public BukkitPlatformUserManager(@NotNull BukkitPlatform platform) {
         this.adapter = platform.adapter();
+        this.logger = platform.plugin().logger();
     }
 
     @Override
@@ -62,11 +66,13 @@ public class BukkitPlatformUserManager implements PlatformUserManager {
     public @Nullable PlatformUser matchUser(@NotNull String name) {
         OfflinePlayer ply = Bukkit.getPlayer(name);
         if (ply != null && this.isDiscoverable((Player) ply)) return this.adapter.player(ply);
+
         ply = this.getOfflinePlayerIfCached(name);
         if (ply != null) return this.adapter.offlineUser(ply);
-        ply = RemotePlayers.fetch(name);
-        if (ply == null) return null;
-        return new BukkitPlatformOfflineUser(ply, name);
+
+        UUID uuid = MojAPI.api(this.logger).getProfile(name);
+        if (uuid == null) return null;
+        return new BukkitPlatformOfflineUser(Bukkit.getOfflinePlayer(uuid), name);
     }
 
     @Override

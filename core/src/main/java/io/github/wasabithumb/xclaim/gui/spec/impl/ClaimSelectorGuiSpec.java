@@ -116,21 +116,33 @@ public abstract class ClaimSelectorGuiSpec extends PaginatedGuiSpec<Claim> {
         final String ownerName = owner.displayName();
 
         final List<String> lore = new ArrayList<>();
-        lore.add(instance.runtime().lang(I18N.GUI_SEL_OWNED, ownerName));
+        lore.add(I18N.GUI_SEL_OWNED
+                .with(ownerName)
+                .format(instance.runtime())
+        );
 
         Set<ChunkReference> chunks = claim.chunks();
         int chunkCount = chunks.size();
         if (chunkCount == 1) {
-            lore.add(instance.runtime().lang(I18N.GUI_SEL_CHUNK_COUNT, chunkCount));
+            lore.add(I18N.GUI_SEL_CHUNK_COUNT
+                    .with(chunkCount)
+                    .format(instance.runtime())
+            );
         } else {
-            lore.add(instance.runtime().lang(I18N.GUI_SEL_CHUNK_COUNT_PLURAL, chunkCount));
+            lore.add(I18N.GUI_SEL_CHUNK_COUNT_PLURAL
+                    .with(chunkCount)
+                    .format(instance.runtime())
+            );
         }
         if (chunkCount > 0) {
             ChunkReference c = chunks.iterator().next();
-            lore.add(instance.runtime().lang(I18N.GUI_SEL_FIRST_CHUNK, c.getCenterBlockX(), c.getCenterBlockZ()));
+            lore.add(I18N.GUI_SEL_FIRST_CHUNK
+                    .with(c.getCenterBlockX(), c.getCenterBlockZ())
+                    .format(instance.runtime())
+            );
         }
         if (chunks.contains(curChunk)) {
-            lore.add(instance.runtime().lang(I18N.GUI_SEL_WITHIN));
+            lore.add(I18N.GUI_SEL_WITHIN.format(instance.runtime()));
         }
 
         return DisplayItem.format(

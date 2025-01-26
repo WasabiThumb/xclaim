@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
+import java.util.List;
+
 public final class CommandArgument<T> {
 
     public static <R> @NotNull Builder<R> builder(@NotNull CommandArgumentType<R> type) {
@@ -75,7 +77,7 @@ public final class CommandArgument<T> {
 
     public static final class Builder<Q> {
 
-        private final CommandArgumentType<Q> type;
+        private CommandArgumentType<Q> type;
         private Translatable name;
         private Translatable description;
         private boolean optional;
@@ -108,6 +110,12 @@ public final class CommandArgument<T> {
         @Contract("-> this")
         public @NotNull Builder<Q> optional() {
             return this.optional(true);
+        }
+
+        @Contract("_ -> this")
+        public @NotNull Builder<Q> withSuggestions(@NotNull List<String> suggestions) {
+            this.type = this.type.withSuggestions(suggestions);
+            return this;
         }
 
         @Contract("-> new")

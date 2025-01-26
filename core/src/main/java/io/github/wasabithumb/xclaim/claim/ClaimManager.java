@@ -20,7 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -164,7 +166,7 @@ public class ClaimManager {
                     .isSuccess();
 
             if (success) {
-                if (!silent) user.sendMessage(this.runtime.lang(I18N.GUI_NEW_SUCCESS, c.name()));
+                if (!silent) user.sendMessage(I18N.GUI_NEW_SUCCESS.with(c.name()).format(this.runtime));
                 return c;
             }
             return null;
@@ -402,8 +404,58 @@ public class ClaimManager {
         state.attachedRegions = Collections.emptySet();
     }
 
+    public @NotNull StressReport calcStress() {
+        return new StressReport(
+                this.calcStress0(this.byNameLock.writeLock()),
+                this.calcStress0(this.byOwnerLock.writeLock()),
+                this.calcStress0(this.byRegionLock.writeLock())
+        );
+    }
+
+    private long calcStress0(Lock lock) {
+        long start = System.nanoTime();
+        long end = 0L;
+
+        boolean interrupted = false;
+        try {
+            if (!lock.tryLock(StressReport.MAX, TimeUnit.MICROSECONDS))
+                return StressReport.MAX;
+
+            try {
+                end = System.nanoTime();
+            } finally {
+                lock.unlock();
+            }
+        } catch (InterruptedException e) {
+            interrupted = true;
+        }
+
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+            return StressReport.MAX;
+        }
+
+        return Math.min(Math.floorDiv(end - start, 1000L), StressReport.MAX);
+    }
+
     public void close() throws Exception {
         this.data.close();
+    }
+
+    //
+
+    /**
+     * Time in micros to acquire the claim registries
+     */
+    public record StressReport(
+            long primary,
+            long ownership,
+            long region
+    ) {
+
+        /** 50ms */
+        public static final long MAX = 50000L;
+
     }
 
 }

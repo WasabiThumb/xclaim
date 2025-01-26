@@ -48,7 +48,7 @@ public final class BukkitPlatformPersistentDataContainer implements PlatformPers
     }
 
     @Override
-    public void remove(@NotNull String key) {
+    public void remove(@NotNull String key, @NotNull PlatformPersistentDataType<?> ignored) {
         this.handle.remove(this.namespaced(key));
     }
 

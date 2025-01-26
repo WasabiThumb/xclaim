@@ -18,6 +18,6 @@ public interface PlatformPersistentDataContainer extends PlatformObject {
 
     <T> void set(@NotNull String key, @NotNull PlatformPersistentDataType<T> type, @NotNull T value);
 
-    void remove(@NotNull String key);
+    void remove(@NotNull String key, @NotNull PlatformPersistentDataType<?> type);
 
 }

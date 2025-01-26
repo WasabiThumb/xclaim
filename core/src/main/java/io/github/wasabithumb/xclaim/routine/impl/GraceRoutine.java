@@ -61,7 +61,7 @@ public final class GraceRoutine extends Routine implements PlatformListener {
         }
 
         final PlatformUser owner = claim.owner();
-        final String message = this.runtime.lang(I18N.GRACE_REMOVE, claim.name());
+        final String message = I18N.GRACE_REMOVE.with(claim.name()).format(this.runtime);
         owner.sendMessage(message);
     }
 
@@ -83,7 +83,7 @@ public final class GraceRoutine extends Routine implements PlatformListener {
 
         long elapsed = now - start;
         if (elapsed >= time) {
-            pdc.remove(START_KEY);
+            pdc.remove(START_KEY, PlatformPersistentDataType.LONG);
             return false;
         }
 
@@ -107,7 +107,7 @@ public final class GraceRoutine extends Routine implements PlatformListener {
         }
 
         if (count != 0)
-            ply.sendMessage(this.runtime.lang(I18N.GRACE_ALERT, count));
+            ply.sendMessage(I18N.GRACE_ALERT.with(count).format(this.runtime));
     }
 
     //

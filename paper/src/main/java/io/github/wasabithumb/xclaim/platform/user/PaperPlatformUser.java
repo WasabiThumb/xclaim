@@ -1,7 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.user;
 
 import io.github.wasabithumb.xclaim.platform.PaperPlatform;
-import io.github.wasabithumb.xclaim.platform.entity.BukkitPlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.entity.PaperPlatformPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;

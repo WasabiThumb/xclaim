@@ -52,7 +52,8 @@ public final class TransferOwnerGuiSpec implements GuiSpec {
         String targetName;
         String display = this.target.displayName();
 
-        if (this.target instanceof PlatformPlayer ply) {
+        if (this.target.isPlayer()) {
+            PlatformPlayer ply = this.target.asPlayer();
             String real = ply.name();
             if (display.equals(real)) {
                 targetName = display;

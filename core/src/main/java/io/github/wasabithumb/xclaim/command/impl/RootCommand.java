@@ -14,6 +14,7 @@ import java.util.List;
 public final class RootCommand implements NullaryCommand {
 
     private final GuiCommand guiCommand = new GuiCommand();
+    private final InfoCommand infoCommand = new InfoCommand();
 
     //
 
@@ -29,7 +30,7 @@ public final class RootCommand implements NullaryCommand {
 
     @Override
     public @NotNull @Unmodifiable List<Command<?>> subCommands() {
-        return List.of(this.guiCommand);
+        return List.of(this.guiCommand, this.infoCommand);
     }
 
     @Override

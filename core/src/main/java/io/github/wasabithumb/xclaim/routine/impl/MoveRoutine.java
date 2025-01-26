@@ -67,15 +67,14 @@ public final class MoveRoutine extends Routine implements PlatformListener {
         if (toClaim == null) {
             if (fromClaim != null) {
                 // Left claim
-                player.sendActionBar(this.runtime.lang(I18N.MOVE_EXIT, fromClaim.name()));
+                player.sendActionBar(I18N.MOVE_EXIT.with(fromClaim.name()).format(this.runtime));
             }
         } else if (fromClaim == null || !fromClaim.equals(toClaim)) {
             // Entered claim
-            player.sendActionBar(this.runtime.lang(
-                    I18N.MOVE_ENTER,
-                    toClaim.owner().displayName(),
-                    toClaim.name()
-            ));
+            player.sendActionBar(I18N.MOVE_ENTER
+                    .with(toClaim.owner().displayName(), toClaim.name())
+                    .format(this.runtime)
+            );
         }
     }
 

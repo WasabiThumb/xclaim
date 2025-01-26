@@ -1,6 +1,8 @@
 package io.github.wasabithumb.xclaim.command.argument.type;
 
 import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.i18n.I18N;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.util.BitManipulation;
 import org.jetbrains.annotations.ApiStatus;
@@ -30,6 +32,11 @@ final class IntegerCommandArgumentType implements CommandArgumentType<Integer> {
     }
 
     //
+
+    @Override
+    public @NotNull Translatable name() {
+        return I18N.ARG_INT_NAME;
+    }
 
     @Override
     public @NotNull Class<Integer> typeClass() {

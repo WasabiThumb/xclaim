@@ -31,9 +31,9 @@ public abstract class ClaimTransaction {
         this.valid = true;
     }
 
-    protected final void langMessage(@NotNull Translatable key, @NotNull Object @NotNull ... args) {
+    protected final void message(@NotNull Translatable key) {
         if (this.valid && !this.silent)
-            this.user.sendMessage(this.runtime.lang(key, args));
+            this.user.sendMessage(this.runtime.lang(key));
     }
 
     protected final boolean checkPermission(@NotNull Permission permission) {
@@ -43,7 +43,7 @@ public abstract class ClaimTransaction {
     protected final boolean manageCheck() {
         if (this.checkPermission(Permission.MANAGE)) return false;
         this.valid = false;
-        this.langMessage(I18N.PERM_HANDLER_STD_ERROR);
+        this.message(I18N.PERM_HANDLER_STD_ERROR);
         return true;
     }
 

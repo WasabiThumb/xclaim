@@ -107,7 +107,11 @@ final class CommandAdapter<A extends Record> {
             this.command.execute(this.runtime, user, boxed);
         } catch (Throwable t) {
             this.runtime.logger().log(Level.WARNING, "An error occurred while dispatching a command", t);
-            user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_UNEXPECTED, t.getClass().getSimpleName()));
+            user.sendMessage(
+                    I18N.CMDMGR_ERR_UNEXPECTED
+                            .with(t.getClass().getSimpleName())
+                            .format(this.runtime)
+            );
         }
     }
 
@@ -126,7 +130,11 @@ final class CommandAdapter<A extends Record> {
         String next;
         while ((next = args.poll()) != null) {
             if (count >= this.max) {
-                user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_MAX_ARGS, this.max));
+                user.sendMessage(
+                        I18N.CMDMGR_ERR_MAX_ARGS
+                                .with(this.max)
+                                .format(this.runtime)
+                );
                 return null;
             }
 
@@ -134,26 +142,32 @@ final class CommandAdapter<A extends Record> {
             CommandArgumentType.ParseResult<?> result = type.parse(this.runtime, user, next);
             if (!result.isSuccess()) {
                 // TODO: The error message should be forwarded
-                user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_MALFORMED));
+                user.sendMessage(I18N.CMDMGR_ERR_MALFORMED.format(this.runtime));
                 return null;
             }
 
             Method accessor = this.accessors[count++];
-            CommandArgument<?> arg;
-            try {
-                arg = (CommandArgument<?>) accessor.invoke(boxed);
-            } catch (ReflectiveOperationException | SecurityException e) {
-                throw new AssertionError("Failed to invoke record accessor", e);
-            }
-            arg.set(result.value());
+            this.extractArg(boxed, accessor).set(result.value());
         }
 
         if (count < this.min) {
-            user.sendMessage(this.runtime.lang(I18N.CMDMGR_ERR_MIN_ARGS, this.min));
+            user.sendMessage(
+                    I18N.CMDMGR_ERR_MIN_ARGS
+                            .with(this.min)
+                            .format(this.runtime)
+            );
             return null;
         }
 
         return boxed;
+    }
+
+    private @NotNull CommandArgument<?> extractArg(@NotNull A boxed, @NotNull Method accessor) {
+        try {
+            return (CommandArgument<?>) accessor.invoke(boxed);
+        } catch (ReflectiveOperationException | SecurityException e) {
+            throw new AssertionError("Failed to invoke record accessor", e);
+        }
     }
 
 }

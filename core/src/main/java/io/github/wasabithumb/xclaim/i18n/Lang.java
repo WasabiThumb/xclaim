@@ -60,11 +60,11 @@ public final class Lang {
         return data.resolve(str);
     }
 
-    public @NotNull String get(@NotNull Translatable key, @NotNull Object @NotNull ... args) {
+    public @NotNull String get(@NotNull Translatable key) {
         if (key instanceof Translatable.Keyed keyed) {
-            return this.get(keyed.key(), args);
+            return this.get(keyed.key(), keyed.args());
         }
-        throw new IllegalArgumentException("Lang cannot accept literal (" + key + ")");
+        throw new IllegalArgumentException("Lang cannot accept complex Translatable (" + key + ")");
     }
 
     public void serialize(@NotNull OutputStream os) throws IOException {

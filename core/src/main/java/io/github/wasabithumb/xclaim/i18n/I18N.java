@@ -797,23 +797,71 @@ public final class I18N {
     /** Prints out basic info about XClaim */
     public static final Translatable CMD_INFO_DESCRIPTION = keyed("cmd-info-description");
 
-    /** Made by $1 */
-    public static final Translatable CMD_INFO_AUTHOR = keyed("cmd-info-author");
+    /** Platform > */
+    public static final Translatable CMD_INFO_PLATFORM = keyed("cmd-info-platform");
 
-    /** Version $1 */
-    public static final Translatable CMD_INFO_VERSION = keyed("cmd-info-version");
+    /** Usage > */
+    public static final Translatable CMD_INFO_USAGE = keyed("cmd-info-usage");
 
-    /** API Version $1 */
-    public static final Translatable CMD_INFO_API_VERSION = keyed("cmd-info-apiVersion");
+    /** $1 claims */
+    public static final Translatable CMD_INFO_USAGE_CLAIMS = keyed("cmd-info-usage-claims");
 
-    /** 1 total claim covering 1 chunk */
-    public static final Translatable CMD_INFO_CLAIMS_NOT_PLURAL = keyed("cmd-info-claims-not-plural");
+    /** 1 claim */
+    public static final Translatable CMD_INFO_USAGE_CLAIMS_SINGLE = keyed("cmd-info-usage-claims-single");
 
-    /** 1 total claim covering $2 chunks */
-    public static final Translatable CMD_INFO_CLAIMS_CHUNK_PLURAL = keyed("cmd-info-claims-chunk-plural");
+    /** $1 chunks */
+    public static final Translatable CMD_INFO_USAGE_CHUNKS = keyed("cmd-info-usage-chunks");
 
-    /** $1 total claims covering $2 chunks */
-    public static final Translatable CMD_INFO_CLAIMS_BOTH_PLURAL = keyed("cmd-info-claims-both-plural");
+    /** 1 chunk */
+    public static final Translatable CMD_INFO_USAGE_CHUNKS_SINGLE = keyed("cmd-info-usage-chunks-single");
+
+    /** Hooks > */
+    public static final Translatable CMD_INFO_HOOKS = keyed("cmd-info-hooks");
+
+    /** ECO */
+    public static final Translatable CMD_INFO_HOOKS_ECONOMY = keyed("cmd-info-hooks-economy");
+
+    /** No Economy Integration */
+    public static final Translatable CMD_INFO_HOOKS_ECONOMY_NONE = keyed("cmd-info-hooks-economy-none");
+
+    /** MAP */
+    public static final Translatable CMD_INFO_HOOKS_MAP = keyed("cmd-info-hooks-map");
+
+    /** No Map Integration */
+    public static final Translatable CMD_INFO_HOOKS_MAP_NONE = keyed("cmd-info-hooks-map-none");
+
+    /** PLH */
+    public static final Translatable CMD_INFO_HOOKS_PLACEHOLDER = keyed("cmd-info-hooks-placeholder");
+
+    /** No Placeholder Integration */
+    public static final Translatable CMD_INFO_HOOKS_PLACEHOLDER_NONE = keyed("cmd-info-hooks-placeholder-none");
+
+    /** GRD */
+    public static final Translatable CMD_INFO_HOOKS_PROTECTION = keyed("cmd-info-hooks-protection");
+
+    /** No Protection Integration */
+    public static final Translatable CMD_INFO_HOOKS_PROTECTION_NONE = keyed("cmd-info-hooks-protection-none");
+
+    /** Stress > */
+    public static final Translatable CMD_INFO_STRESS = keyed("cmd-info-stress");
+
+    /** Primary */
+    public static final Translatable CMD_INFO_STRESS_PRIMARY = keyed("cmd-info-stress-primary");
+
+    /** Ownership */
+    public static final Translatable CMD_INFO_STRESS_OWNERSHIP = keyed("cmd-info-stress-ownership");
+
+    /** Region */
+    public static final Translatable CMD_INFO_STRESS_REGION = keyed("cmd-info-stress-region");
+
+    /** $1 ms */
+    public static final Translatable CMD_INFO_STRESS_MICROS = keyed("cmd-info-stress-micros");
+
+    /** less than $1 ms */
+    public static final Translatable CMD_INFO_STRESS_MICROS_LOW = keyed("cmd-info-stress-micros-low");
+
+    /** over $1 ms */
+    public static final Translatable CMD_INFO_STRESS_MICROS_HIGH = keyed("cmd-info-stress-micros-high");
 
     /** help */
     public static final Translatable CMD_HELP_NAME = keyed("cmd-help-name");

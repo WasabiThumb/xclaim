@@ -1,6 +1,10 @@
 package io.github.wasabithumb.xclaim.command.argument.type;
 
 import io.github.wasabithumb.xclaim.XClaim;
+import io.github.wasabithumb.xclaim.claim.Claim;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.command.argument.CommandArgument;
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -8,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public interface CommandArgumentType<T> {
 
@@ -22,13 +28,27 @@ public interface CommandArgumentType<T> {
         return new IntegerCommandArgumentType(min, max);
     }
 
+    @Contract("_ -> new")
+    static @NotNull CommandArgumentType<Claim> claim(@NotNull BiPredicate<Claim, PlatformUser> condition) {
+        return new ClaimCommandArgumentType(condition);
+    }
+
+    CommandArgumentType<Claim> MANAGEABLE_CLAIM = claim((Claim c, PlatformUser user) -> c.checkPermission(user, Permission.MANAGE));
+
     //
+
+    @NotNull Translatable name();
 
     @NotNull Class<T> typeClass();
 
     @NotNull ParseResult<T> parse(@NotNull XClaim runtime, @NotNull PlatformUser user, @NotNull String input);
 
     @NotNull @Unmodifiable List<String> suggest(@NotNull XClaim runtime, @NotNull PlatformUser user);
+
+    @Contract("_ -> new")
+    default @NotNull CommandArgumentType<T> withSuggestions(@NotNull List<String> suggestions) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Argument type does not support custom suggestions");
+    }
 
     //
 

@@ -17,7 +17,7 @@ public class RenameClaimTransaction extends ClaimTransaction {
     protected void onCommit() {
         if (this.newName == null) return;
         if (this.newName.length() > 50 || this.manager.getByName(this.newName) != null) {
-            this.langMessage(I18N.GUI_RENAME_CHUNK_FAIL);
+            this.message(I18N.GUI_RENAME_CHUNK_FAIL);
             this.valid = false;
             return;
         }

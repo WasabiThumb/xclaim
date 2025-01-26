@@ -72,44 +72,44 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
     public @NotNull ModifyChunksClaimTransaction addChunk(@NotNull ChunkReference cr) {
         if (this.manageCheck()) return this;
         if (!this.data.getWorld().matches(cr.world)) {
-            this.langMessage(I18N.CHUNK_EDITOR_WRONG_WORLD);
+            this.message(I18N.CHUNK_EDITOR_WRONG_WORLD);
             this.valid = false;
             return this;
         }
         if (this.hasProtectionConflict(cr)) {
-            this.langMessage(I18N.CHUNK_EDITOR_PROTECTION_DENY);
+            this.message(I18N.CHUNK_EDITOR_PROTECTION_DENY);
             this.valid = false;
             return this;
         }
         if (this.hasOverrideConflict(cr)) {
-            this.langMessage(I18N.CHUNK_EDITOR_TAKEN);
+            this.message(I18N.CHUNK_EDITOR_TAKEN);
             this.valid = false;
             return this;
         }
         if (this.hasChunkLimitConflict()) {
-            this.langMessage(I18N.CHUNK_EDITOR_MAX);
+            this.message(I18N.CHUNK_EDITOR_MAX);
             this.valid = false;
             return this;
         }
         if (this.hasDistanceConflict(cr)) {
-            this.langMessage(I18N.CHUNK_EDITOR_MIN_DISTANCE_DENY);
+            this.message(I18N.CHUNK_EDITOR_MIN_DISTANCE_DENY);
             this.valid = false;
             return this;
         }
         if (this.hasPlacementConflict(cr)) {
-            this.langMessage(I18N.CHUNK_EDITOR_ADJACENT);
+            this.message(I18N.CHUNK_EDITOR_ADJACENT);
             this.valid = false;
             return this;
         }
         if (this.update(cr.x, cr.z, true)) {
             if (this.hasPoorConflict()) {
-                this.langMessage(I18N.CHUNK_EDITOR_CANT_AFFORD);
+                this.message(I18N.CHUNK_EDITOR_CANT_AFFORD);
                 this.valid = false;
                 return this;
             }
-            this.langMessage(I18N.CHUNK_EDITOR_ADD, Integer.toString(cr.x), Integer.toString(cr.z));
+            this.message(I18N.CHUNK_EDITOR_ADD.with(Integer.toString(cr.x), Integer.toString(cr.z)));
         } else {
-            this.langMessage(I18N.CHUNK_EDITOR_REDUNDANT_ADD);
+            this.message(I18N.CHUNK_EDITOR_REDUNDANT_ADD);
         }
         return this;
     }
@@ -125,14 +125,14 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
         if (this.data.getWorld().matches(cr.world) && this.update(cr.x, cr.z, false)) {
             if (this.isDeleting() && (!this.allowDeletion || !this.checkPermission(Permission.DELETE))) {
                 // TODO: More detailed error message
-                this.langMessage(I18N.PERM_HANDLER_STD_ERROR);
+                this.message(I18N.PERM_HANDLER_STD_ERROR);
                 this.valid = false;
                 return this;
             }
             this.subtractUnclaimReward();
-            this.langMessage(I18N.CHUNK_EDITOR_REMOVE);
+            this.message(I18N.CHUNK_EDITOR_REMOVE);
         } else {
-            this.langMessage(I18N.CHUNK_EDITOR_REDUNDANT_REMOVE);
+            this.message(I18N.CHUNK_EDITOR_REDUNDANT_REMOVE);
         }
         return this;
     }
@@ -318,16 +318,16 @@ public class ModifyChunksClaimTransaction extends ClaimTransaction {
         double price = this.price;
         if (cmp > 0) {
             if (eco.take(this.user, price)) {
-                this.langMessage(I18N.CHUNK_EDITOR_PAY_SUCCESS, eco.format(price));
+                this.message(I18N.CHUNK_EDITOR_PAY_SUCCESS.with(eco.format(price)));
                 this.price = 0;
             } else {
-                this.langMessage(I18N.CHUNK_EDITOR_PAY_FAIL, eco.format(price));
+                this.message(I18N.CHUNK_EDITOR_PAY_FAIL.with(eco.format(price)));
                 return false;
             }
         } else {
             price = -price;
             eco.give(this.user, price);
-            this.langMessage(I18N.CHUNK_EDITOR_REWARD, eco.format(price));
+            this.message(I18N.CHUNK_EDITOR_REWARD.with(eco.format(price)));
             this.price = 0;
         }
 

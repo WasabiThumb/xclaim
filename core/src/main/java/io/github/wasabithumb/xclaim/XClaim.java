@@ -75,8 +75,8 @@ public class XClaim {
         return this.lang;
     }
 
-    public @NotNull String lang(@NotNull Translatable key, @NotNull Object @NotNull ... args) {
-        return key.format(this.lang, args);
+    public @NotNull String lang(@NotNull Translatable key) {
+        return key.format(this.lang);
     }
 
     public @NotNull TrustManager trust() {
@@ -115,6 +115,7 @@ public class XClaim {
         this.loadGUI();
         this.loadCommands();
         this.loadRoutines();
+        this.logger().log(Level.INFO, this.lang(I18N.STARTUP_DONE));
     }
 
     void disable() {
@@ -131,6 +132,7 @@ public class XClaim {
         } catch (Exception e) {
             this.logger().log(Level.WARNING, "Exception while shutting down trust manager", e);
         }
+        this.logger().log(Level.INFO, this.lang(I18N.DISABLE_DONE));
     }
 
     /* STARTUP TASKS */

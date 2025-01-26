@@ -1,7 +1,6 @@
 package io.github.wasabithumb.xclaim.command;
 
 import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.i18n.Translatable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Contract;
