@@ -5,7 +5,7 @@ import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.transaction.impl.ModifyChunksClaimTransaction;
 import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataContainer;
-import io.github.wasabithumb.xclaim.platform.data.PlatformPersistentDataType;
+import io.github.wasabithumb.xclaim.platform.data.type.PlatformPersistentDataType;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.sound.NamedPlatformSound;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformEntity;

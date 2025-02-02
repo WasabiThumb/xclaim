@@ -27,14 +27,11 @@ public class SpongePlatformUser implements PlatformUser {
         return this.handle;
     }
 
-    protected @Nullable ServerPlayer asOnline() {
-        ServerPlayer sp;
-        synchronized (this) {
-            sp = this.online;
-            if (sp == null || !sp.isOnline()) {
-                sp = this.handle.player().orElse(null);
-                this.online = sp;
-            }
+    protected synchronized @Nullable ServerPlayer asOnline() {
+        ServerPlayer sp = this.online;
+        if (sp == null || !sp.isOnline()) {
+            sp = this.handle.player().orElse(null);
+            this.online = sp;
         }
         return sp;
     }
@@ -48,7 +45,9 @@ public class SpongePlatformUser implements PlatformUser {
 
     @Override
     public @NotNull String displayName() {
-        return this.handle.name();
+        String name = this.handle.name();
+        if (name == null) name = this.handle.uniqueId().toString();
+        return name;
     }
 
     @Override

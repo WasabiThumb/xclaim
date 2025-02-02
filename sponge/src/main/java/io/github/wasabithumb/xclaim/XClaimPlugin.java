@@ -5,6 +5,7 @@ import io.github.wasabithumb.xclaim.asset.AssetManager;
 import io.github.wasabithumb.xclaim.platform.Platform;
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.util.LoggerAdapter;
+import io.github.wasabithumb.xclaim.util.WorldDataStore;
 import org.bstats.sponge.Metrics;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Server;
@@ -20,7 +21,6 @@ import java.nio.file.Path;
 @Plugin("xclaim")
 public class XClaimPlugin implements XClaimBootstrap {
 
-
     private final PluginContainer pluginContainer;
     private final ConfigManager configManager;
     private final Metrics metrics;
@@ -28,6 +28,7 @@ public class XClaimPlugin implements XClaimBootstrap {
     @SuppressWarnings("SpongeLogging")
     private final java.util.logging.Logger logger;
 
+    private WorldDataStore worldDataStore;
     private SpongePlatform platform;
 
     //
@@ -44,12 +45,14 @@ public class XClaimPlugin implements XClaimBootstrap {
 
     @Listener
     public void onStart(final StartedEngineEvent<Server> event) {
-        this.platform = new SpongePlatform(this.pluginContainer, event.engine(), this.metrics);
+        this.worldDataStore = new WorldDataStore(event.engine(), this.pluginContainer, this.configManager);
+        this.platform = new SpongePlatform(this.pluginContainer, event.engine(), this.metrics, this.worldDataStore);
     }
 
     @Listener
     public void onStop(final StoppingEngineEvent<Server> event) {
         this.platform.destroy();
+        this.worldDataStore.close();
     }
 
     //

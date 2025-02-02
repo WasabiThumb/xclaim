@@ -6,7 +6,8 @@ import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
 import io.github.wasabithumb.xclaim.platform.scheduler.PlatformScheduler;
 import io.github.wasabithumb.xclaim.platform.user.SpongePlatformUserManager;
-import io.github.wasabithumb.xclaim.platform.world.PlatformWorldManager;
+import io.github.wasabithumb.xclaim.platform.world.SpongePlatformWorldManager;
+import io.github.wasabithumb.xclaim.util.WorldDataStore;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.sponge.Metrics;
 import org.apache.logging.log4j.Logger;
@@ -20,16 +21,25 @@ public class SpongePlatform implements Platform {
     private final PluginContainer plugin;
     private final Server server;
     private final MiniMessage mm;
-    private final SpongePlatformUserManager users;
+    private final WorldDataStore worldData;
     private final SpongePlatformMetrics metrics;
+    private final SpongePlatformUserManager users;
+    private final SpongePlatformWorldManager worlds;
 
     @ApiStatus.Internal
-    public SpongePlatform(@NotNull PluginContainer plugin, @NotNull Server server, @NotNull Metrics metrics) {
+    public SpongePlatform(
+            @NotNull PluginContainer plugin,
+            @NotNull Server server,
+            @NotNull Metrics metrics,
+            @NotNull WorldDataStore worldData
+    ) {
         this.plugin = plugin;
         this.server = server;
         this.mm = MiniMessage.miniMessage();
-        this.users = new SpongePlatformUserManager(this);
+        this.worldData = worldData;
         this.metrics = new SpongePlatformMetrics(metrics);
+        this.users = new SpongePlatformUserManager(this);
+        this.worlds = new SpongePlatformWorldManager(this);
     }
 
     //
@@ -54,6 +64,11 @@ public class SpongePlatform implements Platform {
         return this.mm;
     }
 
+    @ApiStatus.Internal
+    public final @NotNull WorldDataStore worldData() {
+        return this.worldData;
+    }
+
     //
 
     // TODO: Lots
@@ -69,8 +84,8 @@ public class SpongePlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformWorldManager worlds() {
-        return null;
+    public @NotNull SpongePlatformWorldManager worlds() {
+        return this.worlds;
     }
 
     @Override
@@ -84,8 +99,8 @@ public class SpongePlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformMetrics metrics() {
-        return null;
+    public @NotNull SpongePlatformMetrics metrics() {
+        return this.metrics;
     }
 
     @Override

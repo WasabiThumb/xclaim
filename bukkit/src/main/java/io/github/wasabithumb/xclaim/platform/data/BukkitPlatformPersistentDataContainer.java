@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim.platform.data;
 
 import io.github.wasabithumb.xclaim.platform.BukkitPlatform;
+import io.github.wasabithumb.xclaim.platform.data.type.PlatformPersistentDataType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;

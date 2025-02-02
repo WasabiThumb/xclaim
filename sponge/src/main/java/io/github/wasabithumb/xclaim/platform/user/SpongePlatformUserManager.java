@@ -54,7 +54,7 @@ public class SpongePlatformUserManager implements PlatformUserManager {
 
     @Override
     public @NotNull PlatformUser getUser(@NotNull UUID uuid) {
-        if (uuid.getMostSignificantBits() == 0L && uuid.getLeastSignificantBits() == 0L)
+        if (uuid.equals(PlatformConsoleUser.ID))
             return this.console;
 
         Optional<ServerPlayer> ply = this.platform.server().player(uuid);

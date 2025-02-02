@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim.platform.data;
 
 import io.github.wasabithumb.xclaim.platform.PlatformObject;
+import io.github.wasabithumb.xclaim.platform.data.type.PlatformPersistentDataType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

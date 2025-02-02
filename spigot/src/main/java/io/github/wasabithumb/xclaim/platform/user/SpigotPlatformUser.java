@@ -38,7 +38,7 @@ public class SpigotPlatformUser implements BukkitPlatformUser {
 
     @Override
     public @NotNull UUID uuid() {
-        return new UUID(0L, 0L);
+        return PlatformConsoleUser.ID;
     }
 
     @Override

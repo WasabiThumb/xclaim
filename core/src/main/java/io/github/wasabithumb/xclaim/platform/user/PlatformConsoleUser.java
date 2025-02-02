@@ -8,9 +8,11 @@ import java.util.UUID;
 
 public interface PlatformConsoleUser extends PlatformUser {
 
+    UUID ID = new UUID(0L, 0L);
+
     @Override
     default @NotNull UUID uuid() {
-        return new UUID(0L, 0L);
+        return ID;
     }
 
     @Override

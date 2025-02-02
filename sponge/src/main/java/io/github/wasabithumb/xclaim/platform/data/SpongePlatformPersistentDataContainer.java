@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim.platform.data;
 
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
+import io.github.wasabithumb.xclaim.platform.data.type.PlatformPersistentDataType;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.DataHolder;

@@ -60,6 +60,8 @@ tasks.shadowJar {
         attributes["Enable-Debug"] = "$debugMode"
     }
 
+    val libPkg = "io.github.wasabithumb.xclaim.shadow"
+    relocate("org.bstats", "${libPkg}.bstats")
     // TODO: Library exclusions & relocations
 }
 
