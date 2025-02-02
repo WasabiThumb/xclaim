@@ -1,9 +1,11 @@
 package io.github.wasabithumb.xclaim.platform;
 
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
+import io.github.wasabithumb.xclaim.platform.data.material.SpongePlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventManager;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.inventory.SpongePlatformItem;
 import io.github.wasabithumb.xclaim.platform.scheduler.PlatformScheduler;
 import io.github.wasabithumb.xclaim.platform.user.SpongePlatformUserManager;
 import io.github.wasabithumb.xclaim.platform.world.SpongePlatformWorldManager;
@@ -14,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Server;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.plugin.PluginContainer;
 
 public class SpongePlatform implements Platform {
@@ -104,13 +107,16 @@ public class SpongePlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformItem createItem(@NotNull PlatformMaterial material, int amount) {
-        return null;
+    public @NotNull SpongePlatformItem createItem(@NotNull PlatformMaterial material, int amount) {
+        return new SpongePlatformItem(
+                this,
+                ItemStack.of(SpongePlatformMaterial.adaptItem(material), amount)
+        );
     }
 
     @Override
-    public @NotNull PlatformItem createItem(byte @NotNull [] bytes) {
-        return null;
+    public @NotNull SpongePlatformItem createItem(byte @NotNull [] bytes) {
+        return SpongePlatformItem.fromBytes(this, bytes);
     }
 
     @Override

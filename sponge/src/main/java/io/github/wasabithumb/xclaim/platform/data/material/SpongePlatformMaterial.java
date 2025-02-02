@@ -35,6 +35,7 @@ public final class SpongePlatformMaterial implements PlatformMaterial {
         return builder().item(item).block(block).build();
     }
 
+    @ApiStatus.Internal
     @Contract("_ -> new")
     private static @NotNull SpongePlatformMaterial item(
             @NotNull DefaultedRegistryReference<ItemType> item
