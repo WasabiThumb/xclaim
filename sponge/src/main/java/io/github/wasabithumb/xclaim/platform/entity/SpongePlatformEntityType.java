@@ -1,8 +1,10 @@
 package io.github.wasabithumb.xclaim.platform.entity;
 
+import io.github.wasabithumb.xclaim.util.RegistryUtil;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.registry.DefaultedRegistryReference;
 import org.spongepowered.api.registry.RegistryTypes;
 
 public record SpongePlatformEntityType(
@@ -19,10 +21,11 @@ public record SpongePlatformEntityType(
     }
 
     public static @NotNull PlatformEntityType of(@NotNull EntityType<?> type) {
-        if (type == EntityTypes.PLAYER.get()) return NamedPlatformEntityType.PLAYER;
-        if (type == EntityTypes.TNT.get()) return NamedPlatformEntityType.TNT;
-        if (type == EntityTypes.CREEPER.get()) return NamedPlatformEntityType.CREEPER;
-        if (type == EntityTypes.END_CRYSTAL.get()) return NamedPlatformEntityType.END_CRYSTAL;
+        DefaultedRegistryReference<EntityType<?>> ref = type.asDefaultedReference(RegistryTypes.ENTITY_TYPE);
+        if (RegistryUtil.referenceEquals(ref, EntityTypes.PLAYER))      return NamedPlatformEntityType.PLAYER;
+        if (RegistryUtil.referenceEquals(ref, EntityTypes.TNT))         return NamedPlatformEntityType.TNT;
+        if (RegistryUtil.referenceEquals(ref, EntityTypes.CREEPER))     return NamedPlatformEntityType.CREEPER;
+        if (RegistryUtil.referenceEquals(ref, EntityTypes.END_CRYSTAL)) return NamedPlatformEntityType.END_CRYSTAL;
         return new SpongePlatformEntityType(type);
     }
 

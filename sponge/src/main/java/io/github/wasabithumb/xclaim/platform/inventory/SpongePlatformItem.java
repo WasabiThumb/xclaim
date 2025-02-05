@@ -42,7 +42,7 @@ public final class SpongePlatformItem implements PlatformItem {
                 key.append((char) c);
             }
 
-            ItemType type = Sponge.server().registry(RegistryTypes.ITEM_TYPE)
+            ItemType type = Sponge.game().registry(RegistryTypes.ITEM_TYPE)
                     .value(ResourceKey.resolve(key.toString()));
 
             int quantity = 0;
@@ -181,7 +181,8 @@ public final class SpongePlatformItem implements PlatformItem {
 
     @Override
     public boolean isConsumable() {
-        return this.handle.get(Keys.REPLENISHED_FOOD).isPresent();
+        return this.handle.supports(Keys.REPLENISHED_FOOD) &&
+                this.handle.get(Keys.REPLENISHED_FOOD).isPresent();
     }
 
 }

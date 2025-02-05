@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.platform.user;
 
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.entity.SpongePlatformPlayer;
 import io.github.wasabithumb.xclaim.util.MojAPI;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -12,9 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.user.UserManager;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -43,8 +42,12 @@ public class SpongePlatformUserManager implements PlatformUserManager {
 
     @Override
     public @NotNull List<PlatformPlayer> players() {
-        // TODO
-        throw new UnsupportedOperationException("Not implemented");
+        Collection<ServerPlayer> sps = this.platform.server().onlinePlayers();
+        List<PlatformPlayer> ret = new ArrayList<>(sps.size());
+        for (ServerPlayer sp : sps) {
+            ret.add(new SpongePlatformPlayer(this.platform, sp));
+        }
+        return Collections.unmodifiableList(ret);
     }
 
     @Override
@@ -59,8 +62,7 @@ public class SpongePlatformUserManager implements PlatformUserManager {
 
         Optional<ServerPlayer> ply = this.platform.server().player(uuid);
         if (ply.isPresent()) {
-            // TODO: Return Player instead of User
-            return new SpongePlatformUser(this.platform, ply.get().user());
+            return new SpongePlatformPlayer(this.platform, ply.get());
         }
 
         if (this.handle().exists(uuid)) {
@@ -83,8 +85,7 @@ public class SpongePlatformUserManager implements PlatformUserManager {
     public @Nullable PlatformUser matchUser(@NotNull String name) {
         Optional<ServerPlayer> ply = this.platform.server().player(name);
         if (ply.isPresent()) {
-            // TODO: Return Player instead of User
-            return new SpongePlatformUser(this.platform, ply.get().user());
+            return new SpongePlatformPlayer(this.platform, ply.get());
         }
 
         Optional<User> known = this.blockOnFuture(this.handle().load(name));
@@ -104,11 +105,10 @@ public class SpongePlatformUserManager implements PlatformUserManager {
 
     @Override
     public @Nullable PlatformPlayer getPlayer(@NotNull UUID uuid) {
-        Optional<ServerPlayer> ply = this.platform.server().player(uuid);
-        if (ply.isPresent()) {
-            // TODO: Implement
-        }
-        return null;
+        return this.platform.server()
+                .player(uuid)
+                .map((ServerPlayer sp) -> new SpongePlatformPlayer(this.platform, sp))
+                .orElse(null);
     }
 
     //

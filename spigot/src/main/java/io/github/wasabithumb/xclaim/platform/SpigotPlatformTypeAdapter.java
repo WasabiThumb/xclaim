@@ -8,6 +8,7 @@ import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformConsoleUser;
 import io.github.wasabithumb.xclaim.platform.user.BukkitPlatformUser;
 import io.github.wasabithumb.xclaim.platform.user.SpigotPlatformConsoleUser;
 import io.github.wasabithumb.xclaim.platform.user.SpigotPlatformUser;
+import io.github.wasabithumb.xclaim.util.annotations.ParamCasts;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -26,31 +27,41 @@ public class SpigotPlatformTypeAdapter extends BukkitPlatformTypeAdapter {
     }
 
     @Override
-    public SpigotPlatformPlayer player(Object handle) throws IllegalArgumentException {
+    public SpigotPlatformPlayer player(
+            @ParamCasts(Player.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new SpigotPlatformPlayer(this.platform(), this.handleCast(handle, Player.class));
     }
 
     @Override
-    public BukkitPlatformInventory inventory(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformInventory inventory(
+            @ParamCasts(Inventory.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return SpigotPlatformInventory.of(this.platform(), this.handleCast(handle, Inventory.class));
     }
 
     @Override
-    public SpigotPlatformItem item(Object handle) throws IllegalArgumentException {
+    public SpigotPlatformItem item(
+            @ParamCasts(ItemStack.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new SpigotPlatformItem(this.platform(), this.handleCast(handle, ItemStack.class));
     }
 
     @Override
-    public BukkitPlatformUser user(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformUser user(
+            @ParamCasts(CommandSender.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return SpigotPlatformUser.of(this.platform(), this.handleCast(handle, CommandSender.class));
     }
 
     @Override
-    public BukkitPlatformConsoleUser consoleUser(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformConsoleUser consoleUser(
+            @ParamCasts(ConsoleCommandSender.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new SpigotPlatformConsoleUser(this.platform(), this.handleCast(handle, ConsoleCommandSender.class));
     }

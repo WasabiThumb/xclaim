@@ -1,8 +1,7 @@
 package io.github.wasabithumb.xclaim;
 
 import com.google.inject.Inject;
-import io.github.wasabithumb.xclaim.asset.AssetManager;
-import io.github.wasabithumb.xclaim.platform.Platform;
+import io.github.wasabithumb.xclaim.asset.SpongeAssetManager;
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.util.LoggerAdapter;
 import io.github.wasabithumb.xclaim.util.WorldDataStore;
@@ -11,12 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.config.ConfigManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
-
-import java.nio.file.Path;
 
 @Plugin("xclaim")
 public class XClaimPlugin implements XClaimBootstrap {
@@ -24,6 +22,8 @@ public class XClaimPlugin implements XClaimBootstrap {
     private final PluginContainer pluginContainer;
     private final ConfigManager configManager;
     private final Metrics metrics;
+    private final XClaim instance;
+    private final SpongeAssetManager assets;
 
     @SuppressWarnings("SpongeLogging")
     private final java.util.logging.Logger logger;
@@ -39,6 +39,8 @@ public class XClaimPlugin implements XClaimBootstrap {
         this.configManager = configManager;
         this.metrics = metricsFactory.make(24566);
         this.logger = LoggerAdapter.wrap(pluginContainer.logger());
+        this.instance = new XClaim(this);
+        this.assets = new SpongeAssetManager(pluginContainer, configManager);
     }
 
     //
@@ -47,12 +49,19 @@ public class XClaimPlugin implements XClaimBootstrap {
     public void onStart(final StartedEngineEvent<Server> event) {
         this.worldDataStore = new WorldDataStore(event.engine(), this.pluginContainer, this.configManager);
         this.platform = new SpongePlatform(this.pluginContainer, event.engine(), this.metrics, this.worldDataStore);
+        this.instance.enable();
     }
 
     @Listener
     public void onStop(final StoppingEngineEvent<Server> event) {
+        this.instance.disable();
         this.platform.destroy();
         this.worldDataStore.close();
+    }
+
+    @Listener
+    public void onProvideService(final ProvideServiceEvent.EngineScoped<XClaim> event) {
+        event.suggest(() -> this.instance);
     }
 
     //
@@ -63,15 +72,13 @@ public class XClaimPlugin implements XClaimBootstrap {
     }
 
     @Override
-    public @NotNull Platform platform() {
+    public @NotNull SpongePlatform platform() {
         return this.platform;
     }
 
     @Override
-    public @NotNull AssetManager assets() {
-        Path dir = this.configManager.pluginConfig(this.pluginContainer).directory();
-        // TODO
-        return null;
+    public @NotNull SpongeAssetManager assets() {
+        return this.assets;
     }
 
 }

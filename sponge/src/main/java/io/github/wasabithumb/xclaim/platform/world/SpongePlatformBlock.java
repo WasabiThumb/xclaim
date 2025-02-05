@@ -7,10 +7,27 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.entity.BlockEntity;
 import org.spongepowered.api.block.entity.carrier.CarrierBlockEntity;
+import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.fluid.FluidTypes;
+import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
 public class SpongePlatformBlock implements PlatformBlock {
+
+    public static SpongePlatformBlock of(@NotNull SpongePlatform platform, @NotNull BlockEntity ent) {
+        ServerLocation sl = ent.serverLocation();
+        SpongePlatformBlock ret = new SpongePlatformBlock(
+                platform,
+                sl.world(),
+                sl.blockX(),
+                sl.blockY(),
+                sl.blockZ()
+        );
+        ret.state = ent.block();
+        return ret;
+    }
+
+    //
 
     private final SpongePlatform platform;
     private final ServerWorld world;
@@ -83,8 +100,7 @@ public class SpongePlatformBlock implements PlatformBlock {
 
     @Override
     public boolean canWaterlog() {
-        // TODO
-        return false;
+        return this.handle().supports(Keys.IS_WATERLOGGED);
     }
 
     @Override

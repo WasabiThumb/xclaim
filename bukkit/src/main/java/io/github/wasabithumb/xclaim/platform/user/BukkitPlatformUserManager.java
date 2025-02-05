@@ -5,7 +5,6 @@ import io.github.wasabithumb.xclaim.platform.BukkitPlatformTypeAdapter;
 import io.github.wasabithumb.xclaim.platform.entity.BukkitPlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.util.MojAPI;
-import io.github.wasabithumb.xclaim.util.RemotePlayers;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

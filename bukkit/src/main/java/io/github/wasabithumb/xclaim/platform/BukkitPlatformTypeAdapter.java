@@ -16,6 +16,7 @@ import io.github.wasabithumb.xclaim.platform.data.sound.PlatformSound;
 import io.github.wasabithumb.xclaim.platform.user.PlatformConsoleUser;
 import io.github.wasabithumb.xclaim.platform.user.PlatformOfflineUser;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
+import io.github.wasabithumb.xclaim.util.annotations.ParamCasts;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -39,7 +40,9 @@ public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
     //
 
     @Override
-    public BukkitPlatformPersistentDataContainer pdc(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformPersistentDataContainer pdc(
+            @ParamCasts(PersistentDataContainer.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new BukkitPlatformPersistentDataContainer(
                 this.platform,
@@ -48,77 +51,107 @@ public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
     }
 
     @Override
-    public BukkitPlatformEntity entity(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformEntity entity(
+            @ParamCasts(Entity.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         if (handle instanceof Player) return this.player(handle);
         return new BukkitPlatformEntity(this.platform, this.handleCast(handle, Entity.class));
     }
 
     @Override
-    public PlatformEntityType entityType(Object handle) throws IllegalArgumentException {
+    public PlatformEntityType entityType(
+            @ParamCasts(EntityType.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return BukkitPlatformEntityType.of(this.handleCast(handle, EntityType.class));
     }
 
     @Override
-    public abstract BukkitPlatformPlayer player(Object handle) throws IllegalArgumentException;
+    public abstract BukkitPlatformPlayer player(
+            @ParamCasts(Player.class) Object handle
+    ) throws IllegalArgumentException;
 
     @Override
-    public abstract BukkitPlatformInventory inventory(Object handle) throws IllegalArgumentException;
+    public abstract BukkitPlatformInventory inventory(
+            @ParamCasts(Inventory.class) Object handle
+    ) throws IllegalArgumentException;
 
     @Override
-    public PlatformEquipmentSlot equipmentSlot(Object handle) throws IllegalArgumentException {
+    public PlatformEquipmentSlot equipmentSlot(
+            @ParamCasts(EquipmentSlot.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return PlatformEquipmentSlot.valueOf(this.handleCast(handle, EquipmentSlot.class).name());
     }
 
     @Override
-    public abstract BukkitPlatformItem item(Object handle) throws IllegalArgumentException;
+    public abstract BukkitPlatformItem item(
+            @ParamCasts(ItemStack.class) Object handle
+    ) throws IllegalArgumentException;
 
     @Override
-    public PlatformMaterial material(Object handle) throws IllegalArgumentException {
+    public PlatformMaterial material(
+            @ParamCasts(Material.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return BukkitPlatformMaterial.of(this.handleCast(handle, Material.class));
     }
 
     @Override
-    public PlatformSound sound(Object handle) throws IllegalArgumentException {
+    public PlatformSound sound(
+            @ParamCasts(Sound.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return BukkitPlatformSound.of(this.handleCast(handle, Sound.class));
     }
 
     @Override
-    public abstract BukkitPlatformUser user(Object handle) throws IllegalArgumentException;
+    public abstract BukkitPlatformUser user(
+            @ParamCasts(CommandSender.class) Object handle
+    ) throws IllegalArgumentException;
 
     @Override
-    public abstract BukkitPlatformConsoleUser consoleUser(Object handle) throws IllegalArgumentException;
+    public abstract BukkitPlatformConsoleUser consoleUser(
+            @ParamCasts(ConsoleCommandSender.class) Object handle
+    ) throws IllegalArgumentException;
 
     @Override
-    public BukkitPlatformOfflineUser offlineUser(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformOfflineUser offlineUser(
+            @ParamCasts(OfflinePlayer.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new BukkitPlatformOfflineUser(this.handleCast(handle, OfflinePlayer.class));
     }
 
     @Override
-    public BukkitPlatformWorld world(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformWorld world(
+            @ParamCasts(World.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new BukkitPlatformWorld(this.platform, this.handleCast(handle, World.class));
     }
 
     @Override
-    public BukkitPlatformChunk chunk(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformChunk chunk(
+            @ParamCasts(Chunk.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new BukkitPlatformChunk(this.platform, this.handleCast(handle, Chunk.class));
     }
 
     @Override
-    public BukkitPlatformBlock block(Object handle) throws IllegalArgumentException {
+    public BukkitPlatformBlock block(
+            @ParamCasts(Block.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         return new BukkitPlatformBlock(this.platform, this.handleCast(handle, Block.class));
     }
 
     @Override
-    public PlatformLocation location(Object handle) throws IllegalArgumentException {
+    public PlatformLocation location(
+            @ParamCasts(Location.class) Object handle
+    ) throws IllegalArgumentException {
         if (handle == null) return null;
         final Location loc = this.handleCast(handle, Location.class);
         return new PlatformLocation(
@@ -127,6 +160,8 @@ public abstract class BukkitPlatformTypeAdapter implements PlatformTypeAdapter {
                 loc.getYaw(), loc.getPitch()
         );
     }
+
+    //
 
     @Override
     public PersistentDataContainer pdc(PlatformPersistentDataContainer object) {

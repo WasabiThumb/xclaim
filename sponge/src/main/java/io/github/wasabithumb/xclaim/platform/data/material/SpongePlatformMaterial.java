@@ -1,5 +1,6 @@
 package io.github.wasabithumb.xclaim.platform.data.material;
 
+import io.github.wasabithumb.xclaim.util.RegistryUtil;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.registry.DefaultedRegistryReference;
+import org.spongepowered.api.registry.RegistryReference;
 import org.spongepowered.api.registry.RegistryTypes;
 
 import java.util.HashMap;
@@ -144,6 +146,16 @@ public final class SpongePlatformMaterial implements PlatformMaterial {
         return this.block;
     }
 
+    public boolean isItemType(@NotNull DefaultedRegistryReference<ItemType> itemRef) {
+        if ((this.flags & F_ITEM) == 0) return false;
+        return RegistryUtil.referenceEquals(RegistryTypes.ITEM_TYPE, this.item, itemRef);
+    }
+
+    public boolean isBlockType(@NotNull RegistryReference<BlockType> blockRef) {
+        if ((this.flags & F_BLOCK) == 0) return false;
+        return RegistryUtil.referenceEquals(RegistryTypes.BLOCK_TYPE, this.block, blockRef);
+    }
+
     //
 
     @Override
@@ -153,15 +165,13 @@ public final class SpongePlatformMaterial implements PlatformMaterial {
 
     @Override
     public boolean isSoil() {
-        if ((this.flags & F_BLOCK) == 0) return false;
-        return BlockTypes.FARMLAND.get().equals(this.block);
+        return this.isBlockType(BlockTypes.FARMLAND);
     }
 
     @Override
     public boolean ignites() {
-        if ((this.flags & F_ITEM) == 0) return false;
-        return ItemTypes.FLINT_AND_STEEL.get().equals(this.item) ||
-                ItemTypes.FIRE_CHARGE.get().equals(this.item);
+        return this.isItemType(ItemTypes.FLINT_AND_STEEL) ||
+                this.isItemType(ItemTypes.FIRE_CHARGE);
     }
 
     @Override

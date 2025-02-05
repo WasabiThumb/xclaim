@@ -3,10 +3,10 @@ package io.github.wasabithumb.xclaim.platform;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.SpongePlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventManager;
-import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
-import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.inventory.SpongePlatformCustomInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.SpongePlatformItem;
 import io.github.wasabithumb.xclaim.platform.scheduler.PlatformScheduler;
+import io.github.wasabithumb.xclaim.platform.scheduler.SpongePlatformScheduler;
 import io.github.wasabithumb.xclaim.platform.user.SpongePlatformUserManager;
 import io.github.wasabithumb.xclaim.platform.world.SpongePlatformWorldManager;
 import io.github.wasabithumb.xclaim.util.WorldDataStore;
@@ -28,6 +28,8 @@ public class SpongePlatform implements Platform {
     private final SpongePlatformMetrics metrics;
     private final SpongePlatformUserManager users;
     private final SpongePlatformWorldManager worlds;
+    private final SpongePlatformTypeAdapter adapter;
+    private final SpongePlatformScheduler scheduler;
 
     @ApiStatus.Internal
     public SpongePlatform(
@@ -43,6 +45,8 @@ public class SpongePlatform implements Platform {
         this.metrics = new SpongePlatformMetrics(metrics);
         this.users = new SpongePlatformUserManager(this);
         this.worlds = new SpongePlatformWorldManager(this);
+        this.adapter = new SpongePlatformTypeAdapter(this);
+        this.scheduler = new SpongePlatformScheduler(this);
     }
 
     //
@@ -74,11 +78,9 @@ public class SpongePlatform implements Platform {
 
     //
 
-    // TODO: Lots
-
     @Override
-    public @NotNull PlatformTypeAdapter adapter() {
-        return null;
+    public @NotNull SpongePlatformTypeAdapter adapter() {
+        return this.adapter;
     }
 
     @Override
@@ -97,8 +99,8 @@ public class SpongePlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformScheduler scheduler() {
-        return null;
+    public @NotNull SpongePlatformScheduler scheduler() {
+        return this.scheduler;
     }
 
     @Override
@@ -120,8 +122,8 @@ public class SpongePlatform implements Platform {
     }
 
     @Override
-    public @NotNull <D> PlatformCustomInventory<D> createInventory(int size, @NotNull String name, @NotNull D customData) {
-        return null;
+    public @NotNull <D> SpongePlatformCustomInventory<D> createInventory(int size, @NotNull String name, @NotNull D customData) {
+        return SpongePlatformCustomInventory.create(this, size, name, customData);
     }
 
     //

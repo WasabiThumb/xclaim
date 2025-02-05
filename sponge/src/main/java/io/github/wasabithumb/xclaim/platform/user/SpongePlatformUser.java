@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.platform.user;
 
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
+import io.github.wasabithumb.xclaim.platform.entity.SpongePlatformPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.entity.living.player.User;
@@ -61,9 +62,10 @@ public class SpongePlatformUser implements PlatformUser {
     }
 
     @Override
-    public @NotNull PlatformPlayer asPlayer() throws UnsupportedOperationException {
-        // TODO
-        throw new UnsupportedOperationException("Not implemented");
+    public @NotNull PlatformPlayer asPlayer() {
+        ServerPlayer sp = this.asOnline();
+        if (sp == null) throw new IllegalStateException("User is not an online player");
+        return new SpongePlatformPlayer(this.platform, sp);
     }
 
     @Override
