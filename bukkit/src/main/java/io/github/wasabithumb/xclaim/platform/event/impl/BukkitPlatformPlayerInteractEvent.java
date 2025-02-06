@@ -37,11 +37,6 @@ public class BukkitPlatformPlayerInteractEvent extends BukkitPlatformPlayerEvent
     }
 
     @Override
-    public boolean isPlacement() {
-        return this.handle.isBlockInHand();
-    }
-
-    @Override
     public @Nullable PlatformEquipmentSlot getHand() {
         return this.platform.adapter().equipmentSlot(this.handle.getHand());
     }

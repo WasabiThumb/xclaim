@@ -53,12 +53,12 @@ public final class IgniteClaimEnforcer extends ClaimEnforcer {
     public void onInteractEntity(@NotNull PlatformPlayerInteractEntityEvent event) {
         PlatformPlayer ply = event.player();
         PlatformItem itemInUse = ply.getInventory()
-                .getItem(Objects.requireNonNullElse(event.getHand(), PlatformEquipmentSlot.HAND));
+                .getItem(Objects.requireNonNullElse(event.hand(), PlatformEquipmentSlot.HAND));
 
         if (itemInUse == null) return;
         if (!itemInUse.type().ignites()) return;
 
-        PlatformEntity entity = event.entity();
+        PlatformEntity entity = event.interacted();
         Claim claim = this.claimAt(entity.location());
         if (claim == null) return;
         if (this.isNotPermitted(claim, ply)) {

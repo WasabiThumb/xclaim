@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.SpongePlatformMaterial;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.entity.BlockEntity;
 import org.spongepowered.api.block.entity.carrier.CarrierBlockEntity;
@@ -11,6 +12,7 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.fluid.FluidTypes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.math.vector.Vector3i;
 
 public class SpongePlatformBlock implements PlatformBlock {
 
@@ -24,6 +26,23 @@ public class SpongePlatformBlock implements PlatformBlock {
                 sl.blockZ()
         );
         ret.state = ent.block();
+        return ret;
+    }
+
+    public static SpongePlatformBlock of(@NotNull SpongePlatform platform, @NotNull BlockSnapshot bs) {
+        ServerWorld sw = platform.server()
+                .worldManager()
+                .world(bs.world())
+                .orElseThrow(AssertionError::new);
+        Vector3i pos = bs.position();
+        SpongePlatformBlock ret = new SpongePlatformBlock(
+                platform,
+                sw,
+                pos.x(),
+                pos.y(),
+                pos.z()
+        );
+        ret.state = bs.state();
         return ret;
     }
 

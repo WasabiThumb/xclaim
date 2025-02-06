@@ -11,7 +11,7 @@ public final class RegistryUtil {
     public static <T extends DefaultedRegistryValue> boolean referenceEquals(
             @NotNull DefaultedRegistryType<T> type,
             @NotNull T value,
-            @NotNull RegistryReference<T> reference
+            @NotNull RegistryReference<? extends T> reference
     ) {
         return referenceEquals(
                 value.asDefaultedReference(type),

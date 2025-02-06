@@ -4,7 +4,6 @@ import io.github.wasabithumb.xclaim.platform.entity.PlatformEntity;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventType;
 import io.github.wasabithumb.xclaim.platform.event.helper.PlatformPlayerEvent;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformEquipmentSlot;
-import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -15,12 +14,8 @@ public interface PlatformPlayerInteractEntityEvent extends PlatformPlayerEvent {
 
     //
 
-    @UnknownNullability PlatformEquipmentSlot getHand();
+    @UnknownNullability PlatformEquipmentSlot hand();
 
-    @NotNull PlatformEntity getRightClicked();
-
-    boolean hasInteractionPoint();
-
-    @UnknownNullability PlatformLocation getInteractionPoint();
+    @NotNull PlatformEntity interacted();
 
 }

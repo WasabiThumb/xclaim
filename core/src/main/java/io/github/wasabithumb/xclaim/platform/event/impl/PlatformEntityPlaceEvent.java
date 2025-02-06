@@ -10,6 +10,8 @@ public interface PlatformEntityPlaceEvent extends PlatformPlayerEvent {
     @SuppressWarnings("unused")
     PlatformEventType TYPE = PlatformEventType.ENTITY_PLACE;
 
+    //
+
     @NotNull PlatformLocation location();
 
     boolean isVehicle();

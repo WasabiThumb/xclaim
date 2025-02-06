@@ -21,8 +21,6 @@ public interface PlatformPlayerInteractEvent extends PlatformPlayerEvent {
 
     boolean isRightClick();
 
-    boolean isPlacement();
-
     @Nullable PlatformEquipmentSlot getHand();
 
     @Nullable PlatformBlock getClickedBlock();

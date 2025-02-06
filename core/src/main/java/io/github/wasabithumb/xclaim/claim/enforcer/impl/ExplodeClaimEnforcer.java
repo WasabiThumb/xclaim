@@ -10,7 +10,7 @@ import io.github.wasabithumb.xclaim.platform.entity.NamedPlatformEntityType;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformEntity;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
-import io.github.wasabithumb.xclaim.platform.event.impl.PlatformEntityExplodeEvent;
+import io.github.wasabithumb.xclaim.platform.event.impl.PlatformExplosionEvent;
 import io.github.wasabithumb.xclaim.platform.world.PlatformBlock;
 import io.github.wasabithumb.xclaim.platform.world.PlatformChunk;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
@@ -38,7 +38,7 @@ public final class ExplodeClaimEnforcer extends ClaimEnforcer {
     }
 
     @PlatformEventHandler
-    public void onExplode(@NotNull PlatformEntityExplodeEvent event) {
+    public void onExplode(@NotNull PlatformExplosionEvent event) {
         List<PlatformBlock> blocks = event.blocks();
         int blockCount = blocks.size();
         if (blockCount == 0) return;
@@ -75,10 +75,10 @@ public final class ExplodeClaimEnforcer extends ClaimEnforcer {
         }
     }
 
-    private boolean canExplode(@NotNull Claim claim, @NotNull PlatformEntity entity) {
+    private boolean canExplode(@NotNull Claim claim, @Nullable PlatformEntity entity) {
         TrustLevel tl = claim.getGlobalPermission(Permission.EXPLODE);
-        if (tl.equals(TrustLevel.ALL)) return true;
         if (tl.equals(TrustLevel.NONE)) return false;
+        if (tl.equals(TrustLevel.ALL) || entity == null) return true;
 
         if (entity.type().equals(NamedPlatformEntityType.CREEPER))
             return this.canCreeperExplode(claim, entity);

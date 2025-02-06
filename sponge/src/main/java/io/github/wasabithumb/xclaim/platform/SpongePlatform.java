@@ -3,9 +3,9 @@ package io.github.wasabithumb.xclaim.platform;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.SpongePlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventManager;
+import io.github.wasabithumb.xclaim.platform.event.SpongePlatformEventManager;
 import io.github.wasabithumb.xclaim.platform.inventory.SpongePlatformCustomInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.SpongePlatformItem;
-import io.github.wasabithumb.xclaim.platform.scheduler.PlatformScheduler;
 import io.github.wasabithumb.xclaim.platform.scheduler.SpongePlatformScheduler;
 import io.github.wasabithumb.xclaim.platform.user.SpongePlatformUserManager;
 import io.github.wasabithumb.xclaim.platform.world.SpongePlatformWorldManager;
@@ -30,6 +30,7 @@ public class SpongePlatform implements Platform {
     private final SpongePlatformWorldManager worlds;
     private final SpongePlatformTypeAdapter adapter;
     private final SpongePlatformScheduler scheduler;
+    private final SpongePlatformEventManager events;
 
     @ApiStatus.Internal
     public SpongePlatform(
@@ -47,6 +48,7 @@ public class SpongePlatform implements Platform {
         this.worlds = new SpongePlatformWorldManager(this);
         this.adapter = new SpongePlatformTypeAdapter(this);
         this.scheduler = new SpongePlatformScheduler(this);
+        this.events = new SpongePlatformEventManager(this);
     }
 
     //
@@ -94,8 +96,8 @@ public class SpongePlatform implements Platform {
     }
 
     @Override
-    public @NotNull PlatformEventManager events() {
-        return null;
+    public @NotNull SpongePlatformEventManager events() {
+        return this.events;
     }
 
     @Override
@@ -130,6 +132,7 @@ public class SpongePlatform implements Platform {
 
     @ApiStatus.Internal
     public void destroy() {
+        this.events.shutdown();
         this.metrics.shutdown();
     }
 

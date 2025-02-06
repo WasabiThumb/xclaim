@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier;
 public enum PlatformEventType {
     CHAT,
     ENTITY_PLACE,
-    ENTITY_EXPLODE,
+    EXPLOSION,
     ENTITY_DAMAGED,
     HANGING_BREAK,
     ITEM_FRAME_CHANGE,
@@ -35,7 +35,7 @@ public enum PlatformEventType {
     public static @NotNull PlatformEventType of(@NotNull Class<? extends PlatformEvent> clazz) throws IllegalArgumentException {
         Field typeField;
         try {
-            typeField = clazz.getDeclaredField("TYPE");
+            typeField = clazz.getField("TYPE");
         } catch (NoSuchFieldException e) {
             throw new IllegalArgumentException("Event class (" + clazz.getName() + ") has no TYPE field", e);
         }

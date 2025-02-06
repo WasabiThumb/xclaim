@@ -22,7 +22,6 @@ import org.spongepowered.api.entity.vehicle.Vehicle;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 import org.spongepowered.api.projectile.source.ProjectileSource;
 import org.spongepowered.api.registry.RegistryTypes;
-import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3d;
 
@@ -60,13 +59,7 @@ public class SpongePlatformEntity implements PlatformEntity {
 
     @Override
     public @NotNull PlatformLocation location() {
-        ServerLocation sl = this.handle.serverLocation();
-        Vector3d rotation = this.handle.rotation();
-        return new PlatformLocation(
-                new SpongePlatformWorld(this.platform, sl.world()),
-                sl.x(), sl.y(), sl.z(),
-                (float) rotation.y(), (float) rotation.x()
-        );
+        return this.platform.adapter().location(this.handle.serverLocation(), this.handle.rotation());
     }
 
     @Override

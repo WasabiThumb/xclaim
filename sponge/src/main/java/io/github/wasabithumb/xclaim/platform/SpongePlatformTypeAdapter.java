@@ -17,6 +17,7 @@ import io.github.wasabithumb.xclaim.util.RegistryUtil;
 import io.github.wasabithumb.xclaim.util.annotations.ParamCasts;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.DataHolder;
@@ -35,6 +36,7 @@ import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.world.chunk.WorldChunk;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.math.vector.Vector3d;
 
 import java.util.Optional;
 
@@ -208,6 +210,18 @@ public record SpongePlatformTypeAdapter(
     public PlatformLocation location(Object handle) {
         // Reason: ServerLocation is missing pitch, yaw
         throw new UnsupportedOperationException("Sponge has no Location struct");
+    }
+
+    @Contract("_, _ -> new")
+    public @NotNull PlatformLocation location(
+            @NotNull ServerLocation sl,
+            @NotNull Vector3d rot
+    ) {
+        return new PlatformLocation(
+                this.world(sl.world()),
+                sl.x(), sl.y(), sl.z(),
+                (float) rot.y(), (float) rot.x()
+        );
     }
 
     //

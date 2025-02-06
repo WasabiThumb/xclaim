@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class BukkitPlatformEntityExplodeEvent extends BukkitPlatformEntityEvent<EntityExplodeEvent> implements PlatformEntityExplodeEvent {
+public class BukkitPlatformExplosionEvent extends BukkitPlatformEntityEvent<EntityExplodeEvent> implements PlatformExplosionEvent {
 
-    public BukkitPlatformEntityExplodeEvent(@NotNull BukkitPlatform platform, @NotNull EntityExplodeEvent handle) {
+    public BukkitPlatformExplosionEvent(@NotNull BukkitPlatform platform, @NotNull EntityExplodeEvent handle) {
         super(platform, handle);
     }
 

@@ -34,7 +34,7 @@ public abstract class PlatformEventManager {
         return Collections.unmodifiableList(ret);
     }
 
-    protected final @NotNull List<Entry> processEntriesAtLevel(@NotNull PlatformListener listener, @NotNull Class<?> clazz) {
+    private @NotNull List<Entry> processEntriesAtLevel(@NotNull PlatformListener listener, @NotNull Class<?> clazz) {
         final Method[] methods = clazz.getDeclaredMethods();
         final Entry[] entries = new Entry[methods.length];
         int count = 0;

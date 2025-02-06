@@ -12,9 +12,4 @@ public class BukkitPlatformPlayerDropItemEvent extends BukkitPlatformPlayerEvent
         super(platform, handle);
     }
 
-    @Override
-    public @NotNull PlatformEntity getDrop() {
-        return this.platform().adapter().entity(this.handle.getItemDrop());
-    }
-
 }

@@ -9,6 +9,8 @@ public interface PlatformChatEvent extends PlatformPlayerEvent {
     @SuppressWarnings("unused")
     PlatformEventType TYPE = PlatformEventType.CHAT;
 
+    //
+
     @NotNull String message();
 
     @NotNull String plainMessage();
