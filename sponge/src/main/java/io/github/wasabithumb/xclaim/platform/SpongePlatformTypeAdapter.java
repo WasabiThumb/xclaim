@@ -108,10 +108,10 @@ public record SpongePlatformTypeAdapter(
         EquipmentType et = this.handleCast(handle, EquipmentType.class);
         DefaultedRegistryReference<EquipmentType> ref = et.asDefaultedReference(RegistryTypes.EQUIPMENT_TYPE);
 
-        if (RegistryUtil.referenceEquals(ref, EquipmentTypes.MAIN_HAND))
+        if (RegistryUtil.cataloguedReferenceEquals(RegistryTypes.EQUIPMENT_TYPE, ref, EquipmentTypes.class, "MAINHAND", "MAIN_HAND"))
             return PlatformEquipmentSlot.HAND;
 
-        if (RegistryUtil.referenceEquals(ref, EquipmentTypes.OFF_HAND))
+        if (RegistryUtil.cataloguedReferenceEquals(RegistryTypes.EQUIPMENT_TYPE, ref, EquipmentTypes.class, "OFFHAND", "OFF_HAND"))
             return PlatformEquipmentSlot.OFF_HAND;
 
         if (RegistryUtil.referenceEquals(ref, EquipmentTypes.HEAD))
@@ -263,9 +263,18 @@ public record SpongePlatformTypeAdapter(
     @Override
     public EquipmentType equipmentSlot(PlatformEquipmentSlot object) {
         if (object == null) return null;
+
         return switch (object) {
-            case HAND -> EquipmentTypes.MAIN_HAND.get();
-            case OFF_HAND -> EquipmentTypes.OFF_HAND.get();
+            case HAND -> RegistryUtil.cataloguedReference(
+                    RegistryTypes.EQUIPMENT_TYPE,
+                    EquipmentTypes.class,
+                    "MAINHAND", "MAIN_HAND"
+            ).get();
+            case OFF_HAND -> RegistryUtil.cataloguedReference(
+                    RegistryTypes.EQUIPMENT_TYPE,
+                    EquipmentTypes.class,
+                    "OFFHAND", "OFF_HAND"
+            ).get();
             case HEAD -> EquipmentTypes.HEAD.get();
             case CHEST, BODY -> EquipmentTypes.CHEST.get();
             case LEGS -> EquipmentTypes.LEGS.get();

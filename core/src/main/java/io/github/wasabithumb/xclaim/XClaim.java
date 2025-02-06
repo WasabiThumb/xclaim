@@ -42,6 +42,7 @@ public class XClaim {
     private GuiManager gui = null;
     private CommandManager commands = null;
     private Routines routines = null;
+    private boolean enabled = false;
 
     @ApiStatus.Internal
     XClaim(@NotNull XClaimBootstrap bootstrap) {
@@ -116,9 +117,12 @@ public class XClaim {
         this.loadCommands();
         this.loadRoutines();
         this.logger().log(Level.INFO, this.lang(I18N.STARTUP_DONE));
+        this.enabled = true;
     }
 
     void disable() {
+        if (!this.enabled) return;
+        this.enabled = false;
         this.routines.stop();
         this.gui.stop();
         this.integrations.shutdown();

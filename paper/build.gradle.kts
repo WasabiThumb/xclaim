@@ -62,8 +62,6 @@ tasks.shadowJar {
     relocate("org.reflections", "${libPkg}.reflections")
     relocate("org.bstats", "${libPkg}.bstats")
     relocate("com.github.benmanes.caffeine", "${libPkg}.caffeine")
-    relocate("org.sqlite", "${libPkg}.sqlite")
-    relocate("org.bstats", "${libPkg}.bstats")
 }
 
 artifacts {

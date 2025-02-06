@@ -159,6 +159,9 @@ public final class WorldDataStore {
         }
 
         void save() throws IOException {
+            Path parent = this.file.getParent();
+            if (!Files.isDirectory(parent)) Files.createDirectories(parent);
+
             long stamp = this.lock.readLock();
             try {
                 if (this.map.isEmpty()) {

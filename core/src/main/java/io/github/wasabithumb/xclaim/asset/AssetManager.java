@@ -4,8 +4,20 @@ import io.github.wasabithumb.xclaim.asset.impl.DirectoryAssetSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class AssetManager {
+
+    private static final Pattern CODE_SOURCE_PATTERN = Pattern.compile(
+            "^(?:file|jar)://((?:[^!]|(?<!\\.jar)!)+).*$",
+            Pattern.CASE_INSENSITIVE
+    );
+
+    //
 
     protected DirectoryAssetSource data;
     protected AssetSource resources;
@@ -20,10 +32,18 @@ public abstract class AssetManager {
     protected abstract @NotNull DirectoryAssetSource createData();
 
     protected @NotNull AssetSource createResources() {
-        File codeSource = new File(AssetManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-        // TODO: This seems to cause problems with Windows! We probably shouldn't bother handling .paper-remapped,
-        // as when the migration is complete, the paper version should have a paper-plugin.yml and hint to Paper
-        // not to remap this plugin. This would keep this method clear of any platform-specific hacks.
+        URL location = AssetManager.class.getProtectionDomain().getCodeSource().getLocation();
+        File codeSource;
+        Matcher m = CODE_SOURCE_PATTERN.matcher(location.getPath());
+        if (m.matches()) {
+            codeSource = FileSystems.getDefault().getPath(m.group(1)).toAbsolutePath().toFile();
+        } else {
+            try {
+                codeSource = new File(location.toURI());
+            } catch (URISyntaxException e) {
+                throw new AssertionError(e);
+            }
+        }
         return AssetSource.archive(codeSource);
     }
 

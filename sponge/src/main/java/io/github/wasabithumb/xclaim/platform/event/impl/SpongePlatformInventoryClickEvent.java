@@ -29,7 +29,6 @@ public class SpongePlatformInventoryClickEvent
     ) {
         SpongePlatformInventoryClickEvent ret = new SpongePlatformInventoryClickEvent(platform, handle);
         if (ret.optionalSlot().isEmpty()) return;
-        if (!ret.affectsViewedInventory()) return;
         queue.add(ret);
     }
 

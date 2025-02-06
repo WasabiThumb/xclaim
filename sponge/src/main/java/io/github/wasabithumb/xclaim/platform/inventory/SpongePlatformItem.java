@@ -14,11 +14,14 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.registry.RegistryTypes;
 
 import java.io.*;
@@ -102,7 +105,7 @@ public final class SpongePlatformItem implements PlatformItem {
 
     @Override
     public PlatformItem displayName(@NotNull String displayName) {
-        this.handle.offer(Keys.DISPLAY_NAME, this.platform.mm().deserialize(displayName));
+        this.handle.offer(Keys.CUSTOM_NAME, this.platform.mm().deserialize(displayName));
         return this;
     }
 
@@ -130,8 +133,17 @@ public final class SpongePlatformItem implements PlatformItem {
 
     @Override
     public PlatformItem skullOwner(@Nullable PlatformUser user) {
-        // TODO
-        this.handle.offer(Keys.GAME_PROFILE, null);
+        GameProfile gp;
+        if (user != null && user.handle() instanceof User u) {
+            if (u instanceof Player p) {
+                gp = p.profile();
+            } else {
+                gp = u.profile();
+            }
+        } else {
+            gp = null;
+        }
+        this.handle.offer(Keys.GAME_PROFILE, gp);
         return this;
     }
 

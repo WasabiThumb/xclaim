@@ -2,15 +2,18 @@ package io.github.wasabithumb.xclaim;
 
 import com.google.inject.Inject;
 import io.github.wasabithumb.xclaim.asset.SpongeAssetManager;
+import io.github.wasabithumb.xclaim.command.SpongeCommandBinding;
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.util.LoggerAdapter;
 import io.github.wasabithumb.xclaim.util.WorldDataStore;
 import org.bstats.sponge.Metrics;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Server;
+import org.spongepowered.api.command.Command;
 import org.spongepowered.api.config.ConfigManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.plugin.PluginContainer;
@@ -62,6 +65,15 @@ public class XClaimPlugin implements XClaimBootstrap {
     @Listener
     public void onProvideService(final ProvideServiceEvent.EngineScoped<XClaim> event) {
         event.suggest(() -> this.instance);
+    }
+
+    @Listener
+    public void onRegisterRawCommands(final RegisterCommandEvent<Command.Raw> event){
+        event.register(
+                this.pluginContainer,
+                new SpongeCommandBinding(() -> XClaimPlugin.this.instance),
+                "xclaim", "xc"
+        );
     }
 
     //

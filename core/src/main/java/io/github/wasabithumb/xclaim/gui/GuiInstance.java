@@ -181,8 +181,12 @@ public class GuiInstance {
         GuiSlot ob = this.layout.getSlot(idx);
         if (ob == null) return;
 
-        GuiAction act = this.spec.onClick(this, ob, ob.calculateLocalIndex(x, y));
-        this.executeAction(act);
+        final GuiAction act = this.spec.onClick(this, ob, ob.calculateLocalIndex(x, y));
+        this.platform().scheduler()
+                .newTask()
+                .targetEntity(this.player)
+                .executor(() -> this.executeAction(act))
+                .build();
     }
 
     public void respond(@NotNull String message) {

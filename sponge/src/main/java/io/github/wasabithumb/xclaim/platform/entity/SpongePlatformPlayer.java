@@ -141,7 +141,8 @@ public class SpongePlatformPlayer extends SpongePlatformEntity implements Platfo
     public void openInventory(@NotNull PlatformInventory inventory) {
         SpongePlatformInventory spi = (SpongePlatformInventory) inventory;
         if (spi instanceof SpongePlatformCustomInventory<?> custom) {
-            this.handle().openInventory(custom.handle(), custom.title());
+            if (this.handle().openInventory(custom.asViewable(), custom.title()).isPresent()) return;
+            this.handle().openInventory(custom.asViewable());
         } else {
             this.handle().openInventory(spi.handle());
         }

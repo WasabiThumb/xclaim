@@ -60,9 +60,19 @@ tasks.shadowJar {
         attributes["Enable-Debug"] = "$debugMode"
     }
 
+    // Library exclusions (present in Sponge)
+    dependencies {
+        exclude(dependency("com.google.code.gson:gson"))
+        exclude(dependency("org.checkerframework:checker-qual"))
+        exclude(dependency("org.slf4j:slf4j-api"))
+    }
+
+    // Library relocations
     val libPkg = "io.github.wasabithumb.xclaim.shadow"
+    relocate("com.moandjiezana.toml", "${libPkg}.toml")
+    relocate("org.reflections", "${libPkg}.reflections")
     relocate("org.bstats", "${libPkg}.bstats")
-    // TODO: Library exclusions & relocations
+    relocate("com.github.benmanes.caffeine", "${libPkg}.caffeine")
 }
 
 artifacts {

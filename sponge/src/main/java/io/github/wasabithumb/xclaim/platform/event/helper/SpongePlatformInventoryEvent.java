@@ -32,15 +32,6 @@ public abstract class SpongePlatformInventoryEvent<E extends InteractContainerEv
         return this.handle.container();
     }
 
-    protected boolean affectsViewedInventory() {
-        if (this.handle instanceof ClickContainerEvent c) {
-            return c.slot()
-                    .map(this.container()::isViewedSlot)
-                    .orElse(true);
-        }
-        return true;
-    }
-
     //
 
     @Override

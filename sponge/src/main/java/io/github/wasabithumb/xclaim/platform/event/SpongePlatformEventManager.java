@@ -3,6 +3,7 @@ package io.github.wasabithumb.xclaim.platform.event;
 import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.platform.event.adapter.AdapterInstance;
 import io.github.wasabithumb.xclaim.platform.event.impl.*;
+import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -93,24 +94,29 @@ public class SpongePlatformEventManager extends PlatformEventManager {
                 PlatformEventType.of(event.getClass()),
                 category
         );
+        List<DispatchInfo> infos = new ArrayList<>();
 
         this.listenersLock.readLock().lock();
         try {
             for (Map.Entry<PlatformListener, Map<ListenerKey, List<Method>>> entry : this.listeners.entrySet()) {
+                PlatformListener listener = entry.getKey();
                 List<Method> methods = entry.getValue().get(key);
                 if (methods == null) continue;
-                for (Method method : methods) this.dispatch0(event, entry.getKey(), method);
+                infos.addAll(new ProxyList<>(
+                        methods,
+                        (Method m) -> new DispatchInfo(listener, m)
+                ));
             }
         } finally {
             this.listenersLock.readLock().unlock();
         }
-    }
 
-    private void dispatch0(@NotNull PlatformEvent event, @NotNull PlatformListener listener, @NotNull Method method) {
-        try {
-            method.invoke(listener, event);
-        } catch (ReflectiveOperationException | SecurityException e) {
-            this.platform.logger().log(Level.WARN, "Error in event listener", e);
+        for (DispatchInfo info : infos) {
+            try {
+                info.method.invoke(info.listener, event);
+            } catch (ReflectiveOperationException | SecurityException e) {
+                this.platform.logger().log(Level.WARN, "Error in event listener", e);
+            }
         }
     }
 
@@ -216,6 +222,11 @@ public class SpongePlatformEventManager extends PlatformEventManager {
     private record ListenerKey(
             PlatformEventType type,
             PlatformEventCategory category
+    ) { }
+
+    private record DispatchInfo(
+            PlatformListener listener,
+            Method method
     ) { }
 
 }
