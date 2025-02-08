@@ -81,20 +81,19 @@ public class CommandManager {
         Set<String> set = new HashSet<>();
 
         String next = args.peek();
-        if (next != null) {
-            Command<?> sub = null;
-            for (Command<?> candidate : root.subCommands()) {
-                String name = candidate.name().format(this.runtime.lang());
-                if (args.size() < 2) set.add(name);
-                if (name.equalsIgnoreCase(next)) {
-                    sub = candidate;
-                    break;
-                }
+        boolean hasNext = next != null;
+        Command<?> sub = null;
+        for (Command<?> candidate : root.subCommands()) {
+            String name = candidate.name().format(this.runtime.lang());
+            if (args.size() < 2) set.add(name);
+            if (hasNext && name.equalsIgnoreCase(next)) {
+                sub = candidate;
+                break;
             }
-            if (sub != null) {
-                args.poll();
-                return this.suggest(sub, user, args);
-            }
+        }
+        if (sub != null) {
+            args.poll();
+            return this.suggest(sub, user, args);
         }
 
         set.addAll(this.getAdapter(root).suggest(user, args.size()));

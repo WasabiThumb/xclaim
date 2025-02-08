@@ -4,6 +4,7 @@ import io.github.wasabithumb.xclaim.platform.SpongePlatform;
 import io.github.wasabithumb.xclaim.platform.data.type.PlatformPersistentDataType;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.Key;
 import org.spongepowered.api.data.value.Value;
@@ -40,6 +41,7 @@ public class SpongePlatformPersistentDataContainer implements PlatformPersistent
     @Override
     public <T> void set(@NotNull String key, @NotNull PlatformPersistentDataType<T> type, @NotNull T value) {
         if (!this.handle.offer(this.createKey(key, type), value).isSuccessful()) {
+            // TODO: This tends to happen a lot
             this.platform.logger().log(
                     Level.WARN,
                     "DataHolder rejected data of type {}",
@@ -56,7 +58,10 @@ public class SpongePlatformPersistentDataContainer implements PlatformPersistent
     //
 
     protected <V> @NotNull Key<Value<V>> createKey(@NotNull String key, @NotNull PlatformPersistentDataType<V> type) {
-        return Key.from(this.platform.plugin(), key, type.valueClass());
+        return Key.builder()
+                .elementType(type.valueClass())
+                .key(ResourceKey.of(this.platform.plugin(), key))
+                .build();
     }
 
 }

@@ -14,6 +14,7 @@ public final class LoggerAdapter extends Handler {
         java.util.logging.Logger ret = name == null ? java.util.logging.Logger.getAnonymousLogger() :
                 java.util.logging.Logger.getLogger(name);
 
+        ret.setUseParentHandlers(false);
         for (Handler h : ret.getHandlers()) ret.removeHandler(h);
         ret.addHandler(new LoggerAdapter(log4j));
 

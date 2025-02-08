@@ -55,6 +55,7 @@ public abstract class PlayerListGuiSpec extends PaginatedGuiSpec<PlatformUser> {
 
     @Override
     public @NotNull GuiAction onResponse(@NotNull GuiInstance instance, @NotNull String response) {
+        // TODO: Don't hang the server
         PlatformUser ply = instance.platform().users().matchUser(response);
         if (ply == null) {
             instance.player().sendMessage(instance.runtime().lang(I18N.GUI_COMB_PROMPT_FAIL));

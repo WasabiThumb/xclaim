@@ -2,12 +2,16 @@ package io.github.wasabithumb.xclaim.command.impl;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.Claim;
+import io.github.wasabithumb.xclaim.claim.struct.Permission;
 import io.github.wasabithumb.xclaim.command.Command;
 import io.github.wasabithumb.xclaim.command.argument.CommandArgument;
 import io.github.wasabithumb.xclaim.command.argument.type.CommandArgumentType;
+import io.github.wasabithumb.xclaim.gui.editor.ClaimEditor;
 import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Translatable;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
+import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -41,9 +45,36 @@ public final class EditCommand implements Command<EditCommand.Args> {
     }
 
     @Override
+    public boolean requiresPlayerExecutor() {
+        return true;
+    }
+
+    @Override
     public void execute(@NotNull XClaim runtime, @NotNull PlatformUser user, @NotNull Args args) {
-        // TODO
-        user.sendMessage(Objects.toString(args.claim));
+        PlatformPlayer ply = user.asPlayer();
+        PlatformLocation loc = ply.location();
+        Claim c = args.claim.get();
+        if (c == null) {
+            c = runtime.claims().getByChunk(loc.chunk());
+            if (c == null) {
+                user.sendMessage(runtime.lang(I18N.CMD_CHUNKS_ERR_404));
+                return;
+            }
+        }
+        if (!c.checkPermission(ply, Permission.MANAGE)) {
+            user.sendMessage(runtime.lang(I18N.CMD_CHUNKS_ERR_PERM));
+            return;
+        }
+        if (!runtime.rootConfig().worlds().checkLists(loc.world())) {
+            user.sendMessage(runtime.lang(I18N.CMD_CHUNKS_ERR_DISALLOWED));
+            return;
+        }
+        ClaimEditor editor = runtime.gui().editor();
+        if (editor.enter(ply, c)) {
+            user.sendMessage(runtime.lang(I18N.CMD_CHUNKS_SUCCESS.with(c.name())));
+        } else {
+            user.sendMessage(runtime.lang(I18N.CMD_CHUNKS_ERR_STATE));
+        }
     }
 
     //

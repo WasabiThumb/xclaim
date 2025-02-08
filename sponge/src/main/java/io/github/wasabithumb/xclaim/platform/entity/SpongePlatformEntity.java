@@ -54,7 +54,7 @@ public class SpongePlatformEntity implements PlatformEntity {
 
     @Override
     public @NotNull SpongePlatformPersistentDataContainer pdc() {
-        return new SpongePlatformPersistentDataContainer(this.platform, this.handle);
+        return this.platform.adapter().pdc(this.handle);
     }
 
     @Override

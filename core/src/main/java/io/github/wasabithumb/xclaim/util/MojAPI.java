@@ -131,7 +131,7 @@ public final class MojAPI {
         int nibble;
         for (int i=0; i < 8; i++) {
             ret <<= 4;
-            nibble = Character.digit(str.charAt(offset | i), 16);
+            nibble = Character.digit(str.charAt(offset + i), 16);
             if (nibble == -1) return -1L;
             ret |= nibble;
         }

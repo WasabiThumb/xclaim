@@ -15,6 +15,7 @@ public final class RootCommand implements NullaryCommand {
 
     private final GuiCommand guiCommand = new GuiCommand();
     private final InfoCommand infoCommand = new InfoCommand();
+    private final EditCommand editCommand = new EditCommand();
 
     //
 
@@ -30,7 +31,7 @@ public final class RootCommand implements NullaryCommand {
 
     @Override
     public @NotNull @Unmodifiable List<Command<?>> subCommands() {
-        return List.of(this.guiCommand, this.infoCommand);
+        return List.of(this.guiCommand, this.infoCommand, this.editCommand);
     }
 
     @Override
