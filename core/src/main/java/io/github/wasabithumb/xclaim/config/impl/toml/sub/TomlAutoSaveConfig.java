@@ -1,14 +1,14 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.sub.AutoSaveConfig;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 public final class TomlAutoSaveConfig extends TomlConfig implements AutoSaveConfig {
 
-    public TomlAutoSaveConfig(@Nullable Toml table) {
+    public TomlAutoSaveConfig(@Nullable TomlTable table) {
         super(table);
     }
 

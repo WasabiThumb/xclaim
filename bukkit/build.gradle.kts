@@ -1,19 +1,7 @@
+import xyz.jpenilla.resourcefactory.bukkit.Permission
+
 plugins {
-    java
-}
-
-java {
-    val jv = JavaVersion.toVersion(javaVersion)
-    sourceCompatibility = jv
-    targetCompatibility = jv
-    if (JavaVersion.current() < jv) {
-        toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
-    }
-}
-
-tasks.compileJava.configure {
-    options.encoding = "UTF-8"
-    options.release.set(javaVersion)
+    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.0"
 }
 
 repositories {
@@ -29,27 +17,47 @@ repositories {
 
 dependencies {
     implementation(project(":core"))
+    compileOnly(libs.annotations)
+    compileOnly(libs.spigot.api)
+    implementation(libs.bstats.bukkit)
 
-    compileOnly("org.jetbrains:annotations:${annotationsVersion}")
-    implementation("org.bstats:bstats-bukkit:${statsVersion}")
-    compileOnly("org.spigotmc:spigot-api:${serverVersion}")
+    // Integrations
+    compileOnly(libs.vault.api)
+    compileOnly(libs.essentials)
+    compileOnly(libs.worldguard.bukkit)
+    compileOnly(libs.bluemap.api)
+    compileOnly(libs.dynmap.core)
+    compileOnly(libs.dynmap.api)
+    compileOnly(libs.papi)
+}
 
-    // Vault integration
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
-
-    // Essentials integration
-    compileOnly("net.essentialsx:EssentialsX:2.20.1")
-
-    // WorldGuard integration
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
-
-    // BlueMap integration
-    compileOnly("de.bluecolored:bluemap-api:2.7.3")
-
-    // Dynmap integration
-    compileOnly("us.dynmap:DynmapCoreAPI:3.6")
-    compileOnly("us.dynmap:dynmap-api:3.6")
-
-    // Placeholder integration
-    compileOnly("me.clip:placeholderapi:2.11.6")
+bukkitPluginYaml {
+    main = "io.github.wasabithumb.xclaim.XClaimPlugin"
+    description = "A fully-featured chunk claiming system for community servers"
+    apiVersion = "1.18"
+    website = "https://wasabithumb.github.io/"
+    foliaSupported = true
+    prefix = "XC"
+    authors = listOf("WasabiThumbs")
+    permissions {
+        register("xclaim.admin") {
+            description = "Allows you to modify/delete any claim"
+            default = Permission.Default.OP
+        }
+    }
+    softDepend = listOf(
+        "dynmap",
+        "Essentials",
+        "EssentialsX",
+        "Vault",
+        "BlueMap",
+        "WorldGuard",
+        "PlaceholderAPI"
+    )
+    commands {
+        register("xclaim") {
+            description = "XClaim main command"
+            aliases = listOf("xc")
+        }
+    }
 }

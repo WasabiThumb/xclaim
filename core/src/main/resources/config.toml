@@ -11,7 +11,7 @@
 # GitHub Page: https://github.com/WasabiThumb/xclaim
 # Hangar Page: https://hangar.papermc.io/WasabiThumbs/XClaim
 # Spigot Page: https://www.spigotmc.org/resources/1-8-1-21-xclaim-better-chunk-claiming-for-smps.102843/
-# This config file conforms to a subset of the TOML spec. Read it here: https://toml.io/en/v1.0.0
+# This config file is in TOML format. Read the spec here: https://toml.io/en/v1.0.0
 # IF YOU HAVE config.yml, THIS FILE WILL NOT BE USED!
 
 # The language pack to use. Must match a language in "lang/".

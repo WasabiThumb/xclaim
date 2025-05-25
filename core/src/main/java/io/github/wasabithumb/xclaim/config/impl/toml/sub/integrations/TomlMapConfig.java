@@ -1,14 +1,14 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.sub.integrations;
 
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.sub.integrations.MapConfig;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 public final class TomlMapConfig extends TomlConfig implements MapConfig {
 
-    public TomlMapConfig(@Nullable Toml table) {
+    public TomlMapConfig(@Nullable TomlTable table) {
         super(table);
     }
 

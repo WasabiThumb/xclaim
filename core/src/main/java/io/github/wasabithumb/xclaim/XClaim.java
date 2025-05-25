@@ -1,6 +1,7 @@
 package io.github.wasabithumb.xclaim;
 
-import com.moandjiezana.toml.Toml;
+import io.github.wasabithumb.jtoml.JToml;
+import io.github.wasabithumb.jtoml.document.TomlDocument;
 import io.github.wasabithumb.xclaim.asset.AssetManager;
 import io.github.wasabithumb.xclaim.asset.AssetSource;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -179,11 +179,9 @@ public class XClaim {
         }
 
         // Load non-legacy config
-        Toml toml = new Toml();
-        try (InputStream is = data.read("config.toml");
-             InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)
-        ) {
-            toml.read(reader);
+        TomlDocument toml;
+        try (InputStream is = data.read("config.toml")) {
+            toml = JToml.jToml().read(is);
         } catch (Exception e) {
             AssertionError ex = new AssertionError("Failed to read config.toml", e);
             if (suppressed != null) ex.addSuppressed(suppressed);

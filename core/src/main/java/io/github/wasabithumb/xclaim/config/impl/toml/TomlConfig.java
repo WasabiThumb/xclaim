@@ -1,36 +1,47 @@
 package io.github.wasabithumb.xclaim.config.impl.toml;
 
+import io.github.wasabithumb.jtoml.value.TomlValue;
+import io.github.wasabithumb.jtoml.value.primitive.TomlPrimitive;
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.Config;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @ApiStatus.Internal
 public class TomlConfig implements Config {
 
-    protected final Toml table;
+    protected final TomlTable table;
     protected final boolean valid;
-    protected TomlConfig(@Nullable Toml table) {
+    protected TomlConfig(@Nullable TomlTable table) {
         this.table = table;
         this.valid = table != null;
     }
 
     /**
-     * This method will create a new Toml if the backing table is null. Hence, it's not really supposed
+     * This method will create a new TomlTable if the backing table is null. Hence, it's not really supposed
      * to be used when the backing table is null. The precondition "this.valid" should be checked first.
      */
-    protected final @NotNull Toml raw() {
+    protected final @NotNull TomlTable raw() {
         if (this.valid) return Objects.requireNonNull(this.table);
-        return new Toml();
+        return TomlTable.create();
     }
 
-    protected final @Nullable Toml getTable(@NotNull String key) {
-        if (this.valid) return this.raw().getTable(key);
+    protected final @Nullable TomlValue getValue(@NotNull String key) {
+        if (this.valid) {
+            assert this.table != null;
+            return this.table.get(key);
+        }
         return null;
+    }
+
+    protected final @Nullable TomlTable getTable(@NotNull String key) {
+        TomlValue tv = this.getValue(key);
+        if (tv == null || !tv.isTable()) return null;
+        return tv.asTable();
     }
 
     @Override
@@ -40,37 +51,28 @@ public class TomlConfig implements Config {
 
     @Override
     public final @Nullable String getString(final @NotNull String key) {
-        return this.getPrimitive(key, Toml::getString);
+        return this.getPrimitive(key, TomlPrimitive::asString);
     }
 
     @Override
     public final @Nullable Boolean getBoolean(final @NotNull String key) {
-        return this.getPrimitive(key, Toml::getBoolean);
+        return this.getPrimitive(key, TomlPrimitive::asBoolean);
     }
 
     @Override
     public final @Nullable Integer getInt(final @NotNull String key) {
-        Long value = this.getLong(key);
-        if (value == null) return null;
-        try {
-            return Math.toIntExact(value);
-        } catch (ArithmeticException ignored) {
-            return null;
-        }
+        return this.getPrimitive(key, TomlPrimitive::asInteger);
     }
 
     @Override
     public final @Nullable Long getLong(final @NotNull String key) {
-        return this.getPrimitive(key, Toml::getLong);
+        return this.getPrimitive(key, TomlPrimitive::asLong);
     }
 
-    private <T> @Nullable T getPrimitive(@NotNull String key, @NotNull BiFunction<Toml, String, T> extractor) {
-        if (this.valid) {
-            try {
-                return extractor.apply(this.raw(), key);
-            } catch (ClassCastException ignored) { }
-        }
-        return null;
+    private <T> @Nullable T getPrimitive(@NotNull String key, @NotNull Function<TomlPrimitive, T> extractor) {
+        TomlValue tv = this.getValue(key);
+        if (tv == null || !tv.isPrimitive()) return null;
+        return extractor.apply(tv.asPrimitive());
     }
 
 }

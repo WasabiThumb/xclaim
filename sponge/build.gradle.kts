@@ -2,23 +2,8 @@ import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.model.PluginDependency
 
 plugins {
-    java
-    id("org.spongepowered.gradle.plugin") version "2.2.0"
+    id("org.spongepowered.gradle.plugin") version "2.3.0"
     id("io.github.goooler.shadow") version "8.1.8"
-}
-
-java {
-    val jv = JavaVersion.toVersion(javaVersion)
-    sourceCompatibility = jv
-    targetCompatibility = jv
-    if (JavaVersion.current() < jv) {
-        toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
-    }
-}
-
-tasks.compileJava.configure {
-    options.encoding = "UTF-8"
-    options.release.set(javaVersion)
 }
 
 repositories {
@@ -28,8 +13,8 @@ repositories {
 dependencies {
     implementation(project(":core"))
 
-    compileOnly("org.jetbrains:annotations:${annotationsVersion}")
-    implementation("org.bstats:bstats-sponge:${statsVersion}")
+    compileOnly(libs.annotations)
+    implementation(libs.bstats.sponge)
 
     // TODO: Integrations
 }
@@ -57,7 +42,7 @@ tasks.shadowJar {
     archiveClassifier.set("")
 
     manifest {
-        attributes["Enable-Debug"] = "$debugMode"
+        attributes["Enable-Debug"] = "${hasProperty("enableDebug")}"
     }
 
     // Library exclusions (present in Sponge)
@@ -69,16 +54,12 @@ tasks.shadowJar {
 
     // Library relocations
     val libPkg = "io.github.wasabithumb.xclaim.shadow"
-    relocate("com.moandjiezana.toml", "${libPkg}.toml")
+    relocate("io.github.wasabithumb.jtoml", "${libPkg}.jtoml")
     relocate("org.reflections", "${libPkg}.reflections")
     relocate("org.bstats", "${libPkg}.bstats")
     relocate("com.github.benmanes.caffeine", "${libPkg}.caffeine")
 }
 
-artifacts {
-    add("default", tasks.shadowJar)
-}
-
-tasks.build {
+tasks.assemble {
     dependsOn(tasks.shadowJar)
 }

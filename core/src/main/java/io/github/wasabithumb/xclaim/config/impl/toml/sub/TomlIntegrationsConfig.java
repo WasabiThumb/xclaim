@@ -1,9 +1,9 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.sub.integrations.*;
 import io.github.wasabithumb.xclaim.config.sub.IntegrationsConfig;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +12,7 @@ public final class TomlIntegrationsConfig extends TomlConfig implements Integrat
     private final TomlEconomyConfig economy;
     private final TomlMapConfig map;
     private final TomlProtectionConfig protection;
-    public TomlIntegrationsConfig(@Nullable Toml table) {
+    public TomlIntegrationsConfig(@Nullable TomlTable table) {
         super(table);
         this.economy = new TomlEconomyConfig(this.getTable("economy"));
         this.map = new TomlMapConfig(this.getTable("map"));

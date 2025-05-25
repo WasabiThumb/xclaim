@@ -1,21 +1,19 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 
+import io.github.wasabithumb.jtoml.value.TomlValue;
+import io.github.wasabithumb.jtoml.value.array.TomlArray;
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.sub.WorldsConfig;
-import io.github.wasabithumb.xclaim.util.collections.ProxyList;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public final class TomlWorldsConfig extends TomlConfig implements WorldsConfig {
 
-    public TomlWorldsConfig(@Nullable Toml table) {
+    public TomlWorldsConfig(@Nullable TomlTable table) {
         super(table);
     }
 
@@ -52,13 +50,26 @@ public final class TomlWorldsConfig extends TomlConfig implements WorldsConfig {
     }
 
     private @Nullable List<String> getStringList(@NotNull String key) {
-        List<?> list;
-        try {
-            list = this.raw().getList(key);
-        } catch (ClassCastException ignored) {
-            return null;
-        }
-        return new ProxyList<>(list, Objects::toString);
+        TomlValue tv = this.raw().get(key);
+        if (tv == null || !tv.isArray()) return null;
+
+        final TomlArray a = tv.asArray();
+        return new AbstractList<>() {
+
+            @Override
+            public int size() {
+                return a.size();
+            }
+
+            @Override
+            public String get(int i) {
+                TomlValue v = a.get(i);
+                return v.isPrimitive() ?
+                        v.asPrimitive().asString() :
+                        v.toString();
+            }
+
+        };
     }
 
 }

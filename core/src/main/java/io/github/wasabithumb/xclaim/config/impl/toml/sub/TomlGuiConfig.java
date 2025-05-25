@@ -1,14 +1,14 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.sub;
 
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.sub.GuiConfig;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 public final class TomlGuiConfig extends TomlConfig implements GuiConfig {
 
-    public TomlGuiConfig(@Nullable Toml table) {
+    public TomlGuiConfig(@Nullable TomlTable table) {
         super(table);
     }
 

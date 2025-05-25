@@ -1,8 +1,8 @@
 package io.github.wasabithumb.xclaim.config.impl.toml;
 
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.sub.*;
 import io.github.wasabithumb.xclaim.config.RootConfig;
-import com.moandjiezana.toml.Toml;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -14,7 +14,7 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     private final TomlWorldsConfig worlds;
     private final TomlIntegrationsConfig integrations;
     private final TomlGuiConfig gui;
-    public TomlRootConfig(@NotNull Toml table) {
+    public TomlRootConfig(@NotNull TomlTable table) {
         super(table);
         this.autoSave     = new TomlAutoSaveConfig(    this.getTable("auto-save"));
         this.editor       = new TomlEditorConfig(      this.getTable("editor"));

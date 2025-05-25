@@ -1,10 +1,10 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.sub.integrations;
 
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.TomlConfig;
 import io.github.wasabithumb.xclaim.config.impl.toml.helpers.TomlGroupableValue;
 import io.github.wasabithumb.xclaim.config.helpers.ConfigComparators;
 import io.github.wasabithumb.xclaim.config.sub.integrations.EconomyConfig;
-import com.moandjiezana.toml.Toml;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -16,7 +16,7 @@ public final class TomlEconomyConfig extends TomlConfig implements EconomyConfig
     private final TomlGroupableValue.Int claimPrice;
     private final TomlGroupableValue.Int unclaimReward;
     private final TomlGroupableValue.Int freeChunks;
-    public TomlEconomyConfig(@Nullable Toml table) {
+    public TomlEconomyConfig(@Nullable TomlTable table) {
         super(table);
         this.claimPrice = new TomlGroupableValue.Int(table, "claim-price", Comparator.reverseOrder());
         this.unclaimReward = new TomlGroupableValue.Int(table, "unclaim-reward", Comparator.naturalOrder());

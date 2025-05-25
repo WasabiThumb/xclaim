@@ -1,38 +1,32 @@
 package io.github.wasabithumb.xclaim.config.impl.toml.helpers;
 
-import com.moandjiezana.toml.Toml;
+import io.github.wasabithumb.jtoml.key.TomlKey;
+import io.github.wasabithumb.jtoml.value.TomlValue;
+import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class TomlGroupableValue<T> {
 
     private final int mode; // 0: no value, 1: grouped, 2: ungrouped (primitive)
     private final Object value; // either Toml or primitive, depending on mode
-    private final Set<String> keys; // all groups specified, null if mode != 2
+    private final Set<TomlKey> keys; // all groups specified, null if mode != 1
 
-    public TomlGroupableValue(@Nullable Toml table, @NotNull String key) {
+    public TomlGroupableValue(@Nullable TomlTable table, @NotNull TomlKey key) {
         int mode = 0;
         Object value = null;
-        Set<String> keys = null;
+        Set<TomlKey> keys = null;
 
         if (table != null) {
-            Toml sub;
-            if (table.containsTable(key) && (sub = table.getTable(key)) != null) {
+            if (table.get(key) instanceof TomlTable sub) {
                 mode = 1;
                 value = sub;
-
-                Set<Map.Entry<String, Object>> entries = sub.entrySet();
-                keys = new LinkedHashSet<>(entries.size());
-                for (Map.Entry<String, Object> entry : entries) {
-                    keys.add(entry.getKey());
-                }
+                keys = sub.keys();
             } else if ((value = this.extract(table, key)) != null) {
                 mode = 2;
             }
@@ -43,7 +37,13 @@ public abstract class TomlGroupableValue<T> {
         this.keys = keys;
     }
 
-    protected abstract @Nullable T extract(@NotNull Toml table, @NotNull String key);
+    public TomlGroupableValue(@Nullable TomlTable table, @NotNull CharSequence key) {
+        this(table, TomlKey.parse(key));
+    }
+
+    //
+
+    protected abstract @Nullable T extract(@NotNull TomlTable table, @NotNull TomlKey key);
 
     @Contract("null -> null; !null -> !null")
     protected abstract T cast(Object object);
@@ -52,20 +52,20 @@ public abstract class TomlGroupableValue<T> {
 
     public @Nullable T get(@Nullable PlatformUser target) {
         if (this.mode == 1) {
-            return this.getMode1(target, (Toml) this.value, this.keys);
+            return this.getMode1(target, (TomlTable) this.value, this.keys);
         } else if (this.mode == 2) {
             return this.cast(this.value);
         }
         return null;
     }
 
-    private @Nullable T getMode1(@Nullable PlatformUser target, @NotNull Toml table, @NotNull Set<String> keys) {
+    private @Nullable T getMode1(@Nullable PlatformUser target, @NotNull TomlTable table, @NotNull Set<TomlKey> keys) {
         T ret = null;
         boolean any = false;
 
         T next;
-        for (String group : keys) {
-            if (!this.inGroup(target, group)) continue;
+        for (TomlKey group : keys) {
+            if (!this.inGroup(target, group.toString())) continue;
 
             next = this.extract(table, group);
             if (next == null) continue;
@@ -95,25 +95,16 @@ public abstract class TomlGroupableValue<T> {
     public static final class Int extends TomlGroupableValue<Integer> {
 
         private final Comparator<Integer> comparator;
-        public Int(@Nullable Toml table, @NotNull String key, @NotNull Comparator<Integer> comparator) {
+        public Int(@Nullable TomlTable table, @NotNull String key, @NotNull Comparator<Integer> comparator) {
             super(table, key);
             this.comparator = comparator;
         }
 
         @Override
-        protected @Nullable Integer extract(@NotNull Toml table, @NotNull String key) {
-            Long value;
-            try {
-                value = table.getLong(key);
-            } catch (ClassCastException ignored) {
-                return null;
-            }
-            if (value == null) return null;
-            try {
-                return Math.toIntExact(value);
-            } catch (ArithmeticException ignored) {
-                return null;
-            }
+        protected @Nullable Integer extract(@NotNull TomlTable table, @NotNull TomlKey key) {
+            TomlValue tv = table.get(key);
+            if (tv == null || !tv.isPrimitive()) return null;
+            return tv.asPrimitive().asInteger();
         }
 
         @Override
@@ -123,7 +114,7 @@ public abstract class TomlGroupableValue<T> {
 
         @Override
         protected int compare(@NotNull Integer a, @NotNull Integer b) {
-            return this.comparator.compare(a.intValue(), b.intValue());
+            return this.comparator.compare(a, b);
         }
 
     }

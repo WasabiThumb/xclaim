@@ -1,22 +1,10 @@
+import xyz.jpenilla.resourcefactory.bukkit.Permission
+import xyz.jpenilla.resourcefactory.paper.PaperPluginYaml
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 
 plugins {
+    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.0"
     id("io.github.goooler.shadow") version "8.1.8"
-    java
-}
-
-java {
-    val jv = JavaVersion.toVersion(javaVersion)
-    sourceCompatibility = jv
-    targetCompatibility = jv
-    if (JavaVersion.current() < jv) {
-        toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
-    }
-}
-
-tasks.compileJava.configure {
-    options.encoding = "UTF-8"
-    options.release.set(javaVersion)
 }
 
 repositories {
@@ -28,19 +16,15 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":bukkit"))
     implementation(project(":paper:extras"))
-    compileOnly("org.jetbrains:annotations:${annotationsVersion}")
-    compileOnly("io.papermc.paper:paper-api:${serverVersion}")
-}
-
-tasks.jar {
-    enabled = false
+    compileOnly(libs.annotations)
+    compileOnly(libs.paper.api)
 }
 
 tasks.shadowJar {
     archiveClassifier.set("")
 
     manifest {
-        attributes["Enable-Debug"] = "$debugMode"
+        attributes["Enable-Debug"] = "${hasProperty("enableDebug")}"
     }
 
     transform(ServiceFileTransformer::class.java) {
@@ -58,16 +42,59 @@ tasks.shadowJar {
 
     // Library relocations
     val libPkg = "io.github.wasabithumb.xclaim.shadow"
-    relocate("com.moandjiezana.toml", "${libPkg}.toml")
+    relocate("io.github.wasabithumb.jtoml", "${libPkg}.jtoml")
     relocate("org.reflections", "${libPkg}.reflections")
     relocate("org.bstats", "${libPkg}.bstats")
     relocate("com.github.benmanes.caffeine", "${libPkg}.caffeine")
 }
 
-artifacts {
-    add("default", tasks.shadowJar)
+tasks.assemble {
+    dependsOn(tasks.shadowJar)
 }
 
-tasks.build {
-    dependsOn(tasks.shadowJar)
+paperPluginYaml {
+    main = "io.github.wasabithumb.xclaim.XClaimPlugin"
+    bootstrapper = "io.github.wasabithumb.xclaim.XClaimPluginBootstrap"
+    description = "A fully-featured chunk claiming system for community servers"
+    apiVersion = "1.19"
+    website = "https://wasabithumb.github.io/"
+    foliaSupported = true
+    prefix = "XC"
+    authors = listOf("WasabiThumbs")
+    permissions {
+        register("xclaim.admin") {
+            description = "Allows you to modify/delete any claim"
+            default = Permission.Default.OP
+        }
+    }
+    dependencies.server {
+        register("PlaceholderAPI") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+        register("dynmap") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+        register("Essentials") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+        register("EssentialsX") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+        register("Vault") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+        register("BlueMap") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+        register("WorldGuard") {
+            load = PaperPluginYaml.Load.BEFORE
+            required = false
+        }
+    }
 }
