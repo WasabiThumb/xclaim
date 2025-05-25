@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 
 plugins {
-    id("io.github.goooler.shadow") version "8.1.8"
+    alias(libs.plugins.shadow)
 }
 
 repositories {

@@ -2,8 +2,8 @@ import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.model.PluginDependency
 
 plugins {
-    id("org.spongepowered.gradle.plugin") version "2.3.0"
-    id("io.github.goooler.shadow") version "8.1.8"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.sponge)
 }
 
 repositories {

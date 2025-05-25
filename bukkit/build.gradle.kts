@@ -1,7 +1,7 @@
 import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
-    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.0"
+    alias(libs.plugins.resource.factory.bukkit)
 }
 
 repositories {
@@ -28,6 +28,7 @@ dependencies {
     compileOnly(libs.bluemap.api)
     compileOnly(libs.dynmap.core)
     compileOnly(libs.dynmap.api)
+    compileOnly(libs.squaremap.api)
     compileOnly(libs.papi)
 }
 
@@ -47,6 +48,7 @@ bukkitPluginYaml {
     }
     softDepend = listOf(
         "dynmap",
+        "squaremap",
         "Essentials",
         "EssentialsX",
         "Vault",

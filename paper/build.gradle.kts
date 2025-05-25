@@ -3,8 +3,9 @@ import xyz.jpenilla.resourcefactory.paper.PaperPluginYaml
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 
 plugins {
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.0"
-    id("io.github.goooler.shadow") version "8.1.8"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.run.paper)
+    alias(libs.plugins.resource.factory.paper)
 }
 
 repositories {
@@ -67,32 +68,17 @@ paperPluginYaml {
             default = Permission.Default.OP
         }
     }
-    dependencies.server {
-        register("PlaceholderAPI") {
-            load = PaperPluginYaml.Load.BEFORE
-            required = false
-        }
-        register("dynmap") {
-            load = PaperPluginYaml.Load.BEFORE
-            required = false
-        }
-        register("Essentials") {
-            load = PaperPluginYaml.Load.BEFORE
-            required = false
-        }
-        register("EssentialsX") {
-            load = PaperPluginYaml.Load.BEFORE
-            required = false
-        }
-        register("Vault") {
-            load = PaperPluginYaml.Load.BEFORE
-            required = false
-        }
-        register("BlueMap") {
-            load = PaperPluginYaml.Load.BEFORE
-            required = false
-        }
-        register("WorldGuard") {
+    listOf(
+        "PlaceholderAPI",
+        "dynmap",
+        "squaremap",
+        "Essentials",
+        "EssentialsX",
+        "Vault",
+        "BlueMap",
+        "WorldGuard"
+    ).forEach {
+        dependencies.server.register(it) {
             load = PaperPluginYaml.Load.BEFORE
             required = false
         }
