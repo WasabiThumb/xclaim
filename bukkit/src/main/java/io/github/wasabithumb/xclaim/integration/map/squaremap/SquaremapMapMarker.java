@@ -2,6 +2,8 @@ package io.github.wasabithumb.xclaim.integration.map.squaremap;
 
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.integration.map.MapMarker;
+import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
+import io.github.wasabithumb.xclaim.util.ColorUtil;
 import io.github.wasabithumb.xclaim.util.collections.ProxyList;
 import io.github.wasabithumb.xclaim.util.tracer.ChunkBitmap;
 import org.jetbrains.annotations.Contract;
@@ -9,8 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import xyz.jpenilla.squaremap.api.Key;
 import xyz.jpenilla.squaremap.api.Point;
 import xyz.jpenilla.squaremap.api.SimpleLayerProvider;
+import xyz.jpenilla.squaremap.api.marker.MarkerOptions;
 import xyz.jpenilla.squaremap.api.marker.Polygon;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +39,21 @@ record SquaremapMapMarker(
         }
     }
 
+    static @NotNull MarkerOptions generateOptions(@NotNull Claim claim) {
+        PlatformUser owner = claim.owner();
+        Color color = ColorUtil.uuidToColor(owner.uuid());
+        String ownerName = owner.isPlayer() ? owner.asPlayer().name() : owner.displayName();
+
+        return MarkerOptions.builder()
+                .hoverTooltip(claim.name())
+                .clickTooltip(ownerName)
+                .fillColor(color)
+                .fillOpacity(0.2)
+                .strokeColor(color)
+                .strokeOpacity(0.4)
+                .build();
+    }
+
     private static @NotNull Point adaptPoint(@NotNull io.github.wasabithumb.xclaim.util.tracer.Point src) {
         return Point.of(src.x(), src.y());
     }
@@ -43,6 +62,7 @@ record SquaremapMapMarker(
 
     @Override
     public void update(@NotNull Claim claim) {
+        this.handle.markerOptions(generateOptions(claim));
         List<Point> points = this.handle.mainPolygon();
         List<List<Point>> negatives = this.handle.negativeSpace();
         points.clear();

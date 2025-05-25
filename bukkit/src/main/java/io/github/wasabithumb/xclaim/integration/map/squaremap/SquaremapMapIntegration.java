@@ -8,18 +8,14 @@ import io.github.wasabithumb.xclaim.integration.IntegrationInject;
 import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
 import io.github.wasabithumb.xclaim.integration.map.MapMarker;
 import io.github.wasabithumb.xclaim.platform.PlatformTypeAdapter;
-import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
-import io.github.wasabithumb.xclaim.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.jpenilla.squaremap.api.*;
 import xyz.jpenilla.squaremap.api.marker.Marker;
-import xyz.jpenilla.squaremap.api.marker.MarkerOptions;
 import xyz.jpenilla.squaremap.api.marker.Polygon;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,29 +66,13 @@ public class SquaremapMapIntegration implements MapIntegration {
             polygonMarker = (Polygon) marker;
         } else {
             if (marker != null) layer.removeMarker(markerKey);
-            PlatformUser owner = claim.owner();
-            Color color = ColorUtil.uuidToColor(owner.uuid());
-
-            String ownerName;
-            if (owner.isPlayer()) {
-                ownerName = owner.asPlayer().name();
-            } else {
-                ownerName = owner.displayName();
-            }
 
             List<Point> points = new ArrayList<>();
             List<List<Point>> negatives = new ArrayList<>();
             SquaremapMapMarker.populateLists(claim, points, negatives);
 
             polygonMarker = Polygon.polygon(points, negatives);
-            polygonMarker.markerOptions(MarkerOptions.builder()
-                    .hoverTooltip(claim.name())
-                    .clickTooltip(ownerName)
-                    .fillColor(color)
-                    .fillOpacity(0.2)
-                    .strokeColor(color)
-                    .strokeOpacity(0.4)
-            );
+            polygonMarker.markerOptions(SquaremapMapMarker.generateOptions(claim));
             layer.addMarker(markerKey, polygonMarker);
         }
 
