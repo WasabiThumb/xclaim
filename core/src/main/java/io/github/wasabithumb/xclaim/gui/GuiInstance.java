@@ -17,12 +17,13 @@ import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformCustomInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformInventory;
 import io.github.wasabithumb.xclaim.platform.inventory.PlatformItem;
+import io.github.wasabithumb.xclaim.platform.scheduler.PlatformScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GuiInstance {
 
-    public static @NotNull GuiInstance open(
+    static @NotNull GuiInstance open(
             @NotNull GuiManager manager,
             @NotNull PlatformPlayer player,
             @NotNull GuiSpec spec
@@ -191,7 +192,24 @@ public class GuiInstance {
 
     public void respond(@NotNull String message) {
         this.destroyPrompt();
-        GuiAction act = this.spec.onResponse(this, message);
+        if (this.spec.asyncResponse()) {
+            PlatformScheduler scheduler = this.platform().scheduler();
+            scheduler.newTask()
+                    .async()
+                    .executor(() -> {
+                        final GuiAction act = this.spec.onResponse(this, message);
+                        scheduler.newTask()
+                                .targetEntity(this.player)
+                                .executor(() -> this.respond0(act))
+                                .build();
+                    })
+                    .build();
+        } else {
+            this.respond0(this.spec.onResponse(this, message));
+        }
+    }
+
+    private void respond0(@NotNull GuiAction act) {
         if (act.type() == GuiActionType.EXIT) {
             this.manager.untrack(this);
             return;

@@ -45,20 +45,15 @@ public final class IndividualPermissionListGuiSpec extends PermissionListGuiSpec
     @Override
     protected @NotNull GuiAction onClickPermission(@NotNull GuiInstance instance, @NotNull Permission permission) {
         final boolean value = !this.granted.contains(permission);
-        if (value == this.claim.getUserPermissions(this.subject).contains(permission)) {
-            // De-sync
-            if (value) {
-                this.granted.add(permission);
-            } else {
-                this.granted.remove(permission);
-            }
-            return GuiAction.repopulate();
-        }
-
         if (value) {
             this.granted.add(permission);
         } else {
             this.granted.remove(permission);
+        }
+
+        if (value == this.claim.getUserPermissions(this.subject).contains(permission)) {
+            // State was desynchronized, nothing to do
+            return GuiAction.repopulate();
         }
 
         // TODO: Handle failure better

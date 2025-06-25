@@ -17,4 +17,11 @@ public interface GuiSpec {
         return GuiAction.nothing();
     }
 
+    /**
+     * If true, the GUI manager will execute {@link #onResponse(GuiInstance, String) onResponse} asynchronously.
+     */
+    default boolean asyncResponse() {
+        return false;
+    }
+
 }

@@ -23,7 +23,7 @@ public final class ColorUtil {
         };
 
         Random rand = new Random(leastSig);
-        for (int u=0; u < 7; u++) {
+        for (int u=0; u < 3; u++) {
             int v = u + rand.nextInt(8 - u);
             long tmp = parts[u];
             parts[u] = parts[v];

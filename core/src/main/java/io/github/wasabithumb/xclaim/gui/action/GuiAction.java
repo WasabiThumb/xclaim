@@ -11,12 +11,12 @@ public interface GuiAction {
 
     @Contract(pure = true)
     static @NotNull GuiAction nothing() {
-        return NothingGuiAction.INSTANCE;
+        return SimpleGuiAction.NOTHING;
     }
 
     @Contract(pure = true)
     static @NotNull GuiAction repopulate() {
-        return RepopulateGuiAction.INSTANCE;
+        return SimpleGuiAction.REPOPULATE;
     }
 
     @Contract("_ -> new")
@@ -31,7 +31,7 @@ public interface GuiAction {
 
     @Contract(pure = true)
     static @NotNull GuiAction exit() {
-        return ExitGuiAction.INSTANCE;
+        return SimpleGuiAction.EXIT;
     }
 
     //

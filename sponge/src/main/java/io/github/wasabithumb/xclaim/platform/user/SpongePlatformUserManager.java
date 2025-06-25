@@ -114,17 +114,17 @@ public class SpongePlatformUserManager implements PlatformUserManager {
     //
 
     private <T> @UnknownNullability T blockOnFuture(@NotNull CompletableFuture<T> future) {
-        boolean interrupted = false;
         try {
             return future.get();
         } catch (InterruptedException e) {
-            interrupted = true;
+            Thread.currentThread().interrupt();
+            return null;
         } catch (ExecutionException e) {
-            throw new AssertionError("Unexpected exception while awaiting user data", e);
-        } finally {
-            if (interrupted) Thread.currentThread().interrupt();
+            Throwable cause = e.getCause();
+            if (cause == null) cause = e;
+            if (cause instanceof RuntimeException re) throw re;
+            throw new AssertionError("Unexpected exception while awaiting user data", cause);
         }
-        return null;
     }
 
 }
