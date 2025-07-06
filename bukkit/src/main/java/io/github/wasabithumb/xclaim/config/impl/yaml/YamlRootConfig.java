@@ -3,6 +3,8 @@ package io.github.wasabithumb.xclaim.config.impl.yaml;
 import io.github.wasabithumb.xclaim.config.impl.yaml.helpers.YamlLimits;
 import io.github.wasabithumb.xclaim.config.impl.yaml.sub.*;
 import io.github.wasabithumb.xclaim.config.RootConfig;
+import io.github.wasabithumb.xclaim.config.sub.FlagsConfig;
+import io.github.wasabithumb.xclaim.config.sub.PermissionsConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
@@ -15,6 +17,9 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     private final YamlWorldsConfig worlds;
     private final YamlIntegrationsConfig integrations;
     private final YamlGuiConfig gui;
+    private final YamlPermissionsConfig permissions;
+    private final YamlFlagsConfig flags;
+
     public YamlRootConfig(@NotNull ConfigurationSection section) {
         super(section);
         final YamlLimits limits = YamlLimits.of(this.getSection("limits"));
@@ -25,6 +30,8 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
         this.worlds       = new YamlWorldsConfig(      this.getSection("worlds")          );
         this.integrations = new YamlIntegrationsConfig(section,                          limits);
         this.gui          = new YamlGuiConfig(); // Stub
+        this.permissions  = new YamlPermissionsConfig(); // Stub
+        this.flags        = new YamlFlagsConfig(); // Stub
     }
 
     @Override
@@ -35,11 +42,6 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     @Override
     public @UnknownNullability Long veteranTime() {
         return this.getLong("veteran-time");
-    }
-
-    @Override
-    public @UnknownNullability Boolean noPaperNag() {
-        return this.getBoolean("disable-paper-warning");
     }
 
     @Override
@@ -70,6 +72,16 @@ public final class YamlRootConfig extends YamlConfig implements RootConfig {
     @Override
     public @NotNull YamlGuiConfig gui() {
         return this.gui;
+    }
+
+    @Override
+    public @NotNull PermissionsConfig permissions() {
+        return this.permissions;
+    }
+
+    @Override
+    public @NotNull FlagsConfig flags() {
+        return this.flags;
     }
 
     @Override

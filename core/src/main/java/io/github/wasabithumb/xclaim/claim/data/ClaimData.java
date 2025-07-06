@@ -1,7 +1,11 @@
 package io.github.wasabithumb.xclaim.claim.data;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
-import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.flags.ClaimFlag;
+import io.github.wasabithumb.xclaim.claim.flags.ClaimFlags;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.PermissionMap;
+import io.github.wasabithumb.xclaim.claim.permission.PermissionSet;
+import io.github.wasabithumb.xclaim.claim.permission.TrustLevel;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorldManager;
 import org.jetbrains.annotations.*;
@@ -10,6 +14,8 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.StampedLock;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @ApiStatus.Internal
 public final class ClaimData {
@@ -24,6 +30,7 @@ public final class ClaimData {
     private static final int DIRTY_CHUNKS       = 4;
     private static final int DIRTY_GLOBAL_PERMS = 8;
     private static final int DIRTY_USER_PERMS   = 16;
+    private static final int DIRTY_FLAGS        = 32;
 
     private int dirtyMask;
     private final StampedLock lock;
@@ -33,8 +40,9 @@ public final class ClaimData {
     private UUID owner;
     private final WorldReference world;
     private final Set<Long> chunks;
-    private final Map<Permission, TrustLevel> globalPermissions;
-    private final Map<UUID, Set<Permission>> userPermissions;
+    private final PermissionMap<TrustLevel> globalPermissions;
+    private final Map<UUID, PermissionSet> userPermissions;
+    private final ClaimFlags flags;
 
     private ClaimData(
             @NotNull Token token,
@@ -42,8 +50,9 @@ public final class ClaimData {
             @NotNull UUID owner,
             @NotNull WorldReference world,
             @NotNull Set<Long> chunks,
-            @NotNull Map<Permission, TrustLevel> globalPermissions,
-            @NotNull Map<UUID, Set<Permission>> userPermissions
+            @NotNull PermissionMap<TrustLevel> globalPermissions,
+            @NotNull Map<UUID, PermissionSet> userPermissions,
+            @NotNull ClaimFlags flags
     ) {
         this.dirtyMask = 0;
         this.lock = new StampedLock();
@@ -55,6 +64,7 @@ public final class ClaimData {
         this.chunks = chunks;
         this.globalPermissions = globalPermissions;
         this.userPermissions = userPermissions;
+        this.flags = flags;
     }
 
     //
@@ -209,7 +219,7 @@ public final class ClaimData {
         final long stamp = this.lock.readLock();
         try {
             TrustLevel tl = this.globalPermissions.get(permission);
-            if (tl == null) return permission.getDefaultTrust();
+            if (tl == null) return permission.defaultTrust();
             return tl;
         } finally {
             this.lock.unlock(stamp);
@@ -238,8 +248,8 @@ public final class ClaimData {
         final long stamp = this.lock.readLock();
         try {
             Map<UUID, Set<Permission>> ret = new HashMap<>();
-            for (Map.Entry<UUID, Set<Permission>> entry : this.userPermissions.entrySet()) {
-                ret.put(entry.getKey(), Set.copyOf(entry.getValue()));
+            for (Map.Entry<UUID, PermissionSet> entry : this.userPermissions.entrySet()) {
+                ret.put(entry.getKey(), Collections.unmodifiableSet(new PermissionSet(entry.getValue())));
             }
             return Collections.unmodifiableMap(ret);
         } finally {
@@ -274,10 +284,10 @@ public final class ClaimData {
         try {
             final long stamp = this.lock.writeLock();
             try {
-                Set<Permission> set = this.userPermissions.get(user);
+                PermissionSet set = this.userPermissions.get(user);
                 if (set == null) {
                     if (value) {
-                        set = EnumSet.noneOf(Permission.class);
+                        set = new PermissionSet();
                         this.userPermissions.put(user, set);
                     } else {
                         return;
@@ -293,6 +303,49 @@ public final class ClaimData {
                         if (set.isEmpty()) this.userPermissions.remove(user);
                     }
                 }
+            } finally {
+                this.lock.unlock(stamp);
+            }
+        } finally {
+            this.freezeLock.unlock();
+        }
+    }
+
+    public @NotNull @Unmodifiable Set<ClaimFlag> getFlags() {
+        final long stamp = this.lock.readLock();
+        try {
+            return Collections.unmodifiableSet(new ClaimFlags(this.flags));
+        } finally {
+            this.lock.unlock(stamp);
+        }
+    }
+
+    public @NotNull String getFlagsAsString() {
+        final long stamp = this.lock.readLock();
+        try {
+            return this.flags.toString();
+        } finally {
+            this.lock.unlock(stamp);
+        }
+    }
+
+    public boolean getFlag(@NotNull ClaimFlag flag) {
+        final long stamp = this.lock.readLock();
+        try {
+            return this.flags.contains(flag);
+        } finally {
+            this.lock.unlock(stamp);
+        }
+    }
+
+    public void modifyFlags(@NotNull Consumer<ClaimFlags> flags) {
+        this.freezeLock.lock();
+        try {
+            final long stamp = this.lock.writeLock();
+            try {
+                ClaimFlags cpy = new ClaimFlags(this.flags);
+                flags.accept(cpy);
+                this.flags.set(cpy);
             } finally {
                 this.lock.unlock(stamp);
             }
@@ -319,6 +372,10 @@ public final class ClaimData {
 
     public boolean didUpdateUserPermissions() {
         return this.checkDirtyFlag(DIRTY_USER_PERMS);
+    }
+
+    public boolean didUpdateFlags() {
+        return this.checkDirtyFlag(DIRTY_FLAGS);
     }
 
     private boolean checkDirtyFlag(int flag) {
@@ -361,14 +418,15 @@ public final class ClaimData {
 
     public static final class Builder {
 
-        private Token token                                         = null;
-        private String name                                         = null;
-        private UUID owner                                          = null;
-        private WorldReference world                                = null;
-        private final Set<Long> chunks                              = new HashSet<>();
-        private final Map<Permission, TrustLevel> globalPermissions = new EnumMap<>(Permission.class);
-        private final Map<UUID, Set<Permission>> userPermissions    = new HashMap<>();
-        private boolean built                                       = false;
+        private Token token                                       = null;
+        private String name                                       = null;
+        private UUID owner                                        = null;
+        private WorldReference world                              = null;
+        private final Set<Long> chunks                            = new HashSet<>();
+        private final PermissionMap<TrustLevel> globalPermissions = new PermissionMap<>();
+        private final Map<UUID, PermissionSet> userPermissions    = new HashMap<>();
+        private final ClaimFlags flags                            = new ClaimFlags();
+        private boolean built                                     = false;
 
         private void assertNotBuilt() {
             if (this.built)
@@ -441,9 +499,9 @@ public final class ClaimData {
         @Contract("_, _, _ -> this")
         public @NotNull Builder setUserPermission(@NotNull UUID user, @NotNull Permission permission, boolean value) {
             this.assertNotBuilt();
-            Set<Permission> set = this.userPermissions.computeIfAbsent(
+            PermissionSet set = this.userPermissions.computeIfAbsent(
                     user,
-                    (UUID ignored) -> EnumSet.noneOf(Permission.class)
+                    (UUID ignored) -> new PermissionSet()
             );
             if (value) {
                 set.add(permission);
@@ -456,6 +514,13 @@ public final class ClaimData {
         @Contract("_, _ -> this")
         public @NotNull Builder setUserPermission(@NotNull UUID user, @NotNull Permission permission) {
             return this.setUserPermission(user, permission, true);
+        }
+
+        @Contract("_ -> this")
+        public @NotNull Builder flags(@NotNull Collection<? extends ClaimFlag> flags) {
+            this.assertNotBuilt();
+            this.flags.set(flags);
+            return this;
         }
 
         @Contract(" -> new")
@@ -473,7 +538,8 @@ public final class ClaimData {
                     this.world,
                     this.chunks,
                     this.globalPermissions,
-                    this.userPermissions
+                    this.userPermissions,
+                    this.flags
             );
         }
 

@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.claim.struct;
+package io.github.wasabithumb.xclaim.claim.permission;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;

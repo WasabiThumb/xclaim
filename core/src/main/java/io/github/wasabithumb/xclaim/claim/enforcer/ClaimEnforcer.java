@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.claim.enforcer;
 
 import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.i18n.I18N;

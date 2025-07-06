@@ -1,7 +1,9 @@
 package io.github.wasabithumb.xclaim.claim.data.impl.sql;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
-import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.flags.ClaimFlags;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.PermissionMap;
+import io.github.wasabithumb.xclaim.claim.permission.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
@@ -45,6 +47,7 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
             ctx.psInfoInsert.setString(1, name);
             ctx.psInfoInsert.setString(2, owner.toString());
             ctx.psInfoInsert.setString(3, world.uuid().toString());
+            ctx.psInfoInsert.setString(4, "");
             ctx.psInfoInsert.execute();
 
             ctx.psInfoSelectByName.setString(1, name);
@@ -80,7 +83,8 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
                 .token(key)
                 .name(rs.getString(1))
                 .owner(UUID.fromString(rs.getString(2)))
-                .world(UUID.fromString(rs.getString(3)));
+                .world(UUID.fromString(rs.getString(3)))
+                .flags(ClaimFlags.fromString(rs.getString(4)));
 
         // Chunks
         ctx.psChunksSelect.setInt(1, key);
@@ -108,7 +112,7 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
                     continue;
                 }
                 int value = rs.getInt(i);
-                TrustLevel tl = perm.getDefaultTrust();
+                TrustLevel tl = perm.defaultTrust();
                 try {
                     if (value != 255)
                         tl = TrustLevel.fromOrdinal(value);
@@ -161,8 +165,8 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
     }
 
     private void doSync(@NotNull Context ctx, @NotNull ClaimData data) throws SQLException {
-        if (data.didUpdateName() || data.didUpdateOwner())
-            this.doSyncNameOwner(ctx, data);
+        if (data.didUpdateName() || data.didUpdateOwner() || data.didUpdateFlags())
+            this.doSyncNameOwnerFlags(ctx, data);
         if (data.didUpdateChunks())
             this.doSyncChunks(ctx, data);
         if (data.didUpdateGlobalPermissions())
@@ -171,10 +175,11 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
             this.doSyncUserPermissions(ctx, data);
     }
 
-    private void doSyncNameOwner(@NotNull Context ctx, @NotNull ClaimData data) throws SQLException {
+    private void doSyncNameOwnerFlags(@NotNull Context ctx, @NotNull ClaimData data) throws SQLException {
         ctx.psInfoUpdate.setString(1, data.getName());
         ctx.psInfoUpdate.setString(2, data.getOwner().toString());
         ctx.psInfoUpdate.setInt(3, data.getToken().asInt());
+        ctx.psInfoUpdate.setString(4, data.getFlagsAsString());
         ctx.psInfoUpdate.execute();
     }
 
@@ -331,18 +336,18 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
         @Override
         public void prepare(@NotNull Connection connection) throws SQLException {
             try (Statement s = connection.createStatement()) {
-                s.execute("CREATE TABLE IF NOT EXISTS xcClaimInfo (token INTEGER PRIMARY KEY, name VARCHAR(255) UNIQUE NOT NULL, owner VARCHAR(36) NOT NULL, world VARCHAR(36) NOT NULL)");
+                s.execute("CREATE TABLE IF NOT EXISTS xcClaimInfo (token INTEGER PRIMARY KEY, name VARCHAR(255) UNIQUE NOT NULL, owner VARCHAR(36) NOT NULL, world VARCHAR(36) NOT NULL, flags VARCHAR(32) NOT NULL)");
                 s.execute("CREATE TABLE IF NOT EXISTS xcClaimChunks (token INTEGER NOT NULL, x INTEGER NOT NULL, z INTEGER NOT NULL, FOREIGN KEY (token) REFERENCES xcClaimInfo(token))");
                 s.execute("CREATE TABLE IF NOT EXISTS xcClaimGlobalPermissions (token INTEGER UNIQUE NOT NULL, FOREIGN KEY (token) REFERENCES xcClaimInfo(token))");
                 s.execute("CREATE TABLE IF NOT EXISTS xcClaimUserPermissions (token INTEGER NOT NULL, user VARCHAR(36) NOT NULL, FOREIGN KEY (token) REFERENCES xcClaimInfo(token))");
             }
 
-            this.psInfoInsert        = connection.prepareStatement("INSERT INTO xcClaimInfo (name, owner, world) VALUES (?, ?, ?)");
+            this.psInfoInsert        = connection.prepareStatement("INSERT INTO xcClaimInfo (name, owner, world, flags) VALUES (?, ?, ?, ?)");
             this.psInfoSelectTokens  = connection.prepareStatement("SELECT token FROM xcClaimInfo");
-            this.psInfoSelectByToken = connection.prepareStatement("SELECT name, owner, world FROM xcClaimInfo WHERE token=?");
+            this.psInfoSelectByToken = connection.prepareStatement("SELECT name, owner, world, flags FROM xcClaimInfo WHERE token=?");
             this.psInfoSelectByName  = connection.prepareStatement("SELECT token FROM xcClaimInfo WHERE name=?");
             this.psInfoDelete        = connection.prepareStatement("DELETE FROM xcClaimInfo WHERE token=?");
-            this.psInfoUpdate        = connection.prepareStatement("UPDATE xcClaimInfo SET name=?, owner=? WHERE token=?");
+            this.psInfoUpdate        = connection.prepareStatement("UPDATE xcClaimInfo SET name=?, owner=?, flags=? WHERE token=?");
 
             this.psChunksInsert = connection.prepareStatement("INSERT INTO xcClaimChunks (token, x, z) VALUES (?, ?, ?)");
             this.psChunksSelect = connection.prepareStatement("SELECT x, z FROM xcClaimChunks WHERE token=?");
@@ -351,7 +356,7 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
 
             this.psGlobalPermissionsSelect = connection.prepareStatement("SELECT * FROM xcClaimGlobalPermissions WHERE token=?");
             Set<String> globalPermissionsColumns = this.getColumnNames(connection, "xcClaimGlobalPermissions");
-            Map<Permission, PreparedStatement> psGlobalPermissionsUpsert = new EnumMap<>(Permission.class);
+            Map<Permission, PreparedStatement> psGlobalPermissionsUpsert = new PermissionMap<>();
             for (Permission p : Permission.values()) {
                 final String name = p.sqlName();
                 if (!globalPermissionsColumns.contains(name)) {
@@ -370,8 +375,8 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
 
             this.psUserPermissionsSelectAll = connection.prepareStatement("SELECT * FROM xcClaimUserPermissions WHERE token=?");
             Set<String> userPermissionsColumns = this.getColumnNames(connection, "xcClaimUserPermissions");
-            Map<Permission, PreparedStatement> psUserPermissionsInsert = new EnumMap<>(Permission.class);
-            Map<Permission, PreparedStatement> psUserPermissionsUpdate = new EnumMap<>(Permission.class);
+            Map<Permission, PreparedStatement> psUserPermissionsInsert = new PermissionMap<>();
+            Map<Permission, PreparedStatement> psUserPermissionsUpdate = new PermissionMap<>();
             for (Permission p : Permission.values()) {
                 final String name = p.sqlName();
                 if (!userPermissionsColumns.contains(name)) {

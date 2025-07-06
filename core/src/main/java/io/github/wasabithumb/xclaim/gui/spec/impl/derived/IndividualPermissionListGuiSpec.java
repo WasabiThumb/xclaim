@@ -1,6 +1,6 @@
 package io.github.wasabithumb.xclaim.gui.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
@@ -36,7 +36,7 @@ public final class IndividualPermissionListGuiSpec extends PermissionListGuiSpec
         final PlatformMaterial mat = value ? NamedPlatformMaterial.GREEN_CONCRETE : NamedPlatformMaterial.RED_CONCRETE;
         return DisplayItem.format(
                 instance.platform().createItem(mat),
-                perm.getPrintName().format(instance.runtime().lang()),
+                perm.printName().format(instance.runtime().lang()),
                 col,
                 ColorTag.GRAY.format(text)
         );

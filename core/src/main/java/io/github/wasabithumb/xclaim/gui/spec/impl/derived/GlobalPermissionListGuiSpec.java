@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.gui.spec.impl.derived;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
-import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.gui.GuiInstance;
 import io.github.wasabithumb.xclaim.gui.action.GuiAction;
@@ -48,13 +48,13 @@ public final class GlobalPermissionListGuiSpec extends PermissionListGuiSpec {
         };
 
         List<String> lore = new ArrayList<>();
-        for (String s : WordWrap.wrap(perm.getDescription().format(instance.runtime().lang()), 25).split("\\r?\\n")) {
+        for (String s : WordWrap.wrap(perm.description().format(instance.runtime().lang()), 25).split("\\r?\\n")) {
             lore.add(ColorTag.GRAY.format(s));
         }
 
         return DisplayItem.format(
                 instance.platform().createItem(mat),
-                col.format(perm.getPrintName().format(instance.runtime().lang())),
+                col.format(perm.printName().format(instance.runtime().lang())),
                 lore
         );
     }

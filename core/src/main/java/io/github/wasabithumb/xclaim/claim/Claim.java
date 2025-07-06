@@ -1,7 +1,8 @@
 package io.github.wasabithumb.xclaim.claim;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
-import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.flags.ClaimFlag;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
 import io.github.wasabithumb.xclaim.claim.transaction.impl.*;
@@ -210,6 +211,10 @@ public class Claim {
         return Collections.unmodifiableSet(this.data.getUserPermissions().keySet());
     }
 
+    public @NotNull @Unmodifiable Set<ClaimFlag> getFlags() {
+        return this.data.getFlags();
+    }
+
     /**
      * Creates a new transaction.
      * @param clazz The type of transaction to create.
@@ -251,6 +256,10 @@ public class Claim {
 
     public @NotNull ModifyPermissionsClaimTransaction modifyPermissions(@Nullable PlatformUser user) {
         return this.createTransaction(ModifyPermissionsClaimTransaction.class, user);
+    }
+
+    public @NotNull ModifyFlagsClaimTransaction modifyFlags(@Nullable PlatformUser user) {
+        return this.createTransaction(ModifyFlagsClaimTransaction.class, user);
     }
 
     public @NotNull TransferOwnerClaimTransaction transferOwner(@Nullable PlatformUser user) {

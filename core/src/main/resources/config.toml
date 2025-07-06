@@ -12,7 +12,6 @@
 # Hangar Page: https://hangar.papermc.io/WasabiThumbs/XClaim
 # Spigot Page: https://www.spigotmc.org/resources/1-8-1-21-xclaim-better-chunk-claiming-for-smps.102843/
 # This config file is in TOML format. Read the spec here: https://toml.io/en/v1.0.0
-# IF YOU HAVE config.yml, THIS FILE WILL NOT BE USED!
 
 # The language pack to use. Must match a language in "lang/".
 # English (en-US)
@@ -23,9 +22,6 @@ language = "en-US"
 
 # The time (in seconds) until a player is considered a Veteran.
 veteran-time = 604800
-
-# Disables the warning that prints to console when using Spigot where Paper is available.
-no-paper-nag = false
 
 
 [auto-save]
@@ -104,6 +100,41 @@ blacklist = [ "minigames", "pvp", "etc" ]
 
 # Controls whether the whitelist & blacklist is case-sensitive.
 case-sensitive = true
+
+
+# Controls claim permissions
+# default: The default permitted group for new claims
+# wild: The permitted group for all unclaimed chunks
+# configurable: Whether the group may be changed by non-privileged players
+[permissions]
+build           = { default = "TRUSTED",  wild = "ALL", configurable = true } # Place/modify existing blocks
+break           = { default = "TRUSTED",  wild = "ALL", configurable = true } # Break blocks
+enter           = { default = "ALL",      wild = "ALL", configurable = true } # Move into the claim
+use-storage     = { default = "TRUSTED",  wild = "ALL", configurable = true } # Use chests, barrels, shulker boxes (previously chest-open)
+use-redstone    = { default = "TRUSTED",  wild = "ALL", configurable = true } # Activate powerable blocks (previously interact)
+use-fixtures    = { default = "TRUSTED",  wild = "ALL", configurable = true } # Rotate item frames, dress armor stands (previously interact)
+use-doors       = { default = "ALL",      wild = "ALL", configurable = true } # Use doors, gates, trapdoors (previously interact)
+use-other       = { default = "ALL",      wild = "ALL", configurable = true } # Use crafting/enchanting tables, etc. (previously interact)
+place-ents      = { default = "VETERANS", wild = "ALL", configurable = true } # Place armor stands, spawn eggs, etc. (previously ent-place)
+place-vehicles  = { default = "VETERANS", wild = "ALL", configurable = true } # Place boats, minecarts, etc. (previously vehicle-place)
+ignite          = { default = "TRUSTED",  wild = "ALL", configurable = true } # Create fire (previously fire-use)
+explode         = { default = "TRUSTED",  wild = "ALL", configurable = true } # Cause explosions
+damage-friendly = { default = "VETERANS", wild = "ALL", configurable = true } # Damage cows, sheep, squid, etc. (previously entity-damage-friendly)
+damage-hostile  = { default = "VETERANS", wild = "ALL", configurable = true } # Damage zombies, skeletons, etc. (previously entity-damage-hostile)
+damage-vehicles = { default = "VETERANS", wild = "ALL", configurable = true } # Damage boats, minecarts, etc. (previously entity-damage-vehicle)
+damage-other    = { default = "ALL",      wild = "ALL", configurable = true } # Damage all other entities (previously entity-damage-misc
+drop-items      = { default = "ALL",      wild = "ALL", configurable = true } # Drop items (previously item-drop)
+manage          = { default = "NONE",                   configurable = true } # Modify the claim settings
+delete          = { default = "NONE",                   configurable = true } # Delete the claim
+
+
+# Controls claim flags
+# default: The default value for new claims
+# configurable: Whether the value may be changed by non-privileged players
+[flags]
+no-pvp     = { default = false, configurable = true } # Disable all PvP
+no-fire    = { default = false, configurable = true } # Disable all fire
+waterproof = { default = false, configurable = true } # Disable all fluid penetration
 
 
 [integrations.economy]

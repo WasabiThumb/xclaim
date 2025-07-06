@@ -11,8 +11,6 @@ public interface RootConfig extends Config {
 
     @UnknownNullability Long veteranTime();
 
-    @UnknownNullability Boolean noPaperNag();
-
     @Contract(pure = true)
     @NotNull AutoSaveConfig autoSave();
 
@@ -30,6 +28,12 @@ public interface RootConfig extends Config {
 
     @Contract(pure = true)
     @NotNull GuiConfig gui();
+
+    @Contract(pure = true)
+    @NotNull PermissionsConfig permissions();
+
+    @Contract(pure = true)
+    @NotNull FlagsConfig flags();
 
     default boolean isLegacy() {
         return false;

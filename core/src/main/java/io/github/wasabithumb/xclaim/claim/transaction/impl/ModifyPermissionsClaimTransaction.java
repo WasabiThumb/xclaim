@@ -1,7 +1,8 @@
 package io.github.wasabithumb.xclaim.claim.transaction.impl;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
-import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.PermissionMap;
+import io.github.wasabithumb.xclaim.claim.permission.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.ClaimMutationContext;
 import io.github.wasabithumb.xclaim.claim.transaction.ClaimTransaction;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public class ModifyPermissionsClaimTransaction extends ClaimTransaction {
 
-    private final Map<Permission, TrustLevel> globalPermissions = new HashMap<>();
+    private final Map<Permission, TrustLevel> globalPermissions = new PermissionMap<>();
     private final Map<UserPermissionData, Boolean> userPermissions = new HashMap<>();
     public ModifyPermissionsClaimTransaction(@NotNull ClaimMutationContext context) {
         super(context);

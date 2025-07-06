@@ -1,7 +1,8 @@
 package io.github.wasabithumb.xclaim.claim.data.impl.yaml;
 
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
-import io.github.wasabithumb.xclaim.claim.struct.TrustLevel;
+import io.github.wasabithumb.xclaim.claim.flags.ClaimFlags;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.TrustLevel;
 import io.github.wasabithumb.xclaim.claim.data.ClaimData;
 import io.github.wasabithumb.xclaim.claim.data.ClaimDataManager;
 import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
@@ -71,6 +72,7 @@ public class YamlClaimDataManager implements ClaimDataManager {
             section.set("name", name);
             section.set("owner", owner.toString());
             section.set("world", world.name());
+            section.set("flags", "");
             section.createSection("chunks");
             section.createSection("permissions");
             section.createSection("users");
@@ -96,7 +98,8 @@ public class YamlClaimDataManager implements ClaimDataManager {
             ClaimData.Builder builder = ClaimData.builder()
                     .name(Objects.requireNonNull(section.getString("name")))
                     .owner(UUID.fromString(Objects.requireNonNull(section.getString("owner"))))
-                    .world(Objects.requireNonNull(section.getString("world")));
+                    .world(Objects.requireNonNull(section.getString("world")))
+                    .flags(ClaimFlags.fromString(Objects.requireNonNullElse(section.getString("flags"), "")));
 
             ConfigurationSection chunks = section.getConfigurationSection("chunks");
             if (chunks != null) {
@@ -118,7 +121,7 @@ public class YamlClaimDataManager implements ClaimDataManager {
                 for (String k : permissions.getKeys(false)) {
                     Permission p;
                     try {
-                        p = Permission.valueOf(k);
+                        p = Permission.match(k);
                     } catch (IllegalArgumentException ignored) {
                         continue;
                     }
@@ -148,7 +151,7 @@ public class YamlClaimDataManager implements ClaimDataManager {
                         if (!(entry instanceof String str)) continue;
                         Permission p;
                         try {
-                            p = Permission.valueOf(str);
+                            p = Permission.match(str);
                         } catch (IllegalArgumentException ignored) {
                             continue;
                         }
@@ -185,6 +188,8 @@ public class YamlClaimDataManager implements ClaimDataManager {
             section.set("name", data.getName());
         if (data.didUpdateOwner())
             section.set("owner", data.getOwner().toString());
+        if (data.didUpdateFlags())
+            section.set("flags", data.getFlagsAsString());
         if (data.didUpdateChunks())
             this.doSyncChunks(data, section);
         if (data.didUpdateGlobalPermissions())

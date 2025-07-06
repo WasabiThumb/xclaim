@@ -2,7 +2,7 @@ package io.github.wasabithumb.xclaim.command.impl;
 
 import io.github.wasabithumb.xclaim.XClaim;
 import io.github.wasabithumb.xclaim.claim.Claim;
-import io.github.wasabithumb.xclaim.claim.struct.Permission;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.command.Command;
 import io.github.wasabithumb.xclaim.command.argument.CommandArgument;
 import io.github.wasabithumb.xclaim.command.argument.type.CommandArgumentType;
@@ -13,8 +13,6 @@ import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.user.PlatformUser;
 import io.github.wasabithumb.xclaim.platform.world.PlatformLocation;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public final class EditCommand implements Command<EditCommand.Args> {
 

@@ -3,6 +3,8 @@ package io.github.wasabithumb.xclaim.config.impl.toml;
 import io.github.wasabithumb.jtoml.value.table.TomlTable;
 import io.github.wasabithumb.xclaim.config.impl.toml.sub.*;
 import io.github.wasabithumb.xclaim.config.RootConfig;
+import io.github.wasabithumb.xclaim.config.sub.FlagsConfig;
+import io.github.wasabithumb.xclaim.config.sub.PermissionsConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -14,6 +16,9 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     private final TomlWorldsConfig worlds;
     private final TomlIntegrationsConfig integrations;
     private final TomlGuiConfig gui;
+    private final TomlPermissionsConfig permissions;
+    private final TomlFlagsConfig flags;
+
     public TomlRootConfig(@NotNull TomlTable table) {
         super(table);
         this.autoSave     = new TomlAutoSaveConfig(    this.getTable("auto-save"));
@@ -22,6 +27,8 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
         this.worlds       = new TomlWorldsConfig(      this.getTable("worlds"));
         this.integrations = new TomlIntegrationsConfig(this.getTable("integrations"));
         this.gui          = new TomlGuiConfig(         this.getTable("gui"));
+        this.permissions  = new TomlPermissionsConfig( this.getTable("permissions"));
+        this.flags        = new TomlFlagsConfig(       this.getTable("flags"));
     }
 
     @Override
@@ -32,11 +39,6 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     @Override
     public @UnknownNullability Long veteranTime() {
         return this.getLong("veteran-time");
-    }
-
-    @Override
-    public @UnknownNullability Boolean noPaperNag() {
-        return this.getBoolean("no-paper-nag");
     }
 
     @Override
@@ -67,6 +69,16 @@ public final class TomlRootConfig extends TomlConfig implements RootConfig {
     @Override
     public @NotNull TomlIntegrationsConfig integrations() {
         return this.integrations;
+    }
+
+    @Override
+    public @NotNull PermissionsConfig permissions() {
+        return this.permissions;
+    }
+
+    @Override
+    public @NotNull FlagsConfig flags() {
+        return this.flags;
     }
 
 }
