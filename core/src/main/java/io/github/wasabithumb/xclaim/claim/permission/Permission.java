@@ -2,9 +2,10 @@ package io.github.wasabithumb.xclaim.claim.permission;
 
 import io.github.wasabithumb.xclaim.i18n.Translatable;
 import static io.github.wasabithumb.xclaim.claim.permission.PermissionImpl.create;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import org.jetbrains.annotations.*;
+
+import java.util.List;
 
 public sealed interface Permission permits PermissionImpl {
     /** Place/modify existing blocks */
@@ -17,46 +18,46 @@ public sealed interface Permission permits PermissionImpl {
     Permission ENTER           = create("enter");
 
     /** Use chests, barrels, shulker boxes */
-    Permission USE_STORAGE     = create("use-storage");
+    Permission USE_STORAGE     = create("use-storage", "interact");
 
     /** Activate powerable blocks */
-    Permission USE_REDSTONE    = create("use-redstone");
+    Permission USE_REDSTONE    = create("use-redstone", "interact");
 
     /** Rotate item frames, dress armor stands */
-    Permission USE_FIXTURES    = create("use-fixtures");
+    Permission USE_FIXTURES    = create("use-fixtures", "interact");
 
     /** Use doors, gates, trapdoors */
-    Permission USE_DOORS       = create("use-doors");
+    Permission USE_DOORS       = create("use-doors", "interact");
 
     /** Use crafting/enchanting tables, etc. */
-    Permission USE_OTHER       = create("use-other");
+    Permission USE_OTHER       = create("use-other", "interact");
 
     /** Place armor stands, spawn eggs, etc. */
-    Permission PLACE_ENTS      = create("place-ents");
+    Permission PLACE_ENTS      = create("place-ents", "ent-place");
 
     /** Place boats, minecarts, etc. */
-    Permission PLACE_VEHICLES  = create("place-vehicles");
+    Permission PLACE_VEHICLES  = create("place-vehicles", "vehicle-place");
 
     /** Create fire */
-    Permission IGNITE          = create("ignite");
+    Permission IGNITE          = create("ignite", "fire-use");
 
     /** Cause explosions */
     Permission EXPLODE         = create("explode");
 
     /** Damage cows, sheep, squid, etc. */
-    Permission DAMAGE_FRIENDLY = create("damage-friendly");
+    Permission DAMAGE_FRIENDLY = create("damage-friendly", "entity-damage-friendly");
 
     /** Damage zombies, skeletons, etc. */
-    Permission DAMAGE_HOSTILE  = create("damage-hostile");
+    Permission DAMAGE_HOSTILE  = create("damage-hostile", "entity-damage-hostile");
 
     /** Damage boats, minecarts, etc. */
-    Permission DAMAGE_VEHICLES = create("damage-vehicles");
+    Permission DAMAGE_VEHICLES = create("damage-vehicles", "entity-damage-vehicle");
 
     /** Damage all other entities */
-    Permission DAMAGE_OTHER    = create("damage-other");
+    Permission DAMAGE_OTHER    = create("damage-other", "entity-damage-nl", "entity-damage-misc");
 
     /** Drop items */
-    Permission DROP_ITEMS      = create("drop-items");
+    Permission DROP_ITEMS      = create("drop-items", "item-drop");
 
     /** Modify the claim settings */
     Permission MANAGE          = create("manage");
@@ -135,7 +136,7 @@ public sealed interface Permission permits PermissionImpl {
      * are treated as hyphens.
      */
     static @NotNull Permission valueOf(@NotNull String name) throws IllegalArgumentException {
-        return PermissionImpl.valueOf(name);
+        return PermissionImpl.valueOf(name, false);
     }
 
     /**
@@ -145,18 +146,7 @@ public sealed interface Permission permits PermissionImpl {
      */
     @ApiStatus.Obsolete
     static @NotNull Permission match(@NotNull String name) throws IllegalArgumentException {
-        if ("CHEST_OPEN".equalsIgnoreCase(name)) return USE_STORAGE;
-        if ("INTERACT".equalsIgnoreCase(name)) return USE_OTHER;
-        if ("ENT_PLACE".equalsIgnoreCase(name)) return PLACE_ENTS;
-        if ("VEHICLE_PLACE".equalsIgnoreCase(name)) return PLACE_VEHICLES;
-        if ("FIRE_USE".equalsIgnoreCase(name)) return IGNITE;
-        if ("ENTITY_DAMAGE_FRIENDLY".equalsIgnoreCase(name)) return DAMAGE_FRIENDLY;
-        if ("ENTITY_DAMAGE_HOSTILE".equalsIgnoreCase(name)) return DAMAGE_HOSTILE;
-        if ("ENTITY_DAMAGE_VEHICLE".equalsIgnoreCase(name)) return DAMAGE_VEHICLES;
-        if ("ENTITY_DAMAGE_NL".equalsIgnoreCase(name)) return DAMAGE_OTHER;
-        if ("ENTITY_DAMAGE_MISC".equalsIgnoreCase(name)) return DAMAGE_OTHER;
-        if ("ITEM_DROP".equalsIgnoreCase(name)) return DROP_ITEMS;
-        return PermissionImpl.valueOf(name);
+        return PermissionImpl.valueOf(name, true);
     }
 
     /**
@@ -165,7 +155,7 @@ public sealed interface Permission permits PermissionImpl {
     @ApiStatus.Internal
     static @NotNull Permission fromSQLName(@NotNull String sqlName) {
         if ("del".equalsIgnoreCase(sqlName)) return DELETE;
-        return PermissionImpl.valueOf(sqlName);
+        return PermissionImpl.valueOf(sqlName, false);
     }
 
     //
@@ -174,6 +164,9 @@ public sealed interface Permission permits PermissionImpl {
     int ordinal();
 
     @NotNull String name();
+
+    @Deprecated
+    @NotNull @Unmodifiable List<String> legacyNames();
 
     @NotNull Translatable printName();
 

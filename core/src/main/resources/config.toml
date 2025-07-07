@@ -110,20 +110,20 @@ case-sensitive = true
 build           = { default = "TRUSTED",  wild = "ALL", configurable = true } # Place/modify existing blocks
 break           = { default = "TRUSTED",  wild = "ALL", configurable = true } # Break blocks
 enter           = { default = "ALL",      wild = "ALL", configurable = true } # Move into the claim
-use-storage     = { default = "TRUSTED",  wild = "ALL", configurable = true } # Use chests, barrels, shulker boxes (previously chest-open)
-use-redstone    = { default = "TRUSTED",  wild = "ALL", configurable = true } # Activate powerable blocks (previously interact)
-use-fixtures    = { default = "TRUSTED",  wild = "ALL", configurable = true } # Rotate item frames, dress armor stands (previously interact)
-use-doors       = { default = "ALL",      wild = "ALL", configurable = true } # Use doors, gates, trapdoors (previously interact)
-use-other       = { default = "ALL",      wild = "ALL", configurable = true } # Use crafting/enchanting tables, etc. (previously interact)
-place-ents      = { default = "VETERANS", wild = "ALL", configurable = true } # Place armor stands, spawn eggs, etc. (previously ent-place)
-place-vehicles  = { default = "VETERANS", wild = "ALL", configurable = true } # Place boats, minecarts, etc. (previously vehicle-place)
-ignite          = { default = "TRUSTED",  wild = "ALL", configurable = true } # Create fire (previously fire-use)
+use-storage     = { default = "TRUSTED",  wild = "ALL", configurable = true } # Use chests, barrels, shulker boxes
+use-redstone    = { default = "TRUSTED",  wild = "ALL", configurable = true } # Activate powerable blocks
+use-fixtures    = { default = "TRUSTED",  wild = "ALL", configurable = true } # Rotate item frames, dress armor stands
+use-doors       = { default = "ALL",      wild = "ALL", configurable = true } # Use doors, gates, trapdoors
+use-other       = { default = "ALL",      wild = "ALL", configurable = true } # Use crafting/enchanting tables, etc.
+place-ents      = { default = "VETERANS", wild = "ALL", configurable = true } # Place armor stands, spawn eggs, etc.
+place-vehicles  = { default = "VETERANS", wild = "ALL", configurable = true } # Place boats, minecarts, etc.
+ignite          = { default = "TRUSTED",  wild = "ALL", configurable = true } # Create fire
 explode         = { default = "TRUSTED",  wild = "ALL", configurable = true } # Cause explosions
-damage-friendly = { default = "VETERANS", wild = "ALL", configurable = true } # Damage cows, sheep, squid, etc. (previously entity-damage-friendly)
-damage-hostile  = { default = "VETERANS", wild = "ALL", configurable = true } # Damage zombies, skeletons, etc. (previously entity-damage-hostile)
-damage-vehicles = { default = "VETERANS", wild = "ALL", configurable = true } # Damage boats, minecarts, etc. (previously entity-damage-vehicle)
-damage-other    = { default = "ALL",      wild = "ALL", configurable = true } # Damage all other entities (previously entity-damage-misc
-drop-items      = { default = "ALL",      wild = "ALL", configurable = true } # Drop items (previously item-drop)
+damage-friendly = { default = "VETERANS", wild = "ALL", configurable = true } # Damage cows, sheep, squid, etc.
+damage-hostile  = { default = "VETERANS", wild = "ALL", configurable = true } # Damage zombies, skeletons, etc.
+damage-vehicles = { default = "VETERANS", wild = "ALL", configurable = true } # Damage boats, minecarts, etc.
+damage-other    = { default = "ALL",      wild = "ALL", configurable = true } # Damage all other entities
+drop-items      = { default = "ALL",      wild = "ALL", configurable = true } # Drop items
 manage          = { default = "NONE",                   configurable = true } # Modify the claim settings
 delete          = { default = "NONE",                   configurable = true } # Delete the claim
 

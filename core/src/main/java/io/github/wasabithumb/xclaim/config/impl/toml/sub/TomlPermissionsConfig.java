@@ -13,13 +13,29 @@ import org.jetbrains.annotations.UnknownNullability;
 
 public final class TomlPermissionsConfig extends TomlConfig implements PermissionsConfig {
 
-    public TomlPermissionsConfig(@Nullable TomlTable table) {
+    private final TomlConfig legacyDefaults;
+    private final boolean hasLegacyDefaults;
+
+    public TomlPermissionsConfig(@Nullable TomlTable table, @Nullable TomlTable legacyDefaults) {
         super(table);
+        this.legacyDefaults = new TomlConfig(legacyDefaults);
+        this.hasLegacyDefaults = legacyDefaults != null && !legacyDefaults.isEmpty();
     }
 
     @Override
     public @UnknownNullability TrustLevel defaultLevel(@NotNull Permission permission) {
-        return this.levelOf(this.withSub(permission.name(), (Config c) -> c.getString("default")));
+        String value = this.withSub(permission.name(), (Config c) -> c.getString("default"));
+        if (value == null && this.hasLegacyDefaults) {
+            // Check the deprecated default-permissions block
+            value = this.legacyDefaults.getString(permission.name());
+            if (value == null) {
+                for (String alias : permission.legacyNames()) {
+                    value = this.legacyDefaults.getString(alias);
+                    if (value != null) break;
+                }
+            }
+        }
+        return this.levelOf(value);
     }
 
     @Override

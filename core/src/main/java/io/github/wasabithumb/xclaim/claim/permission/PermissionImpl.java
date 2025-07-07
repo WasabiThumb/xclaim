@@ -4,8 +4,11 @@ import io.github.wasabithumb.xclaim.i18n.Translatable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @ApiStatus.Internal
 final class PermissionImpl implements Permission {
@@ -13,10 +16,16 @@ final class PermissionImpl implements Permission {
     private static final Permission[] CANONICAL = new Permission[Permission.class.getDeclaredFields().length];
     private static int ORDINAL_HEAD = 0;
 
-    @Contract("_ -> new")
-    static synchronized @NotNull Permission create(@NotNull String name) {
+    @Contract("_, _ -> new")
+    static synchronized @NotNull Permission create(@NotNull String name, @NotNull String @NotNull ... legacyNames) {
         final int ordinal = ORDINAL_HEAD++;
-        Permission ret = new PermissionImpl(ordinal, name);
+        Permission ret = new PermissionImpl(
+                ordinal,
+                name,
+                legacyNames.length == 0 ?
+                        Collections.emptyList() :
+                        List.of(legacyNames)
+        );
         CANONICAL[ordinal] = ret;
         return ret;
     }
@@ -32,11 +41,16 @@ final class PermissionImpl implements Permission {
         return CANONICAL[ordinal];
     }
 
-    static @NotNull Permission valueOf(@NotNull String name) throws IllegalArgumentException {
+    static @NotNull Permission valueOf(@NotNull String name, boolean allowLegacy) throws IllegalArgumentException {
         Permission next;
         for (int i=0; i < ORDINAL_HEAD; i++) {
             next = CANONICAL[i];
             if (nameEquals(next.name(), name)) return next;
+            if (allowLegacy) {
+                for (String legacy : next.legacyNames()) {
+                    if (nameEquals(legacy, name)) return next;
+                }
+            }
         }
         throw new IllegalArgumentException("\"" + name + "\" does not match any valid permission name");
     }
@@ -68,10 +82,12 @@ final class PermissionImpl implements Permission {
 
     private final int ordinal;
     private final String name;
+    private final List<String> legacyNames;
 
-    private PermissionImpl(int ordinal, @NotNull String name) {
+    private PermissionImpl(int ordinal, @NotNull String name, @NotNull List<String> legacyNames) {
         this.ordinal = ordinal;
         this.name = name;
+        this.legacyNames = legacyNames;
     }
 
     //
@@ -84,6 +100,11 @@ final class PermissionImpl implements Permission {
     @Override
     public @NotNull String name() {
         return this.name;
+    }
+
+    @Override
+    public @NotNull List<String> legacyNames() {
+        return this.legacyNames;
     }
 
     @Override

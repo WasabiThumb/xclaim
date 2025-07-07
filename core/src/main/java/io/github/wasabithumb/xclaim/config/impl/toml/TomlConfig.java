@@ -16,7 +16,8 @@ public class TomlConfig implements Config {
 
     protected final TomlTable table;
     protected final boolean valid;
-    protected TomlConfig(@Nullable TomlTable table) {
+
+    public TomlConfig(@Nullable TomlTable table) {
         this.table = table;
         this.valid = table != null;
     }
