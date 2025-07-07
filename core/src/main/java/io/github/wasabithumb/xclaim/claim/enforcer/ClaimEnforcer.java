@@ -1,9 +1,10 @@
 package io.github.wasabithumb.xclaim.claim.enforcer;
 
 import io.github.wasabithumb.xclaim.XClaim;
-import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.claim.flags.ClaimFlag;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.i18n.I18N;
 import io.github.wasabithumb.xclaim.i18n.Lang;
 import io.github.wasabithumb.xclaim.platform.Platform;
@@ -20,9 +21,12 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ClaimEnforcer implements PlatformListener {
 
     protected final ClaimManager manager;
-    public ClaimEnforcer(@NotNull ClaimManager manager) {
+
+    protected ClaimEnforcer(@NotNull ClaimManager manager) {
         this.manager = manager;
     }
+
+    //
 
     protected final @NotNull XClaim runtime() {
         return this.manager.runtime();
@@ -36,26 +40,21 @@ public abstract class ClaimEnforcer implements PlatformListener {
         return this.runtime().platform();
     }
 
-    protected abstract @NotNull Permission permission();
-
-    public void register() {
-        this.onRegister();
+    public final void register() {
         this.platform().events().register(this);
     }
 
-    public void unregister() {
+    public final void unregister() {
         this.platform().events().unregister(this);
-        this.onUnregister();
     }
 
-    protected void onRegister() { }
-
-    protected void onUnregister() { }
+    @ApiStatus.OverrideOnly
+    protected abstract boolean permits(@NotNull Claim claim, @NotNull PlatformUser user);
 
     @Contract("_, null -> false")
     protected boolean isNotPermitted(@NotNull Claim claim, PlatformUser user) {
         if (user == null) return false;
-        if (claim.checkPermission(user, this.permission())) {
+        if (this.permits(claim, user)) {
             return false;
         } else {
             user.sendMessage(this.lang().get(I18N.PERM_HANDLER_STD_ERROR));
@@ -69,6 +68,40 @@ public abstract class ClaimEnforcer implements PlatformListener {
 
     protected @Nullable Claim claimAt(@NotNull PlatformLocation location) {
         return this.claimAt(ChunkReference.of(location));
+    }
+
+    //
+
+    public static abstract class ForPermission extends ClaimEnforcer {
+
+        protected ForPermission(@NotNull ClaimManager manager) {
+            super(manager);
+        }
+
+        @Override
+        protected boolean permits(@NotNull Claim claim, @NotNull PlatformUser user) {
+            return claim.checkPermission(user, this.permission());
+        }
+
+        @ApiStatus.OverrideOnly
+        protected abstract @NotNull Permission permission();
+
+    }
+
+    public static abstract class ForFlag extends ClaimEnforcer {
+
+        protected ForFlag(@NotNull ClaimManager manager) {
+            super(manager);
+        }
+
+        @Override
+        protected boolean permits(@NotNull Claim claim, @NotNull PlatformUser user) {
+            return claim.getFlags().contains(this.flag());
+        }
+
+        @ApiStatus.OverrideOnly
+        protected abstract @NotNull ClaimFlag flag();
+
     }
 
 }

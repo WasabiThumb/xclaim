@@ -1,9 +1,9 @@
 package io.github.wasabithumb.xclaim.claim.enforcer.impl;
 
-import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.*;
 import java.util.Objects;
 
 @ApiStatus.Internal
-public final class InteractClaimEnforcer extends ClaimEnforcer {
+public final class InteractClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     public InteractClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);

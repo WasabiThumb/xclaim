@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public final class FluidClaimEnforcer extends ClaimEnforcer {
+public final class FluidClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     public FluidClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);

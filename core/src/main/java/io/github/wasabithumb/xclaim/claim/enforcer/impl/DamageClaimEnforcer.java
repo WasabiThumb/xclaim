@@ -1,7 +1,7 @@
 package io.github.wasabithumb.xclaim.claim.enforcer.impl;
 
-import io.github.wasabithumb.xclaim.platform.entity.PlatformEntityGroup;
 import io.github.wasabithumb.xclaim.claim.permission.Permission;
+import io.github.wasabithumb.xclaim.platform.entity.PlatformEntityGroup;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer {
+public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     public DamageClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);

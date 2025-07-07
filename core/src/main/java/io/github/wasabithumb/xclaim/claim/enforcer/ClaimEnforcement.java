@@ -36,6 +36,7 @@ public final class ClaimEnforcement {
     private final ClaimManager manager;
     private final List<ClaimEnforcer> enforcers;
     private boolean enabled;
+
     public ClaimEnforcement(@NotNull ClaimManager manager) {
         this.manager = manager;
         this.enforcers = new ArrayList<>();

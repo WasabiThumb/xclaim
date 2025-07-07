@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @ApiStatus.Internal
-public final class ExplodeClaimEnforcer extends ClaimEnforcer {
+public final class ExplodeClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     public ExplodeClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);

@@ -1,9 +1,9 @@
 package io.github.wasabithumb.xclaim.claim.enforcer.impl;
 
-import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.platform.data.material.NamedPlatformMaterial;
 import io.github.wasabithumb.xclaim.platform.entity.NamedPlatformEntityType;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformEntity;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public final class BreakClaimEnforcer extends ClaimEnforcer {
+public final class BreakClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     public BreakClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);

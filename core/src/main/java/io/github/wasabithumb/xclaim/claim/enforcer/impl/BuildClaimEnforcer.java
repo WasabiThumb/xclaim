@@ -1,9 +1,9 @@
 package io.github.wasabithumb.xclaim.claim.enforcer.impl;
 
-import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
+import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformBlockMultiPlaceEvent;
 import io.github.wasabithumb.xclaim.platform.event.impl.PlatformBlockPlaceEvent;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public final class BuildClaimEnforcer extends ClaimEnforcer {
+public final class BuildClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     public BuildClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);
