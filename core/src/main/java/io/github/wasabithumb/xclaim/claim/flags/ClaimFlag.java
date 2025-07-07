@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public sealed interface ClaimFlag permits ClaimFlagImpl {
 
     ClaimFlag NO_PVP     = create("no-pvp", 'p');
-    ClaimFlag NO_FIRE    = create("no-fire", 'f');
+    ClaimFlag FIREPROOF  = create("fireproof", 'f');
     ClaimFlag WATERPROOF = create("waterproof", 'w');
 
     @Contract("-> new")

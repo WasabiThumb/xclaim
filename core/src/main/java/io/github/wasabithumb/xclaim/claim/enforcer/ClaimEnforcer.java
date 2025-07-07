@@ -96,11 +96,16 @@ public abstract class ClaimEnforcer implements PlatformListener {
 
         @Override
         protected boolean permits(@NotNull Claim claim, @NotNull PlatformUser user) {
-            return claim.getFlags().contains(this.flag());
+            return claim.getFlags().contains(this.flag()) == this.allowedWhen();
         }
 
         @ApiStatus.OverrideOnly
         protected abstract @NotNull ClaimFlag flag();
+
+        @ApiStatus.OverrideOnly
+        protected boolean allowedWhen() {
+            return false;
+        }
 
     }
 

@@ -1,7 +1,10 @@
 package io.github.wasabithumb.xclaim.claim.enforcer;
 
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
-import io.github.wasabithumb.xclaim.claim.enforcer.impl.*;
+import io.github.wasabithumb.xclaim.claim.enforcer.impl.flag.FireproofClaimEnforcer;
+import io.github.wasabithumb.xclaim.claim.enforcer.impl.flag.NoPvpClaimEnforcer;
+import io.github.wasabithumb.xclaim.claim.enforcer.impl.flag.WaterproofClaimEnforcer;
+import io.github.wasabithumb.xclaim.claim.enforcer.impl.perm.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +16,7 @@ import java.util.List;
 public final class ClaimEnforcement {
 
     private static final List<Class<? extends ClaimEnforcer>> IMPLS = List.of(
+            // Permissions
             BreakClaimEnforcer.class,
             BuildClaimEnforcer.class,
             ContainerClaimEnforcer.class,
@@ -28,7 +32,12 @@ public final class ClaimEnforcement {
             IgniteClaimEnforcer.class,
             InteractClaimEnforcer.class,
             PlaceClaimEnforcer.Entities.class,
-            PlaceClaimEnforcer.Vehicles.class
+            PlaceClaimEnforcer.Vehicles.class,
+
+            // Flags
+            NoPvpClaimEnforcer.class,
+            FireproofClaimEnforcer.class,
+            WaterproofClaimEnforcer.class
     );
 
     //

@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.claim.enforcer.impl;
+package io.github.wasabithumb.xclaim.claim.enforcer.impl.perm;
 
 import io.github.wasabithumb.xclaim.claim.permission.Permission;
 import io.github.wasabithumb.xclaim.platform.entity.PlatformEntityGroup;

@@ -1,4 +1,4 @@
-package io.github.wasabithumb.xclaim.claim.enforcer.impl;
+package io.github.wasabithumb.xclaim.claim.enforcer.impl.perm;
 
 import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;

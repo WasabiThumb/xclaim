@@ -34,8 +34,8 @@ public class BukkitPlatformEntity implements PlatformEntity {
     }
 
     @Override
-    public @NotNull BukkitPlatformEntityType type() {
-        return new BukkitPlatformEntityType(this.handle.getType());
+    public @NotNull PlatformEntityType type() {
+        return BukkitPlatformEntityType.of(this.handle.getType());
     }
 
     @Override

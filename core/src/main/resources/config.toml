@@ -133,7 +133,7 @@ delete          = { default = "NONE",                   configurable = true } # 
 # configurable: Whether the value may be changed by non-privileged players
 [flags]
 no-pvp     = { default = false, configurable = true } # Disable all PvP
-no-fire    = { default = false, configurable = true } # Disable all fire
+fireproof  = { default = false, configurable = true } # Disable all fire
 waterproof = { default = false, configurable = true } # Disable all fluid penetration
 
 
