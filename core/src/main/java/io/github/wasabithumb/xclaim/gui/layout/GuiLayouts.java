@@ -324,6 +324,7 @@ public class GuiLayouts {
         private @NotNull GuiLayout resolveEntry(@NotNull LoadEntry entry) throws IOException {
             final String path = "layouts/" + entry.name + ".xml";
 
+            // TODO: we need to force servers migrating from v1 to discard any customized layouts
             if (!this.assets().data().exists(path)) {
                 try (InputStream is = this.assets().resources().read(path);
                      OutputStream os = this.assets().data().write(path)

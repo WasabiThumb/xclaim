@@ -34,7 +34,7 @@ public abstract class PermissionListGuiSpec implements GuiSpec {
                 instance.runtime().lang(I18N.GUI_PERM_BACK)
         ));
         for (int i=0; i < ALL_PERMISSIONS.length; i++) {
-            instance.set(1 + i, this.populatePermission(instance, ALL_PERMISSIONS[i]));
+            instance.set(1, i, this.populatePermission(instance, ALL_PERMISSIONS[i]));
         }
     }
 
@@ -43,10 +43,13 @@ public abstract class PermissionListGuiSpec implements GuiSpec {
     @Override
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         int slotIndex = slot.index();
-        if (slotIndex <= 0) return GuiAction.transfer(GuiSpecs.permissionOverview(this.claim));
-
-        if (slotIndex > ALL_PERMISSIONS.length) return GuiAction.nothing();
-        return this.onClickPermission(instance, ALL_PERMISSIONS[slotIndex - 1]);
+        if (slotIndex <= 0) {
+            return GuiAction.transfer(GuiSpecs.permissionOverview(this.claim));
+        } else if (slotIndex == 1 && index < ALL_PERMISSIONS.length) {
+            return this.onClickPermission(instance, ALL_PERMISSIONS[index]);
+        } else {
+            return GuiAction.nothing();
+        }
     }
 
     protected @NotNull GuiSpec exitDestination() {
