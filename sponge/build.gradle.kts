@@ -1,5 +1,7 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.model.PluginDependency
+import kotlin.jvm.java
 
 plugins {
     alias(libs.plugins.shadow)
@@ -8,6 +10,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven("https://repo.bluecolored.de/releases/")
 }
 
 dependencies {
@@ -16,7 +19,9 @@ dependencies {
     compileOnly(libs.annotations)
     implementation(libs.bstats.sponge)
 
-    // TODO: Integrations
+    // TODO: More integrations
+    compileOnly(libs.bluemap.api)
+    compileOnly(libs.squaremap.api)
 }
 
 sponge {
@@ -43,6 +48,10 @@ tasks.shadowJar {
 
     manifest {
         attributes["Enable-Debug"] = "${hasProperty("enableDebug")}"
+    }
+
+    transform(ServiceFileTransformer::class.java) {
+        setPath("META-INF/integrations")
     }
 
     // Library exclusions (present in Sponge)

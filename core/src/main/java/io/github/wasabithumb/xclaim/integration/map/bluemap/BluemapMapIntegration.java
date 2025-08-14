@@ -16,14 +16,14 @@ import io.github.wasabithumb.xclaim.integration.map.MapIntegration;
 import io.github.wasabithumb.xclaim.integration.map.MapMarker;
 import io.github.wasabithumb.xclaim.integration.map.MapOperation;
 import io.github.wasabithumb.xclaim.platform.PlatformTypeAdapter;
+import io.github.wasabithumb.xclaim.platform.world.PlatformWorld;
 import io.github.wasabithumb.xclaim.util.ColorUtil;
-import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class BluemapMapIntegration implements MapIntegration {
+public final class BluemapMapIntegration implements MapIntegration {
 
     private static final String MARKER_SET_ID = "xclaim_marker_set";
 
@@ -105,9 +105,10 @@ public class BluemapMapIntegration implements MapIntegration {
     }
 
     private @Nullable MarkerSet getMarkerSet(@NotNull Claim claim, @NotNull BlueMapAPI api) {
-        World world = (World) this.adapter.world(claim.world());
-        if (world == null) return null;
-        UUID uid = world.getUID();
+        PlatformWorld world = claim.world();
+        Object worldHandle = this.adapter.world(world);
+        if (worldHandle == null) return null;
+        UUID uid = world.uuid();
 
         MarkerSet ret;
         BlueMapWorld bmw;

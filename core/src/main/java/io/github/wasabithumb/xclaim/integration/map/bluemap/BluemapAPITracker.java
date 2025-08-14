@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Consumer;
 
-class BluemapAPITracker extends ForeignLoadable<BlueMapAPI> {
+final class BluemapAPITracker extends ForeignLoadable<BlueMapAPI> {
 
     private Consumer<BlueMapAPI> enableListener = null;
     private Consumer<BlueMapAPI> disableListener = null;

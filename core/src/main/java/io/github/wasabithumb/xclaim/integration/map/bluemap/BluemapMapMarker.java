@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class BluemapMapMarker implements MapMarker {
+final class BluemapMapMarker implements MapMarker {
 
     private final MarkerSet set;
     private final ExtrudeMarker marker;

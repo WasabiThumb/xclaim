@@ -101,17 +101,21 @@ final class IntegrationLoader<T extends Integration> {
 
     public void inject(@NotNull T instance, @NotNull XClaim runtime) {
         Class<?> cls = instance.getClass();
-        for (Field f : cls.getDeclaredFields()) {
-            if (f.getAnnotation(IntegrationInject.class) == null) continue;
-            try {
-                f.setAccessible(true);
-            } catch (InaccessibleObjectException | SecurityException ignored) { }
-            try {
-                this.inject0(instance, f, runtime);
-            } catch (ReflectiveOperationException e) {
-                throw new AssertionError("Failed to inject field \"" + f.getName() + "\"", e);
+        do {
+            for (Field f : cls.getDeclaredFields()) {
+                if (f.getAnnotation(IntegrationInject.class) == null) continue;
+                try {
+                    f.setAccessible(true);
+                } catch (InaccessibleObjectException | SecurityException ignored) {
+                }
+                try {
+                    this.inject0(instance, f, runtime);
+                } catch (ReflectiveOperationException e) {
+                    throw new AssertionError("Failed to inject field \"" + f.getName() + "\"", e);
+                }
             }
-        }
+            cls = cls.getSuperclass();
+        } while (cls != null && Integration.class.isAssignableFrom(cls));
     }
 
     // Handle injection for a given field

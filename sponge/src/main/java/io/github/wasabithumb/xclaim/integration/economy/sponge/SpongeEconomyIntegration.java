@@ -13,7 +13,7 @@ import org.spongepowered.api.service.economy.transaction.ResultType;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-public class SpongeEconomyIntegration implements EconomyIntegration {
+public final class SpongeEconomyIntegration implements EconomyIntegration {
 
     private final EconomyService service;
 

@@ -1,6 +1,7 @@
 
 repositories {
     mavenCentral()
+    maven("https://repo.bluecolored.de/releases/")
 }
 
 dependencies {
@@ -11,4 +12,8 @@ dependencies {
     implementation(libs.bstats.base)
     implementation(libs.caffeine)
     implementation(libs.sqlite)
+
+    // Integrations
+    compileOnly(libs.bluemap.api)
+    compileOnly(libs.squaremap.api)
 }
