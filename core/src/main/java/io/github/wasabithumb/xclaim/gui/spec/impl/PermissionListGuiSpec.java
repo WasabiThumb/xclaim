@@ -33,8 +33,12 @@ public abstract class PermissionListGuiSpec implements GuiSpec {
                 instance.platform().createItem(NamedPlatformMaterial.BARRIER),
                 instance.runtime().lang(I18N.GUI_PERM_BACK)
         ));
-        for (int i=0; i < ALL_PERMISSIONS.length; i++) {
-            instance.set(1, i, this.populatePermission(instance, ALL_PERMISSIONS[i]));
+
+        int head = 0;
+        for (Permission permission : ALL_PERMISSIONS) {
+            if (this.shouldShowPermission(instance, permission)) {
+                instance.set(1, head++, this.populatePermission(instance, permission));
+            }
         }
     }
 
@@ -46,7 +50,20 @@ public abstract class PermissionListGuiSpec implements GuiSpec {
         if (slotIndex <= 0) {
             return GuiAction.transfer(GuiSpecs.permissionOverview(this.claim));
         } else if (slotIndex == 1 && index < ALL_PERMISSIONS.length) {
-            return this.onClickPermission(instance, ALL_PERMISSIONS[index]);
+            int head = 0;
+            Permission selection = null;
+            for (Permission candidate : ALL_PERMISSIONS) {
+                if (!this.shouldShowPermission(instance, candidate)) continue;
+                if ((head++) == index) {
+                    selection = candidate;
+                    break;
+                }
+            }
+            if (selection != null) {
+                return this.onClickPermission(instance, selection);
+            } else {
+                return GuiAction.nothing();
+            }
         } else {
             return GuiAction.nothing();
         }
@@ -57,5 +74,11 @@ public abstract class PermissionListGuiSpec implements GuiSpec {
     }
 
     protected abstract @NotNull GuiAction onClickPermission(@NotNull GuiInstance instance, @NotNull Permission permission);
+
+    private boolean shouldShowPermission(@NotNull GuiInstance instance, @NotNull Permission permission) {
+        return instance.runtime().rootConfig().permissions().configurable(permission) ||
+                instance.player().hasPermission(Permission.ADMIN_OVERRIDE) ||
+                instance.player().isOp();
+    }
 
 }
