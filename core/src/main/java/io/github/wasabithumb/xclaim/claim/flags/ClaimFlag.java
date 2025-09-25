@@ -2,6 +2,7 @@ package io.github.wasabithumb.xclaim.claim.flags;
 
 import static io.github.wasabithumb.xclaim.claim.flags.ClaimFlagImpl.create;
 
+import io.github.wasabithumb.xclaim.i18n.Translatable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,5 +27,9 @@ public sealed interface ClaimFlag permits ClaimFlagImpl {
     int value();
 
     @NotNull String name();
+
+    default @NotNull Translatable title() {
+        return Translatable.keyed("flag-" + this.name());
+    }
 
 }

@@ -59,6 +59,10 @@ public final class MainGuiSpec implements GuiSpec {
                 instance.platform().createItem(NamedPlatformMaterial.ARROW),
                 instance.runtime().lang(I18N.GUI_MAIN_EXIT)
         ));
+        instance.set(10, DisplayItem.format(
+                instance.platform().createItem(NamedPlatformMaterial.BOOK),
+                instance.runtime().lang(I18N.GUI_MAIN_FLAGS)
+        ));
     }
 
     @Override
@@ -74,6 +78,7 @@ public final class MainGuiSpec implements GuiSpec {
             case 7 -> GuiAction.transfer(GuiSpecs.deletingClaimSelector());
             case 8 -> GuiAction.transfer(GuiSpecs.versionInfo());
             case 9 -> GuiAction.exit();
+            case 10 -> GuiAction.transfer(GuiSpecs.editFlags());
             default -> GuiAction.nothing();
         };
     }

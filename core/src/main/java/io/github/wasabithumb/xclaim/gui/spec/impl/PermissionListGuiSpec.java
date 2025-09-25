@@ -48,7 +48,7 @@ public abstract class PermissionListGuiSpec implements GuiSpec {
     public @NotNull GuiAction onClick(@NotNull GuiInstance instance, @NotNull GuiSlot slot, int index) {
         int slotIndex = slot.index();
         if (slotIndex <= 0) {
-            return GuiAction.transfer(GuiSpecs.permissionOverview(this.claim));
+            return GuiAction.transfer(this.exitDestination());
         } else if (slotIndex == 1 && index < ALL_PERMISSIONS.length) {
             int head = 0;
             Permission selection = null;

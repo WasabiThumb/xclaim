@@ -101,6 +101,7 @@
   "gui-main-delete": "<red>Delete Claim</red>",
   "gui-main-version": "<light_purple>Version Info</light_purple>",
   "gui-main-exit": "<gray>Exit</gray>",
+  "gui-main-flags": "<aqua>Edit Claim Flags</aqua>",
   "gui-vinf-version": "Version",
   "gui-vinf-mc-version": "Made for MC Version $1",
   "gui-vinf-mc-version-unspecified": "Unspecified",
@@ -372,5 +373,8 @@
   "event-fail-grant-user-permission-single": "<red>* Cannot grant user permission on this claim ($1)</red>",
   "event-fail-revoke-user-permission": "<red>* You cannot revoke a user permission at this time.</red>",
   "event-fail-revoke-user-permission-single": "<red>* Cannot revoke user permission on this claim ($1)</red>",
+  "flag-no-pvp": "No PvP",
+  "flag-fireproof": "Fireproof",
+  "flag-waterproof": "Waterproof",
   "unknown": "Unknown"
 }

@@ -311,6 +311,9 @@ public final class I18N {
     /** Exit */
     public static final Translatable GUI_MAIN_EXIT = keyed("gui-main-exit");
 
+    /** Edit Claim Flags */
+    public static final Translatable GUI_MAIN_FLAGS = keyed("gui-main-flags");
+
     /** Version */
     public static final Translatable GUI_VINF_VERSION = keyed("gui-vinf-version");
 

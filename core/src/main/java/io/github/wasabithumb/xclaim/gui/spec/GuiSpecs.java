@@ -34,6 +34,10 @@ public final class GuiSpecs {
         return new EditTrustGuiSpec();
     }
 
+    public static @NotNull GuiSpec editFlags() {
+        return new EditFlagsGuiSpec();
+    }
+
     public static @NotNull GuiSpec editChunks() {
         return new EditChunksGuiSpec();
     }
@@ -64,6 +68,10 @@ public final class GuiSpecs {
 
     public static @NotNull GuiSpec permissiblePlayerList(@NotNull Claim claim) {
         return new PermissiblePlayerListGuiSpec(claim);
+    }
+
+    public static @NotNull GuiSpec flagList(@NotNull Claim claim) {
+        return new FlagListGuiSpec(claim);
     }
 
     public static @NotNull GuiSpec transferableClaimSelector() {
