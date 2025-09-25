@@ -11,15 +11,15 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public final class ContainerClaimEnforcer extends ClaimEnforcer.ForPermission {
+public final class UseRedstoneClaimEnforcer extends ClaimEnforcer.ForPermission {
 
-    public ContainerClaimEnforcer(@NotNull ClaimManager manager) {
+    public UseRedstoneClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);
     }
 
     @Override
     protected @NotNull Permission permission() {
-        return Permission.CHEST_OPEN;
+        return Permission.USE_REDSTONE;
     }
 
     @PlatformEventHandler
@@ -27,11 +27,10 @@ public final class ContainerClaimEnforcer extends ClaimEnforcer.ForPermission {
         if (!event.isRightClick()) return;
         PlatformBlock block = event.getClickedBlock();
         if (block == null) return;
-        if (!block.isContainer()) return;
+        if (!block.isRedstoneComponent()) return;
 
         Claim claim = this.claimAt(block.location());
         if (claim == null) return;
-
         if (this.isNotPermitted(claim, event.player())) {
             event.setCancelled(true);
         }

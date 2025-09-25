@@ -5,8 +5,8 @@ import io.github.wasabithumb.xclaim.platform.data.material.BukkitPlatformMateria
 import io.github.wasabithumb.xclaim.platform.data.material.PlatformMaterial;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.*;
+import org.bukkit.block.data.type.Barrel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -61,6 +61,18 @@ public class BukkitPlatformBlock implements PlatformBlock {
     @Override
     public boolean isContainer() {
         return this.handle.getState() instanceof Container;
+    }
+
+    @Override
+    public boolean isRedstoneComponent() {
+        BlockData bd = this.handle().getBlockData();
+        return bd instanceof Powerable || bd instanceof AnaloguePowerable;
+    }
+
+    @Override
+    public boolean isDoor() {
+        BlockData bd = this.handle().getBlockData();
+        return bd instanceof Openable && !(bd instanceof Barrel);
     }
 
     @Override

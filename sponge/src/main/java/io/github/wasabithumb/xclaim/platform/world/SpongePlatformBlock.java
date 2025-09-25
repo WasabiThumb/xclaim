@@ -118,6 +118,17 @@ public class SpongePlatformBlock implements PlatformBlock {
     }
 
     @Override
+    public boolean isRedstoneComponent() {
+        return this.handle().supports(Keys.POWER) ||
+                this.handle().supports(Keys.IS_POWERED);
+    }
+
+    @Override
+    public boolean isDoor() {
+        return this.handle().supports(Keys.IS_OPEN);
+    }
+
+    @Override
     public boolean canWaterlog() {
         return this.handle().supports(Keys.IS_WATERLOGGED);
     }

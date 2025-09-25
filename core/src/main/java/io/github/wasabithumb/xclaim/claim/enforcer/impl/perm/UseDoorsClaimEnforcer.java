@@ -4,30 +4,34 @@ import io.github.wasabithumb.xclaim.claim.Claim;
 import io.github.wasabithumb.xclaim.claim.ClaimManager;
 import io.github.wasabithumb.xclaim.claim.enforcer.ClaimEnforcer;
 import io.github.wasabithumb.xclaim.claim.permission.Permission;
-import io.github.wasabithumb.xclaim.platform.entity.PlatformPlayer;
 import io.github.wasabithumb.xclaim.platform.event.PlatformEventHandler;
-import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerDropItemEvent;
+import io.github.wasabithumb.xclaim.platform.event.impl.PlatformPlayerInteractEvent;
+import io.github.wasabithumb.xclaim.platform.world.PlatformBlock;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public final class DropClaimEnforcer extends ClaimEnforcer.ForPermission {
+public final class UseDoorsClaimEnforcer extends ClaimEnforcer.ForPermission {
 
-    public DropClaimEnforcer(@NotNull ClaimManager manager) {
+    public UseDoorsClaimEnforcer(@NotNull ClaimManager manager) {
         super(manager);
     }
 
     @Override
     protected @NotNull Permission permission() {
-        return Permission.DROP_ITEMS;
+        return Permission.USE_DOORS;
     }
 
     @PlatformEventHandler
-    public void onDrop(@NotNull PlatformPlayerDropItemEvent event) {
-        PlatformPlayer player = event.player();
-        Claim claim = this.claimAt(player.location());
+    public void onInteract(@NotNull PlatformPlayerInteractEvent event) {
+        if (!event.isRightClick()) return;
+        PlatformBlock block = event.getClickedBlock();
+        if (block == null) return;
+        if (!block.isDoor()) return;
+
+        Claim claim = this.claimAt(block.location());
         if (claim == null) return;
-        if (this.isNotPermitted(claim, player)) {
+        if (this.isNotPermitted(claim, event.player())) {
             event.setCancelled(true);
         }
     }

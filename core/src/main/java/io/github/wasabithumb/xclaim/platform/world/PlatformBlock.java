@@ -24,6 +24,10 @@ public interface PlatformBlock extends PlatformObject {
 
     boolean isContainer();
 
+    boolean isRedstoneComponent();
+
+    boolean isDoor();
+
     boolean canWaterlog();
 
     boolean isWaterlogged();

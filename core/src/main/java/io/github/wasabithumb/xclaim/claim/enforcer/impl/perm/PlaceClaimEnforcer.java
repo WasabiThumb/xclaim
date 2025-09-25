@@ -45,7 +45,7 @@ public abstract sealed class PlaceClaimEnforcer extends ClaimEnforcer.ForPermiss
 
         @Override
         protected @NotNull Permission permission() {
-            return Permission.ENT_PLACE;
+            return Permission.PLACE_ENTS;
         }
 
     }
@@ -63,7 +63,7 @@ public abstract sealed class PlaceClaimEnforcer extends ClaimEnforcer.ForPermiss
 
         @Override
         protected @NotNull Permission permission() {
-            return Permission.VEHICLE_PLACE;
+            return Permission.PLACE_VEHICLES;
         }
 
     }

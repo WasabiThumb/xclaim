@@ -67,7 +67,7 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer.ForPermis
 
         @Override
         protected @NotNull Permission permission() {
-            return Permission.ENTITY_DAMAGE_FRIENDLY;
+            return Permission.DAMAGE_FRIENDLY;
         }
 
     }
@@ -85,7 +85,7 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer.ForPermis
 
         @Override
         protected @NotNull Permission permission() {
-            return Permission.ENTITY_DAMAGE_HOSTILE;
+            return Permission.DAMAGE_HOSTILE;
         }
 
     }
@@ -103,14 +103,14 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer.ForPermis
 
         @Override
         protected @NotNull Permission permission() {
-            return Permission.ENTITY_DAMAGE_VEHICLE;
+            return Permission.DAMAGE_VEHICLES;
         }
 
     }
 
-    public static final class NonLiving extends DamageClaimEnforcer {
+    public static final class Other extends DamageClaimEnforcer {
 
-        public NonLiving(@NotNull ClaimManager manager) {
+        public Other(@NotNull ClaimManager manager) {
             super(manager);
         }
 
@@ -120,26 +120,14 @@ public abstract sealed class DamageClaimEnforcer extends ClaimEnforcer.ForPermis
         }
 
         @Override
-        protected @NotNull Permission permission() {
-            return Permission.ENTITY_DAMAGE_NL;
-        }
-
-    }
-
-    public static final class Misc extends DamageClaimEnforcer {
-
-        public Misc(@NotNull ClaimManager manager) {
-            super(manager);
-        }
-
-        @Override
-        protected @NotNull PlatformEntityGroup group() {
-            return PlatformEntityGroup.MISC;
+        protected boolean inGroup(@NotNull PlatformEntity entity) {
+            return entity.isInGroup(PlatformEntityGroup.NOT_ALIVE) ||
+                    entity.isInGroup(PlatformEntityGroup.MISC);
         }
 
         @Override
         protected @NotNull Permission permission() {
-            return Permission.ENTITY_DAMAGE_MISC;
+            return Permission.DAMAGE_OTHER;
         }
 
     }

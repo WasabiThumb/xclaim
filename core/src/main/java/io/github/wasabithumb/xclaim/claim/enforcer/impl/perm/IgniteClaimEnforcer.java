@@ -26,7 +26,7 @@ public final class IgniteClaimEnforcer extends ClaimEnforcer.ForPermission {
 
     @Override
     protected @NotNull Permission permission() {
-        return Permission.FIRE_USE;
+        return Permission.IGNITE;
     }
 
     @PlatformEventHandler
