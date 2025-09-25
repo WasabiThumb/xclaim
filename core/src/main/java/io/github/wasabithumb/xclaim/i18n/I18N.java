@@ -2,7 +2,6 @@ package io.github.wasabithumb.xclaim.i18n;
 
 import static io.github.wasabithumb.xclaim.i18n.Translatable.keyed;
 
-@SuppressWarnings("unused")
 public final class I18N {
 
     /** Done */
@@ -14,35 +13,8 @@ public final class I18N {
     /** New Claim */
     public static final Translatable NEW_CLAIM = keyed("new-claim");
 
-    /** Created data folder */
-    public static final Translatable DATA_FOLDER_CREATED = keyed("data-folder-created");
-
-    /** Locating JAR file */
-    public static final Translatable LOCATING_JAR = keyed("locating-jar");
-
-    /** Fetching required libraries... */
-    public static final Translatable EXT_DL = keyed("ext-dl");
-
-    /** (!) An update for XClaim is available ($1)! */
-    public static final Translatable UPDATE_AVAILABLE_LINE1 = keyed("update-available-line1");
-
-    /** (!) Use /xc update to update automatically. */
-    public static final Translatable UPDATE_AVAILABLE_LINE2 = keyed("update-available-line2");
-
-    /** Checking for Dynmap */
-    public static final Translatable DYNMAP_CHECK = keyed("dynmap-check");
-
-    /** Failed to validate Dynmap core, proceeding anyways... */
-    public static final Translatable DYNMAP_WARN_CORE = keyed("dynmap-warn-core");
-
-    /** Hooked into Dynmap version $1 */
-    public static final Translatable DYNMAP_HOOKED = keyed("dynmap-hooked");
-
     /** Claims */
     public static final Translatable DYNMAP_MARKER_NAME = keyed("dynmap-marker-name");
-
-    /** No suitable economy plugin was found */
-    public static final Translatable ECO_FAIL = keyed("eco-fail");
 
     /** Loading trusted players */
     public static final Translatable TRUST_LOAD = keyed("trust-load");
@@ -176,108 +148,6 @@ public final class I18N {
     /** Hey! You can't do that here. */
     public static final Translatable PERM_HANDLER_STD_ERROR = keyed("permHandler-stdError");
 
-    /** Build */
-    public static final Translatable PERM_BUILD_NAME = keyed("perm-build-name");
-
-    /** Place blocks */
-    public static final Translatable PERM_BUILD_DESCRIPTION = keyed("perm-build-description");
-
-    /** Break */
-    public static final Translatable PERM_BREAK_NAME = keyed("perm-break-name");
-
-    /** Break blocks */
-    public static final Translatable PERM_BREAK_DESCRIPTION = keyed("perm-break-description");
-
-    /** Enter */
-    public static final Translatable PERM_ENTER_NAME = keyed("perm-enter-name");
-
-    /** Walk into the area */
-    public static final Translatable PERM_ENTER_DESCRIPTION = keyed("perm-enter-description");
-
-    /** Interact */
-    public static final Translatable PERM_INTERACT_NAME = keyed("perm-interact-name");
-
-    /** Interact with buttons, chests, etc. */
-    public static final Translatable PERM_INTERACT_DESCRIPTION = keyed("perm-interact-description");
-
-    /** Open Chests */
-    public static final Translatable PERM_CHEST_OPEN_NAME = keyed("perm-chest-open-name");
-
-    /** Interact with chests, for general interaction see Interact. */
-    public static final Translatable PERM_CHEST_OPEN_DESCRIPTION = keyed("perm-chest-open-description");
-
-    /** Place Entities */
-    public static final Translatable PERM_ENT_PLACE_NAME = keyed("perm-ent-place-name");
-
-    /** Put down boats, minecarts, armor stands, etc. */
-    public static final Translatable PERM_ENT_PLACE_DESCRIPTION = keyed("perm-ent-place-description");
-
-    /** Place Vehicles */
-    public static final Translatable PERM_VEHICLE_PLACE_NAME = keyed("perm-vehicle-place-name");
-
-    /** Put down vehicles like minecarts */
-    public static final Translatable PERM_VEHICLE_PLACE_DESCRIPTION = keyed("perm-vehicle-place-description");
-
-    /** Use Flammables */
-    public static final Translatable PERM_FIRE_USE_NAME = keyed("perm-fire-use-name");
-
-    /** Use flint & steel and fire charges */
-    public static final Translatable PERM_FIRE_USE_DESCRIPTION = keyed("perm-fire-use-description");
-
-    /** Damage Friendly Entities */
-    public static final Translatable PERM_ENTITY_DAMAGE_FRIENDLY_NAME = keyed("perm-entity-damage-friendly-name");
-
-    /** Cause damage to things like cows, sheep, squid, etc */
-    public static final Translatable PERM_ENTITY_DAMAGE_FRIENDLY_DESCRIPTION = keyed("perm-entity-damage-friendly-description");
-
-    /** Damage Hostile Entities */
-    public static final Translatable PERM_ENTITY_DAMAGE_HOSTILE_NAME = keyed("perm-entity-damage-hostile-name");
-
-    /** Cause damage to things like zombies, skeletons, slimes, etc */
-    public static final Translatable PERM_ENTITY_DAMAGE_HOSTILE_DESCRIPTION = keyed("perm-entity-damage-hostile-description");
-
-    /** Damage Vehicles Entities */
-    public static final Translatable PERM_ENTITY_DAMAGE_VEHICLE_NAME = keyed("perm-entity-damage-vehicle-name");
-
-    /** Cause damage to things like boats and minecarts */
-    public static final Translatable PERM_ENTITY_DAMAGE_VEHICLE_DESCRIPTION = keyed("perm-entity-damage-vehicle-description");
-
-    /** Damage Non-Living Entities */
-    public static final Translatable PERM_ENTITY_DAMAGE_NL_NAME = keyed("perm-entity-damage-nl-name");
-
-    /** Cause damage to things like armor stands and decorations */
-    public static final Translatable PERM_ENTITY_DAMAGE_NL_DESCRIPTION = keyed("perm-entity-damage-nl-description");
-
-    /** Damage Miscellaneous Entities */
-    public static final Translatable PERM_ENTITY_DAMAGE_MISC_NAME = keyed("perm-entity-damage-misc-name");
-
-    /** Cause damage to entities that don't fall into any other group */
-    public static final Translatable PERM_ENTITY_DAMAGE_MISC_DESCRIPTION = keyed("perm-entity-damage-misc-description");
-
-    /** Explosions */
-    public static final Translatable PERM_EXPLODE_NAME = keyed("perm-explode-name");
-
-    /** Cause explosions; when the source of an explosion is unclear, TRUSTED and VETERAN groups act like NONE */
-    public static final Translatable PERM_EXPLODE_DESCRIPTION = keyed("perm-explode-description");
-
-    /** Drop Items */
-    public static final Translatable PERM_ITEM_DROP_NAME = keyed("perm-item-drop-name");
-
-    /** Drop items */
-    public static final Translatable PERM_ITEM_DROP_DESCRIPTION = keyed("perm-item-drop-description");
-
-    /** Manage Claim */
-    public static final Translatable PERM_MANAGE_NAME = keyed("perm-manage-name");
-
-    /** Modify the claim settings */
-    public static final Translatable PERM_MANAGE_DESCRIPTION = keyed("perm-manage-description");
-
-    /** Remove Claim */
-    public static final Translatable PERM_DELETE_NAME = keyed("perm-delete-name");
-
-    /** Remove the claim */
-    public static final Translatable PERM_DELETE_DESCRIPTION = keyed("perm-delete-description");
-
     /** XClaim Config */
     public static final Translatable GUI_NAME = keyed("gui-name");
 
@@ -316,12 +186,6 @@ public final class I18N {
 
     /** Version */
     public static final Translatable GUI_VINF_VERSION = keyed("gui-vinf-version");
-
-    /** Made for MC Version $1 */
-    public static final Translatable GUI_VINF_MC_VERSION = keyed("gui-vinf-mc-version");
-
-    /** Unspecified */
-    public static final Translatable GUI_VINF_MC_VERSION_UNSPECIFIED = keyed("gui-vinf-mc-version-unspecified");
 
     /** Author */
     public static final Translatable GUI_VINF_AUTHOR = keyed("gui-vinf-author");
@@ -376,9 +240,6 @@ public final class I18N {
 
     /** * Couldn't find a player with that name. */
     public static final Translatable GUI_COMB_PROMPT_FAIL = keyed("gui-comb-prompt-fail");
-
-    /** Player successfully added. */
-    public static final Translatable GUI_COMB_PROMPT_SUCCESS = keyed("gui-comb-prompt-success");
 
     /** General Permissions */
     public static final Translatable GUI_PERM_GENERAL = keyed("gui-perm-general");
@@ -458,23 +319,8 @@ public final class I18N {
     /** Enabled */
     public static final Translatable GUI_PERM_ENABLED = keyed("gui-perm-enabled");
 
-    /** Make this player have */
-    public static final Translatable GUI_PERM_ENABLED_LINE1 = keyed("gui-perm-enabled-line1");
-
-    /** this permission. */
-    public static final Translatable GUI_PERM_ENABLED_LINE2 = keyed("gui-perm-enabled-line2");
-
     /** Disabled */
     public static final Translatable GUI_PERM_DISABLED = keyed("gui-perm-disabled");
-
-    /** Unset this permission for */
-    public static final Translatable GUI_PERM_DISABLED_LINE1 = keyed("gui-perm-disabled-line1");
-
-    /** this player. Permission will */
-    public static final Translatable GUI_PERM_DISABLED_LINE2 = keyed("gui-perm-disabled-line2");
-
-    /** defer to general groups. */
-    public static final Translatable GUI_PERM_DISABLED_LINE3 = keyed("gui-perm-disabled-line3");
 
     /** Confirm */
     public static final Translatable GUI_NEW_CONFIRM = keyed("gui-new-confirm");
@@ -497,17 +343,11 @@ public final class I18N {
     /** main menu. */
     public static final Translatable GUI_NEW_CANCEL_LINE2 = keyed("gui-new-cancel-line2");
 
-    /** * This chunk is already claimed! */
-    public static final Translatable GUI_NEW_CLAIMED = keyed("gui-new-claimed");
-
     /** * You cannot make a new claim in a blacklisted world! */
     public static final Translatable GUI_NEW_DISALLOWED = keyed("gui-new-disallowed");
 
     /** * You've reached your maximum number of claims! Try deleting some. */
     public static final Translatable GUI_NEW_MAX_CLAIMS = keyed("gui-new-max-claims");
-
-    /** * Can't create this claim, it will exceed your maximum number of chunks. */
-    public static final Translatable GUI_NEW_MAX_CHUNKS = keyed("gui-new-max-chunks");
 
     /** * Created new claim $1 */
     public static final Translatable GUI_NEW_SUCCESS = keyed("gui-new-success");
@@ -523,9 +363,6 @@ public final class I18N {
 
     /** * Name too long! Has to be less than 50 characters */
     public static final Translatable GUI_RENAME_CHUNK_FAIL = keyed("gui-rename-chunk-fail");
-
-    /** Claim renamed successfully. */
-    public static final Translatable GUI_RENAME_CHUNK_SUCCESS = keyed("gui-rename-chunk-success");
 
     /** Yes, I am sure */
     public static final Translatable GUI_CLEAR_YES = keyed("gui-clear-yes");
@@ -563,17 +400,8 @@ public final class I18N {
     /** Currently within */
     public static final Translatable GUI_SEL_WITHIN = keyed("gui-sel-within");
 
-    /** Previous */
-    public static final Translatable GUI_SEL_PREVIOUS = keyed("gui-sel-previous");
-
     /** Search */
     public static final Translatable GUI_SEL_SEARCH = keyed("gui-sel-search");
-
-    /** Cancel */
-    public static final Translatable GUI_SEL_CANCEL = keyed("gui-sel-cancel");
-
-    /** Next */
-    public static final Translatable GUI_SEL_NEXT = keyed("gui-sel-next");
 
     /** Enter search term in the chat to search. */
     public static final Translatable GUI_SEL_PROMPT = keyed("gui-sel-prompt");
@@ -592,12 +420,6 @@ public final class I18N {
 
     /** * An unexpected exception ($1) occurred while executing this command. */
     public static final Translatable CMDMGR_ERR_UNEXPECTED = keyed("cmdmgr-err-unexpected");
-
-    /** Could not register command "$1", does not exist in plugin.yml */
-    public static final Translatable CMDMGR_ERR_UNDEFINED = keyed("cmdmgr-err-undefined");
-
-    /** Could not access constructor for class $1, see details below */
-    public static final Translatable CMDMGR_ERR_REFLECT = keyed("cmdmgr-err-reflect");
 
     /** XClaim main command */
     public static final Translatable CMD_XC_DESCRIPTION = keyed("cmd-xc-description");
@@ -1066,66 +888,6 @@ public final class I18N {
 
     /** Your claim named $1 was removed due to being in a blacklisted world */
     public static final Translatable GRACE_REMOVE = keyed("grace-remove");
-
-    /** * You cannot create a claim at this time. */
-    public static final Translatable EVENT_FAIL_CREATE_CLAIM = keyed("event-fail-create-claim");
-
-    /** * Cannot create this claim ($1) */
-    public static final Translatable EVENT_FAIL_CREATE_CLAIM_SINGLE = keyed("event-fail-create-claim-single");
-
-    /** * You cannot delete a claim at this time. */
-    public static final Translatable EVENT_FAIL_DELETE_CLAIM = keyed("event-fail-delete-claim");
-
-    /** * Cannot delete this claim ($1) */
-    public static final Translatable EVENT_FAIL_DELETE_CLAIM_SINGLE = keyed("event-fail-delete-claim-single");
-
-    /** * You cannot add chunks to a claim at this time. */
-    public static final Translatable EVENT_FAIL_ADD_CHUNKS = keyed("event-fail-add-chunks");
-
-    /** * Cannot add chunks to this claim ($1) */
-    public static final Translatable EVENT_FAIL_ADD_CHUNKS_SINGLE = keyed("event-fail-add-chunks-single");
-
-    /** * You cannot add a chunk to a claim at this time. */
-    public static final Translatable EVENT_FAIL_ADD_CHUNK = keyed("event-fail-add-chunk");
-
-    /** * Cannot add a chunk to this claim ($1) */
-    public static final Translatable EVENT_FAIL_ADD_CHUNK_SINGLE = keyed("event-fail-add-chunk-single");
-
-    /** * You cannot remove chunks from a claim at this time. */
-    public static final Translatable EVENT_FAIL_REMOVE_CHUNKS = keyed("event-fail-remove-chunks");
-
-    /** * Cannot remove chunks from this claim ($1) */
-    public static final Translatable EVENT_FAIL_REMOVE_CHUNKS_SINGLE = keyed("event-fail-remove-chunks-single");
-
-    /** * You cannot remove a chunk from a claim at this time. */
-    public static final Translatable EVENT_FAIL_REMOVE_CHUNK = keyed("event-fail-remove-chunk");
-
-    /** * Cannot remove a chunk from this claim ($1) */
-    public static final Translatable EVENT_FAIL_REMOVE_CHUNK_SINGLE = keyed("event-fail-remove-chunk-single");
-
-    /** * You cannot transfer the claim owner at this time. */
-    public static final Translatable EVENT_FAIL_TRANSFER_OWNER = keyed("event-fail-transfer-owner");
-
-    /** * Cannot transfer this claim's owner ($1) */
-    public static final Translatable EVENT_FAIL_TRANSFER_OWNER_SINGLE = keyed("event-fail-transfer-owner-single");
-
-    /** * You cannot set this permission on the claim at this time. */
-    public static final Translatable EVENT_FAIL_SET_PERMISSION = keyed("event-fail-set-permission");
-
-    /** * Cannot set permission on this claim ($1) */
-    public static final Translatable EVENT_FAIL_SET_PERMISSION_SINGLE = keyed("event-fail-set-permission-single");
-
-    /** * You cannot grant a user permission at this time. */
-    public static final Translatable EVENT_FAIL_GRANT_USER_PERMISSION = keyed("event-fail-grant-user-permission");
-
-    /** * Cannot grant user permission on this claim ($1) */
-    public static final Translatable EVENT_FAIL_GRANT_USER_PERMISSION_SINGLE = keyed("event-fail-grant-user-permission-single");
-
-    /** * You cannot revoke a user permission at this time. */
-    public static final Translatable EVENT_FAIL_REVOKE_USER_PERMISSION = keyed("event-fail-revoke-user-permission");
-
-    /** * Cannot revoke user permission on this claim ($1) */
-    public static final Translatable EVENT_FAIL_REVOKE_USER_PERMISSION_SINGLE = keyed("event-fail-revoke-user-permission-single");
 
     /** Unknown */
     public static final Translatable UNKNOWN = keyed("unknown");
