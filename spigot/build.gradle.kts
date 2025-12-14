@@ -24,6 +24,7 @@ dependencies {
 
 tasks.shadowJar {
     archiveClassifier.set("")
+    mergeServiceFiles()
 
     manifest {
         attributes["Enable-Debug"] = "${hasProperty("enableDebug")}"

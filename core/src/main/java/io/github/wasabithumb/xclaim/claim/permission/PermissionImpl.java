@@ -12,11 +12,34 @@ import java.util.List;
 @ApiStatus.Internal
 final class PermissionImpl implements Permission {
 
+
     private static final Permission[] CANONICAL = new Permission[Permission.class.getDeclaredFields().length];
     private static int ORDINAL_HEAD = 0;
 
+    static final Permission BUILD           = create("build");
+    static final Permission BREAK           = create("break");
+    static final Permission ENTER           = create("enter");
+    static final Permission USE_STORAGE     = create("use-storage", "interact");
+    static final Permission USE_REDSTONE    = create("use-redstone", "interact");
+    static final Permission USE_FIXTURES    = create("use-fixtures", "interact");
+    static final Permission USE_DOORS       = create("use-doors", "interact");
+    static final Permission USE_OTHER       = create("use-other", "interact");
+    static final Permission PLACE_ENTS      = create("place-ents", "ent-place");
+    static final Permission PLACE_VEHICLES  = create("place-vehicles", "vehicle-place");
+    static final Permission IGNITE          = create("ignite", "fire-use");
+    static final Permission EXPLODE         = create("explode");
+    static final Permission DAMAGE_FRIENDLY = create("damage-friendly", "entity-damage-friendly");
+    static final Permission DAMAGE_HOSTILE  = create("damage-hostile", "entity-damage-hostile");
+    static final Permission DAMAGE_VEHICLES = create("damage-vehicles", "entity-damage-vehicle");
+    static final Permission DAMAGE_OTHER    = create("damage-other", "entity-damage-nl", "entity-damage-misc");
+    static final Permission DROP_ITEMS      = create("drop-items", "item-drop");
+    static final Permission MANAGE          = create("manage");
+    static final Permission DELETE          = create("delete");
+
+    //
+
     @Contract("_, _ -> new")
-    static synchronized @NotNull Permission create(@NotNull String name, @NotNull String @NotNull ... legacyNames) {
+    private static synchronized @NotNull Permission create(@NotNull String name, @NotNull String @NotNull ... legacyNames) {
         final int ordinal = ORDINAL_HEAD++;
         Permission ret = new PermissionImpl(
                 ordinal,

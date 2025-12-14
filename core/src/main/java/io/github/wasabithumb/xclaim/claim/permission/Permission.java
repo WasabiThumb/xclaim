@@ -1,7 +1,6 @@
 package io.github.wasabithumb.xclaim.claim.permission;
 
 import io.github.wasabithumb.xclaim.i18n.Translatable;
-import static io.github.wasabithumb.xclaim.claim.permission.PermissionImpl.create;
 
 import org.jetbrains.annotations.*;
 
@@ -9,61 +8,61 @@ import java.util.List;
 
 public sealed interface Permission permits PermissionImpl {
     /** Place/modify existing blocks */
-    Permission BUILD           = create("build");
+    Permission BUILD           = PermissionImpl.BUILD;
 
     /** Break blocks */
-    Permission BREAK           = create("break");
+    Permission BREAK           = PermissionImpl.BREAK;
 
     /** Move into the claim */
-    Permission ENTER           = create("enter");
+    Permission ENTER           = PermissionImpl.ENTER;
 
     /** Use chests, barrels, shulker boxes */
-    Permission USE_STORAGE     = create("use-storage", "interact");
+    Permission USE_STORAGE     = PermissionImpl.USE_STORAGE;
 
     /** Activate powerable blocks */
-    Permission USE_REDSTONE    = create("use-redstone", "interact");
+    Permission USE_REDSTONE    = PermissionImpl.USE_REDSTONE;
 
     /** Rotate item frames, dress armor stands */
-    Permission USE_FIXTURES    = create("use-fixtures", "interact");
+    Permission USE_FIXTURES    = PermissionImpl.USE_FIXTURES;
 
     /** Use doors, gates, trapdoors */
-    Permission USE_DOORS       = create("use-doors", "interact");
+    Permission USE_DOORS       = PermissionImpl.USE_DOORS;
 
     /** Use crafting/enchanting tables, etc. */
-    Permission USE_OTHER       = create("use-other", "interact");
+    Permission USE_OTHER       = PermissionImpl.USE_OTHER;
 
     /** Place armor stands, spawn eggs, etc. */
-    Permission PLACE_ENTS      = create("place-ents", "ent-place");
+    Permission PLACE_ENTS      = PermissionImpl.PLACE_ENTS;
 
     /** Place boats, minecarts, etc. */
-    Permission PLACE_VEHICLES  = create("place-vehicles", "vehicle-place");
+    Permission PLACE_VEHICLES  = PermissionImpl.PLACE_VEHICLES;
 
     /** Create fire */
-    Permission IGNITE          = create("ignite", "fire-use");
+    Permission IGNITE          = PermissionImpl.IGNITE;
 
     /** Cause explosions */
-    Permission EXPLODE         = create("explode");
+    Permission EXPLODE         = PermissionImpl.EXPLODE;
 
     /** Damage cows, sheep, squid, etc. */
-    Permission DAMAGE_FRIENDLY = create("damage-friendly", "entity-damage-friendly");
+    Permission DAMAGE_FRIENDLY = PermissionImpl.DAMAGE_FRIENDLY;
 
     /** Damage zombies, skeletons, etc. */
-    Permission DAMAGE_HOSTILE  = create("damage-hostile", "entity-damage-hostile");
+    Permission DAMAGE_HOSTILE  = PermissionImpl.DAMAGE_HOSTILE;
 
     /** Damage boats, minecarts, etc. */
-    Permission DAMAGE_VEHICLES = create("damage-vehicles", "entity-damage-vehicle");
+    Permission DAMAGE_VEHICLES = PermissionImpl.DAMAGE_VEHICLES;
 
     /** Damage all other entities */
-    Permission DAMAGE_OTHER    = create("damage-other", "entity-damage-nl", "entity-damage-misc");
+    Permission DAMAGE_OTHER    = PermissionImpl.DAMAGE_OTHER;
 
     /** Drop items */
-    Permission DROP_ITEMS      = create("drop-items", "item-drop");
+    Permission DROP_ITEMS      = PermissionImpl.DROP_ITEMS;
 
     /** Modify the claim settings */
-    Permission MANAGE          = create("manage");
+    Permission MANAGE          = PermissionImpl.MANAGE;
 
     /** Delete the claim */
-    Permission DELETE          = create("delete");
+    Permission DELETE          = PermissionImpl.DELETE;
 
     /** Deprecated alias for {@link #USE_STORAGE} */
     @Deprecated

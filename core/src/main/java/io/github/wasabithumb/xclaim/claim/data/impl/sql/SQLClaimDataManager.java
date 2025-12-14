@@ -361,13 +361,13 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
                 final String name = p.sqlName();
                 if (!globalPermissionsColumns.contains(name)) {
                     try (Statement s = connection.createStatement()) {
-                        s.execute("ALTER TABLE xcClaimGlobalPermissions ADD " + name + " TINYINT UNSIGNED NOT NULL DEFAULT 255");
+                        s.execute("ALTER TABLE xcClaimGlobalPermissions ADD `" + name + "` TINYINT UNSIGNED NOT NULL DEFAULT 255");
                     }
                 }
                 psGlobalPermissionsUpsert.put(
                         p,
-                        connection.prepareStatement("INSERT INTO xcClaimGlobalPermissions (token, " + name +
-                                ") VALUES (?, ?) ON CONFLICT(token) DO UPDATE SET " + name + "=?")
+                        connection.prepareStatement("INSERT INTO xcClaimGlobalPermissions (token, `" + name +
+                                "`) VALUES (?, ?) ON CONFLICT(token) DO UPDATE SET `" + name + "`=?")
                 );
             }
             this.psGlobalPermissionsUpsert = psGlobalPermissionsUpsert;
@@ -381,18 +381,18 @@ public abstract class SQLClaimDataManager extends SQLHelper<SQLClaimDataManager.
                 final String name = p.sqlName();
                 if (!userPermissionsColumns.contains(name)) {
                     try (Statement s = connection.createStatement()) {
-                        s.execute("ALTER TABLE xcClaimUserPermissions ADD " + name + " TINYINT UNSIGNED NOT NULL DEFAULT 0");
+                        s.execute("ALTER TABLE xcClaimUserPermissions ADD `" + name + "` TINYINT UNSIGNED NOT NULL DEFAULT 0");
                     }
                 }
                 psUserPermissionsInsert.put(
                         p,
-                        connection.prepareStatement("INSERT INTO xcClaimUserPermissions (token, user, " + name +
-                                ") VALUES (?, ?, ?)")
+                        connection.prepareStatement("INSERT INTO xcClaimUserPermissions (token, user, `" + name +
+                                "`) VALUES (?, ?, ?)")
                 );
                 psUserPermissionsUpdate.put(
                         p,
-                        connection.prepareStatement("UPDATE xcClaimUserPermissions SET " + name +
-                                "=? WHERE token=? AND user=?")
+                        connection.prepareStatement("UPDATE xcClaimUserPermissions SET `" + name +
+                                "`=? WHERE token=? AND user=?")
                 );
             }
             this.psUserPermissionsInsert = psUserPermissionsInsert;

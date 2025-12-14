@@ -21,8 +21,13 @@ dependencies {
     compileOnly(libs.paper.api)
 }
 
+tasks.runServer {
+    minecraftVersion("1.21.8")
+}
+
 tasks.shadowJar {
     archiveClassifier.set("")
+    mergeServiceFiles()
 
     manifest {
         attributes["Enable-Debug"] = "${hasProperty("enableDebug")}"
@@ -54,6 +59,7 @@ tasks.assemble {
 }
 
 paperPluginYaml {
+    name = "XClaim"
     main = "io.github.wasabithumb.xclaim.XClaimPlugin"
     bootstrapper = "io.github.wasabithumb.xclaim.XClaimPluginBootstrap"
     description = "A fully-featured chunk claiming system for community servers"
